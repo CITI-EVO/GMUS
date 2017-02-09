@@ -4,3 +4,17 @@
 
 /.svn
 /.vs/GMS.IIS/v14
+/CITI.EVO.CommonData.DAL/obj/Debug
+/CITI.EVO.CommonData.Svc/obj/Debug
+/CITI.EVO.CommonData.Web/Bin
+/CITI.EVO.Proxies/obj/Debug
+/CITI.EVO.Rpc/obj/Debug
+/CITI.EVO.RpcHub.Web/Bin
+/CITI.EVO.Tools/obj/Debug
+/CITI.EVO.TwoWayModel/obj/Debug
+/CITI.EVO.UserManagement.DAL/obj/Debug
+/CITI.EVO.UserManagement.Svc/obj/Debug
+/CITI.EVO.UserManagement.Web/Bin
+/Gms.Portal.DAL/obj/Debug
+/Gms.Portal.Svc/obj/Debug
+/PrecompiledWeb
