@@ -1,0 +1,2 @@
+﻿2017-02-09 13:13:26,851 [10] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: 341bbb61-6689-45ba-b9d4-13fb08e09564
+2017-02-09 13:13:27,014 [12] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: superadmin; Password: resetpass; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 341bbb61-6689-45ba-b9d4-13fb08e09564; SessionID: irptmg0fc1av3zfykubgmfen; ClientIP: ::1, ::1; Success: True

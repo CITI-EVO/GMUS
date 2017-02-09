@@ -1,0 +1,307 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: Bpg Nino Mtavruli Normal;
+    src: url(../default/Fonts/bpg_nino_mtavruli_normal.ttf);
+}
+
+.clear {
+    clear: both;
+}
+
+
+#login_page {
+    font-family: Arial, sans-serif;
+    background: #333033;
+    margin: 0;
+    padding: 0;
+    background-image: url('images/nature.jpg');
+    border: 0;
+    position: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 100%;
+    min-width: 100%;
+    font-size: 13px;
+    color: #404040;
+}
+
+.logo {
+    padding-top: 120px;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+#login_page .main_content {
+    text-align: center;
+    width: 310px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.30);
+    padding: 25px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 7%;
+    border: 1px solid rgb(42, 121, 76);
+}
+
+#login_page .main_contentregister {
+    text-align: center;
+    width: 510px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(0, 0, 0, 0.30);
+    padding: 25px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-top: 10%;
+    border: 1px solid rgb(42, 121, 76);
+}
+
+.box_body {
+    width: 250px;
+}
+
+#login_page .box {
+    width: 250px;
+    padding: 0;
+    text-align: center;
+}
+
+
+#login_page .registerbox {
+    width: 450px;
+    margin: 10px 0 10px 0;
+    text-align: center;
+    height: 40px;
+}
+
+
+#login_page .title {
+    font-size: 16px;
+    color: #ffffff;
+    font-family: 'BPG Nino Mtavruli Normal';
+    padding: 8px 0 8px 0;
+    margin: 0 auto;
+    font-weight: normal;
+    text-align: left;
+    float: left;
+    width: 200px;
+}
+
+#login_page .box_bodyregister input[type="text"] {
+    width: 250px;
+    height: 24px;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-family: arial;
+    padding-left: 8px;
+    float: right;
+    height: 35px;
+}
+
+#login_page .box_bodyregister input[type="password"] {
+    width: 250px;
+    height: 24px;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-family: arial;
+    padding-left: 8px;
+    float: right;
+    height: 35px;
+}
+
+#login_page .box_bodyregister_small input[type="text"] {
+    width: 208px;
+    height: 24px;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-family: arial;
+    padding-left: 8px;
+    float: right;
+    height: 25px;
+}
+
+
+#login_page .dxeButtonEditButton, #login_page .dxEditors_edtDropDown {
+    background-image: url(Images/drop_down_green.png);
+    width: 24px;
+    height: 24px;
+}
+
+#login_page .dxeButtonEditButton, #login_page .dxeSpinIncButton, #login_page .dxeSpinDecButton, #login_page .dxeSpinLargeIncButton, #login_page .dxeSpinLargeDecButton, #login_page .dxeCalendarButtonHover, #login_page .dxeButtonEditButtonHover, #login_page .dxeSpinIncButtonHover, #login_page .dxeSpinDecButtonHover, #login_page .dxeSpinLargeIncButtonHover, #login_page .dxeSpinLargeDecButtonHover {
+    background-color: #4caf50;
+}
+
+
+@media screen and (max-width: 1450px) {
+    #login_page .box {
+        width: 250px;
+    }
+}
+
+#login_page .checkbox {
+    width: 200px;
+    padding: 26px 0 0 0;
+    text-align: center;
+}
+
+.checkbox .box_body {
+    float: left;
+    padding: 0 10px 0 0;
+}
+
+
+#login_page .box_body input[type="text"] {
+    width: 250px;
+    height: 24px;
+    border: 1px solid #ffffff;
+    height: 40px;
+    background-color: #ffffff;
+    font-size: 14px;
+    font-family: arial;
+    padding-left: 8px;
+}
+
+
+
+@media screen and (max-width: 1450px) {
+    #login_page .box_body input[type="text"] {
+        height: 40px;
+        width: 250px;
+    }
+}
+
+
+#login_page .box_body input[type="password"] {
+    width: 250px;
+    border: 1px solid #ffffff;
+    height: 45px;
+    background-color: #ffffff;
+    padding-left: 8px;
+}
+
+@media screen and (max-width: 1450px) {
+    #login_page .box_body input[type="password"] {
+        height: 45px;
+        width: 250px;
+    }
+}
+
+
+#login_page h1 {
+    font-size: 18px;
+    color: #ffffff;
+    font-family: 'BPG Nino Mtavruli Normal';
+    padding: 14px 0 8px 0;
+    margin: 0 auto;
+    font-weight: normal;
+    text-align: left;
+}
+
+@media screen and (max-width: 1450px) {
+    #login_page h1 {
+        padding: 14px 0 8px 0;
+    }
+}
+
+
+#login_page h2 {
+    font-size: 14px;
+    color: #ffffff;
+    font-family: 'BPG Nino Mtavruli Normal';
+    margin: 0 auto;
+    font-weight: normal;
+    float: left;
+}
+
+
+#login_page input[type="checkbox"] {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url(../default/images/chekbox.png) left top no-repeat;
+    border: 1px solid #363636;
+}
+
+#login_page a.login_button {
+    font-size: 18px;
+    color: white;
+    font-family: 'Bpg Nino Mtavruli Normal';
+    width: 250px;
+    height: 45px;
+    display: block;
+    margin-top: 10px;
+    font-weight: normal;
+    padding: 15px 0 0 0;
+    font-weight: normal;
+    -webkit-transition: background-color 0.25s, width 0.25s;
+    -moz-transition: background-color 0.25s, width 0.25s;
+    -ms-transition: background-color 0.25s, width 0.25s;
+    -o-transition: background-color 0.25s, width 0.25s;
+    transition: background-color 0.25s, width 0.25s;
+    background-color: #86d35d;
+    text-decoration: none;
+}
+
+#login_page .login_button1 a{
+    font-size: 18px;
+    color: white;
+    font-family: 'Bpg Nino Mtavruli Normal';
+    width: 250px;
+    height: 45px;
+    display: block;
+    margin-top: 10px;
+    font-weight: normal;
+    padding: 15px 0 0 0;
+    font-weight: normal;
+    -webkit-transition: background-color 0.25s, width 0.25s;
+    -moz-transition: background-color 0.25s, width 0.25s;
+    -ms-transition: background-color 0.25s, width 0.25s;
+    -o-transition: background-color 0.25s, width 0.25s;
+    transition: background-color 0.25s, width 0.25s;
+    background-color: #86d35d;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 1450px) {
+    #login_page a.login_button {
+        height: 45px;
+        width: 250px;
+        padding: 15px 0 0 0;
+        margin-top: 0;
+    }
+}
+
+
+#login_page .login_button:hover {
+    background-color: #333033;
+}
+
+
+#login_page .login_button a:link, .login_button a:visited, .login_button a:active, .login_button a:hover {
+    color: white;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+#login_page .login_button1 a:hover {
+    background-color: #333033;
+}
+
+
+#login_page .login_button1.a:link, .login_button1.a:visited, .login_button1.a:active, .login_button1.a:hover {
+    color: white;
+    font-weight: normal;
+    text-decoration: none;
+}

@@ -1,0 +1,234 @@
+﻿.sidebarmenu
+{
+    margin: 0 auto;
+    padding: 0;     
+}
+
+.sidebarmenu ul
+{
+    margin: 0 auto;
+    padding: 0 6px 0 0;
+    list-style-type: none;
+    font:  12px Verdana;
+    width: 190px; /* Main Menu Item widths */
+}
+ 
+.sidebarmenu ul li
+{
+    position: relative;
+    border-bottom:1px solid #e1e1e1;
+    background-color: #f1f1f1;
+
+}
+
+
+.sidebarmenu ul li a
+{
+    display: block;
+    overflow: auto; /*force hasLayout in IE7 */
+    color: #5d5d5d;
+    text-decoration: none;
+    padding: 6px;
+}
+
+.sidebarmenu ul li a span
+{
+    margin:0 auto;
+    padding:0;
+}
+.sidebarmenu ul li a:link, .sidebarmenu ul li a:visited
+{
+    background-color: #f1f1f1; /*background of tabs (default state)*/
+    border-right: 1px solid #d7d7d7;
+}
+
+.sidebarmenu ul li a.active
+{
+    background-color: #d7d7d7;
+}
+
+.sidebarmenu ul li a:visited
+{
+    color: #5d5d5d;
+}
+
+.sidebarmenu ul li a:hover
+{
+    background-color: #e1e1e1;
+    border-left: 1px solid #d7d7d7;
+    border-right: 1px solid #d7d7d7;
+}
+
+/*Sub level menu items */
+.sidebarmenu ul li ul
+{
+    margin: 0 auto;
+    padding: 0; 
+    position: absolute;
+    width: 250px; /*Sub Menu Items width */
+    top: 0;
+    visibility: hidden;
+    border-top:1px solid #e1e1e1;
+ 
+}
+
+.sidebarmenu a.subfolderstyle
+{
+    background: url(images/arrow_lmenu.png) no-repeat 97% 25%;
+}
+
+/* ----------------- LEFT SIDE MENU ----------------- */
+
+#left_nav_title
+{
+    border-bottom: 1px solid #d7d7d7;
+    font-family: BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#left_nav_title span.nav_title
+{
+    display: block;
+    height: 30px;
+    width: 189px;
+    background-color: #e1e1e1;
+    color: #5d5d5d;
+    text-align: left;
+    vertical-align: middle;
+    padding: 14px 0 0 6px;
+}
+/*
+#left_nav_menu
+{
+    font-size: 12px;
+    padding-bottom: 12px;
+}
+
+#left_nav_menu ul
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    width: 189px;
+}
+
+#left_nav_menu ul li
+{
+    display: block;
+    position: relative;
+    line-height: auto;
+}
+
+#left_nav_menu ul li a
+{
+    background: url(images/open_red.png) 5px 8px no-repeat;
+    line-height: auto;
+    font-size: 12px;
+    padding: 5px 0 5px 17px;
+    color: #b70404;
+    display: block;
+    text-decoration: none;
+}
+
+#left_nav_menu ul li a:hover
+{
+    color: #b70404;
+    text-decoration: none;
+}
+
+#left_nav_menu ul li a.active
+{
+    background: url(images/close_red.png) 5px 8px no-repeat;
+    color: #b70404;
+    text-decoration: none;
+}
+
+#left_nav_menu ul li a:visited
+{
+    background-color: #e1e1e1;
+    color: #b70404;
+    text-decoration: none;
+}
+#left_nav_menu ul ul
+{
+    margin: 0;
+    padding: 0;
+    display: none;
+}
+
+#left_nav_menu ul ul li
+{
+    margin: 0;
+    color: #5d5d5d;
+    text-decoration: none;
+    clear: both;
+}
+
+#left_nav_menu ul ul li a
+{
+    background: url(images/open_gray.png) 5px 8px no-repeat;
+    padding-left: 0px;
+    font-size: 12px;
+    color: #5d5d5d;
+    font-weight: normal;
+    text-decoration: none;
+    padding: 5px 0 5px 17px;
+    display: block;
+}
+
+#left_nav_menu ul ul li a:hover
+{
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+#left_nav_menu ul li ul li a.active
+{
+    background: url(images/close_gray.png) 5px 8px no-repeat;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+
+#left_nav_menu ul ul li a:visited
+{
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+#left_nav_menu ul ul ul li
+{
+    background-color: #ffffff;
+    padding-left: 0px;
+}
+
+#left_nav_menu ul ul ul li a
+{
+    background: url(images/form_icon.png) 5px 8px no-repeat;
+    display: block;
+    overflow: auto;
+    color: black;
+    text-decoration: none;
+    padding: 5px 0 5px 17px;
+    background-color: #ffffff;
+    border-bottom: none;
+    border-top: none;
+}
+
+#left_nav_menu ul ul ul li a:hover
+{
+    background: url(images/form_icon.png) 5px 8px no-repeat;
+    text-decoration: underline;
+    color: black;
+    background-color: #ffffff;
+}
+
+#left_nav_menu ul ul ul li a:visited
+{
+    text-decoration: underline;
+    color: black;
+    background-color: #ffffff;
+}
+
+*/

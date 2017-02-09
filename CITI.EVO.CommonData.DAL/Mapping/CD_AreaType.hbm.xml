@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.CommonData.DAL"
+                   namespace="CITI.EVO.CommonData.DAL.Domain">
+
+  <class name="CD_AreaType" table="CD_AreaTypes">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    <property name="GeoName" />
+    <property name="EngName" />
+    <property name="Code" />
+    <property name="Level" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <bag name="Areas">
+      <key column="TypeID" />
+      <one-to-many class="CD_Area" />
+    </bag>
+  </class>
+</hibernate-mapping>

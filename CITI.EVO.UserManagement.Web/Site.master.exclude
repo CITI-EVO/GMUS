@@ -1,0 +1,302 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<%@ Register TagPrefix="act" Namespace="AjaxControlToolkit" Assembly="AjaxControlToolkit, Version=4.1.40412.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <asp:ContentPlaceHolder ID="cphHead" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <act:ToolkitScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true"
+        EnableHistory="true" EnableScriptGlobalization="true" EnableScriptLocalization="true">
+        <Scripts>
+            <asp:ScriptReference Path="~/Scripts/jquery-1.4.1.js" />
+            <asp:ScriptReference Path="~/Scripts/navigation.js" />
+            <asp:ScriptReference Path="~/Scripts/jquery.cookie.js" />
+        </Scripts>
+    </act:ToolkitScriptManager>
+    <div id="main">
+        <div id="header">
+            <div id="header-center">
+                <div class="leftcorner">
+                    <div class="rightcorner">
+                        <div class="header_items">
+                            <div class="leftside">
+                                <asp:Image ID="Image1" runat="server" ImageUrl="App_Themes/default/images/logo.png" />
+                            </div>
+                            <div id="rightside">
+                                <ul>
+                                    <li class="log_out">
+                                        <asp:ImageButton ID="btnLogout" ToolTip="სისტემიდან გამოსვლა" ImageUrl="~/App_Themes/default/images/log_out_icon.png"
+                                            runat="server" OnClick="btLogout_Click" />
+                                    </li>
+                                    <li class="arrow_up_down">
+                                        <ul>
+                                            <li class="pallete">
+                                                <div id="slideleft" class="slide">
+                                                    <a href="#">
+                                                        <asp:Image ID="btn_pallete" runat="server" ImageUrl="App_Themes/default/images/pallete_icon.png" />
+                                                    </a>
+                                                    <div class="inner">
+                                                        <ul>
+                                                            <li><a href="#">
+                                                                <asp:Image ID="Image5" runat="server" alt="ლურჯი თემა" ImageUrl="App_Themes/default/images/blue_theme.gif" />
+                                                            </a></li>
+                                                            <li><a href="#">
+                                                                <asp:Image ID="Image6" runat="server" alt="ყვითელი თემა" ImageUrl="App_Themes/default/images/yellow_theme.gif" />
+                                                            </a></li>
+                                                            <li><a href="#">
+                                                                <asp:Image ID="Image7" runat="server" alt="მწვანე თემა" ImageUrl="App_Themes/default/images/green_theme.gif" />
+                                                            </a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="updown"><a href="#">
+                                                <asp:Image ID="btn_up" class="btn-slide" runat="server" alt="დამალვა" ImageUrl="App_Themes/default/images/arrow_header_close.png" />
+                                            </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="nav-menu-wrap">
+                                <ul id="nav-menu">
+                                    <li class="withline"><a class="emp" href="#">ნავიგაცია</a>
+                                        <ul>
+                                            
+                                        </ul>
+                                    </li>
+                                    <li class="withline"><a class="emp" href="#">შესახებ</a>
+                                        <ul>
+                                            <li class="witharrow"></li>
+                                            <li><a href="#">პროექტის შესახებ</a></li>
+                                            <li><a href="#">ჯგუფი</a></li>
+                                            <li><a href="#">მხარდაჭერა</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="withline"><a href="#">კონტაქტები</a> </li>
+                                    <%--<li class="withoutlinefirst"><a href="#">დახმარება</a>
+                                        <ul>
+                                            <li class="witharrow"></li>
+                                            <li><a href="#">სამომხმარებლო დოკუმენტაცია</a></li>
+                                            <li><a href="#">ვიდეო გაკვეთილები</a></li>
+                                        </ul>
+                                    </li>--%>
+                                     <li class="withline"><a href="Logout.aspx">გამოსვლა</a> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- for btn_show -->
+            <div id="btn_show" style="height: 32px; margin: 0 53px 0 53px; text-align: center;
+                clear: both; display: none; z-index: 1000;">
+                <asp:Image ID="Image2" runat="server" ImageUrl="App_Themes/default/images/btn_show.gif"
+                    class="btn-slide" alt="დამალვა" Style="float: right; text-align: center;" />
+            </div>
+        </div>
+        <div id="top_sep" class="spacer_v">
+        </div>
+         <div id="center_content">
+            <div class="center_table">
+                <div id="leftpanelcell">
+                    <span id="sidebar_left" class="openleft">
+                        <div class="t">
+                            <div class="b">
+                                <div class="l">
+                                    <div class="r">
+                                        <div class="bl">
+                                            <div class="br">
+                                                <div class="tl">
+                                                    <div class="tr">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <div class="t">
+                        <div class="b">
+                            <div class="l">
+                                <div class="r">
+                                    <div class="bl">
+                                        <div class="br">
+                                            <div class="tl">
+                                                <div class="tr">
+                                                    <div id="left_nav_title">
+                                                        <span class="nav_title">ნავიგაცია </span>
+                                                    </div>
+                                                    <%-- ----- მენიუ ------%>
+                                                    <div id="left_nav_menu">
+                                                        <ul>
+                                                            <li class="witharrow"></li>
+                                                            <li><a id="A1" runat="server" href="~/Pages/ProjectsList.aspx">მოდულები</a></li>
+                                                            <li><a id="A2" runat="server" href="~/Pages/UsersList.aspx">მომხმარებლები</a></li>
+                                                            <li><a id="A3" runat="server" href="~/Pages/GroupsList.aspx">ჯგუფები</a></li>
+                                                             <li><a id="A5" runat="server" href="~/Pages/AttributesCategoriesTypesList.aspx">ატრიბუტების
+                                                                კატეგორიები/ტიპები</a></li>
+                                                            <li><a id="A4" runat="server" href="~/Pages/AttributesSchemasNodesList.aspx">ატრიბუტების
+                                                                სქემები</a></li>
+                                                            <li><a id="A6" runat="server" href="~/Pages/ResourceList.aspx">რესურსების მართვა</a></li>
+                                                            <%--<li><a id="A7" runat="server" href="~/Pages/RulesList.aspx">როლების დაწესება</a></li>--%>
+                                                            <li><a id="A8" runat="server" href="~/Pages/PermissionList.aspx">უფლებების დაწესება</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <%-- ----- მენიუს დასასრული ------%>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="rightpanelcell">
+                    <span id="sidebar_right" class="openright">
+                        <div class="t">
+                            <div class="b">
+                                <div class="l">
+                                    <div class="r">
+                                        <div class="bl">
+                                            <div class="br">
+                                                <div class="tl">
+                                                    <div class="tr">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <div class="t">
+                        <div class="b">
+                            <div class="l">
+                                <div class="r">
+                                    <div class="bl">
+                                        <div class="br">
+                                            <div class="tl">
+                                                <div class="tr">
+                                                    <asp:ContentPlaceHolder ID="cphRight" runat="server">
+                                                    </asp:ContentPlaceHolder>
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%-- ----- შუა ნაწილი ------%>
+                <div id="centerpanelcell">
+                    <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+                <%--    ------ შუა ნაწილის დასასრული -------%>
+            </div>
+        </div>
+        <div id="bot_sep" class="spacer_v">
+        </div>
+        <div id="mpwon_footer">
+            <div id="footer-center">
+                <div class="leftcorner">
+                    <div class="rightcorner">
+                        <div class="center">
+                            <div id="footer-center-left">
+                                <asp:Image ID="Image3" runat="server" ImageUrl="App_Themes/default/images/moh_logo.png" />
+                            </div>
+                            <div id="footer-center-right">
+                                <asp:Image ID="Image4" runat="server" ImageUrl="App_Themes/default/images/usaid_logo.png" />
+                            </div>
+                            <div id="footer-center-center">
+                                © 2011 | პროექტი ხორციელდება შრომის, ჯანმრთელობისა და სოციალური დაცვის სამინისტროს
+                                მიერ ამერიკის მთავრობის განვითარების
+                                <br />
+                                სააგენტოს ჯანდაცვის სისტემის განმტკიცების პროექტის ფინანსური და ტექნიკური მხარდაჭერით
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <asp:Panel ID="pnlChangePassword" runat="server" Style="display: none;" CssClass="modalWindow"
+        Width="333px" DefaultButton="btChangePasswordOK">
+        <asp:UpdatePanel ID="upnlChangePassword" runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <asp:Button ID="btChangePasswordPopup" runat="server" Style="display: none;" />
+                <act:ModalPopupExtender ID="mpeChangePassword" TargetControlID="btChangePasswordPopup"
+                    PopupControlID="pnlChangePassword" runat="server" Enabled="True" BackgroundCssClass="modalBackground"
+                    DynamicServicePath="" />
+                <div class="modal" style="width: 330px;">
+                    <table>
+                        <tr>
+                            <td class="ftitle">
+                                <div class="ftitle">
+                                    პაროლის შეცვლა
+                                </div>
+                                <asp:UpdateProgress ID="updChangePasswordProcess" runat="server" AssociatedUpdatePanelID="upnlChangePassword">
+                                    <ProgressTemplate>
+                                        <img alt="" src="../Images/small-waiting.gif" />
+                                    </ProgressTemplate>
+                                </asp:UpdateProgress>
+                                <asp:Label ID="lblChangePasswordError" runat="server" ForeColor="Red"></asp:Label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td class="subtitle">
+                                            მიმდინარე პაროლი:
+                                        </td>
+                                        <td class="content">
+                                            <asp:TextBox ID="tbCurrentPassword" TextMode="Password" runat="server"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="subtitle">
+                                            ახალი პაროლი:
+                                        </td>
+                                        <td class="content">
+                                            <asp:TextBox ID="tbNewPassword" TextMode="Password" runat="server"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="subtitle">
+                                            გაიმეორეთ ახალი პაროლი:
+                                        </td>
+                                        <td class="content">
+                                            <asp:TextBox ID="tbConfirmNewPassword" TextMode="Password" runat="server"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:ImageButton ID="btChangePasswordOK" ImageUrl="~/Images/save.gif" ToolTip="OK"
+                                    runat="server" />
+                                <asp:ImageButton ID="btChangePasswordCancel" ImageUrl="~/Images/cancel.gif" ToolTip="Cancel"
+                                    runat="server" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </asp:Panel>
+    </form>
+</body>
+</html>

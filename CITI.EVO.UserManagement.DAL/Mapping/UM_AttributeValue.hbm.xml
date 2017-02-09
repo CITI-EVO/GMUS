@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_AttributeValue" table="UM_AttributeValues">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    <property name="ParentID" />
+    <property name="AttributeFieldID" />
+    <property name="Value" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <many-to-one name="AttributeField" column="AttributeFieldID" update="false" insert="false"  />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.CommonData.DAL"
+                   namespace="CITI.EVO.CommonData.DAL.Domain">
+
+  <class name="CD_MobileIndex" table="CD_MobileIndexes">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    <property name="Value" />
+    <property name="GeoOperatorName" />
+    <property name="EngOperatorName" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+  </class>
+</hibernate-mapping>

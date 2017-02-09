@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_Project" table="UM_Projects">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+
+    <property name="Name" />
+    <property name="IsActive" />
+
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+    
+    <bag name="Rules">
+      <key column="ProjectID" />
+      <one-to-many class="UM_Rule" />
+    </bag>
+    <bag name="Groups">
+      <key column="ProjectID" />
+      <one-to-many class="UM_Group" />
+    </bag>
+    <bag name="UserLogs">
+      <key column="ProjectID" />
+      <one-to-many class="UM_UserLog" />
+    </bag>
+    <bag name="Resources">
+      <key column="ProjectID" />
+      <one-to-many class="UM_Resource" />
+    </bag>
+    <bag name="AttributesSchemas">
+      <key column="ProjectID" />
+      <one-to-many class="UM_AttributeSchema" />
+    </bag>
+  </class>
+</hibernate-mapping>

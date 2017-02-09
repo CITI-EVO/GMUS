@@ -1,0 +1,2 @@
+﻿2017-01-10 13:56:24,022 [10] INFO  ServiceLoginLogger [(null)] - Login - LoginName: org2, Password: 123456, ClientIP: ::1, ::1, Token: 7ecb9a2a-1650-409d-81b4-f5f40fee7adc
+2017-01-10 13:56:24,120 [7] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: org2; Password: 123456; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 7ecb9a2a-1650-409d-81b4-f5f40fee7adc; SessionID: z52mul411gjm0inqrng3gfan; ClientIP: ::1, ::1; Success: True

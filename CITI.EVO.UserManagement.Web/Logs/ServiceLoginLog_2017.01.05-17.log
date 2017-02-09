@@ -1,0 +1,2 @@
+﻿2017-01-05 17:12:25,269 [12] INFO  ServiceLoginLogger [(null)] - Login - LoginName: Moe, Password: 123456, ClientIP: ::1, ::1, Token: 0c3c8b11-59ae-4f6e-ab55-d719b71b50e3
+2017-01-05 17:12:25,368 [13] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: Moe; Password: 123456; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 0c3c8b11-59ae-4f6e-ab55-d719b71b50e3; SessionID: kh4ng1zxtl2pjyeoei1lgj0g; ClientIP: ::1, ::1; Success: True

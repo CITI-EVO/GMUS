@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="DefaultTarget" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup Label="Common">
+		<Verbosity>diagnostic</Verbosity>
+
+		<MSBuildExtensionsPath>Dependencies\MSBuild</MSBuildExtensionsPath>
+		<MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\..\..</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\MSBuild.Community.Tasks.Targets"/>
+
+	<PropertyGroup Label="Libraries">
+		<LibrariesDefaultBuildProperties>Configuration=Debug;Platform=AnyCPU;</LibrariesDefaultBuildProperties>
+
+		<CitiEvoRpcRoot>CITI.EVO.Rpc</CitiEvoRpcRoot>
+		<CitiEvoRpcProject>$(CitiEvoRpcRoot)\CITI.EVO.Rpc.csproj</CitiEvoRpcProject>
+
+		<CitiEvoToolsRoot>CITI.EVO.Tools</CitiEvoToolsRoot>
+		<CitiEvoToolsProject>$(CitiEvoToolsRoot)\CITI.EVO.Tools.csproj</CitiEvoToolsProject>
+
+		<CitiEvoProxiesRoot>CITI.EVO.Proxies</CitiEvoProxiesRoot>
+		<CitiEvoProxiesProject>$(CitiEvoProxiesRoot)\CITI.EVO.Proxies.csproj</CitiEvoProxiesProject>
+
+    <CitiEvoTwoWayModelRoot>CITI.EVO.TwoWayModel</CitiEvoTwoWayModelRoot>
+    <CitiEvoTwoWayModelProject>$(CitiEvoTwoWayModelRoot)\CITI.EVO.TwoWayModel.csproj</CitiEvoTwoWayModelProject>
+
+    <GmsPortalDalRoot>Gms.Portal.DAL</GmsPortalDalRoot>
+    <GmsPortalDalProject>$(GmsPortalDalRoot)\Gms.Portal.DAL.csproj</GmsPortalDalProject>
+
+    <GmsPortalSvcRoot>Gms.Portal.Svc</GmsPortalSvcRoot>
+    <GmsPortalSvcProject>$(GmsPortalSvcRoot)\Gms.Portal.Svc.csproj</GmsPortalSvcProject>
+
+		<CitiEvoCommonDataDalRoot>CITI.EVO.CommonData.DAL</CitiEvoCommonDataDalRoot>
+		<CitiEvoCommonDataDalProject>$(CitiEvoCommonDataDalRoot)\CITI.EVO.CommonData.DAL.csproj</CitiEvoCommonDataDalProject>
+
+		<CitiEvoUserManagementDalRoot>CITI.EVO.UserManagement.DAL</CitiEvoUserManagementDalRoot>
+		<CitiEvoUserManagementDalProject>$(CitiEvoUserManagementDalRoot)\CITI.EVO.UserManagement.DAL.csproj</CitiEvoUserManagementDalProject>
+	</PropertyGroup>
+
+	<Target Name="BuildLibraries">
+		<Delete Files="@(MisLibraries)" >
+			<Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
+		</Delete>
+
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoRpcProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoToolsProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoProxiesProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+    <MSBuild ContinueOnError="false" Projects="$(CitiEvoTwoWayModelProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+    <Message Text="--------------------------------------------------------" />
+
+    <MSBuild ContinueOnError="false" Projects="$(GmsPortalSvcProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+		<MSBuild ContinueOnError="false" Projects="$(GmsPortalDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoCommonDataDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoUserManagementDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="DefaultTarget">
+		<CallTarget Targets="BuildLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+	</Target>
+</Project>

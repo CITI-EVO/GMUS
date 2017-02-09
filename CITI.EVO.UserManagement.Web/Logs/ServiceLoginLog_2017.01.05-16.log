@@ -1,0 +1,3 @@
+﻿2017-01-05 16:28:03,188 [17] INFO  ServiceLoginLogger [(null)] - Logout - LoginName: Moe, Password: 123456, ClientIP: ::1, ::1, Token: 52868feb-f607-4df1-8e58-969ce69a0b26
+2017-01-05 16:28:08,437 [21] INFO  ServiceLoginLogger [(null)] - Login - LoginName: org1, Password: 123456, ClientIP: ::1, ::1, Token: 50a9b392-bc92-4549-b049-ce54fc76a96a
+2017-01-05 16:28:08,477 [27] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: org1; Password: 123456; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 50a9b392-bc92-4549-b049-ce54fc76a96a; SessionID: kh4ng1zxtl2pjyeoei1lgj0g; ClientIP: ::1, ::1; Success: True

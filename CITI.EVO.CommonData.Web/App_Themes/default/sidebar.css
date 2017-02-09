@@ -1,0 +1,72 @@
+.use-sidebar
+{
+    visibility:hidden;
+}
+
+/*
+	Stylesheet for examples by DevHeart.
+	http://devheart.org/
+
+	Article title:	jQuery: Collapsible sidebar layout
+	Article URI:	http://devheart.org/articles/jquery-collapsible-sidebar-layout/
+
+	Example title:	3. Remember preference using cookies
+	Example URI:	http://devheart.org/examples/jquery-collapsible-sidebar-layout/3-remember-preference-using-cookies/index.html
+*/
+
+/*
+	Alignment
+------------------------------------------------------------------- */
+
+/* Floats */
+
+.left {float: left;}
+.right {float: right;}
+
+.clearer {
+	clear: both;
+	display: block;
+	font-size: 0;
+	height: 0;
+	line-height: 0;
+}
+
+
+/*
+	Example specifics
+------------------------------------------------------------------- */
+
+/* Layout */
+
+#center-wrapper {
+	margin: 0 auto;
+	width: 920px;
+}
+
+
+/* Content & sidebar */
+
+#content,#sidebar {
+	line-height: 300px;
+	text-align: center;
+	border: 1px solid;
+}
+
+#sidebar {
+	background-color: #DEF;
+	border-color: #BCD;
+	display: none;
+}
+#content {
+	background-color: #EFE;
+	border-color: #CDC;
+}
+
+.use-sidebar1 #content {width: 65%;}
+.use-sidebar1 #sidebar {
+	display: block;
+	width: 32%;
+}
+
+.use-sidebar1.sidebar-at-left #content, .use-sidebar.sidebar-at-right #sidebar {float: right;}
+.use-sidebar1.sidebar-at-right #content, .use-sidebar1.sidebar-at-left #sidebar {float: left;}

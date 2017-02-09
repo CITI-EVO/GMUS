@@ -1,0 +1,2 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="HiddenFieldValueControl.ascx.cs" Inherits="CITI.EVO.UserManagement.Web.Controls.HiddenFieldValueControl" %>
+<asp:HiddenField runat="server" ID="hdValue" />

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_UserCategory" table="UM_UserCategories">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+
+    <property name="Name" />
+
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <bag name="Users">
+      <key column="UserID" />
+      <one-to-many class="UM_User" />
+    </bag>
+  </class>
+</hibernate-mapping>

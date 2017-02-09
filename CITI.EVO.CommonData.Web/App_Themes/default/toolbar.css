@@ -1,0 +1,222 @@
+﻿/* ----------------- TOOLBAR ----------------- */
+
+#toolbar
+{
+    display: block;
+    font-family: BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size: 12px;
+    color: #5d5d5d;
+}
+
+#toolbar .toolbar_box 
+{
+    float: left;
+    padding: 4px 8px 6px 6px;
+}
+#toolbar .toolbar_box input[type="text"]
+{
+    font-family: BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size: 12px;
+    color: #5d5d5d;
+}
+
+
+select 
+{
+    font-family: BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size: 12px;
+    color: #5d5d5d;
+}
+
+#toolbar .toolbar_box_end
+{
+    padding: 4px 8px 6px 6px;
+}
+
+
+#toolbar .toolbar_sep
+{
+    width: 2px;
+    min-height: 95px;
+    float: left;
+    padding: 0px 10px 0 10px;
+    background: url(images/line_cmt.png) 0px 8px no-repeat;
+}
+
+#toolbar .toolbar_sep_small
+{
+    width: 2px;
+    min-height: 55px;
+    float: left;
+    padding: 0;
+    background: url(images/line_cmt_small.png) 5px 8px no-repeat;
+}
+
+#toolbar .toolbar_sep_medium
+{
+    width: 2px;
+    min-height: 132px;
+    float: left;
+    padding: 0;
+    background: url(images/line_cmt_medium.png) 0px 8px no-repeat;
+}
+
+.toolbar_horizontal_sep
+{
+    margin: 0 auto;
+    width: 100%;
+    background: url(images/toolbar_horizontal_sep.gif) repeat-x;
+    height: 2px;
+}
+.toolbar_horizontal_sep1
+{
+    margin: 0 auto;
+    width: 100%;
+    background: url(images/toolbar_horizontal_sep.gif) repeat-x;
+    height: 1px;
+    padding-top: 1px;
+}
+#toolbar .toolbar_box_title
+{
+   /* font-weight: bold;*/
+    padding: 4px 8px 6px 6px;
+}
+
+#toolbar .toolbar_box_body
+{
+    display: block;
+    padding: 6px 4px 0 4px;
+}
+
+#toolbar .toolbar_box_body ul
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#toolbar .toolbar_box_body ul li
+{
+    margin: 0;
+    padding: 6px 0 0 4px;
+    list-style-type: none;
+    height: 25px;
+}
+
+#toolbar .toolbar_box_body ul li ul li
+{
+    margin: 0;
+    padding: 4px 12px 0 0px;
+    list-style-type: none;
+    float: left;
+}
+
+#toolbar .toolbar_box_body ul li input[type="text"]
+{
+    font-family: BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size: 12px;
+    color: #5d5d5d; 
+}
+
+
+#toolbar a, a:visited
+{
+    display: inline;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+#toolbar a img
+{
+    border: 0px;
+    vertical-align: Middle;
+}
+
+#toolbar a span
+{
+    vertical-align: Middle;
+    padding-left: 6px;
+}
+
+#toolbar a span:hover
+{
+    vertical-align: Middle;
+    padding-left: 6px;
+    text-decoration: underline;
+}
+
+
+#toolbar a:hover
+{
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+#toolbar .clear
+{
+    clear: both;
+}
+
+/* ----------------- UPLOAD ----------------- */
+
+#toolbar .tdStyle
+{
+    vertical-align: middle;
+    padding-left: 5px;
+}
+
+#toolbar .upload
+{
+    position: relative;
+    width: 250px;
+}
+
+#toolbar .realupload_toolbar
+{
+    position: relative;
+    top: 0;
+    right: 0;
+    float: right; /* start of transparency styles */
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: alpha(opacity:0); /* end of transparency styles */
+    z-index: 2; /* bring the real upload interactivity up front */
+    width: 25px;
+    margin-left: -25px;
+}
+
+#toolbar .fakeupload
+{
+    background: url(images/browse_icon.png) no-repeat right;
+    height: 25px;
+    position: relative;
+    width: 165px;
+    padding-left: 10px;
+}
+
+
+#toolbar .fakeupload input
+{
+    color: #5d5d5d;
+    border: 1px solid #abadb3;
+}
+
+
+
+#toolbar .fakeupload input[type="text"]
+{
+    height: 18px;
+}
+
+#toolbar .middleAlign
+{
+    vertical-align: middle;
+}
+
+.dxeListBox tr td table
+{ width: 400px;}
+
+label
+{
+    padding-left: 6px;
+}

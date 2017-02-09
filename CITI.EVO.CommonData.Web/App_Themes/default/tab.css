@@ -1,0 +1,101 @@
+﻿.root-content
+{ 
+
+    padding: 5px 0 8px 0;
+
+    height: auto;
+}
+
+ul
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tab ul li.tab_sheet ul
+{
+    display: none;
+}
+
+.tab li.tab_sheet a.tab_sheet_title
+{
+    display: block;
+    height: 28px;
+    padding: 10px 0 0 10px;
+    color: #5d5d5d;
+    background: #d8d8d8;
+    border-left: 1px solid #d2d2d2;
+    border-right: 1px solid #d2d2d2;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #d2d2d2;
+    text-decoration: none;
+}
+
+.tab li.tab_sheet a.tab_sheet_title span:hover
+{
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+
+.tab li.tab_sheet a img
+{
+    margin-top: -2px;
+    text-decoration: none;
+}
+
+
+
+.tab li.tab_sheet a.active
+{
+    background: #d8d8d8;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+
+.tab li.tab_sheet ul li.content
+{
+    display: block;
+    padding: 5px 0 5px 0;
+    text-decoration: none;
+    border-bottom: 1px solid #d2d2d2;
+    height: auto;
+}
+
+.tab li.tab_sheet ul li.tab_sheet1 ul li.content
+{
+    display: block;
+    padding: 10px 0 0 10px;
+    text-decoration: none;
+    border-bottom: 1px solid #d2d2d2;
+    height: 100px;
+}
+
+.tab li.tab_sheet ul li.tab_sheet1 ul, .tab li.tab_sheet ul li.tab_sheet1 ul li
+{
+    display: none;
+}
+
+.tab li.tab_sheet ul li.tab_sheet1 a.tab_sheet_title1
+{
+    display: block;
+    height: 28px;
+    padding: 10px 0 0 15px;
+    background: #f2efef;
+    color: #5d5d5d;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    border-left: 1px solid #d2d2d2;
+    border-right: 1px solid #d2d2d2;
+    text-decoration: none;
+}
+
+.tab li.tab_sheet ul li.tab_sheet1 a span:hover
+{
+    background: #f2efef;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+

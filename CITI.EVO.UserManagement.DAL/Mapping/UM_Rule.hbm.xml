@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_Rule" table="UM_Rules">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    
+    <property name="ProjectID" />
+    <property name="Name" />
+    <property name="CanView" />
+    <property name="CanAdd" />
+    <property name="CanEdit" />
+    <property name="CanDelete" />
+    <property name="AccessLevel" />
+    
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <many-to-one name="Project" column="ProjectID" update="false" insert="false"  />
+  </class>
+</hibernate-mapping>

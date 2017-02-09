@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Hmis.Tools.Helpers.BoyerMoore">
+    <Position X="0.5" Y="0.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAACAAAAgAAAAAgQAAiAEAAAIQAAQgAAAAA=</HashCode>
+      <FileName>Helpers\BoyerMoore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.BulkCopyCallback">
+    <Position X="4" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAABAAAAAAAQAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Helpers\BulkCopyCallback.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.DateDifference">
+    <Position X="7" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkAAAAAAAAAAAEAAAAAAAAAAQAIAAEQAEAAAAAAAA=</HashCode>
+      <FileName>Helpers\DateDifference.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Enumerators.DateTimeEnumerator">
+    <Position X="4" Y="5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Hmis.Tools.Enumerators.DateTimeEnumerator.DateInterval">
+        <TypeIdentifier>
+          <NewMemberFileName>Enumerators\DateTimeEnumerator.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAADAAAAICAAAAgAAAAAAAAoAAAAEAAAAA=</HashCode>
+      <FileName>Enumerators\DateTimeEnumerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.DefaultTranslatable">
+    <Position X="8.75" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAEAAAAAAAAABAACAAAAAA=</HashCode>
+      <FileName>Helpers\DefaultTranslatable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.HmisDataBinder">
+    <Position X="8.75" Y="3.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Hmis.Tools.Helpers.HmisDataBinder.NameFormatUnit">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\HmisDataBinder.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gADAAAAAIAAEAFAAAAIQAAAAgBAAAAAFCAEAABAAkAg=</HashCode>
+      <FileName>Helpers\HmisDataBinder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.HmisDataBinderEntry">
+    <Position X="11.75" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAQAAAAAAAAAAABAAAQAA=</HashCode>
+      <FileName>Helpers\HmisDataBinderEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.NumberBaseConverter">
+    <Position X="11.75" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAQAAAAAAEAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\NumberBaseConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.Pluralizer">
+    <Position X="0.5" Y="5" Width="3.25" />
+    <NestedTypes>
+      <Class Name="Hmis.Tools.Helpers.Pluralizer.Word" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\Pluralizer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Hmis.Tools.Helpers.Pluralizer.SuffixRule" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Helpers\Pluralizer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAgAAAFAAIRIAAgAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Helpers\Pluralizer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.UrlHelper">
+    <Position X="0.5" Y="9" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAECAAAAABAAAACAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Helpers\UrlHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Helpers.EntityBulkCopySession">
+    <Position X="0.5" Y="12" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEDACAAASBQIAAAAgCYEAABAAAAEAAAAABBARAI=</HashCode>
+      <FileName>Helpers\EntityBulkCopySession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

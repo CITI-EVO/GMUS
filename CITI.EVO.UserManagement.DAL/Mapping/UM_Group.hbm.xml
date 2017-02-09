@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_Group" table="UM_Groups">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    <property name="Name" />
+    <property name="ParentID" />
+    <property name="ProjectID" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <many-to-one name="Parent" column="ParentID" update="false" insert="false"  />
+    <many-to-one name="Project" column="ProjectID" update="false" insert="false"  />
+
+    <bag name="Children">
+      <key column="ParentID" />
+      <one-to-many class="UM_Group" />
+    </bag>
+
+    <bag name="GroupUsers">
+      <key column="GroupID" />
+      <one-to-many class="UM_GroupUser" />
+    </bag>
+
+    <bag name="Permissions">
+      <key column="GroupID" />
+      <one-to-many class="UM_Resource" />
+    </bag>
+
+    <bag name="GroupOrganizations">
+      <key column="GroupID" />
+      <one-to-many class="UM_Group" />
+    </bag>
+  </class>
+</hibernate-mapping>

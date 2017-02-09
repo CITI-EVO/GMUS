@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{416C5D23-950C-46B2-A2AB-784FBA7A376C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CITI.EVO.Rpc</RootNamespace>
+    <AssemblyName>CITI.EVO.Rpc</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Dependencies\Local\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QuickLZ">
+      <HintPath>..\Dependencies\3rdparty\Web\QuickLZ.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\RpcAllowRemoteCallAttribute.cs" />
+    <Compile Include="Attributes\RpcLazyEnumerationAttribute.cs" />
+    <Compile Include="Attributes\RpcRemoteMethodAttribute.cs" />
+    <Compile Include="Collection\LazyRpcCollection.cs" />
+    <Compile Include="Collection\LocalRpcEnumerator.cs" />
+    <Compile Include="Collection\RemoteRpcEnumerator.cs" />
+    <Compile Include="Common\AuthorizationEventArg.cs" />
+    <Compile Include="Common\CollectionItemEntity.cs" />
+    <Compile Include="Common\CollectionsCache.cs" />
+    <Compile Include="Common\IDataTranporter.cs" />
+    <Compile Include="Common\IRequestProcessor.cs" />
+    <Compile Include="Common\MethodParam.cs" />
+    <Compile Include="Common\RequestEntity.cs" />
+    <Compile Include="Common\RequestEventArg.cs" />
+    <Compile Include="Common\ResponseEntity.cs" />
+    <Compile Include="Config\RpcClientElement.cs" />
+    <Compile Include="Config\RpcPeerElement.cs" />
+    <Compile Include="Config\RpcPeerElementCollection.cs" />
+    <Compile Include="Config\RpcSection.cs" />
+    <Compile Include="Exceptions\ClassNotFoundException.cs" />
+    <Compile Include="Exceptions\GenericTypeNotFoundException.cs" />
+    <Compile Include="Exceptions\InvalidPeerUrlException.cs" />
+    <Compile Include="Exceptions\MethodAttributeNotDefinedException.cs" />
+    <Compile Include="Exceptions\MethodFullNameEmptyException.cs" />
+    <Compile Include="Exceptions\MethodNotFoundException.cs" />
+    <Compile Include="Exceptions\PeerNotFoundException.cs" />
+    <Compile Include="Exceptions\RemoteCallNotAllowedException.cs" />
+    <Compile Include="Exceptions\RemoteMethodAttributeException.cs" />
+    <Compile Include="Exceptions\ServerInvocationException.cs" />
+    <Compile Include="Formatters\AdvancedBinaryFormatter.cs" />
+    <Compile Include="Formatters\ConcurrentFormatter.cs" />
+    <Compile Include="Formatters\SynchronizedFormatter.cs" />
+    <Compile Include="Handlers\RpcClientHandler.cs" />
+    <Compile Include="Handlers\RpcServerHandler.cs" />
+    <Compile Include="Helpers\ConcurrencyHelper.cs" />
+    <Compile Include="Managers\RpcCollectionManager.cs" />
+    <Compile Include="Processing\ClientRequestProcessor.cs" />
+    <Compile Include="Processing\RequestProcessorBase.cs" />
+    <Compile Include="Processing\ServerRequestProcessor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcInvoker.cs" />
+    <Compile Include="Transporters\HttpDataTransporter.cs" />
+    <Compile Include="Utils\CommonUtil.cs" />
+    <Compile Include="Utils\CompressionUtil.cs" />
+    <Compile Include="Utils\ConfigUtil.cs" />
+    <Compile Include="Utils\PeersUtil.cs" />
+    <Compile Include="Utils\ProcessorUtil.cs" />
+    <Compile Include="Utils\ReflectionUtil.cs" />
+    <Compile Include="Utils\SerializationUtil.cs" />
+    <Compile Include="Utils\TransporterUtil.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

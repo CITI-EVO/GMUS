@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Hmis.Tools.Extensions.ByteArrayExtensions">
+    <Position X="0.5" Y="0.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>gwAAAAgAAAAAAAAAAAEACAAAAAAAAAAAAAQAAAAQAAA=</HashCode>
+      <FileName>Extensions\ByteArrayExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.CommonExtensions">
+    <Position X="4" Y="0.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>ABQCAAQAAgAACAAA0AAACQCAAAQAAAAQIAAAAAwAwQA=</HashCode>
+      <FileName>Extensions\CommonExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.CryptoExtensions">
+    <Position X="7.75" Y="0.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Hmis.Tools.Extensions.CryptoExtensions.HashFormat">
+        <TypeIdentifier>
+          <NewMemberFileName>Extensions\CryptoExtensions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAEAgAACQAAAAAAAAAAAGAgAAGAABAKAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\CryptoExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.DataContextExtensions">
+    <Position X="0.5" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABAAAgAAAAAAAEAEAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\DataContextExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.DataSetExtensions">
+    <Position X="10.75" Y="9.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgABAAAABAAAAAAEAAAAEAAAAAQAA=</HashCode>
+      <FileName>Extensions\DataSetExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.DateTimeExtensions">
+    <Position X="7.75" Y="8.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAADAAgAAAEAAAAAAAAAAAAgIAIQAAAAAAAgA=</HashCode>
+      <FileName>Extensions\DateTimeExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.NpoiExtensions">
+    <Position X="10.75" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\NpoiExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.SearchExtensions">
+    <Position X="10.75" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAgAAAAAAAAAAAEAAAAQAAQAAAAAA=</HashCode>
+      <FileName>Extensions\SearchExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.SortExtensions">
+    <Position X="4" Y="6" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>EAFAAAEAEAAAEAAAAgAgAIAAAAAAAEAACEACAAAAAAg=</HashCode>
+      <FileName>Extensions\SortExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.UIExtensions">
+    <Position X="7.75" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAgAAAAAAAAAAAAAABAAEAAAEAABAAA=</HashCode>
+      <FileName>Extensions\UIExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.ViewStateExtensions">
+    <Position X="0.5" Y="6" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\ViewStateExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Extensions.XmlExtensions">
+    <Position X="10.75" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>GIAAAAAAAECAAEIAAIAYAAAAAAAIEBIAIAAAABAAgAQ=</HashCode>
+      <FileName>Extensions\XmlExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

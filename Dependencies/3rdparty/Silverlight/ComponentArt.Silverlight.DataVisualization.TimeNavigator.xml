@@ -1,0 +1,1381 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ComponentArt.Silverlight.DataVisualization.TimeNavigator</name>
+    </assembly>
+    <members>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.Draw(ComponentArt.Silverlight.DataVisualization.Common.TimeNode[],System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.GetOrCreateTextBlock(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.ClearTextBlocks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.TrimTextBlocks(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.GetLevelSchemas(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit)">
+            <summary>
+            
+            </summary>
+            <param name="timeUnit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.LoadResource(System.Uri)">
+            <summary>
+            
+            </summary>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.Canvas_SizeChanged(System.Object,System.Windows.SizeChangedEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.Canvas">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.AnnotationStyle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnnotationCompositor.SchemaDictionary">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotationItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation">
+            <summary>
+            Represents a DateTime formatting rule for a specific TimeUnit.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation.#ctor">
+            <summary>
+            Initializes a new instance of the DateTimeAnnotation class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation.ComputeListItems(ComponentArt.Silverlight.DataVisualization.Common.TimeNode[])">
+            <summary>
+            
+            </summary>
+            <param name="timeNodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation.CreateItem(ComponentArt.Silverlight.DataVisualization.Common.TimeNode)">
+            <summary>
+            
+            </summary>
+            <param name="timeNode"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation.TimeUnit">
+            <summary>
+            The time resolution of coordinates.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.DateTimeAnnotation.Format">
+            <summary>
+            The format string used to create the "Formatted" member of the DateTimeAnnotationItem
+            as used in string.Format(...) expression. The expression has the following parameters
+              {0} Start (DateTime)
+              {1} End (DateTime)
+              {2} Fiscal Year Start (DateTime) (for example, 2005-01-01 00:00:00.0)
+              {3} Fiscal Year End (DateTime) (for example, 2005-12-31 23:59:59.9)
+              {4} Level Ordinal (int)  (for example 1,2,3,4 for Quarters)
+              {5} Year Ordinal (int)
+            If the formatting string begins with a '{', it is preceeded with '\' because XAML parser gets excited at strings beginning with braces
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.ViewportResizeMethod">
+            <summary>
+            Specifies the resize method used by the viewport scrollbar.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.ViewportResizeMethod.Linear">
+            <summary>
+            The viewport scale is a linear representation of the scrollbar size.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.ViewportResizeMethod.Exponential">
+            <summary>
+            The viewport scale is an exponential interpolation of the scrollbar size.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange">
+            <summary>
+            Represents a left-closed, right-open time interval; [StartTime, EndTime)
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange.#ctor">
+            <summary>
+            Initializes a new instance of the TimeRange class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange.#ctor(System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the TimeRange class with the specified start and end times.
+            </summary>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange.StartTime">
+            <summary>
+            Gets or sets the start time of this interval.
+            </summary>
+            <remarks>
+            StartTime is inclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange.EndTime">
+            <summary>
+            Gets or sets the end time of this interval.
+            </summary>
+            <remarks>
+            EndTime is exclusive.
+            </remarks>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext">
+            <summary>
+            Provides an internal class for applying animations to dependency properties.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.AnimationProgressProperty">
+            <summary>
+            Identifies the AnimationProgress dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.SetViewport(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="viewportStart"></param>
+            <param name="viewportEnd"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.AnimateViewport(System.DateTime,System.DateTime,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="viewportStart"></param>
+            <param name="viewportEnd"></param>
+            <param name="durationMs"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.Animator_Completed(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.OnViewportTimeRangeChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.ViewportStartTimeChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.ViewportEndTimeChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.ViewportTimeRangeChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.AnimationProgress">
+            <summary>
+            Gets or sets the AnimationProgress property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.ViewportStartTime">
+            <summary>
+            Gets or sets the ViewportStartTime property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.ViewportEndTime">
+            <summary>
+            Gets or sets the ViewportEndTime property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.AnimationContext.IsAnimating">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator">
+            <summary>
+            Control that enables user to select a date-time range by zooming and scrolling through a hierarchical units of time while visualy displaying the selected and total range. 
+            </summary>
+            <remarks>In order to have a functional TimeNavigator, the following properties must be set:
+            <ul>
+              <li>Set <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.StartTime"/> and <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EndTime"/> to define the overall time range available for selection.</li>
+              <li>Set <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportStartTime"/> and <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportEndTime"/> to define the currently visible area of the TimeNavigator's range.</li>
+              <li>Set <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedStartTime"/> and <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedEndTime"/> to define the currently selected area of the TimeNavigator's range.</li>
+            </ul>
+            <para>To determine the levels visible when a user zooms in or out of the TimeNavigator, set the <see cref="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TimeContext"/> property.</para>
+            <para>TimeNavigator has the ability to nest controls within it's content. You can then bind properties of these controls to the TimeNavigator's 
+            ViewportStartTime and ViewportEndTime in order to have the content update it's visual based on user interaction with the TimeNavigator.</para>
+            To learn more about this control see the list of <a href="mk:@MSITStore:ComponentArt.Silverlight.DataVisualization.chm::/TimeNavigator_Welcome.htm">TimeNavigator tutorials</a>.
+            </remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Common.TimeContext"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.#ctor">
+            <summary>
+            Initializes a new instance of the TimeNavigator class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseViewportStartTimeChangedEvent(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseViewportEndTimeChangedEvent(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.QueueRaiseViewportTimeRangeChangedEvent(ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseViewportTimeRangeChangedEvent(ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseSelectedStartTimeChangedEvent(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseSelectedEndTimeChangedEvent(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.QueueRaiseSelectedTimeRangeChangedEvent(ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseSelectedTimeRangeChangedEvent(ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseGroupTimeUnitChangedEvent(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit,ComponentArt.Silverlight.DataVisualization.Common.TimeUnit)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.RaiseItemTimeUnitChangedEvent(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit,ComponentArt.Silverlight.DataVisualization.Common.TimeUnit)">
+            <summary>
+            
+            </summary>
+            <param name="oldValue"></param>
+            <param name="newValue"></param>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TimeContextProperty">
+            <summary>
+            Identifies the TimeContext dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupTimeUnitProperty">
+            <summary>
+            Identifies the GroupTimeUnit dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemTimeUnitProperty">
+            <summary>
+            Identifies the ItemTimeUnit dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.StartTimeProperty">
+            <summary>
+            Identifies the StartTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EndTimeProperty">
+            <summary>
+            Identifies the EndTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportStartTimeProperty">
+            <summary>
+            Identifies the ViewportStartTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportEndTimeProperty">
+            <summary>
+            Identifies the ViewportEndTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedStartTimeProperty">
+            <summary>
+            Identifies the SelectedStartTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedEndTimeProperty">
+            <summary>
+            Identifies the SelectedEndTime dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemTemplateProperty">
+            <summary>
+            Identifies the ItemTemplate dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupTemplateProperty">
+            <summary>
+            Identifies the SelectionTemplate dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemAnnotationStyleProperty">
+            <summary>
+            Identifies the ItemAnnotationStyle dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupAnnotationStyleProperty">
+            <summary>
+            Identifies the GroupAnnotationStyle dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderContentProperty">
+            <summary>
+            Identifies the HeaderContent dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderTemplateProperty">
+            <summary>
+            Identifies the HeaderTemplate dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderVisibilityProperty">
+            <summary>
+            Identifies the HeaderVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableAnimationProperty">
+            <summary>
+            Identifies the EnableAnimation dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableZoomOnDoubleClickProperty">
+            <summary>
+            Identifies the EnableZoomOnDoubleClick dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableZoomOnMouseWheelProperty">
+            <summary>
+            Identifies the EnableZoomOnMouseWheel dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AutoDrillOnZoomProperty">
+            <summary>
+            Identifies the AutoDrillOnZoom dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportResizeMethodProperty">
+            <summary>
+            Identifies the ViewportResizeMethod dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionVisibilityProperty">
+            <summary>
+            Identifies the SelectionVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionModeProperty">
+            <summary>
+            Identifies the SelectionMode dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AllowMouseSelectionProperty">
+            <summary>
+            Identifies the AllowMouseSelection dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.OptimalDrillThresholdProperty">
+            <summary>
+            Identifies the OptimalDrillThreshold dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionShadeBrushProperty">
+            <summary>
+            Identifies the SelectionShadeBrush dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportShadeBrushProperty">
+            <summary>
+            Identifies the ViewportShadeBrush dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SnapSelectionToGridProperty">
+            <summary>
+            Identifies the SnapSelectionToGrid dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GetBoundedTime(System.DateTime)">
+            <summary>
+            Bounds a time between StartTime and EndTime.
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Zoom(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit)">
+            <summary>
+            Adjusts the current Zoom of the TimeNavigator
+            </summary>
+            <param name="timeUnit"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Zoom(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit,System.Double)">
+            <summary>
+            Adjusts the current Zoom of the TimeNavigator, with TimeUnit offset as a double
+            </summary>
+            <param name="timeUnit"></param>
+            <param name="offset"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AdjustDateRangeToBounds(System.DateTime@,System.DateTime@)">
+            <summary>
+            Adjusts the DateRange to match the passed to the passed start and end DateTimes
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TruncateDateRangeToBounds(System.DateTime@,System.DateTime@)">
+            <summary>
+            Truncates the TimeNavigator's DataRange to the passed start and end DateTimes
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Zoom(System.DateTime,System.DateTime)">
+            <summary>
+            Zooms the TimeNavigator based on the passed start and end DateTimes
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ZoomYearToDate">
+            <summary>
+            Zooms the TimeNavigator to the current year to date
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ZoomAll">
+            <summary>
+            Zooms to largest viewport, the entire time-span available.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ZoomToSelection">
+            <summary>
+            Zooms the TimeNavigator to the current Selection
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Pan(System.DateTime)">
+            <summary>
+            Pans the TimeNavigator to the passed DateTime
+            </summary>
+            <param name="time"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Pan(System.DateTime,System.Double)">
+            <summary>
+            Pans the TimeNavigator to the passed DateTime accounting for the passed TimeUnit offset
+            </summary>
+            <param name="time"></param>
+            <param name="offset"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Pan(System.DateTime,System.DateTime)">
+            <summary>
+            Pans the TimeNavigator to the passed start and end DateTimes
+            </summary>
+            <param name="time"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Pan(System.DateTime,System.DateTime,System.Double)">
+            <summary>
+            Pans the TimeNavigator to the passed start and end DateTimes accounting for the passed TimeUnit offset
+            </summary>
+            <param name="time"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.PanToStart">
+            <summary>
+            Pans the TimeNavigator the start of the full range
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.PanToEnd">
+            <summary>
+            Pans the TimeNavigator the end of the full range
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Select(System.DateTime,System.DateTime)">
+            <summary>
+            Select a range by start DateTime and end DateTime
+            </summary>
+            <param name="start"></param>
+            <param name="end"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectYearToDate">
+            <summary>
+            Select the current year to Today's date
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectAll">
+            <summary>
+            Select entire range
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectViewport">
+            <summary>
+            Select entire Viewport
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.View(System.DateTime,System.DateTime)">
+            <summary>
+            Change View to passed start DateTime and end DateTime
+            </summary>
+            <param name="viewStart"></param>
+            <param name="viewEnd"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.View(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit,System.DateTime,System.DateTime)">
+            <summary>
+            Change View to passed start DateTime and end DateTime at a TimeUnit's optimal zoom
+            </summary>
+            <param name="timeUnit"></param>
+            <param name="viewStart"></param>
+            <param name="viewEnd"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.View(ComponentArt.Silverlight.DataVisualization.Common.TimeUnit,System.Double,System.DateTime,System.DateTime)">
+            <summary>
+            Change View to passed start DateTime and end DateTime at a TimeUnit's optimal zoom accounting for an offset
+            </summary>
+            <param name="timeUnit"></param>
+            <param name="viewStart"></param>
+            <param name="viewEnd"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewYearToDate">
+            <summary>
+            Change View to current Year up to current Date
+            </summary>
+            <param name="timeUnit"></param>
+            <param name="selectionStart"></param>
+            <param name="selectionEnd"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewAll">
+            <summary>
+            Change View to entire Range
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.DeferAnimation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EndDeferAnimation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.animationContext_ViewportTimeRangeChanged(System.Object,System.Windows.RoutedPropertyChangedEventArgs{ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeRange})">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateElementsLayout">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateScrollBarLayout">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateFromScrollBar">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateSelectionLayout">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateSelectionLayout(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SnapSelectionToAxis">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateDragHighlights">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ClearDragHighlights">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SetViewportTimeRange(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SetSelectedTimeRange(System.DateTime,System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="startTime"></param>
+            <param name="endTime"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.VerifyRange">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.VerifyViewportRange">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.VerifySelectionRange">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.CorrectRangeValues">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GetOrCreateItemElement(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ClearItemElements">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TrimItemElements(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GetOrCreateGroupElement(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ClearGroupElements">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TrimGroupElements(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GetUpperLimit(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.FindNearestNode(System.DateTime,ComponentArt.Silverlight.DataVisualization.Common.TimeNode[])">
+            <summary>
+            
+            </summary>
+            <param name="visual"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.FindFirstOverlappingIndex(System.DateTime,ComponentArt.Silverlight.DataVisualization.Common.TimeNode[])">
+            <summary>
+            
+            </summary>
+            <param name="ticksStart"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.FindFirstOverlappingNode(System.DateTime,ComponentArt.Silverlight.DataVisualization.Common.TimeNode[])">
+            <summary>
+            
+            </summary>
+            <param name="time"></param>
+            <param name="timeNodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Zoom(System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="sign"></param>
+            <param name="mult"></param>
+            <param name="centreOffset"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Zoom(ComponentArt.Silverlight.DataVisualization.Common.TimeNode)">
+            <summary>
+            
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectNode(ComponentArt.Silverlight.DataVisualization.Common.TimeNode)">
+            <summary>
+            
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateOptimalDrillLevel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateOptimalDrillLevel(ComponentArt.Silverlight.DataVisualization.Common.TimeNode,ComponentArt.Silverlight.DataVisualization.Common.TimeNode)">
+            <summary>
+            
+            </summary>
+            <param name="parentNode"></param>
+            <param name="childNode"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.CheckItemNodeSize(ComponentArt.Silverlight.DataVisualization.Common.TimeNode)">
+            <summary>
+            
+            </summary>
+            <param name="itemNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.UpdateViewportBounds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertVisualToLogical(System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="visual"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertVisualToAbsolute(System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="visual"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertLogicalToVisual(System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="visual"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertLogicalToAbsolute(System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="visual"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertAbsoluteToLogical(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="ticks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertAbsoluteToLogical(System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="absolute"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertAbsoluteToVisual(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="ticks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ConvertAbsoluteToVisual(System.DateTime)">
+            <summary>
+            
+            </summary>
+            <param name="absolute"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TimeNavigator_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TimeNavigator_SizeChanged(System.Object,System.Windows.SizeChangedEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.bodyPanel_SizeChanged(System.Object,System.Windows.SizeChangedEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.bodyPanel_MouseWheel(System.Object,System.Windows.Input.MouseWheelEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Item_MouseLeftButtonDown(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Item_MouseMove(System.Object,System.Windows.Input.MouseEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Item_MouseLeftButtonUp(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.bodyPanel_MouseMove(System.Object,System.Windows.Input.MouseEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.bodyPanel_MouseLeftButtonUp(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.bodyPanel_MouseLeftButtonDown(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.edgeZoneTimer_Tick(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.IsDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HandleMouseMove(System.Windows.Point)">
+            <summary>
+            
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HandleMouseInEdgeZone(System.Windows.Point)">
+            <summary>
+            
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.StartEdgeZoneTimer">
+            <summary>
+            Starts the timer to handle auto-scrolling when the mouse is in the "edge-zone": the area adjacent to the viewport edges.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.StopEdgeZoneTimer">
+            <summary>
+            Stops the timer that handles auto-scrolling.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.scrollBar_Scroll(System.Object,System.Windows.Controls.Primitives.ScrollEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.scrollBar_ValueChanged(System.Object,System.Windows.RoutedPropertyChangedEventArgs{System.Double})">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.scrollBar_ViewportSizeChanged(System.Object,System.Windows.RoutedPropertyChangedEventArgs{System.Double})">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.selection_ThumbDragDelta(System.Object,System.Windows.Controls.Primitives.DragDeltaEventArgs)">
+            <summary>
+            Fires when the Selection Thumb is being dragged.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ThemeProperty">
+            <summary>
+            Identifies the Theme dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ThemeVariantProperty">
+            <summary>
+            Identifies the ThemeVariant dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Dispose">
+            <summary>
+            Releases allocated resources.  Do not call directly from code.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.PaletteProperty">
+            <summary>
+            Identifies the Palette dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EffectivePaletteProperty">
+            <summary>
+            Identifies the EffectivePalette dependency property.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportStartTimeChanged">
+            <summary>
+            Occurs when the ViewportStartTime property is changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportEndTimeChanged">
+            <summary>
+            Occurs when the ViewportEndTime property is changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportTimeRangeChanged">
+            <summary>
+            Occurs when ViewportStartTime and/or ViewportEndTime has changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedStartTimeChanged">
+            <summary>
+            Occurs when the SelectedStartTime property is changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedEndTimeChanged">
+            <summary>
+            Occurs when the SelectedEndTime property is changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedTimeRangeChanged">
+            <summary>
+            Occurs when SelectedStartTime and/or SelectedEndTime has changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupTimeUnitChanged">
+            <summary>
+            Occurs when the GroupTimeUnit property is changed.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemTimeUnitChanged">
+            <summary>
+            Occurs when the ItemTimeUnit property is changed.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.TimeContext">
+            <summary>
+            Gets or sets the TimeContext object that TimeNavaigator uses to generate its visual layout.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupTimeUnit">
+            <summary>
+            Gets or sets the GroupTimeUnit property.
+            </summary>
+            <remarks>
+            This property will be set automatically if the AutoDrillOnZoom property is true.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemTimeUnit">
+            <summary>
+            Gets or sets the ItemTimeUnit property.
+            </summary>
+            <remarks>
+            This property will be set automatically if the AutoDrillOnZoom property is true.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.StartTime">
+            <summary>
+            Gets or sets the start of the navigable time range.
+            </summary>
+            <remarks>
+            StartTime is inclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EndTime">
+            <summary>
+            Gets or sets the end of the navigable time range.
+            </summary>
+            <remarks>
+            EndTime is exclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportStartTime">
+            <summary>
+            Gets or sets the start of the visible time range.
+            </summary>
+            <remarks>
+            ViewportStartTime is inclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportEndTime">
+            <summary>
+            Gets or sets the end of the visible time range.
+            </summary>
+            <remarks>
+            ViewportEndTime is exclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedStartTime">
+            <summary>
+            Gets or sets the start of the selected time range.
+            </summary>
+            <remarks>
+            SelectedStartTime is inclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectedEndTime">
+            <summary>
+            Gets or sets the end of the selected time range.
+            </summary>
+            <remarks>
+            SelectedEndTime is exclusive.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemTemplate">
+            <summary>
+            Gets or sets the ControlTemplate for item-level blocks.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupTemplate">
+            <summary>
+            Gets or sets the ControlTemplate for group-level blocks.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ItemAnnotationStyle">
+            <summary>
+            Gets or sets a (TextBlock) Style for item-level annotations.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.GroupAnnotationStyle">
+            <summary>
+            Gets or sets a (TextBlock) Style for group-level annotations.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderContent">
+            <summary>
+            Gets or sets the HeaderContent property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderTemplate">
+            <summary>
+            Gets or sets the HeaderTemplate property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.HeaderVisibility">
+            <summary>
+            Gets or sets the HeaderVisibility property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableAnimation">
+            <summary>
+            Gets or sets the EnableAnimation property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableZoomOnDoubleClick">
+            <summary>
+            Gets or sets the EnableZoomOnDoubleClick property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EnableZoomOnMouseWheel">
+            <summary>
+            Gets or sets the EnableZoomOnMouseWheel property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AutoDrillOnZoom">
+            <summary>
+            Gets or sets the AutoDrillOnZoom property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportResizeMethod">
+            <summary>
+            Gets or sets the ViewportResizeMethod property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionVisibility">
+            <summary>
+            Gets or sets the SelectionVisibility property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionMode">
+            <summary>
+            Gets or sets the SelectionMode property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AllowMouseSelection">
+            <summary>
+            Gets or sets the AllowMouseSelection property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.OptimalDrillThreshold">
+            <summary>
+            Gets or sets the OptimalDrillThreshold property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionShadeBrush">
+            <summary>
+            Gets or sets the SelectionShadeBrush property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportShadeBrush">
+            <summary>
+            Gets or sets the ViewportShadeBrush property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SnapSelectionToGrid">
+            <summary>
+            Gets or sets the SnapSelectionToGrid property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.AbsoluteLength">
+            <summary>
+            Gets the absolute length in ticks of the navigable range.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedStartTime">
+            <summary>
+            Gets the bounded StartTime of the navigable range.  Returns StartTime.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedEndTime" -->
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedLength" -->
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ViewportLength">
+            <summary>
+            Gets the length in ticks of the visible range.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ActualViewportStartTime">
+            <summary>
+            Gets the actual (animated) StartTime of the visible range.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ActualViewportEndTime">
+            <summary>
+            Gets the actual (animated) EndTime of the visible range.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ActualViewportLength">
+            <summary>
+            Gets the actual (animated) length in ticks of the visible range.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedViewportStartTime" -->
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedViewportEndTime" -->
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedViewportLength" -->
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.SelectionLength">
+            <summary>
+            Gets the length in ticks of the selected range.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedSelectedStartTime" -->
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedSelectedEndTime" -->
+        <!-- Badly formed XML comment ignored for member "P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.BoundedSelectedLength" -->
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.IsReady">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.IsAnimating">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Theme">
+            <summary>
+            Gets or sets the Theme property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.ThemeVariant">
+            <summary>
+            Gets or sets the ThemeVariant property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.Palette">
+            <summary>
+            Gets or sets the Palette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigator.EffectivePalette">
+            <summary>
+            Gets or sets the EffectivePalette property.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem">
+            <summary>
+            Represents the individual selected time-spans coverd visually with the selection boxes.  
+            </summary>
+            <remarks> Can be skinned for indidual themes.</remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem.IsSelectedProperty">
+            <summary>
+            Identifies the IsSelected dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem.IsScrollingProperty">
+            <summary>
+            Identifies the IsScrolling dependency property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem.IsSelected">
+            <summary>
+            Whether or not this item is currently Selected
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorItem.IsScrolling">
+            <summary>
+            Gets or sets the IsScrolling property.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorSelection">
+            <summary>
+            Represents the entire selection box.  
+            </summary>
+            <remarks> Can be skinned for indidual themes.</remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorSelection.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.TimeNavigator.TimeNavigatorSelection.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+    </members>
+</doc>

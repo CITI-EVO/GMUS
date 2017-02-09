@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="FullBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Label="Common">
+		<Verbosity>diagnostic</Verbosity>
+
+		<MSBuildExtensionsPath>Dependencies\MSBuild</MSBuildExtensionsPath>
+		<MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\..\..</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+
+	<PropertyGroup Label="WebSites">
+		<CitiEvoCommonDataRoot>CITI.EVO.CommonData.Web</CitiEvoCommonDataRoot>
+		<CitiEvoCommonDataBin>$(CitiEvoCommonDataRoot)\Bin</CitiEvoCommonDataBin>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Libraries">
+		<CitiEvoLibrariesMSBuild>BuildLibraries.MSBuild.xml</CitiEvoLibrariesMSBuild>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\MSBuild.Community.Tasks.Targets"/>
+
+	<ItemGroup>
+		<WmsLibraries Include="Dependencies\Local\**\*"/>
+		<WmsPortalLibraries Include="CITI.EVO.CommonData.Web\Bin\**\*"/>
+		<ThirdpartyWebDependencies Include="Dependencies\3rdparty\Web\**\*"/>
+	</ItemGroup>
+
+	<Target Name="RemovePrecompiledWeb">
+		<RemoveDir Directories="PrecompiledWeb\$(CitiEvoCommonDataRoot)">
+			<Output TaskParameter="RemovedDirectories" ItemName="SuccessfullyRemovedDirectories"/>
+		</RemoveDir>
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="DeleteLibraries">
+		<Delete Files="@(CitiEvoCommonDataLibraries)" >
+			<Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
+		</Delete>
+		<RemoveDir Directories="$(CitiEvoCommonDataBin)">
+			<Output TaskParameter="RemovedDirectories" ItemName="SuccessfullyRemovedDirectories"/>
+		</RemoveDir>
+	</Target>
+
+	<Target Name="CopyLibraries">
+		<Copy SourceFiles="@(WmsLibraries)" DestinationFolder="$(CitiEvoCommonDataBin)\%(RecursiveDir)" SkipUnchangedFiles="true">
+			<Output TaskParameter="CopiedFiles" ItemName="SuccessfullyCopiedFiles"/>
+		</Copy>
+		<Copy SourceFiles="@(ThirdpartyWebDependencies)" DestinationFolder="$(CitiEvoCommonDataBin)\%(RecursiveDir)" SkipUnchangedFiles="true">
+			<Output TaskParameter="CopiedFiles" ItemName="SuccessfullyCopiedFiles"/>
+		</Copy>
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="BuildLibraries">
+		<MSBuild ContinueOnError="false" Projects="$(CitiEvoLibrariesMSBuild)" Properties="Configuration=Debug;Verbosity=$(Verbosity)" />
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="BuildWebSites">
+		<AspNetCompiler ContinueOnError="false" VirtualPath="/$(CitiEvoCommonDataRoot)" PhysicalPath="$(CitiEvoCommonDataRoot)\" TargetPath="PrecompiledWeb\$(CitiEvoCommonDataRoot)" Force="true" Debug="true" Clean="true" />
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="ZipPrecompiledWebs">
+		<CreateItem Include="PrecompiledWeb\$(CitiEvoCommonDataRoot)\**\*.*" >
+			<Output ItemName="CitiEvoCommonDataBuilded" TaskParameter="Include"/>
+		</CreateItem>
+		<Delete Files="PrecompiledWeb\$(CitiEvoCommonDataRoot).zip" >
+			<Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
+		</Delete>
+		<Zip ZipFileName="PrecompiledWeb\$(CitiEvoCommonDataRoot).zip" WorkingDirectory="PrecompiledWeb\$(CitiEvoCommonDataRoot)" Files="@(CitiEvoCommonDataBuilded)" />
+		<Message Text="--------------------------------------------------------" />
+
+	</Target>
+
+	<Target Name="FullBuild">
+		<AppPoolController ApplicationPoolName="$(CitiEvoCommonDataRoot)" Action="Stop" />
+
+		<CallTarget Targets="DeleteLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="BuildLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="CopyLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="RemovePrecompiledWeb" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="BuildWebSites" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="ZipPrecompiledWebs" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<AppPoolController ApplicationPoolName="$(CitiEvoCommonDataRoot)" Action="Start" />
+	</Target>
+</Project>

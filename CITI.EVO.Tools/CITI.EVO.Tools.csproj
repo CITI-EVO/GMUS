@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CITI.EVO.Tools</RootNamespace>
+    <AssemblyName>CITI.EVO.Tools</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Dependencies\Local\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxHtmlEditor.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxPivotGrid.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxTreeList.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v16.1.Core, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraPivotGrid.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\3rdparty\Web\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\Dependencies\3rdparty\Web\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\Dependencies\3rdparty\Web\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net.Appenders">
+      <HintPath>..\Dependencies\3rdparty\Web\log4net.Appenders.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="NHibernate, Version=4.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\3rdparty\Web\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\Dependencies\3rdparty\Web\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\Dependencies\3rdparty\Web\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\Dependencies\3rdparty\Web\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\Dependencies\3rdparty\Web\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickLZ, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\3rdparty\Web\QuickLZ.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\CommonObjectCache.cs" />
+    <Compile Include="Collections\BTSet.cs" />
+    <Compile Include="Extensions\Hb8Extensions.cs" />
+    <Compile Include="Structures\BTree.cs" />
+    <Compile Include="Structures\BNode.cs" />
+    <Compile Include="Collections\NameObjectCollection.cs" />
+    <Compile Include="Collections\CollectionPartitioner.cs" />
+    <Compile Include="Collections\ComparableGroup.cs" />
+    <Compile Include="Collections\IComparableGroup.cs" />
+    <Compile Include="Collections\MaxHeap.cs" />
+    <Compile Include="Collections\MinHeap.cs" />
+    <Compile Include="Collections\NameValueDataList.cs" />
+    <Compile Include="Collections\SynchronizedDictionary.cs" />
+    <Compile Include="Collections\SynchronizedList.cs" />
+    <Compile Include="Comparers\AssemblyNameComparer.cs" />
+    <Compile Include="Comparers\ByteArrayComparer.cs" />
+    <Compile Include="Comparers\ComparableComparer.cs" />
+    <Compile Include="Comparers\ComparerBase.cs" />
+    <Compile Include="Comparers\ComparisonComparer.cs" />
+    <Compile Include="Comparers\FileInfoComparer.cs" />
+    <Compile Include="Comparers\IComparerBase.cs" />
+    <Compile Include="Comparers\KeySelectorComparer.cs" />
+    <Compile Include="Comparers\StringLogicalComparer.cs" />
+    <Compile Include="Comparers\XAttributeComparer.cs" />
+    <Compile Include="Comparers\XComparerBase.cs" />
+    <Compile Include="Comparers\XDocumentComparer.cs" />
+    <Compile Include="Comparers\XElementComparer.cs" />
+    <Compile Include="Comparers\XNameComparer.cs" />
+    <Compile Include="EventArguments\GenericEventArgs.cs" />
+    <Compile Include="ExpressionEngine\Common\ActionTypes.cs" />
+    <Compile Include="ExpressionEngine\Common\ValueTypes.cs" />
+    <Compile Include="ExpressionEngine\ExpressionEvaluator.cs" />
+    <Compile Include="ExpressionEngine\ExpressionHelper.cs" />
+    <Compile Include="ExpressionEngine\ExpressionNode.cs" />
+    <Compile Include="ExpressionEngine\ExpressionParser.cs" />
+    <Compile Include="ExpressionEngine\ExpressionUtil.cs" />
+    <Compile Include="ExpressionEngine\FunctionEvaluator.cs" />
+    <Compile Include="ExpressionEngine\FunctionNode.cs" />
+    <Compile Include="ExpressionEngine\OperatorEvaluator.cs" />
+    <Compile Include="ExpressionEngine\OperatorNode.cs" />
+    <Compile Include="ExpressionEngine\StringValueNode.cs" />
+    <Compile Include="Extensions\ByteArrayExtensions.cs" />
+    <Compile Include="Extensions\UIExtensions.cs" />
+    <Compile Include="Extensions\CommonExtensions.cs" />
+    <Compile Include="Extensions\CryptoExtensions.cs" />
+    <Compile Include="Extensions\DataContextExtensions.cs" />
+    <Compile Include="Extensions\DataSetExtensions.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\HttpExtensions.cs" />
+    <Compile Include="Extensions\SearchExtensions.cs" />
+    <Compile Include="Extensions\ViewStateExtensions.cs" />
+    <Compile Include="Extensions\XmlExtensions.cs" />
+    <Compile Include="Helpers\BoyerMoore.cs" />
+    <Compile Include="Helpers\BulkCopyCallback.cs" />
+    <Compile Include="Helpers\AnonymousObject.cs" />
+    <Compile Include="Helpers\PredicateBuilder.cs" />
+    <Compile Include="Helpers\DefaultTranslatable.cs" />
+    <Compile Include="Helpers\ConcurrencyHelper.cs" />
+    <Compile Include="Helpers\DateDifference.cs" />
+    <Compile Include="Helpers\DbCommandOptimizer.cs" />
+    <Compile Include="Helpers\DictionaryDataReader.cs" />
+    <Compile Include="Helpers\EntityBulkCopySession.cs" />
+    <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\LimitedConcurrencyTaskScheduler.cs" />
+    <Compile Include="Helpers\NameValueContainer.cs" />
+    <Compile Include="Helpers\NumberBaseConverter.cs" />
+    <Compile Include="Helpers\ObjectDataReader.cs" />
+    <Compile Include="Helpers\Pluralizer.cs" />
+    <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Helpers\StackTraceFormatter.cs" />
+    <Compile Include="Helpers\TimedLock.cs" />
+    <Compile Include="Helpers\UrlHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Common\IPermissionDependent.cs" />
+    <Compile Include="Security\Configs\PermissionElement.cs" />
+    <Compile Include="Security\Configs\PermissionElementCollection.cs" />
+    <Compile Include="Security\Configs\PermissionElementSection.cs" />
+    <Compile Include="Security\Configs\PermissionSettingsElement.cs" />
+    <Compile Include="Security\Cryptography\CRC16.cs" />
+    <Compile Include="Security\Cryptography\CRC16CCITT.cs" />
+    <Compile Include="Security\Cryptography\CRC32.cs" />
+    <Compile Include="Security\Cryptography\CRC64.cs" />
+    <Compile Include="Security\Cryptography\CRC8.cs" />
+    <Compile Include="Security\Cryptography\ELF32.cs" />
+    <Compile Include="Security\PermissionUtil.cs" />
+    <Compile Include="Security\UmUtil.cs" />
+    <Compile Include="Utils\DcFactory.cs" />
+    <Compile Include="Utils\ExcelUtil.cs" />
+    <Compile Include="Utils\Hb8Factory.cs" />
+    <Compile Include="Utils\MimeTypeUtil.cs" />
+    <Compile Include="Utils\TranslationUtil.cs" />
+    <Compile Include="Utils\LanguageUtil.cs" />
+    <Compile Include="Utils\CollectionUtil.cs" />
+    <Compile Include="Utils\CommonUtil.cs" />
+    <Compile Include="Utils\CryptographyUtil.cs" />
+    <Compile Include="Utils\DataConverter.cs" />
+    <Compile Include="Utils\DateTimeParser.cs" />
+    <Compile Include="Utils\DateTimeUtil.cs" />
+    <Compile Include="Utils\EventLogUtil.cs" />
+    <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\RandomGenerator.cs" />
+    <Compile Include="Utils\ReflectionUtil.cs" />
+    <Compile Include="Utils\StringCipherUtil.cs" />
+    <Compile Include="Utils\TileSystemUtil.cs" />
+    <Compile Include="Utils\UserInterfaceUtil.cs" />
+    <Compile Include="Web\Bases\MasterPageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\Bases\PageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\Handlers\ScriptCompressorHandler.cs" />
+    <Compile Include="Web\Modules\ScriptCompressorModule.cs" />
+    <Compile Include="Web\UI\Configs\ImageLinkButton\ImageLinkButtonSection.cs" />
+    <Compile Include="Web\UI\Configs\ImageLinkButton\ImageUrlElement.cs" />
+    <Compile Include="Web\UI\Configs\ImageLinkButton\ImageUrlElementCollection.cs" />
+    <Compile Include="Web\UI\Controls\ASPxComboBox.cs" />
+    <Compile Include="Web\UI\Controls\ASPxGridView.cs" />
+    <Compile Include="Web\UI\Controls\ASPxGridViewDataTextColumn.cs" />
+    <Compile Include="Web\UI\Controls\ASPxPivotGrid.cs" />
+    <Compile Include="Web\UI\Controls\ASPxTreeList.cs" />
+    <Compile Include="Web\UI\Controls\AutoActiveLink.cs" />
+    <Compile Include="Web\UI\Controls\BulletedList.cs" />
+    <Compile Include="Web\UI\Controls\Button.cs" />
+    <Compile Include="Web\UI\Controls\CheckBox.cs" />
+    <Compile Include="Web\UI\Controls\CheckBoxList.cs" />
+    <Compile Include="Web\UI\Controls\DropDownList.cs" />
+    <Compile Include="Web\UI\Controls\ExtendedFileUpload.cs" />
+    <Compile Include="Web\UI\Controls\ExtendedImageUpload.cs" />
+    <Compile Include="Web\UI\Controls\GridView.cs" />
+    <Compile Include="Web\UI\Controls\GridViewDataColumn.cs" />
+    <Compile Include="Web\UI\Common\ICommand.cs" />
+    <Compile Include="Web\UI\Controls\ImageLinkButton.cs" />
+    <Compile Include="Web\UI\Common\ITranslatable.cs" />
+    <Compile Include="Web\UI\Controls\Label.cs" />
+    <Compile Include="Web\UI\Controls\ListBox.cs" />
+    <Compile Include="Web\UI\Controls\Panel.cs" />
+    <Compile Include="Web\UI\Controls\RadioButton.cs" />
+    <Compile Include="Web\UI\Controls\RadioButtonList.cs" />
+    <Compile Include="Web\UI\Controls\TextBox.cs" />
+    <Compile Include="Web\UI\Helpers\CollectionDataView.cs" />
+    <Compile Include="Web\UI\Helpers\CollectionItemDescriptor.cs" />
+    <Compile Include="Web\UI\Helpers\CollectionItemPropertyDescriptor.cs" />
+    <Compile Include="WorkflowEngine\Configs\ExpressionConfig.cs" />
+    <Compile Include="WorkflowEngine\Configs\NamedFieldConfig.cs" />
+    <Compile Include="WorkflowEngine\Configs\ProcessorConfig.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\DataItemPair.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\DataProcessor.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\FieldInfoPair.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\GroupingPair.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\Interfaces\IComparableDataItem.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\Interfaces\IDataItem.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\Interfaces\IDataProcessor.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\NameValueEntry.cs" />
+    <Compile Include="WorkflowEngine\LogicEngine\TypedNameValueEntry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CITI.EVO.CommonData.Svc\CITI.EVO.CommonData.Svc.csproj">
+      <Project>{5b8f965a-240c-4b1a-93b5-87160c20e47e}</Project>
+      <Name>CITI.EVO.CommonData.Svc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CITI.EVO.UserManagement.Svc\CITI.EVO.UserManagement.Svc.csproj">
+      <Project>{0616af18-8b68-4924-93ed-8dc51a0a8d7f}</Project>
+      <Name>CITI.EVO.UserManagement.Svc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CITI.EVO.Proxies\CITI.EVO.Proxies.csproj">
+      <Project>{dd01c646-4fbd-4b4d-af10-1f7cb74d5e0c}</Project>
+      <Name>CITI.EVO.Proxies</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

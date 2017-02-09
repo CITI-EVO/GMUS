@@ -1,0 +1,155 @@
+﻿/* ----------------- * ----------------- */
+#tblItemControl
+{
+    padding-top:6px;
+    padding-left:12px;
+    width:100%;  
+}
+
+#tblItemControl .fild_title
+{
+    float:left;
+    width: 50%;
+    text-align:right;
+    padding-top:4px
+}
+
+#tblItemControl .fild_title span
+{
+    vertical-align:middle;
+    font-family:BPG Glaho Arial SP V5,Sylfaen, Arial;
+    color:#5d5d5d;
+    font-size:12px;
+    text-align:right;
+    padding-right:10px;
+    display:block;
+}
+
+#tblItemControl .fild_control 
+{
+    display:inline-block;
+    color:#5d5d5d;
+    vertical-align:middle;
+    text-align:left;
+    width: 50%;
+    float:left;
+}
+
+#tblItemControl .fild_control input
+{
+    vertical-align:middle;
+    color:#5d5d5d;
+    border: 1px solid #abadb3;
+    font-size:12px;
+}
+
+#tblItemControl .fild_control input[type="image"]
+{
+  border: 0;
+}
+
+
+#cphContent_itest
+{
+    border:0px;
+    height:auto;
+    width:auto;
+}
+
+.content
+{
+    font-family:BPG Glaho Arial SP V5,Sylfaen, Arial;
+    font-size:12px;
+    color: #5d5d5d; 
+}
+
+a, a:visited
+{
+    font-size:12px;
+    display:inline;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+a:hover
+{
+    font-size:12px;
+    display:inline;
+    color: #5d5d5d;
+    text-decoration: none;
+}
+
+a img
+{
+    border:0px;
+    vertical-align:Middle;
+}
+
+a img hover
+{
+    border:0px;
+    vertical-align:Middle;
+    text-decoration:none;
+}
+
+/* a span
+{
+    vertical-align:Middle;
+    padding-left:6px;
+}
+
+a span:hover
+{
+    vertical-align:Middle;
+    padding-left:6px;
+     text-decoration: underline;
+}
+*/
+/* ----------------- UPLOADER ----------------- */
+.realupload
+{   
+    position:relative;
+    top: 0;
+    right: 0;
+    float: left; /* start of transparency styles */
+    opacity:0;
+    -moz-opacity: 0;
+    filter: alpha(opacity:0); /* end of transparency styles */
+    z-index: 2; /* bring the real upload interactivity up front */
+    width: 25px;
+    margin-left:100px;
+    margin-top:-25px;
+}
+
+.fakeupload
+{
+    background: url(images/browse_icon.png) no-repeat right;
+    height:25px;
+    position: relative;
+    width: 165px;
+    padding-left:10px;
+}
+
+ .fakeupload input
+{
+    color:#5d5d5d;
+    border: 1px solid #abadb3;
+    width:135px;
+}
+
+
+.fakeupload input[type="text"]
+{
+    height:18px;
+}
+
+ .middleAlign
+{
+   vertical-align: middle;
+}
+
+
+
+
+
+

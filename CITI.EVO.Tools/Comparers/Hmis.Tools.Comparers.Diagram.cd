@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Hmis.Tools.Comparers.ComparableComparer&lt;TObject&gt;">
+    <Position X="3.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\ComparableComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.ComparisonComparer&lt;TObject&gt;">
+    <Position X="6.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAIAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\ComparisonComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.KeySelectorComparer&lt;TObject, TKey&gt;">
+    <Position X="9.75" Y="8.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAABAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\KeySelectorComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.StringLogicalComparer">
+    <Position X="3.75" Y="1.25" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Hmis.Tools.Comparers.StringLogicalComparer.PartEntry">
+        <TypeIdentifier>
+          <NewMemberFileName>Comparers\StringLogicalComparer.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAABAQAAAAAAAAAAAAgAABBAAAAAgQ=</HashCode>
+      <FileName>Comparers\StringLogicalComparer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.XAttributeComparer">
+    <Position X="9.75" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\XAttributeComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.XComparerBase&lt;TObject&gt;">
+    <Position X="0.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIYAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Comparers\XComparerBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.XDocumentComparer">
+    <Position X="0.75" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\XDocumentComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.XElementComparer">
+    <Position X="3.75" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAgAgAAAAAAAAAAAAIAAAABAAAAAIAA=</HashCode>
+      <FileName>Comparers\XElementComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.XNameComparer">
+    <Position X="6.75" Y="11.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\XNameComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hmis.Tools.Comparers.ComparerBase&lt;TObject&gt;">
+    <Position X="0.75" Y="1.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Comparers\ComparerBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

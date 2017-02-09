@@ -1,0 +1,230 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{C83D7735-C604-4891-BB18-67FDFDFF1269}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.Tools", "CITI.EVO.Tools\CITI.EVO.Tools.csproj", "{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.Proxies", "CITI.EVO.Proxies\CITI.EVO.Proxies.csproj", "{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.Rpc", "CITI.EVO.Rpc\CITI.EVO.Rpc.csproj", "{416C5D23-950C-46B2-A2AB-784FBA7A376C}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.RpcHub.Web", "http://localhost/Rnsf/Gms/CITI.EVO.RpcHub.Web", "{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.RpcHub.Web"
+		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.RpcHub.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.RpcHub.Web\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/CITI.EVO.RpcHub.Web"
+		Release.AspNetCompiler.PhysicalPath = "CITI.EVO.RpcHub.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.RpcHub.Web\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "CITI.EVO.RpcHub.Web\"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.UserManagement.Web", "http://localhost/Rnsf/Gms/CITI.EVO.UserManagement.Web", "{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.UserManagement.Web"
+		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.UserManagement.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.UserManagement.Web\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/CITI.EVO.UserManagement.Web"
+		Release.AspNetCompiler.PhysicalPath = "CITI.EVO.UserManagement.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.UserManagement.Web\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "CITI.EVO.UserManagement.Web\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portal", "Portal", "{0B8964DB-77A7-465E-9B37-73122C70CF07}"
+	ProjectSection(SolutionItems) = preProject
+		Gms.Portal.MSBuild.xml = Gms.Portal.MSBuild.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RpcHub", "RpcHub", "{C41A183D-BA64-43C5-9259-9109269B1E0E}"
+	ProjectSection(SolutionItems) = preProject
+		CITI.EVO.RpcHub.MSBuild.xml = CITI.EVO.RpcHub.MSBuild.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserManagement", "UserManagement", "{38604C76-5877-4684-B5F8-956E70D3D002}"
+	ProjectSection(SolutionItems) = preProject
+		CITI.EVO.UserManagement.MSBuild.xml = CITI.EVO.UserManagement.MSBuild.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.UserManagement.DAL", "CITI.EVO.UserManagement.DAL\CITI.EVO.UserManagement.DAL.csproj", "{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Building", "Building", "{6BD0DA46-281B-4E32-AA9B-924C7B60DE9C}"
+	ProjectSection(SolutionItems) = preProject
+		BuildLibraries.MSBuild.xml = BuildLibraries.MSBuild.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.UserManagement.Svc", "CITI.EVO.UserManagement.Svc\CITI.EVO.UserManagement.Svc.csproj", "{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonData", "CommonData", "{785EFF53-5CD3-43FC-9468-9DD230FE0AE8}"
+	ProjectSection(SolutionItems) = preProject
+		CITI.EVO.CommonData.MSBuild.xml = CITI.EVO.CommonData.MSBuild.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.CommonData.Svc", "CITI.EVO.CommonData.Svc\CITI.EVO.CommonData.Svc.csproj", "{5B8F965A-240C-4B1A-93B5-87160C20E47E}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.CommonData.Web", "http://localhost/Rnsf/Gms/CITI.EVO.CommonData.Web", "{6365B462-8F7B-4484-8CFB-E54879FE4EDB}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.CommonData.Web"
+		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.CommonData.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.CommonData.Web\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/CITI.EVO.CommonData.Web"
+		Release.AspNetCompiler.PhysicalPath = "CITI.EVO.CommonData.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.CommonData.Web\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "CITI.EVO.CommonData.Web\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.CommonData.DAL", "CITI.EVO.CommonData.DAL\CITI.EVO.CommonData.DAL.csproj", "{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{9032D8DB-8E03-4EE6-81BB-5CAA5EC07B37}"
+	ProjectSection(SolutionItems) = preProject
+		iis.config.cmd = iis.config.cmd
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Gms.Portal.Web", "http://localhost/Rnsf/Gms/Gms.Portal.Web", "{11EA094C-DD9D-4A3C-93F6-41A96909B51B}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "false"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/Gms.Portal.Web"
+		Debug.AspNetCompiler.PhysicalPath = "Gms.Portal.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Gms.Portal.Web"
+		Release.AspNetCompiler.PhysicalPath = "Gms.Portal.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Gms.Portal.Web\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.TwoWayModel", "CITI.EVO.TwoWayModel\CITI.EVO.TwoWayModel.csproj", "{55B576B9-0874-4B74-93C4-E54E69E22A2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gms.Portal.Svc", "Gms.Portal.Svc\Gms.Portal.Svc.csproj", "{2333A78D-B018-4C45-88BC-C45CB39746AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gms.Portal.DAL", "Gms.Portal.DAL\Gms.Portal.DAL.csproj", "{37A05A5F-A479-4F4D-B643-40DC8087F959}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{416C5D23-950C-46B2-A2AB-784FBA7A376C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{416C5D23-950C-46B2-A2AB-784FBA7A376C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{416C5D23-950C-46B2-A2AB-784FBA7A376C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{416C5D23-950C-46B2-A2AB-784FBA7A376C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8F965A-240C-4B1A-93B5-87160C20E47E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8F965A-240C-4B1A-93B5-87160C20E47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8F965A-240C-4B1A-93B5-87160C20E47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8F965A-240C-4B1A-93B5-87160C20E47E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6365B462-8F7B-4484-8CFB-E54879FE4EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6365B462-8F7B-4484-8CFB-E54879FE4EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6365B462-8F7B-4484-8CFB-E54879FE4EDB}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6365B462-8F7B-4484-8CFB-E54879FE4EDB}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11EA094C-DD9D-4A3C-93F6-41A96909B51B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11EA094C-DD9D-4A3C-93F6-41A96909B51B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11EA094C-DD9D-4A3C-93F6-41A96909B51B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{11EA094C-DD9D-4A3C-93F6-41A96909B51B}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{55B576B9-0874-4B74-93C4-E54E69E22A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B576B9-0874-4B74-93C4-E54E69E22A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B576B9-0874-4B74-93C4-E54E69E22A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B576B9-0874-4B74-93C4-E54E69E22A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2333A78D-B018-4C45-88BC-C45CB39746AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2333A78D-B018-4C45-88BC-C45CB39746AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2333A78D-B018-4C45-88BC-C45CB39746AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2333A78D-B018-4C45-88BC-C45CB39746AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFD02FAD-2A02-4A38-B680-1F02772FD1FE} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
+		{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
+		{416C5D23-950C-46B2-A2AB-784FBA7A376C} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
+		{6EBA73AD-05CF-41DB-B534-A098D8CE1D36} = {C41A183D-BA64-43C5-9259-9109269B1E0E}
+		{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC} = {38604C76-5877-4684-B5F8-956E70D3D002}
+		{0B8964DB-77A7-465E-9B37-73122C70CF07} = {F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}
+		{C41A183D-BA64-43C5-9259-9109269B1E0E} = {F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}
+		{38604C76-5877-4684-B5F8-956E70D3D002} = {F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}
+		{A776D8EB-973E-45EE-A6F6-6F6CEC5D844E} = {38604C76-5877-4684-B5F8-956E70D3D002}
+		{0616AF18-8B68-4924-93ED-8DC51A0A8D7F} = {38604C76-5877-4684-B5F8-956E70D3D002}
+		{785EFF53-5CD3-43FC-9468-9DD230FE0AE8} = {F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}
+		{5B8F965A-240C-4B1A-93B5-87160C20E47E} = {785EFF53-5CD3-43FC-9468-9DD230FE0AE8}
+		{6365B462-8F7B-4484-8CFB-E54879FE4EDB} = {785EFF53-5CD3-43FC-9468-9DD230FE0AE8}
+		{A9DF2480-CE56-4C0F-9EA1-B426E0163DF6} = {785EFF53-5CD3-43FC-9468-9DD230FE0AE8}
+		{11EA094C-DD9D-4A3C-93F6-41A96909B51B} = {0B8964DB-77A7-465E-9B37-73122C70CF07}
+		{55B576B9-0874-4B74-93C4-E54E69E22A2A} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
+		{2333A78D-B018-4C45-88BC-C45CB39746AD} = {0B8964DB-77A7-465E-9B37-73122C70CF07}
+		{37A05A5F-A479-4F4D-B643-40DC8087F959} = {0B8964DB-77A7-465E-9B37-73122C70CF07}
+	EndGlobalSection
+EndGlobal

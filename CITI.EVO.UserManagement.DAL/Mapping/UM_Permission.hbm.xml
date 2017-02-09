@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_Permission" table="UM_Permissions">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+
+    <property name="GroupID" />
+    <property name="ResourceID" />
+    <property name="RuleValue" />
+    
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <many-to-one name="Group" column="GroupID" update="false" insert="false"  />
+    <many-to-one name="Resource" column="ResourceID" update="false" insert="false"  />
+
+    <bag name="PermissionParameters">
+      <key column="PermissionID" />
+      <one-to-many class="UM_PermissionParameter" />
+    </bag>
+  </class>
+</hibernate-mapping>

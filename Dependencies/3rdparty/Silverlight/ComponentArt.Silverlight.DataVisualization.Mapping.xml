@@ -1,0 +1,1316 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ComponentArt.Silverlight.DataVisualization.Mapping</name>
+    </assembly>
+    <members>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerRule">
+            <summary>
+            MapLayerRule class. Base class for rules guiding automatic data-based rendering features.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerRule.Binding">
+            <summary>
+            The binding to use for acquiring data values for this rule.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule">
+            <summary>
+            MapLayerFillRule class. Defines how shapes are colored according to data values.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.GetColorForValue(ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer,System.Double)">
+            <summary>
+            Returns the brush corresponding to the given value for the given layer, according to this rule.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.AnimationStaggerDelay">
+            <summary>
+            The delay of each subsequent color animation, in milliseconds. Default: 0 (off).
+            </summary>
+            <remarks>
+            This delay is used to produce a staggered coloring effect.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.AnimationDuration">
+            <summary>
+            The duration of the color animation, in milliseconds. Default: 0 (off).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.Colors">
+            <summary>
+            The value/colour combinations defining the rule.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.ColorFromPalette">
+            <summary>
+            Whether to populate colour values based on the active palette. 
+            </summary>
+            <remarks>
+            When set to true, Color settings should be left blank in the Colors definition.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerFillRule.Opacity">
+            <summary>
+            The opacity to apply to the colours. Default: 1.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerSizeRule">
+            <summary>
+            MapLayerSizeRule class. Defines how elements are sized according to data values.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerSizeRule.GetSizeForValue(System.Double)">
+            <summary>
+            Returns the bubble size (in square pixels) corresponding to the given value, according to this rule.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerSizeRule.AnimationStaggerDelay">
+            <summary>
+            The delay of each subsequent sizing animation, in milliseconds. Default: 0 (off).
+            </summary>
+            <remarks>
+            This delay is used to produce a staggered sizing effect.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerSizeRule.AnimationDuration">
+            <summary>
+            The duration of the sizing animation, in milliseconds. Default: 0 (off).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayerSizeRule.Sizes">
+            <summary>
+            The value/size mappings defining the rule.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeInterpolationMode">
+            <summary>
+            Used for specifying a method of interpolating intermediate sizes between value/size definitions.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeInterpolationMode.None">
+            <summary>
+            No interpolation.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeInterpolationMode.Linear">
+            <summary>
+            Linear interpolation.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeMapping">
+            <summary>
+            Represents a mapping between a value and a size.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeMapping.Value">
+            <summary>
+            Value to associate with the size.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeMapping.Size">
+            <summary>
+            Size to associate with the value.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeMappings">
+            <summary>
+            Represents a collection of value/size mappings.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueSizeMappings.InterpolationMode">
+            <summary>
+            Specifies whether, and how, intermediate values should be interpolated.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorInterpolationMode">
+            <summary>
+            Used for specifying a method of interpolating intermediate colours between value/color stops.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorInterpolationMode.None">
+            <summary>
+            No interpolation.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorInterpolationMode.Linear">
+            <summary>
+            Linear interpolation.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorMapping">
+            <summary>
+            Represents a mapping between a value and a color.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorMapping.Value">
+            <summary>
+            Value to associate with the color.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorMapping.Color">
+            <summary>
+            Color to associate with the value.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorMappings">
+            <summary>
+            Represents a collection of value/color mappings.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.ValueColorMappings.InterpolationMode">
+            <summary>
+            Specifies whether, and how, intermediate values should be interpolated.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemType">
+            <summary>
+            MapItemType enumeration. Defines possible values for the MapItem.ItemType property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemType.Point">
+            <summary>
+            Specifies a map item composed of a point.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemType.Line">
+            <summary>
+            Specifies a map item composed of one or more lines.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemType.Area">
+            <summary>
+            Specifies a map item composed of one or more areas.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem">
+            <summary>
+            MapItem class. Defines a logical unit on the map, consisting of any number of visual elements.
+            </summary>
+            <remarks>MapItems are created as they are loaded from the <see cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer"/> definition file. 
+            Each MapItem will contain its loaded meta-data in its <see cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.MetaData"/> property, a name-value dictionary.
+            <para>To access the data object connected with that MapItem (if any), use the item's <see cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.DataItem"/> property.</para>
+            </remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.BubbleFillRuleValueProperty">
+            <summary>
+            BubbleFillRuleValue dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.BubbleSizeRuleValueProperty">
+            <summary>
+            BubbleSizeRuleValue dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.FillRuleValueProperty">
+            <summary>
+            FillRuleValue dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.#ctor(ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer,ComponentArt.Silverlight.DataVisualization.Mapping.MapItemType)">
+            <summary>
+            Instantiates a map item of the given type for the given layer.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.GetBoundingRectangle">
+            <summary>
+            Returns the smallest rectangle containing all the elements of this item.
+            </summary>
+            <remarks>
+            The rectangle coordinates are in pixels, relative to the visible map.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.GetCenterOfMass">
+            <summary>
+            Returns the center of visual "mass" of the largest polygon among those belonging to this item.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.GetLabelBoundingRectangle">
+            <summary>
+            Returns the bounding box within which the label would be contained.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelField"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.GetLargestPolygonBoundingRectangle">
+            <summary>
+            Returns the bounding box of the largest polygon among those belonging to this item.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.SetToolTip(System.Object)">
+            <summary>
+            Sets the tooltip content for this item.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.BubbleFill">
+            <summary>
+            The fill to use for this item's bubble, if there is one.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleSizeRule"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleFillRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.BubbleFillRuleValue">
+            <summary>
+            The value of the bubble fill rule, if one is defined, for this item.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleFillRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.BubbleSizeRuleValue">
+            <summary>
+            The value of the bubble size rule (if defined) for this item.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleSizeRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.DataContext">
+            <summary>
+            The data context for this item.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingItemPropertyName"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.DataItem"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.DataItem">
+            <summary>
+            The data object associated with this map item.
+            </summary>
+            <remarks>
+            When using Binding syntax for item templates, for instance, a property of the MapItem's DataContext is referenced as "DataItem.PropertyName".
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingItemPropertyName"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.DataContext"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.Elements">
+            <summary>
+            Visual elements associated with this item. 
+            </summary>
+            <remarks>
+            All FrameworkElements which are currently rendered and associated with this logical map item are listed here.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.Fill">
+            <summary>
+            The fill to use for this item. Overrides Style properties.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.FillRuleValue">
+            <summary>
+            The value of the fill rule, if one is defined, for this item.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.FillRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.IsEnabled">
+            <summary>
+            Determines whether this item is enabled. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.IsSelected">
+            <summary>
+            Indicates whether this item is selected. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.ItemType">
+            <summary>
+            Describes the type of map item this is. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.MetaData">
+            <summary>
+            Meta data for this item.
+            </summary>
+            <remarks>
+            MetaData entries are added automatically from DBF files, when available alongside the SHP. They can also be added programmatically. Typically, meta-data includes names of map items and/or unique
+            identifiers which can be used for associating the map items with data.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.OwningLayer">
+            <summary>
+            The layer to which this item belongs.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.PathStyle">
+            <summary>
+            The style to apply to visual elements (XAML Paths) belonging to this item.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.Stroke">
+            <summary>
+            The stroke to use for this item. Overrides Style properties.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.Visibility">
+            <summary>
+            Controls the visibility of all visual elements belonging to this map item. Default: Visible.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemMetaDataConverter">
+            <summary>
+            MapItemDataConverter class. Can be used to bind directly to MapItem meta-data. 
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemMetaDataConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a MapItem, given a meta-data key as the parameter, to the corresponding value in the item's meta-data.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemMetaDataConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Unused.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLabelFontSizeConverter">
+            <summary>
+            MapItemDataConverter class. Can be used to determine optimal font size for an item label. 
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLabelFontSizeConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Given a TextBlock as the parameter, with a MapItem as its DataContext, returns the optimal font size for the map label.
+            </summary>
+            <remarks>
+            The visibility of the TextBlock is automatically set to invisible if the resulting size is too small to show. The value parameter is unused.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLabelFontSizeConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Unused.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupVisibility">
+            <summary>
+            MapElementVisibility enum. Used to specify the visibility mode of a map popup.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupVisibility.Off">
+            <summary>
+            Never show popups.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupVisibility.OnIfHasData">
+            <summary>
+            Show popups on MapItems which are bound to data.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupVisibility.On">
+            <summary>
+            Always show popups.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapElementVisibility">
+            <summary>
+            MapElementVisibility enum. Used to specify the visibility mode of a map UI element.
+            </summary>
+            <seealso cref="!:ZoomBoxVisibility"/>
+            <seealso cref="!:PanArrowsVisibility"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapElementVisibility.Visible">
+            <summary>
+            Always visible.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapElementVisibility.VisibleWhenZoomed">
+            <summary>
+            Visible when the map is zoomed in.
+            </summary>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomTo(System.Double)"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapElementVisibility.Hidden">
+            <summary>
+            Never visible.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapElementPosition">
+            <summary>
+            MapElementPosition enum. Used to specify the position of the map's UI element relative to its frame.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxPosition"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanZoomPosition"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapTranslation">
+            <summary>
+            MapTranslation class. Used to define the translation of points and shapes from one coordinate box to another.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.MapTranslations"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapTranslation.FromBoundingBox">
+            <summary>
+            Specifies the coordinate box to be translated from.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapTranslation.ToBoundingBox">
+            <summary>
+            Specifies the coordinate box to translate the FromBoundingBox to, by translating and scaling all coordinates contained within the original box to corresponding ones in this one.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.Map">
+             <summary>
+             ComponentArt Map control. Rich, interactive visualization of geographic and other shape-based data.
+             </summary>
+             <remarks><para>The basic ingredient in a Map control is the <see cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer"/>. 
+             At least one layer is required to produce a meaningful visualization, but any number can be laid over one another.
+            In a typical scenario, the first map layer defines basic shapes, such as territories. 
+            These shapes can be coloured according to data values, or can include content displayed over the shapes, based on templates bound with data.</para>
+             To learn more about this control see the list of <a href="mk:@MSITStore:ComponentArt.Silverlight.DataVisualization.chm::/Maps_Welcome.htm">Map tutorials</a>. 
+             </remarks>
+             <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CanvasEffectProperty">
+            <summary>
+            CanvasEffectProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridBrushProperty">
+            <summary>
+            CoordinateGridBrushProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.DownloadProgressTemplateProperty">
+            <summary>
+            DownloadProgressTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomProperty">
+            <summary>
+            ZoomProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.#ctor">
+            <summary>
+            Public constructor for Map.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ConvertPointForMap(System.Windows.Point)">
+            <summary>
+            Converts a logical point within the original coordinate system to one scaled for the visual instance of the map.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Dispose">
+            <summary>
+            Cleans up the control to ensure its proper disposal.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.HidePopup">
+            <summary>
+            Hides the popup.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.HidePopupNow">
+            <summary>
+            Hides the popup with no delay.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ShowPopup(ComponentArt.Silverlight.DataVisualization.Mapping.MapItem)">
+            <summary>
+            Shows the popup for the given item.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupVisibility"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ShowPopup(ComponentArt.Silverlight.DataVisualization.Mapping.MapItem,System.Windows.FrameworkElement)">
+            <summary>
+            Shows the popup for the given item, centered over the given visual element.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanBy(System.Double,System.Double,System.TimeSpan)">
+            <summary>
+            Pan a zoomed-in map by the given x and y delta.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanTo(System.Double,System.Double,System.TimeSpan)">
+            <summary>
+            Center a zoomed-in map at the given x and y coordinates.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Redraw">
+            <summary>
+            Causes all loaded items, on all layers, to be redrawn.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.SelectRectangle(System.Windows.Rect,System.Boolean)">
+            <summary>
+            Select items (on all layers) which significantly intersect with the given rectangle.
+            </summary>
+            <remarks>
+            The coordinates in the given rect should be relative to the Map's content.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBy(System.Double,System.Double,System.Double,System.TimeSpan)">
+            <summary>
+            Zooms the map by the given factor, centered around the given coordinates.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomTo(System.Double)">
+            <summary>
+            Set the zoom level of the map to the given scale.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomTo(System.Double,System.Double,System.Double,System.TimeSpan)">
+            <summary>
+            Set the zoom level of the map to the given scale, centered at the given coordinates.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomTo(ComponentArt.Silverlight.DataVisualization.Mapping.MapItem,System.TimeSpan)">
+            <summary>
+            Zoom the map so that the given item fills the frame.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.Map.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.EffectivePaletteProperty">
+            <summary>
+            EffectivePaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PaletteProperty">
+            <summary>
+            PaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ThemeProperty">
+            <summary>
+            ThemeProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ThemeVariantProperty">
+            <summary>
+            ThemeVariantProperty dependency property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.AllowAreaSelection">
+            <summary>
+            Whether to allow the user to select all items (on all layers) within an area by drawing a rectangle. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.AllowMouseWheelZooming">
+            <summary>
+            Whether to allow the user to zoom the map using the mouse wheel.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CanvasEffect">
+            <summary>
+            The effect to use for elements on the map canvas.
+            </summary>
+            <remarks>
+            Use this property to set a DropShadowEffect on map areas, for example.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Center">
+            <summary>
+            Gets or center point of a (zoomed) map.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateBoundingBox">
+            <summary>
+            The bounding box for the coordinates used on all the layers of this map.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateBoundingBoxAutoAdjust">
+            <summary>
+            Whether to automatically adjust the bounding box to fit shape data as it loads. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridBrush">
+            <summary>
+            The brush to use for colouring coordinate grid lines.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridInterval"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridInterval">
+            <summary>
+            The interval (in coordinate units) at which to draw grid lines. Set to zero to disable grid lines. Default: 0.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateBoundingBox"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridResolution"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridResolution">
+            <summary>
+            The resolution (in coordinate units) of points which define grid lines. Default: 0.
+            </summary>
+            <remarks>
+            If set to zero, the control will attempt to compute a reasonable resolution.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateBoundingBox"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateGridInterval"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.DownloadProgressTemplate">
+            <summary>
+            The template to use for indicating the progress of the data download.
+            </summary>
+            <remarks>
+            The indicator reflects the download progress of the first layer. Subsequent layers are drawn as they are loaded.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.FixBackground">
+            <summary>
+            Whether to fix the background (not move or scale it as the map is panned or zoomed). Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ScaleTemplates">
+            <summary>
+            Whether to scale templated content when the map is zoomed. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Layers">
+            <summary>
+            List of layers for this map.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.LegendContent">
+            <summary>
+            The legend to display on the map. This can be defined as any Silverlight content.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.LegendPosition">
+            <summary>
+            The position, relative to the frame of the control, at which to display the legend.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.LegendVisibility">
+            <summary>
+            The visibility of the legend. If no LegendContent is explicitly set, Map will present a default legend.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.MapProjection">
+            <summary>
+            The map projection to use.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.MapTranslations">
+            <summary>
+            The coordinate translations to apply to all layers on this map.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanZoomPosition">
+            <summary>
+            The position, relative to the frame of the control, at which to display the panning/zooming UI.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanZoomVisibility"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanZoomVisibility">
+            <summary>
+            The visibility mode of the panning/zooming UI.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.PanZoomPosition"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Zoom">
+            <summary>
+            Zoom (scale) factor.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxPosition">
+            <summary>
+            The position, relative to the frame of the control, at which to display the zoom box.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxScale">
+            <summary>
+            The scale at which to present the zoom box, relative to the overall map. Default: 0.25.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxVisibility">
+            <summary>
+            The visibility mode of the zoom box. Default: Hidden.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxPosition"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomBoxScale"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ZoomMaximum">
+            <summary>
+            The maximum scale to which to allow zooming. Default: 50 (fifty times the original size).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.EffectivePalette">
+            <summary>
+            EffectivePalette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Palette">
+            <summary>
+            Palette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.Theme">
+            <summary>
+            Theme property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.ThemeVariant">
+            <summary>
+            ThemeVariant property.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemEventArgs">
+            <summary>
+            MapItemEventArgs class. Defines data relevant to an event raised for a map item.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItemEventArgs.Item">
+            <summary>
+            The item to which this event relates.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupDataContext">
+            <summary>
+            MapPopupDataContext class. Defines the data context for popups.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupIndexTemplate"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupValueTemplate"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupVisibility"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupDataContext.DataItem">
+            <summary>
+            The bound data object, if any.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapPopupDataContext.Fill">
+            <summary>
+            The fill brush associated with active item.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer">
+            <summary>
+            Defines visual map items (areas, lines or points) and, optionally, data associated with them. 
+            </summary>
+            <remarks>To populate a map layer with shapes, simply set its <see cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ShapeFile"/> property to
+            to the URI describing the location (on the web, or among compiled reasources) of the shape file (.shp) 
+            containing the definitions of visual layers. 
+            <para>As items are loaded onto the layer, the <see cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Items"/> collection will be populated with <see cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem"/>s. </para>
+            </remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.Map"/> <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSourceProperty">
+            <summary>
+            ItemsSource dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PathStyleProperty">
+            <summary>
+            PathStyle dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PathStyle"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.#ctor">
+            <summary>
+            Default constructor: Added by Jeremy (temp fix?)
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.#ctor(ComponentArt.Silverlight.DataVisualization.Mapping.Map)">
+            <summary>
+            Instantiates a map layer for the given map.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.AddItem(ComponentArt.Silverlight.DataVisualization.Mapping.MapItem,System.Collections.Generic.List{System.Windows.Media.PointCollection})">
+            <summary>
+            Creates an area or line item defined by the given point collections and adds it to this layer.
+            </summary>
+            <remarks>
+            The coordinates are taken in the context of the bounding box. For instance, in many cases they are the latitude and longitude.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.AddItem(ComponentArt.Silverlight.DataVisualization.Mapping.MapItem,System.Windows.Point)">
+            <summary>
+            Adds a point item to this layer, at the given point.
+            </summary>
+            <remarks>
+            The coordinates are taken in the context of the bounding box. For instance, in many cases they are the latitude and longitude.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.FindItem(System.Object)">
+            <summary>
+            Returns the item with a matching data item (DataContext).
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.FindItem(System.String,System.Object)">
+            <summary>
+            Returns the item with a matching meta-data entry, or null if not found.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Load(System.String)">
+            <summary>
+            Loads an ESRI shape file and metadata from the given location into this layer.
+            </summary>
+            <remarks>The location does not need to include the ".shp" extension.</remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Load(System.Uri)">
+            <summary>
+            Loads an ESRI shape file and metadata from the given location into this layer.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Load(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Loads an ESRI shape file and associated meta data from the given streams.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.GetArea(System.Windows.Media.PointCollection)">
+            <summary>
+            Returns the surface area of a polygon defined by the given points.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.GetCenterOfMass(System.Windows.Media.PointCollection)">
+            <summary>
+            Returns the "center of mass" of a polygon defined by the given points.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.GetDistance(System.Windows.Point,System.Windows.Point)">
+            <summary>
+            Returns the distance between two points.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.GetHighlight(System.Windows.Media.Color,System.Double,System.Double)">
+            <summary>
+            Returns the highlighted version of the given colour.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LoadPoint(System.Byte[])">
+            <summary>
+            This method takes a raw SHP point record and returns a the logical point, in the original coordinate box.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LoadPoly(System.Byte[])">
+            <summary>
+            This method takes a raw SHP polyline or polygon record and returns a list of logical point collections, in the original coordinate box.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.RenderPoint(System.Windows.Point)">
+            <summary>
+            This method takes a logical point in the original coordinate box and produces a visual element within the canvas.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.RenderPoly(System.Collections.Generic.List{System.Windows.Media.PointCollection},System.Boolean)">
+            <summary>
+            This method takes a list of logical point collections in the original coordinate box, representing polygons and polylines,
+            and produces visual elements within the canvas.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.AllowSelection">
+            <summary>
+            Whether to allow the user to select an area. Default: true.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.SelectedItems"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.AllowMultipleSelection">
+            <summary>
+            Whether to allow the user to select multiple areas. Default: true.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.SelectedItems"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleFillRule">
+            <summary>
+            Defines how bubble visualizations should be coloured according to data on this layer.
+            </summary>
+            <remarks>
+            To make bubbles automatically appear, BubbleSizeRule must also be set.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleSizeRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleSizeRule">
+            <summary>
+            Defines how bubble visualizations should be sized according to data on this layer.
+            </summary>
+            <remarks>
+            If set, bubbles will be rendered over data-bound items on this layer, sized according to the rule. The size will map to the bubble's surface area, in pixels squared.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.BubbleFillRule"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingMetaDataKey">
+            <summary>
+            The key in item metadata which connects an item to an object in this layer's provided ItemsSource.
+            </summary>
+            <remarks>
+            The value of the metadata entry under this key is matched with a corresponding property value of an object in ItemsSource. The matching object becomes the
+            DataContext for the corresponding MapItem as well as its constituent elements.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingItemPropertyName"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.MetaData"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingItemPropertyName">
+            <summary>
+            The name of the property on objects in ItemsSource which connects them to items on this map layer.
+            </summary>
+            <remarks>
+            The value of this property is matched with a corresponding metadata value of a map item. The matching object becomes the
+            DataContext for the corresponding MapItem as well as its constituent elements.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingMetaDataKey"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.MetaData"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.FillBrushes">
+            <summary>
+            Defines a list of brushes to use for colouring items on this layer.
+            </summary>
+            <remarks>
+            If set, the fill for items on this layer is set to brushes in this collection, chosen in order.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.FillRule">
+            <summary>
+            Defines how items on this layer should be coloured according to values coming from data.
+            </summary>
+            <remarks>
+            If set, the fill for items on this layer is set according to the defined rule and data context.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointXPath">
+            <summary>
+            The property path in objects contained in ItemsSource at which to find horizontal coordinates for automatically plotting points.
+            </summary>
+            <remarks>
+            If ItemPointXPath, ItemPointYPath and ItemTemplate are set, points will be plotted automatically when ItemsSource is set.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointYPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemTemplate"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointYPath">
+            <summary>
+            The property path in objects contained in ItemsSource at which to find vertical coordinates for automatically plotting points.
+            </summary>
+            <remarks>
+            If ItemPointXPath, ItemPointYPath and ItemTemplate are set, points will be plotted automatically when ItemsSource is set.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointXPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemTemplate"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Items">
+            <summary>
+            List of map items on this layer.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource">
+            <summary>
+            An external source of data for items on this layer.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataBindingItemPropertyName"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointXPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemPointYPath"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemTemplate">
+            <summary>
+            The template to use for items drawn on this layer.
+            </summary>
+            <remarks>
+            In the case of point items, the content template is displayed at the point's coordinates. In the case of areas and lines,
+            the template appears centered over the item.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemSelectedTemplate"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemSelectedTemplate">
+            <summary>
+            The template to use for selected items on this layer.
+            </summary>
+            <remarks>
+            If set, the content defined by this template replaces that of the standard item template when the item is selected.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemTemplate"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelBinding">
+            <summary>
+            The binding to use for populating labels from data items.
+            </summary>
+            <remarks>
+            The context for such a binding is the associated MapItem. To bind labels to a property of data objects, we set LabelBinding="{Binding DataItem.PropertyName}"
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelField">
+            <summary>
+            The meta-data (DBF) field to use for default area labels.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelBinding"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelForeground">
+            <summary>
+            The Brush to use on the Foreground of labels.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelBinding"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.LabelField"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.OwningMap">
+            <summary>
+            The Map control to which this layer belongs.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PathStyle">
+            <summary>
+            PathStyle property.
+            </summary>
+            <remarks>
+            The TargetType of the Style should be "Path". The style is applied to each Path belonging to a logical MapItem on this layer.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupIndexField">
+            <summary>
+            The meta-data field from which to optionally get the index value of the popup.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapItem.MetaData"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupVisibility"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupIndexTemplate">
+            <summary>
+            The template to use for the item popup index area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupValueTemplate">
+            <summary>
+            The template to use for the item popup value area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupVisibility">
+            <summary>
+            Regulates the visibility mode of popups. Default: On.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupIndexTemplate"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupValueTemplate"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.PopupShowDefaultChrome">
+            <summary>
+            Determines whether popups should display default themed chrome and index header in addition to the value template. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.SelectedItems">
+            <summary>
+            List of currently selected areas.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ShapeFile">
+            <summary>
+            The name and location of the ESRI shapefile to load.
+            </summary>
+            <remarks>
+            The string can be a relative or absolute URI, and the extension can optionally be omitted. The URI can point to a resource in a loaded assembly, or
+            a file on the web. A DBF file will also automatically be sought alongside the SHP file.
+            </remarks>
+            <example>
+            ShapeFile="/SilverlightApplication1;component/maps/canada.shp"
+            </example>
+            <example>
+            ShapeFile="ClientBin/maps/canada.shp"
+            </example>
+            <example>
+            ShapeFile="http://www.mysite.com/maps/canada.shp"
+            </example>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ShapeFileUtmZone">
+            <summary>
+            The Universal Transverse Mercator zone for which the coordinates in the shape file are intended. Default: -1. (don't convert).
+            </summary>
+            <remarks>
+            This should only be set if the desire is to convert the UTM coordinates to longitude/latitude during loading.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.Map.CoordinateBoundingBox"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.Visibility">
+            <summary>
+            The visibility of this layer.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataLoaded">
+            <summary>
+            Fires when the meta-data (DBF) for this layer is done loading.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataLoadedForItem">
+            <summary>
+            Fires when meta-data (DBF) for an item is loaded.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.DataLoaded"/>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemClick">
+            <summary>
+            Fires when an item on this layer is clicked.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemDoubleClick">
+            <summary>
+            Fires when an item on this layer is double-clicked.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemLoaded">
+            <summary>
+            Fires when an item (SHP) is loaded.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsLoaded"/>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemMouseEnter">
+            <summary>
+            Fires when the mouse enters an item on this layer.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemMouseLeave">
+            <summary>
+            Fires when the mouse leaves an item on this layer.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemRendered">
+            <summary>
+            Fires when a map item is done rendering.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsLoaded">
+            <summary>
+            Fires when the map items (SHP) for this layer are done loading.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ShapeFile"/>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemsRendered">
+            <summary>
+            Fires when the map items for this layer are done rendering.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.ItemSelectionChanged">
+            <summary>
+            Fires when the selected items are changed on this layer.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.Mapping.MapLayer.SelectedItems"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MapProjection">
+            <summary>
+            MapProjection class. Defines how logical coordinates are converted before being displayed on the screen.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MapProjection.Convert(System.Windows.Rect)">
+            <summary>
+            Converts a Rect in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.Mapping.MapProjection.PropertyChanged">
+            <summary>
+            Fires when a member property's value changes.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.EquirectangularMapProjection">
+            <summary>
+            This class describes an equirectangular projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MercatorMapProjection">
+            <summary>
+            This class describes a Mercator projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MercatorMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MercatorMapProjection.MinLatitude">
+            <summary>
+            The minimum latitude below which to cut off the map. Default: -60.
+            </summary>
+            <remarks>
+            This is typically used to remove heavily distorted Antarctica from Mercator world maps. Note that the South Pole cannot be shown on Mercator maps, so this
+            must be set to something greater than -90.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.MercatorMapProjection.MaxLatitude">
+            <summary>
+            The maximum latitude above which to cut off the map. Default: 88.
+            </summary>
+            <remarks>
+            This is typically used to remove the heavily distorted Arctic from Mercator world maps. Note that the North Pole cannot be shown on Mercator maps, so this
+            must be set to something less than 90.
+            </remarks>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.MillerMapProjection">
+            <summary>
+            This class describes a Miller projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.MillerMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.RobinsonMapProjection">
+            <summary>
+            This class describes a Robison projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.RobinsonMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.BonneMapProjection">
+            <summary>
+            This class describes a Bonne projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.BonneMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.BonneMapProjection.StandardParallel">
+            <summary>
+            Specifies the standard parallel to use for this Bonne projection. Default: 45.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.AlbersMapProjection">
+            <summary>
+            This class describes an Albers projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.AlbersMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.AlbersMapProjection.FirstStandardParallel">
+            <summary>
+            Specifies the first standard parallel to use for this Albers projection. Default: 0.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.AlbersMapProjection.SecondStandardParallel">
+            <summary>
+            Specifies the second standard parallel to use for this Bonne projection. Default: 60.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.AlbersMapProjection.Origin">
+            <summary>
+            Specifies the origin to use for this Albers projection. Default: (0, 0).
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.Mapping.LambertConformalConicMapProjection">
+            <summary>
+            This class describes a Lambert Conformal Conic projection and provides the necessary functionality to apply it.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.Mapping.LambertConformalConicMapProjection.Convert(System.Windows.Point)">
+            <summary>
+            Converts a point in logical coordinates to one which corresponds to the same location under this projection.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.LambertConformalConicMapProjection.FirstStandardParallel">
+            <summary>
+            Specifies the first standard parallel to use for this Lambert Conformal Conic projection. Default: 30.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.LambertConformalConicMapProjection.SecondStandardParallel">
+            <summary>
+            Specifies the second standard parallel to use for this Lambert Conformal Conic projection. Default: 60.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.Mapping.LambertConformalConicMapProjection.Origin">
+            <summary>
+            Specifies the origin to use for this Albers projection. Default: (0, 0).
+            </summary>
+        </member>
+    </members>
+</doc>

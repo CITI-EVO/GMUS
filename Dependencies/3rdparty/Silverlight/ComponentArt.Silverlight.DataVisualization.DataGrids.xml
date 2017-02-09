@@ -1,0 +1,2772 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ComponentArt.Silverlight.DataVisualization.DataGrids</name>
+    </assembly>
+    <members>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnResizingMode">
+            <summary>
+            GridViewColumnResizingMode enum.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnResizingMode.Distribute">
+            <summary>
+            Differences in width are distributed proportionally among sizable columns to the right of the one being resized, preserving total width.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnResizingMode.Normal">
+            <summary>
+            Only the column being sized is affected by resizing, causing total width to change.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsVisibilityMode">
+            <summary>
+            GridViewRowDetailsVisibilityMode enum.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsVisibilityMode.Collapsed">
+            <summary>
+            Row details are never displayed.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsVisibilityMode.Visible">
+            <summary>
+            Row details are always displayed.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsVisibilityMode.VisibleWhenSelected">
+            <summary>
+            Row details are displayed when the row is selected.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsVisibilityMode.Expandable">
+            <summary>
+            Row details are displayed when the row is explicitly expanded.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRunningMode">
+            <summary>
+            GridViewRunningMode enum.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRunningMode.Callback">
+            <summary>
+            Callback running mode - a single page of data at a time, typically loaded via WCF service
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRunningMode.Client">
+            <summary>
+            Client running mode - all data pre-loaded on load, typically via WCF service
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextOverflowMode">
+            <summary>
+            TextOverflowMode enum.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextOverflowMode.Ellipsis">
+            <summary>
+            Text ellipsis (...) is applied.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextOverflowMode.Fade">
+            <summary>
+            Text fades to nothing.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextOverflowMode.Hide">
+            <summary>
+            Overflowed text is invisible. No effect is applied.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode">
+            <summary>
+            GridViewPagerMode enum.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode.ButtonsAndSlider">
+            <summary>
+            Show four buttons and a slider
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode.ButtonsOnly">
+            <summary>
+            Show four buttons
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode.SliderOnly">
+            <summary>
+            Show a slider
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode.NextPrevious">
+            <summary>
+            Show two buttons
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPagerMode.None">
+            <summary>
+            Display no pager buttons nor the slider
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSelectionMode">
+            <summary>
+            GridViewSelectionMode enum.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection">
+            <summary>
+            SortDirection enum. Used for indicating the direction of an ordering.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection.Ascending">
+            <summary>
+            Ascending sort order.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection.Descending">
+            <summary>
+            Descending sort order.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView">
+            <summary>
+            Displays data in a two dimensional grid resembling a spreadsheet.  Allows users to select, group and traverse through large data sets efficiently. 
+            </summary>
+            <remarks>
+            <para>Setting the <see cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemsSource"/> property to the collection representing the datasource will automatically display all the data in the datasource.</para>
+            <para>To control which columns from the datasource are displayed, add specific <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>s within the GridView.</para>
+            To learn more about this control see the list of <a href="mk:@MSITStore:ComponentArt.Silverlight.DataVisualization.chm::/GridView_Welcome.htm">GridView tutorials</a>.
+            </remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextColumn"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTemplateColumn"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CellStyleProperty">
+            <summary>
+            CellStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDragTemplateProperty">
+            <summary>
+            ColumnDragTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnResizeElementStyleProperty">
+            <summary>
+            ColumnResizeElementStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnHeaderStyleProperty">
+            <summary>
+            ColumnHeaderStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnFilterHeaderStyleProperty">
+            <summary>
+            ColumnFilterHeaderStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnHeaderVisibilityProperty">
+            <summary>
+            ColumnHeaderVisibilityProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CornerRadiusProperty">
+            <summary>
+            CornerRadiusProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.EmptyHeaderTemplateProperty">
+            <summary>
+            EmptyHeaderTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FooterVisibilityProperty">
+            <summary>
+            FooterVisibilityProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupBoxSeparatorTemplateProperty">
+            <summary>
+            GroupBoxSeparatorTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupBoxStyleProperty">
+            <summary>
+            GroupBoxStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnGroupedHeaderTemplateProperty">
+            <summary>
+            UnGroupedHeaderTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupedHeaderPrefixTemplateProperty">
+            <summary>
+            GroupedHeaderPrefixTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupHeadingTemplateProperty">
+            <summary>
+            GroupHeadingTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupStyleProperty">
+            <summary>
+            GroupStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.HeaderVisibilityProperty">
+            <summary>
+            HeaderVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.HorizontalScrollBarVisibilityProperty">
+            <summary>
+            HorizontalScrollBarVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemsSourceProperty">
+            <summary>
+            ItemsSourceProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PagerInfoTemplateProperty">
+            <summary>
+            PagerInfoTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsTemplateProperty">
+            <summary>
+            RowDetailsTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsVisibilityModeProperty">
+            <summary>
+            RowDetailsVisibilityModeProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowHeightProperty">
+            <summary>
+            RowHeight dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowStyleProperty">
+            <summary>
+            RowStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollerPopupTemplateProperty">
+            <summary>
+            ScrollerPopupTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SearchBoxVisibilityProperty">
+            <summary>
+            SearchBoxVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectorCellStyleProperty">
+            <summary>
+            SelectorCellStyleProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SliderPopupTemplateProperty">
+            <summary>
+            SliderPopupTemplateProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ThemeProperty">
+            <summary>
+            ThemeProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ThemeVariantProperty">
+            <summary>
+            ThemeVariantProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.VerticalScrollBarVisibilityProperty">
+            <summary>
+            VerticalScrollBarVisibilityProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AddRow(System.Object)">
+            <summary>
+            Add a new row for the given data object.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Clear">
+            <summary>
+            Clear rendered content from the GridView.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ClearFilters">
+            <summary>
+            Causes the data to be unfiltered.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.DeleteRow(System.Object)">
+            <summary>
+            Removes any rows associated with the given data item.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FilterBy(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition)">
+            <summary>
+            Causes the data to be filtered according to the given condition, in addition to any previous conditions.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetRow(System.Int32)">
+            <summary>
+            Returns the data row at the given overall index in the record set, if it's currently loaded.
+            </summary>
+            <param name="iIndex">Overall index of data row to return.</param>
+            <returns>Data row at given overall index in the record set, if it's currently loaded. Otherwise, null is returned.</returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetRow(System.Object)">
+            <summary>
+            Returns the data row for the given data object, if it's currently loaded.
+            </summary>
+            <param name="oDataItem">Data object.</param>
+            <returns>Data row for the given data object, if it's currently loaded. Otherwise, null is returned.</returns>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetOwningCell(System.Windows.DependencyObject)">
+            <summary>
+            Returns the GridViewCell to which the given visual element belongs, if any. Can be used to find the GridViewCell relevant to an event raised from
+            a CellTemplate.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupBy(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn,ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection)">
+            <summary>
+            Causes the data to be grouped by the given column, in addition to any previous groupings.
+            </summary>
+            <param name="oColumn">Column to group by.</param>
+            <param name="oDirection">Direction to order the groupings in.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Refresh">
+            <summary>
+            Update the GridView visually.
+            </summary>
+            <remarks>
+            The update is not performed immediately, but is added to the dispatcher.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Search(System.String)">
+            <summary>
+            Causes the data to be filtered by a simple string-matching search.
+            </summary>
+            <remarks>
+            A simple "contains" operation is applied here, and no wild-cards or special expressions are used.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowSearching"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Select(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow)">
+            <summary>
+            Causes the given data row to be selected.
+            </summary>
+            <param name="oRow">The row to select.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectRangeBegin(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell)">
+            <summary>
+            Starts a selection range with the given cell.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectRangeTo(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell)">
+            <summary>
+            Increase or decrease the range selection to end at the given cell.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Select(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow,System.Boolean)">
+            <summary>
+            Causes the given data row to be selected.
+            </summary>
+            <param name="oRow">The row to select.</param>
+            <param name="bMultiSelect">Whether the row is being added to the list of selected nodes.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Select(System.Object,System.Boolean)">
+            <summary>
+            Causes the given item to be selected.
+            </summary>
+            <param name="dataItem">The item to make selected.</param>
+            <param name="bMultiSelect">Whether the row is being added to the list of selected nodes.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Select(System.Object)">
+            <summary>
+            Causes the given item to be selected.
+            </summary>
+            <param name="dataItem">The item to make selected.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnSelectRow(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow)">
+            <summary>
+            Causes the given data row to be unselected.
+            </summary>
+            <param name="oRow">The row to unselect.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnSelectRow(System.Object)">
+            <summary>
+            Causes the given data item unselected.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SortBy(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn,ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection)">
+            <summary>
+            Causes the data to be sorted by the given column, in the given direction.
+            </summary>
+            <param name="oColumn">Column to sort by.</param>
+            <param name="oDirection">Direction to sort in.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SortBy(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn,ComponentArt.Silverlight.DataVisualization.DataGrids.SortDirection,System.Boolean)">
+            <summary>
+            Causes the data to be sorted by the given column, in the given direction.
+            </summary>
+            <param name="oColumn">Column to sort by.</param>
+            <param name="oDirection">Direction to sort in.</param>
+            <param name="bMultipleSort">Whether this is a multiple selection.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnGroup">
+            <summary>
+            Causes all data groupings to be removed.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnGroup(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn)">
+            <summary>
+            Causes any groupings by the given column to be removed.
+            </summary>
+            <param name="oColumn">The column for which groupings should be removed.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnSort">
+            <summary>
+            Clears any sortings currently applied.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyChildren(System.Object)">
+            <summary>
+            Returns the child items of the given data item within the hierarchy, if one is defined.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ParentItemKeyPath"/>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyParent(System.Object)"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyDepth(System.Object)">
+            <summary>
+            Returns the depth of the given data item within the hierarchy, if one is defined.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ParentItemKeyPath"/>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyParent(System.Object)"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyParent(System.Object)">
+            <summary>
+            Returns the parent item of the given data item within the hierarchy, if one is defined.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ParentItemKeyPath"/>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GetHierarchyChildren(System.Object)"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RefreshRows">
+            <summary>
+            Update the rendered rows, to make sure they are in their appropriate visual states.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollBy(System.Double,System.Double)">
+            <summary>
+            Scroll by a given amount.
+            </summary>
+            <remarks>
+            Vertical delta is in records.
+            Horizontal delta is in pixels.
+            </remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollTo(System.Int32)">
+            <summary>
+            Scroll to the given record offset.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollTo(System.Object)">
+            <summary>
+            Scroll to the given record.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollTo(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow)">
+            <summary>
+            Scroll to the given row.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AccentBrushProperty">
+            <summary>
+            Identifies the AccentBrush dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.EffectivePaletteProperty">
+            <summary>
+            EffectivePaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PaletteProperty">
+            <summary>
+            PaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowEditing">
+            <summary>
+            Determines whether to allow the inline editing of data cells. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowGrouping">
+            <summary>
+            Determines whether to allow the user to interactively group data. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowPaging">
+            <summary>
+            Determines whether to allow the user to interactively page through data. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnDragging">
+            <summary>
+            Determines whether to allow the user to drag columns onto external elements. Default: false.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDropTargets"/>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDroppedOnTarget"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnFreezing">
+            <summary>
+            Determines whether to allow the user to interactively freeze columns. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnReordering">
+            <summary>
+            Determines whether to allow the user to interactively reorder columns. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnResizing">
+            <summary>
+            Determines whether to allow the user to interactively resize columns. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowRowFreezing">
+            <summary>
+            Determines whether to allow the user to interactively freeze items (rows). Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowSorting">
+            <summary>
+            Determines whether to allow the user to interactively sort data. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AutoGenerateColumns">
+            <summary>
+            Determines whether columns are automatically generated from data when not explicitly defined. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CellStyle">
+            <summary>
+            The Style applied to GridViewCells.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDragTemplate">
+            <summary>
+            Defines the template to use when dragging column headings to reorder, group, or drop on external target.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnDragging"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnReordering"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDropTargets">
+            <summary>
+            Comma-delimited list of x:Name values to define valid drop targets when dragging columns.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowColumnDragging"/>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDroppedOnTarget"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnResizeElementStyle">
+            <summary>
+            The Style applied to GridViewColumnResizeElements.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnHeaderStyle">
+            <summary>
+            The Style applied to GridViewColumnHeaders.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnFilterHeaderStyle">
+            <summary>
+            Controls the visibility of column header filtering UI.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnHeaderVisibility">
+            <summary>
+            Controls the visibility of column headers.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnResizingMode">
+            <summary>
+            This determines the behaviour of column sizing and resizing.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Columns">
+            <summary>
+            The list of columns defined for this GridView. 
+            </summary>
+            <remarks>
+            If empty, and AutoGenerateColumns is set, the list is populated automatically based on the provided data.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AutoGenerateColumns"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CornerRadius">
+            <summary>
+            Determines the corner radius applied to the control frame.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CurrentPageIndex">
+            <summary>
+            The zero-based index of the data page currently displayed.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.EmptyHeaderTemplate">
+            <summary>
+            The content to place into the control header when it isn't being used for grouping.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ExpandedItems">
+            <summary>
+            The collection of items (from ItemsSource) which are expanded.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ParentItemKeyPath"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsTemplate"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Filters">
+            <summary>
+            The list of conditions that data is currently filtered by. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FooterVisibility">
+            <summary>
+            Controls the visibility of the footer area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FrozenColumns">
+            <summary>
+            The collection of columns which are frozen (always displayed on the left-hand side of the data area).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FrozenItems">
+            <summary>
+            The collection of items (from ItemsSource) which are frozen (always displayed at the top of the data area).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupBoxSeparatorTemplate">
+            <summary>
+            The DataTemplate to use between GroupBoxes in the grouped header.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupBoxStyle">
+            <summary>
+            The Style to use on GridViewGroupBoxes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UnGroupedHeaderTemplate">
+            <summary>
+            Defines the content in the control header when data is not grouped.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupedHeaderPrefixTemplate">
+            <summary>
+            Defines the "prefix" content in the control header when data is grouped.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupHeadingTemplate">
+            <summary>
+            Defines the template for individual group headings.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupDataContext"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupStyle">
+            <summary>
+            The Style to use on GridViewGroups.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Groupings">
+            <summary>
+            The list of groupings that data is currently grouped by. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.HeaderVisibility">
+            <summary>
+            Controls the visibility of the header area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.HorizontalScrollBarVisibility">
+            <summary>
+            Controls the visibility of the horizontal scroll bar.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Indent">
+            <summary>
+            The amount of indentation (in pixels) to use when rendering nested groups, expandable rows or the row number column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemsSource">
+            <summary>
+            The data source to load items from.
+            </summary>
+            <remarks>
+            This is expected to be a collection of objects which correspond to records.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PageCount">
+            <summary>
+            The total number of pages available for display. Read-only.
+            </summary>
+            <remarks>
+            This value is computed based on the values of RecordCount and PageSize.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordCount"/>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PageSize"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PageSize">
+            <summary>
+            Determines the number of records per page to display.
+            </summary>
+            <remarks>
+            If not set, an optimal value is computed automatically.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PagerInfoTemplate">
+            <summary>
+            The DataTemplate to use for the pager info area in the footer.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PagerMode">
+            <summary>
+            Determines the mode of the pager UI. Default: ButtonsAndSlider.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath">
+            <summary>
+            Determines how key values are acquired for producing a hierarchical view.
+            </summary>
+            <seealso cref="!:ParentKeyBinding"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ParentItemKeyPath">
+            <summary>
+            Determines how parent key values are acquired for producing a hierarchical view.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemKeyPath"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PreExpandGroups">
+            <summary>
+            Determines whether to expand groups as they are created. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordCount">
+            <summary>
+            The total number of records in the record set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordOffset">
+            <summary>
+            The offset within the record set to display.
+            </summary>
+            <remarks>
+            This property controls the view when vertical scrolling is used.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsTemplate">
+            <summary>
+            The DataTemplate to use for row details panels.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsVisibilityMode"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsVisibilityMode">
+            <summary>
+            Controls the visibility of row details panels.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsTemplate"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowHeight">
+            <summary>
+            The height, in pixels, of standard rows.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowStyle">
+            <summary>
+            The Style to use for GridViewRows.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RunningMode">
+            <summary>
+            This determines the way paging, sorting, filtering and other operations are performed on the data at runtime. Default: Client.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ScrollerPopupTemplate">
+            <summary>
+            This data template is used for the popup element of the vertical scroller.
+            </summary>
+            <remarks>
+            This template is bound with an object of type GridViewPositionDataContext.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SearchBoxVisibility">
+            <summary>
+            Controls the visibility of the search box.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowSearching"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SearchBoxWatermarkText">
+            <summary>
+            The text to display, in watermark style, before any text is entered into the search box.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SearchBoxVisibility"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectedItems">
+            <summary>
+            The collection of items (from ItemsSource) which are selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectedColumns">
+            <summary>
+            The collection of columns which are selected.
+            </summary>
+            <remarks>
+            Column selection is only allowed in SpreadSheet SelectionMode.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectionMode"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectionMode">
+            <summary>
+            Controls permissible selection behaviour. Default: Spreadsheet.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SelectorCellStyle">
+            <summary>
+            The Style of selector GridViewCells.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ShowSelectorCells">
+            <summary>
+            Determines whether to show selector cells on the left-hand end of row data. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ShowTextOverflowToolTip">
+            <summary>
+            Determines whether to show popup tooltips for cells with cut off text. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SliderPopupTemplate">
+            <summary>
+            This data template is used for the slider popup element of the built-in pager.
+            </summary>
+            <remarks>
+            This template is bound with an object of type GridViewPositionDataContext.
+            </remarks>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SortExpression">
+            <summary>
+            Returns the SQL ORDER BY clause reflecting the current sort order of the data. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Sortings">
+            <summary>
+            Describes what fields the data is sorted by. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.TextOverflowMode">
+            <summary>
+            Determines what effect to apply to cut off text in cells. Default: Hide.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Theme">
+            <summary>
+            Gets or sets the named theme (if any) applied to the control.
+            </summary>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.Theming.GetThemeNames"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ThemeVariant">
+            <summary>
+            Gets or sets the variant of the applied theme to apply on the control.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Theme"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.UseVirtualizedScrolling">
+            <summary>
+            Determines whether to virtualize vertical scrolling. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.VerticalScrollBarVisibility">
+            <summary>
+            Controls the visibility of the vertical scrollbar.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordOffset"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AccentBrush">
+            <summary>
+            The accent brush is used by some themes to color some elements of the UI. 
+            </summary>
+            <remarks>
+            Typically, this is automatically populated from the palette and does not need to be set explicitly.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Palette"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.EffectivePalette">
+            <summary>
+            EffectivePalette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.Palette">
+            <summary>
+            Palette property.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.BeforeColumnAutoGenerated">
+            <summary>
+            BeforeColumnAutoGenerated event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.BeforeGroupingChanged">
+            <summary>
+            BeforeGroupingChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.BeforeSortingChanged">
+            <summary>
+            BeforeSortingChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.CellClicked">
+            <summary>
+            CellClicked event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnDroppedOnTarget">
+            <summary>
+            ColumnDroppedOnTarget event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnResized">
+            <summary>
+            ColumnResized event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ColumnReordered">
+            <summary>
+            ColumnReordered event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FilterChanged">
+            <summary>
+            FilterChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupCollapsed">
+            <summary>
+            GroupCollapsed event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupExpanded">
+            <summary>
+            GroupExpanded event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupLoaded">
+            <summary>
+            GroupLoaded event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupingChanged">
+            <summary>
+            GroupingChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.NeedData">
+            <summary>
+            NeedData event.
+            </summary>
+            <remarks>
+            This event is particularly important for "Callback" running mode. In this load-on-demand mode, this event must be reacted to with a call to
+            fetch the required page of records.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RunningMode"/>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.NeedGroups">
+            <summary>
+            NeedGroups event.
+            </summary>
+            <remarks>
+            This event is needed for grouping when RunningMode is set to "Callback".
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RunningMode"/>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PageIndexChanged">
+            <summary>
+            PageIndexChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordOffsetChanged">
+            <summary>
+            RecordOffsetChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsLoaded">
+            <summary>
+            RowDetailsLoaded event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDetailsVisibilityChanged">
+            <summary>
+            RowDetailsVisibilityChanged event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowClicked">
+            <summary>
+            RowClicked event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RowDoubleClicked">
+            <summary>
+            RowDoubleClicked event.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SortingChanged">
+            <summary>
+            SortingChanged event.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell">
+            <summary>
+            GridViewCell class. An instance of this class corresponds to a cell in a GridViewRow.  
+            </summary>
+            <remarks>Most often represents a single data value unless it is part of a custom <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTemplateColumn"/>.</remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.AlternatingBackgroundProperty">
+            <summary>
+            AlternatingBackgroundProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.AlternatingBackground">
+            <summary>
+            AlternatingBackground property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.HoverBackground">
+            <summary>
+            The background brush to use on hover.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.IsSelected">
+            <summary>
+            IsSelected property. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.OwningColumn">
+            <summary>
+            OwningColumn property. The data field (of type GridViewColumn) to which this cell corresponds.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.OwningGrid">
+            <summary>
+            OwningGrid property. The GridView to which this cell belongs.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.OwningRow">
+            <summary>
+            OwningRow property. The data row (of type GridViewRow) to which this cell belongs.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.SelectedBackground">
+            <summary>
+            The background brush to use for the selected state.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell.SelectedBorderBrush">
+            <summary>
+            The border brush brush to use for the selected state.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnCollection">
+            <summary>
+            GridViewColumnCollection class.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn">
+            <summary>
+            GridViewColumn class. An object of this type corresponds to a data field to be handled by the GridView control.  Baseclass for <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextColumn"/>, 
+            <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCheckBoxColumn"/> and <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTemplateColumn"/>.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.ColumnNameProperty">
+            <summary>
+            ColumnNameProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.HeaderHorizontalAlignmentProperty">
+            <summary>
+            HeaderHorizontalAlignmentProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.HeaderHorizontalAlignment"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.VisibilityProperty">
+            <summary>
+            VisibilityProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.WidthProperty">
+            <summary>
+            WidthProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Width"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowGrouping">
+            <summary>
+            Whether to allow grouping by this column. 
+            </summary>
+            <remarks>
+            If not specified, the default is inherited from the owning GridView.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowGrouping"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowResizing">
+            <summary>
+            Whether to allow the resizing of this column. 
+            </summary>
+            <remarks>
+            If not specified, the default is inherited from the owning GridView.
+            </remarks>
+            <seealso cref="!:GridView.AllowResizing"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowSearching">
+            <summary>
+            Specifies whether cells in this column are considered by quick search functionality. Default: false.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.AllowSorting">
+            <summary>
+            Whether to allow sorting by this column. 
+            </summary>
+            <remarks>
+            If not specified, the default is inherited from the owning GridView.
+            </remarks>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.AllowSorting"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Background">
+            <summary>
+            The background to set to cells in this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.CalcExpression">
+            <summary>
+            The Calc expression to use for computing the value of cells in this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.CellTemplate">
+            <summary>
+            The template to use for cells in this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.CellStyle">
+            <summary>
+            The style to apply to GridViewCells in this column.
+            </summary>
+            <cref seealso="GridViewCell" />
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.ColumnName">
+            <summary>
+            ColumnName property. Textual name for the column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.DefaultSortDirection">
+            <summary>
+            The default sort and group direction for this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.DisplayIndex">
+            <summary>
+            The order of appearance of this column relative to others.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.FilterHeaderStyle">
+            <summary>
+            The style to apply to the filter header of this column.
+            </summary>
+            <seealso cref="!:GridView.ShowColumnFilters"/>
+            <seealso cref="!:GridViewColumnFilterHeader"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Foreground">
+            <summary>
+            The foreground to set to cells in this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Header">
+            <summary>
+            The content to display in the header of this column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.HeaderHorizontalAlignment">
+            <summary>
+            The horizontal alignment to apply to the content of the header.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.HeaderStyle">
+            <summary>
+            The style to apply to the header of this column.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnHeader"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.IsSelected">
+            <summary>
+            Whether this column is selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.SortState">
+            <summary>
+            Determines whether this column's header indicates a particular sort order on the column.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Visibility">
+            <summary>
+            Whether this column is to be displayed.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.Width">
+            <summary>
+            The width of this column.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn.PropertyChanged">
+            <summary>
+            Fires when a member property's value changes.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBoundColumn">
+            <summary>
+            GridViewBoundColumn class. Represents a column bound to a data field in the ItemsSource.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBoundColumn.Binding">
+            <summary>
+            Determines how this column is populated with data from the data source.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.ItemsSource"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTemplateColumn">
+            <summary>
+            GridViewTemplateColumn class. Represents a column for which a CellTemplate is provided. 
+            </summary>
+            <remarks><para>It is considered best practice to set the Binding property to the entire datasource in order to have access to all the data within the custom cell data template.</para>
+            <para>Set the CellTemplate property to the <see cref="T:System.Windows.DataTemplate"/> that contains custom XAML markup for the cell.</para></remarks>
+            <seealso cref="T:System.Windows.DataTemplate"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewTextColumn">
+            <summary>
+            GridViewTextColumn class. Represents a column for which text content is presented.
+            </summary>
+            <remarks>Set the Binding property to the datasource property displayed by this column.</remarks>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCheckBoxColumn">
+            <summary>
+            GridViewCheckBoxColumn class. Represents a boolean-valued column for which checkboxes are automatically generated.
+            </summary>
+            <remarks>Set the Binding property to the datasource boolean property whose value is displayed by this column.</remarks>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCheckBoxColumn.CheckChange">
+            <summary>
+            CheckChange event.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnResizeElement">
+            <summary>
+            GridViewColumnResizeElement class.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnHeader">
+            <summary>
+            GridViewColumnHeader class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnHeader.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnHeader.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnHeader.SortState">
+            <summary>
+            Determines whether this column header indicates a particular sort order on the column.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnAutoGeneratedCancelEventArgs">
+            <summary>
+            Parameters relating to a column auto-generation event.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnAutoGeneratedCancelEventArgs.Column">
+            <summary>
+            The GridViewColumn to which this event pertains.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnAutoGeneratedCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the generation of this column.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnAutoGeneratedCancelEventArgs.PropertyName">
+            <summary>
+            The name of the property for which this column is being generated.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnAutoGeneratedCancelEventArgs.PropertyType">
+            <summary>
+            The type of the property for which this column is being generated.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewFilterChangedEventArgs">
+            <summary>
+            Parameters relating to a FilterChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.FilterChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewFilterChangedEventArgs.Filters">
+            <summary>
+            The new state of the filters.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnEventArgs">
+            <summary>
+            Parameters relating to an event involving a GridViewColumn.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnEventArgs.Column">
+            <summary>
+            The GridViewColumn object being generated.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnDropEventArgs">
+            <summary>
+            Parameters relating to an event involving a GridViewColumn.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumn"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewColumnDropEventArgs.TargetName">
+            <summary>
+            The x:Name of the target of the column drop.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupEventArgs">
+            <summary>
+            Parameters relating to an event involving a GridViewGroup.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupEventArgs.Group">
+            <summary>
+            The GridViewGroup to which this event pertains.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingChangedEventArgs">
+            <summary>
+            Parameters relating to a GroupingChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.GroupingChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingChangedEventArgs.Groupings">
+            <summary>
+            The new groupings.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingChangedCancelEventArgs">
+            <summary>
+            Parameters relating to a BeforeGroupingChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.BeforeGroupingChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingChangedCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the default handling of this event.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs">
+            <summary>
+            Parameters relating to NeedData event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.NeedData"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the default handling of this event.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs.Offset">
+            <summary>
+            The offset within the record set to start from.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs.Count">
+            <summary>
+            The maximum number of records required.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs.Sortings">
+            <summary>
+            Abstract description of the sort order to be used.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedDataCancelEventArgs.Filters">
+            <summary>
+            Abstract description of the filters to be applied.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs">
+            <summary>
+            Parameters relating to NeedGroups event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.NeedGroups"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the default handling of this event.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.Groupings">
+            <summary>
+            The orderings to group by.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.Filters">
+            <summary>
+            Constraints to include in the query.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.Offset">
+            <summary>
+            How many groups to skip.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.Count">
+            <summary>
+            How many groups to include.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNeedGroupsCancelEventArgs.#ctor(ComponentArt.Silverlight.DataVisualization.DataGrids.GridView,ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingCollection)">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPageIndexChangedEventArgs">
+            <summary>
+            Parameters relating to a PageIndexChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.PageIndexChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPageIndexChangedEventArgs.NewIndex">
+            <summary>
+            The new page index.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRecordOffsetChangedEventArgs">
+            <summary>
+            Parameters relating to a RecordOffsetChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.RecordOffsetChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRecordOffsetChangedEventArgs.NewOffset">
+            <summary>
+            The new record offset.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowCancelEventArgs">
+            <summary>
+            Parameters relating to a cancelable event involving a GridViewRow.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowEventArgs">
+            <summary>
+            Parameters relating to an event involving a GridViewRow.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowEventArgs.Row">
+            <summary>
+            The GridViewRow to which this event pertains.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowEventArgs.Item">
+            <summary>
+            The data item associated with the row.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the related action.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellEventArgs">
+            <summary>
+            Parameters relating to an event involving a GridViewCell.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellEventArgs.Cell">
+            <summary>
+            The GridViewCell to which this event pertains.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsEventArgs">
+            <summary>
+            Parameters relating to an event involving row details.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRowDetailsEventArgs.DetailsElement">
+            <summary>
+            The details element.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingChangedCancelEventArgs">
+            <summary>
+            Parameters relating to a BeforeSortingChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.BeforeSortingChanged"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingChangedEventArgs">
+            <summary>
+            Parameters relating to a SortingChanged event.
+            </summary>
+            <seealso cref="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridView.SortingChanged"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingChangedEventArgs.Sortings">
+            <summary>
+            The new sort order.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingChangedCancelEventArgs.Cancel">
+            <summary>
+            Whether to cancel the default handling of this event.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupBox">
+            <summary>
+            GridViewGroupBox class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupBox.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupBox.Direction">
+            <summary>
+            The sort direction indicated by this grouping box.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupBox.OwningColumn">
+            <summary>
+            The column (data field) corresponding to this grouping.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup">
+            <summary>
+            GridViewGroup class. Represents a grouped set of items.
+            </summary>
+            <remarks>Groupings can be performed by the end-user by draging column headers onto the header surface in order to group the entries by common values of the property of the column.</remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.RowIndices">
+            <summary>
+            RowIndices
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Depth">
+            <summary>
+            Depth property. Indicates the depth (zero-based) of this group in the overall grouping hierarchy.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.IsExpanded">
+            <summary>
+            IsExpanded property. Indicates whether this group is expanded.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.IsLoaded">
+            <summary>
+            IsLoaded property. Indicates whether this group has loaded its constituent rows.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Field">
+            <summary>
+            Field property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.GroupColumn">
+            <summary>
+            GroupColumn property. Indicates the column (data field) for which the group was created.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Groups">
+            <summary>
+            Groups property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Indent">
+            <summary>
+            Indent property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Items">
+            <summary>
+            Items property.
+            </summary>    
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.OwningGrid">
+            <summary>
+            The parent GridView control containing this group.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.ParentGroup">
+            <summary>
+            The parent group of this group, if any.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.Value">
+            <summary>
+            Value property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroup.ValueText">
+            <summary>
+            ValueText property.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewAccentConverter">
+            <summary>
+            GridViewAccentConverter class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewAccentConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implementation of standard ValueConverter method.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewAccentConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implementation of standard ValueConverter method.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNumberFormatter">
+            <summary>
+            GridViewNumberFormatter class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNumberFormatter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implementation of standard ValueConverter method.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewNumberFormatter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Implementation of standard ValueConverter method.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBulkObservableCollection`1">
+            <summary>
+            An observable collection which adds batched AddRange and RemoveRange operations.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBulkObservableCollection`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Performs a bulk addition.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBulkObservableCollection`1.RemoveRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Performs a bulk removal.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBulkObservableCollection`1.BeginUpdate">
+            <summary>
+            Signals the start of a bulk update on the collection.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewBulkObservableCollection`1.EndUpdate">
+            <summary>
+            Signals the endo of a bulk update on the collection.
+            </summary>
+            <remarks>CollectionChanged is triggered at this point.</remarks>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection">
+            <summary>
+            GridViewCellCollection class. Represents a collection of GridViewCell objects.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection.#ctor(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection"/> class with the specified <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow"/>.
+            </summary>
+            <param name="parentRow">The parent row for the cell collection.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection.Add(ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell)">
+            <summary>
+            Adds a new cell to the collection.
+            </summary>
+            <param name="cell">The cell to add to the collection.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection.Insert(System.Int32,ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCell)">
+            <summary>
+            Inserts a cell at the specified index.
+            </summary>
+            <param name="cellIndex">The index to insert the cell at.</param>
+            <param name="cell">The cell to insert.</param>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCellCollection.Item(System.String)">
+            <summary>
+            String indexer for row cells.
+            </summary>
+            <param name="sFieldName">The name of the column.</param>
+            <returns>The cell in the collection corresponding to the named column.</returns>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingCollection">
+            <summary>
+            This class describes a collection of data orderings in a data query.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSorting"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingCollection.ToSqlString">
+            <summary>
+            Returns a SQL ORDER BY expression representing this collection of data orderings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSortingCollection.IsEmpty">
+            <summary>
+            Returns whether this collection is empty of any orderings.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSorting">
+            <summary>
+            GridViewSorting class. Describes an ordering of data.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSorting.ToSqlString">
+            <summary>
+            Returns an SQL ORDER BY expression describing this data ordering.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSorting.Column">
+            <summary>
+            Column by which to order.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSorting.Direction">
+            <summary>
+            Direction of the ordering.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingCollection">
+            <summary>
+            This class describes a collection of data groupings.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGrouping"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingCollection.ToSqlString">
+            <summary>
+            Returns a SQL ORDER BY expression representing this collection of data groupings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupingCollection.IsEmpty">
+            <summary>
+            Returns whether this collection is empty of any groupings.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGrouping">
+            <summary>
+            GridViewGrouping class.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGrouping.ToSqlString">
+            <summary>
+            Returns an SQL GROUP BY expression describing this data grouping.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGrouping.Column">
+            <summary>
+            Column that's grouped by.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGrouping.Direction">
+            <summary>
+            The direction of the grouping.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataConditionCollection">
+            <summary>
+            This class describes a collection of data conditions to be satisfied in a data query.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataConditionCollection.ToSqlString">
+            <summary>
+            Returns an SQL WHERE expression describing this set of data conditions.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataConditionCollection.IsEmpty">
+            <summary>
+            Returns whether this collection is empty of any conditions.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataConditionOperand">
+            <summary>
+            Operands that can be part of a data condition.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataConditionLogicalOperator">
+            <summary>
+            Logical operators that can be used to form compound data conditions.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCompoundDataCondition"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition">
+            <summary>
+            This class describes a simple data condition to be satisfied in a data query.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition.DataFieldName">
+            <summary>
+            The name of the data field to restrict by.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition.DataFieldValue">
+            <summary>
+            The value of the data field to match.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition.Operand">
+            <summary>
+            The operand to apply to the field and value.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewDataCondition.ToSqlString">
+            <summary>
+            Returns a valid SQL expression describing the condition.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCompoundDataCondition">
+            <summary>
+            This class describes a compound data condition to be satisfied in a data query.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCompoundDataCondition.CompoundCondition">
+            <summary>
+            The condition to form a compound condition with.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewCompoundDataCondition.CompoundOperator">
+            <summary>
+            The logical operator to use when compounding this condition with CompoundCondition.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewObjectComparer">
+            <summary>
+            GridViewObjectComparer class. Used for client-side data sorting.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.SortableObservableCollection`1">
+            <summary>
+            Provides an implementation of <see cref="!:ObservableCollection"/> that can be sorted.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:ComponentArt.Silverlight.DataVisualization.DataGrids.SortableObservableCollection`1.Sort" -->
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.SortableObservableCollection`1.Sort(System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Sorts the collection by using the provided custom comparer.
+            </summary>
+            <param name="comparer">Custom comparer to sort the collection with.</param>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.SortableObservableCollection`1.Sort(System.Int32,System.Int32,System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Sorts a subset fo the collection between index and index+count with the provided comparer.
+            </summary>
+            <param name="index">Starting index where sorting begins</param>
+            <param name="count">The number of elements to be encompassed by the sort</param>
+            <param name="comparer">Custom comparer used for sorting</param>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupDataContext">
+            <summary>
+            GridViewGroupDataContext class. Used for group heading templates.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupDataContext.Group">
+            <summary>
+            The GridViewGroup control, if available.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupDataContext.Column">
+            <summary>
+            The column for which this group was made.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewGroupDataContext.Value">
+            <summary>
+            The field value for this group.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext">
+            <summary>
+            GridViewPositionDataContext class. Used for slider and pager templates.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.DataItem">
+            <summary>
+            Data object appearing at this position in the data set, if any.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.RecordIndex">
+            <summary>
+            The 0-based record index corresponding to this position in the data set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.RecordNumber">
+            <summary>
+            The 1-based record number corresponding to this position in the data set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.PageIndex">
+            <summary>
+            The 0-based page index corresponding to this position in the data set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.PageNumber">
+            <summary>
+            The 1-based page number corresponding to this position in the data set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewPositionDataContext.Owner">
+            <summary>
+            The GridView control to which this position information pertains.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow">
+            <summary>
+            GridViewRow class. An object of this type corresponds to a row of data to be displayed by the GridView control.
+            </summary>
+            <remarks>Represents a single data object from the datasource collection.</remarks>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.Index">
+            <summary>
+            Returns the index of this record within the record set.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.DisplayIndex">
+            <summary>
+            Returns the index of this record on the visible page if it is displayed, and -1 if it isn't.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.PageIndex">
+            <summary>
+            Return the index of the page which this record is found on.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.Cells">
+            <summary>
+            Cells property. Contains all the data cells contained by this row.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.DataItem">
+            <summary>
+            DataItem property. Contains the data object which this row was created for. Used for accessing raw data in templates.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.DetailsVisibility">
+            <summary>
+            DetailsVisibility property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.IsExpanded">
+            <summary>
+            IsExpanded property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.IsSelected">
+            <summary>
+            IsSelected property. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.OwningGrid">
+            <summary>
+            The GridView control to which this row belongs.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewRow.OwningGroup">
+            <summary>
+            The GridViewGroup control to which this row belongs, if any.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSlider">
+            <summary>
+            GridViewSlider class. Visual elements supporting GridView's slide-paging functionality.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSlider.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSlider.ThumbDragStarted">
+            <summary>
+            Raised when the thumb has been clicked, and dragging is initiated.
+            </summary>
+        </member>
+        <member name="E:ComponentArt.Silverlight.DataVisualization.DataGrids.GridViewSlider.ThumbDragCompleted">
+            <summary>
+            Raised when the thumb has been released.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader">
+            <summary>
+            PivotGridHeader class. Provides control over a column dimension, row dimension, or measure. Contains functionality for dragging, removing, filtering the represented object.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader.CaptionProperty">
+            <summary>
+            CaptionProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader.Caption"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader.Caption">
+            <summary>
+            A representative string to be displayed for this node.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridHeader.OwningGrid">
+            <summary>
+            The PivotGrid to which this header belongs.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill">
+            <summary>
+            Defines the look and functionality of the drill (expand/collapse) element for pivot grid nodes.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpandableProperty">
+            <summary>
+            IsExpandableProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpandable"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpandedProperty">
+            <summary>
+            IsExpandedProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpanded"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpandable">
+            <summary>
+            Whether this drill is expandable (drillable).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNodeDrill.IsExpanded">
+            <summary>
+            Whether this drill is currently expanded (drilled).
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridColumnNode">
+            <summary>
+            PivotGridColumnNode class.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode">
+            <summary>
+            PivotGridNode class.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.CaptionProperty">
+            <summary>
+            CaptionProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Caption"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsExpandableProperty">
+            <summary>
+            IsExpandableProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsExpandedProperty">
+            <summary>
+            IsExpandedProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsTotalProperty">
+            <summary>
+            IsTotalProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Breadth">
+            <summary>
+            The breadth of this node's sub-hierarchy. Read-onkly.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Caption">
+            <summary>
+            A representative string to be displayed for this node.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Depth">
+            <summary>
+            The depth of this node within its hierarchy. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsExpandable">
+            <summary>
+            Whether this node is expandable.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsExpanded">
+            <summary>
+            Whether this node is presently expanded.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.IsTotal">
+            <summary>
+            Defines whether this node represents a total.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Nodes">
+            <summary>
+            The collection of this node's child nodes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.Member">
+            <summary>
+            The multi-dimensional data member node associated with this pivot grid node.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.ParentNode">
+            <summary>
+            This node's parent.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode.OwningGrid">
+            <summary>
+            The PivotGrid to which this node belongs.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridRowNode">
+            <summary>
+            PivotGridRowNode class.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotNodeDrag">
+            <summary>
+            PivotNodeDrag class. Represents a pivot (grid or tree) node being dragged by mouse in the application.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotNodeDrag.IsDraggingProperty">
+            <summary>
+            IsDraggingProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotNodeDrag.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotNodeDrag.IsDragging">
+            <summary>
+            IsDragging property.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridDataCell">
+            <summary>
+            PivotGridDataCell class. Represents a cell in the data pane of the PivotGrid.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridDataCell.#ctor">
+            <summary>
+            The public constructor for PivotGridDataCell.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridDataCell.ColumnIndex">
+            <summary>
+            The index of the column to which the cell is currently associated.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridDataCell.RowIndex">
+            <summary>
+            The index of the row to which the cell is currently associated.
+            </summary>    
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridDataCell.OwningGrid">
+            <summary>
+            The PivotGrid to which this cell belongs.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid">
+            <summary>
+            PivotGrid class. Allows end-users interactive, out-of-the-box navigation of multi-dimensional data sources.
+            </summary>
+            <remarks>
+            <para>To connect the control to a multi-dimensional data source, we need only to set its <see cref="!:ChartBase.DataSource"/> property to an object inheriting from <see cref="T:ComponentArt.Silverlight.DataVisualization.Data.MD.MdDataSource"/>. 
+            An implementation of this that is capable of connecting directly to XMLA-based entry points into OLAP databases (like Microsoft Analysis Services),
+            and is included in the Data Visualization package, is the XMLA MdDataSource (<see cref="T:ComponentArt.Silverlight.DataVisualization.Data.Olap.Xmla.MD.MdDataSource"/>).</para>
+            <para>In order to allow the end user to analyze all the dimensions available in the Analysis Services cube, we can introduce a <see cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree"/> to our page. 
+            End-users can drag specific data dimensions and measures from the PivotTree onto the PivotGrid's headers in order to change the view</para>
+            To learn more about this control see the list of <a href="mk:@MSITStore:ComponentArt.Silverlight.DataVisualization.chm::/PivotGrid_Welcome.htm">PivotGrid tutorials</a>.
+            </remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree"/>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Data.MD.MdDataSource"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ColumnHeaderVisibilityProperty">
+            <summary>
+            ColumnHeaderVisibilityProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataCellHeightProperty">
+            <summary>
+            DataCellHeightProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataCellWidthProperty">
+            <summary>
+            DataCellWidthProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataSourceProperty">
+            <summary>
+            DataSourceProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.FilterHeaderVisibilityProperty">
+            <summary>
+            FilterHeaderVisibilityProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.FilterHeaderVisibility"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.MeasureHeaderVisibilityProperty">
+            <summary>
+            MeasureHeaderVisibilityProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.MeasureHeaderVisibility"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.RowHeaderVisibilityProperty">
+            <summary>
+            RowHeaderVisibilityProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.RowHeaderVisibility"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ScrollBarWidthProperty">
+            <summary>
+            ScrollBarWidthProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Select(System.Int32,System.Int32)">
+            <summary>
+            Adds a column and/or row node to the selection in order to extend it to the include the data cell at the given grid coordinates.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Render">
+            <summary>
+            (Re-)produces all visual elements of the control to reflect its current state.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.AccentBrushProperty">
+            <summary>
+            Identifies the AccentBrush dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EffectivePaletteProperty">
+            <summary>
+            EffectivePaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.PaletteProperty">
+            <summary>
+            PaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ThemeProperty">
+            <summary>
+            ThemeProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ThemeVariantProperty">
+            <summary>
+            ThemeVariantProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.LoadNodes(ComponentArt.Silverlight.DataVisualization.Data.MD.MemberNodeCollection,System.Collections.ObjectModel.Collection{ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode},System.Type,ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGridNode)">
+            <summary>
+            Loads member nodes into pivot grid nodes of the given type and returns the maximum tree depth.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ColumnDepth">
+            <summary>
+            The maximum depth of the column hierarchy. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ColumnHeaderVisibility">
+            <summary>
+            The visibility of the column header area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ColumnHierarchies">
+            <summary>
+            ColumnHierarchies property. Describes the hierarchies laid out along the columns.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataCellHeight">
+            <summary>
+            DataCellHeight property. Specifies the default height of data cells. Default: 25.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataCellWidth">
+            <summary>
+            DataCellWidth property. Specifies the default width of data cells. Default: 90.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.DataSource">
+            <summary>
+            The data source from which to load data and with which to interact.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.Data.MD.MdDataSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EmptyColumnsText">
+            <summary>
+            The text to display in the header when no column dimensions are selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EmptyFiltersText">
+            <summary>
+            The text to display in the header when no filters are selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EmptyMeasuresText">
+            <summary>
+            The text to display in the header when no measures are selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EmptyRowsText">
+            <summary>
+            The text to display in the header when no rows are selected.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.FilterHeaderVisibility">
+            <summary>
+            The visibility of the filter header area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Filters">
+            <summary>
+            Filters property. Specifies the filters to be appled on the data.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.MeasureHeaderVisibility">
+            <summary>
+            The visibility of the measure header area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Measures">
+            <summary>
+            Measures property. Specifies the measures to be used for data.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.RowDepth">
+            <summary>
+            The maximum depth of the row hierarchy. Read-only.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.RowHeaderVisibility">
+            <summary>
+            The visibility of the row header area.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.RowHierarchies">
+            <summary>
+            RowHierarchies property. Describes the hierarchies laid out along the rows.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ScrollBarWidth">
+            <summary>
+            ScrollBarWidth property. Specifies the width of scrollbars in pixels. Default: 11.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.SelectedColumnNodes">
+            <summary>
+            The collection of selected column nodes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.SelectedData">
+            <summary>
+            A two-dimensional collection of presently selected data items.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.SelectedRowNodes">
+            <summary>
+            The collection of selected row nodes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ShowTotals">
+            <summary>
+            Whether to display total rows/columns. Default: true.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.AccentBrush">
+            <summary>
+            Gets or sets the AccentBrush property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.EffectivePalette">
+            <summary>
+            EffectivePalette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Palette">
+            <summary>
+            Palette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Theme">
+            <summary>
+            Gets or sets the named theme (if any) applied to the control.
+            </summary>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.Theming.GetThemeNames"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.ThemeVariant">
+            <summary>
+            Gets or sets the variant of the applied theme to apply on the control.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid.Theme"/>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill">
+            <summary>
+            Defines the look and functionality of the drill (expand/collapse) element for pivot tree nodes.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpandableProperty">
+            <summary>
+            IsExpandableProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpandable"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpandedProperty">
+            <summary>
+            IsExpandedProperty dependency property.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpanded"/>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpandable">
+            <summary>
+            Whether this node is expandable (drillable).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.IsExpanded">
+            <summary>
+            Whether this node is presently expanded (drilled).
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNodeDrill.OwningNode">
+            <summary>
+            The PivotTreeNode to which this drill belongs.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode">
+            <summary>
+            Defines a node in the PivotTree.
+            </summary>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsCheckedProperty">
+            <summary>
+            IsCheckedProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsExpandableProperty">
+            <summary>
+            IsExpandableProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsExpandedProperty">
+            <summary>
+            IsExpandedProperty dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsChecked">
+            <summary>
+            Whether this node is presently checked.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsExpandable">
+            <summary>
+            Whether this node is expandable.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.IsExpanded">
+            <summary>
+            Whether this node is presently expanded.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.Nodes">
+            <summary>
+            The collection of this node's child nodes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.ParentNode">
+            <summary>
+            This node's parent node.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode.OwningTree">
+            <summary>
+            The PivotTree to which this node belongs.
+            </summary>
+        </member>
+        <member name="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree">
+            <summary>
+            PivotTree class. Allows the end user to hierarchically browse through all the available data dimensions and measures in the specified data source.
+            </summary>
+            <remarks>
+            <para>To connect the control to a multi-dimensional data source, we need only to set its <see cref="!:ChartBase.DataSource"/> property to an object inheriting from <see cref="T:ComponentArt.Silverlight.DataVisualization.Data.MD.MdDataSource"/>. 
+            An implementation of this that is capable of connecting directly to XMLA-based entry points into OLAP databases (like Microsoft Analysis Services),
+            and is included in the Data Visualization package, is the XMLA MdDataSource (<see cref="T:ComponentArt.Silverlight.DataVisualization.Data.Olap.Xmla.MD.MdDataSource"/>).</para>
+            Also allows specific data dimensions and measures to be dragged onto the PivotGrid's headers in order to change the view.</remarks>
+            <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotGrid"/> <seealso cref="T:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTreeNode"/>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CatalogSelectorVisibilityProperty">
+            <summary>
+            CatalogSelectorVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CheckBoxVisibilityProperty">
+            <summary>
+            CheckBoxVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CubeSelectorVisibilityProperty">
+            <summary>
+            CubeSelectorVisibility dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.DataSourceProperty">
+            <summary>
+            DataSourceProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.MeasureGroupSelectorVisibilityProperty">
+            <summary>
+            MeasureGroupSelectorVisibility dependency property.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.#ctor">
+            <summary>
+            Public constructor for PivotTree.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Dispose">
+            <summary>
+            Releases any resources currently in use to ensure proper disposal.  Do not call directly from external code.
+            </summary>		
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.GetCheckedObjects">
+            <summary>
+            Returns a collection of nodes which are checked.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.GetFilterItems">
+            <summary>
+            Returns a collection of items which represent a filter selection based on checked, unchecked and partially checked states of nodes.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.GetUnCheckedObjects">
+            <summary>
+            Returns a collection of nodes which are unchecked.
+            </summary>
+        </member>
+        <member name="M:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.OnApplyTemplate">
+            <summary>
+            Lifecycle method to be called by the framework.  Do not call directly from external code.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.AccentBrushProperty">
+            <summary>
+            Identifies the AccentBrush dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.EffectivePaletteProperty">
+            <summary>
+            EffectivePaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.PaletteProperty">
+            <summary>
+            PaletteProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.ThemeProperty">
+            <summary>
+            ThemeProperty dependency property.
+            </summary>
+        </member>
+        <member name="F:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.ThemeVariantProperty">
+            <summary>
+            ThemeVariantProperty dependency property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CatalogSelectorVisibility">
+            <summary>
+            CatalogSelectorVisibility property. Determines whether the cube selector is displayed.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CheckBoxVisibility">
+            <summary>
+            CheckBoxVisibility property. Determines whether check boxes are displayed on nodes.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.CubeSelectorVisibility">
+            <summary>
+            CubeSelectorVisibility property. Determines whether the cube selector is displayed.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.DataSource">
+            <summary>
+            The data source to be navigated.
+            </summary>
+            <seealso cref="!:MD.MdDataSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.MeasureGroup">
+            <summary>
+            MeasureGroup property. If specified, only the measures and dimensions relevant to the measure group will be displayed in the tree.
+            </summary>   
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.MeasureGroupSelectorVisibility">
+            <summary>
+            MeasureGroupSelectorVisibility property. Determines whether the measure group selector is displayed.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.MeasureGroup"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Nodes">
+            <summary>
+            The loaded nodes describing the hierarchical structure of dimensions and measures. Read-only.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.DataSource"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Root">
+            <summary>
+            The root object from which to begin the tree. If null, the entire data source will be browsable.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.AccentBrush">
+            <summary>
+            Gets or sets the AccentBrush property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.EffectivePalette">
+            <summary>
+            EffectivePalette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Palette">
+            <summary>
+            Palette property.
+            </summary>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Theme">
+            <summary>
+            Gets or sets the named theme (if any) applied to the control.
+            </summary>
+            <seealso cref="M:ComponentArt.Silverlight.DataVisualization.Theming.GetThemeNames"/>
+        </member>
+        <member name="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.ThemeVariant">
+            <summary>
+            Gets or sets the variant of the applied theme to apply on the control.
+            </summary>
+            <seealso cref="P:ComponentArt.Silverlight.DataVisualization.DataGrids.PivotTree.Theme"/>
+        </member>
+    </members>
+</doc>

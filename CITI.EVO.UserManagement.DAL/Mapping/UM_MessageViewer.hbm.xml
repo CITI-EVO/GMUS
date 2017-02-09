@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_MessageViewer" table="UM_MessageViewers">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+
+    <property name="MessageID" />
+    <property name="UserID" />
+    
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <many-to-one name="User" column="UserID"  />
+    <many-to-one name="Message" column="MessageID"  />
+  </class>
+</hibernate-mapping>

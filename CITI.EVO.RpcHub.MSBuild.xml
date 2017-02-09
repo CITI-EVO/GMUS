@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="FullBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup Label="Common">
+		<Verbosity>diagnostic</Verbosity>
+
+		<MSBuildExtensionsPath>Dependencies\MSBuild</MSBuildExtensionsPath>
+		<MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\..\..</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+
+	<PropertyGroup Label="WebSites">
+		<CitiEvoRpcHubRoot>CITI.EVO.RpcHub.Web</CitiEvoRpcHubRoot>
+		<CitiEvoRpcHubBin>$(CitiEvoRpcHubRoot)\Bin</CitiEvoRpcHubBin>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Libraries">
+		<LibrariesMSBuild>BuildLibraries.MSBuild.xml</LibrariesMSBuild>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\MSBuild.Community.Tasks.Targets"/>
+
+	<ItemGroup>
+		<WmsLibraries Include="Dependencies\Local\**\*"/>
+		<CitiEvoRpcHubLibraries Include="CITI.EVO.RpcHub.Web\Bin\**\*"/>
+		<ThirdpartyWebDependencies Include="Dependencies\3rdparty\Web\**\*"/>
+	</ItemGroup>
+
+	<Target Name="RemovePrecompiledWeb">
+		<RemoveDir Directories="PrecompiledWeb\$(CitiEvoRpcHubRoot)">
+			<Output TaskParameter="RemovedDirectories" ItemName="SuccessfullyRemovedDirectories"/>
+		</RemoveDir>
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="DeleteLibraries">
+		<Delete Files="@(CitiEvoRpcHubLibraries)" >
+			<Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
+		</Delete>
+		<RemoveDir Directories="$(CitiEvoRpcHubBin)">
+			<Output TaskParameter="RemovedDirectories" ItemName="SuccessfullyRemovedDirectories"/>
+		</RemoveDir>
+	</Target>
+
+	<Target Name="CopyLibraries">
+		<Copy SourceFiles="@(WmsLibraries)" DestinationFolder="$(CitiEvoRpcHubBin)\%(RecursiveDir)" SkipUnchangedFiles="true">
+			<Output TaskParameter="CopiedFiles" ItemName="SuccessfullyCopiedFiles"/>
+		</Copy>
+		<Copy SourceFiles="@(ThirdpartyWebDependencies)" DestinationFolder="$(CitiEvoRpcHubBin)\%(RecursiveDir)" SkipUnchangedFiles="true">
+			<Output TaskParameter="CopiedFiles" ItemName="SuccessfullyCopiedFiles"/>
+		</Copy>
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="BuildLibraries">
+		<MSBuild ContinueOnError="false" Projects="$(LibrariesMSBuild)" Properties="Configuration=Debug;Verbosity=$(Verbosity)" />
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="BuildWebSites">
+		<AspNetCompiler ContinueOnError="false" VirtualPath="/$(CitiEvoRpcHubRoot)" PhysicalPath="$(CitiEvoRpcHubRoot)\" TargetPath="PrecompiledWeb\$(CitiEvoRpcHubRoot)" Force="true" Debug="true" Clean="true" />
+		<Message Text="--------------------------------------------------------" />
+	</Target>
+
+	<Target Name="ZipPrecompiledWebs">
+		<CreateItem Include="PrecompiledWeb\$(CitiEvoRpcHubRoot)\**\*.*" >
+			<Output ItemName="CitiEvoRpcHubBuilded" TaskParameter="Include"/>
+		</CreateItem>
+		<Delete Files="PrecompiledWeb\$(CitiEvoRpcHubRoot).zip" >
+			<Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
+		</Delete>
+		<Zip ZipFileName="PrecompiledWeb\$(CitiEvoRpcHubRoot).zip" WorkingDirectory="PrecompiledWeb\$(CitiEvoRpcHubRoot)" Files="@(CitiEvoRpcHubBuilded)" />
+		<Message Text="--------------------------------------------------------" />
+
+	</Target>
+
+	<Target Name="FullBuild">
+		<AppPoolController ApplicationPoolName="$(CitiEvoRpcHubRoot)" Action="Stop" />
+
+		<CallTarget Targets="DeleteLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="BuildLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="CopyLibraries" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="RemovePrecompiledWeb" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="BuildWebSites" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<CallTarget Targets="ZipPrecompiledWebs" />
+		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+
+		<AppPoolController ApplicationPoolName="$(CitiEvoRpcHubRoot)" Action="Start" />
+	</Target>
+</Project>

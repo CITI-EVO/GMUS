@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CITI.EVO.UserManagement.DAL"
+                   namespace="CITI.EVO.UserManagement.DAL.Domain">
+
+  <class name="UM_User" table="UM_Users">
+    <id name="ID">
+      <generator class="guid" />
+    </id>
+    
+    <property name="LoginName" />
+    <property name="Password" />
+    <property name="FirstName" />
+    <property name="LastName" />
+    <property name="Email" />
+    <property name="Address" />
+    <property name="IsSuperAdmin" />
+    <property name="IsActive" />
+    <property name="UserCategoryID" />
+    <property name="PasswordExpirationDate" />
+    <property name="UserCode" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+    
+    <many-to-one name="UserCategory" column="UserCategoryID" update="false" insert="false"  />
+
+    <bag name="UserLogs">
+      <key column="UserID" />
+      <one-to-many class="UM_UserLog" />
+    </bag>
+    <bag name="GroupUsers">
+      <key column="UserID" />
+      <one-to-many class="UM_GroupUser" />
+    </bag>
+    <bag name="LoginTokens">
+      <key column="UserID" />
+      <one-to-many class="UM_LoginToken" />
+    </bag>
+    <bag name="MessageViewers">
+      <key column="UserID" />
+      <one-to-many class="UM_MessageViewer" />
+    </bag>
+    <!--<bag name="AttributeValues">
+      <key column="ParentID" />
+      <one-to-many class="UM_AttributeField" />
+    </bag>-->
+  </class>
+</hibernate-mapping>
