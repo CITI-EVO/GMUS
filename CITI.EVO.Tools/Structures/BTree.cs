@@ -54,7 +54,7 @@ namespace CITI.EVO.Tools.Structures
             // there is space in the root node
             if (!_root.HasReachedMaxSize)
             {
-                if (AddNonFull(_root, item))
+                if (InsertNonFull(_root, item))
                 {
                     _count++;
                     return true;
@@ -73,7 +73,7 @@ namespace CITI.EVO.Tools.Structures
 
             SplitChild(_root, 0, oldRoot);
 
-            if (AddNonFull(_root, item))
+            if (InsertNonFull(_root, item))
             {
                 _count++;
                 return true;
@@ -113,7 +113,7 @@ namespace CITI.EVO.Tools.Structures
             _root = new BNode<TItem>(_degree);
         }
 
-        private bool AddNonFull(BNode<TItem> node, TItem newItem)
+        private bool InsertNonFull(BNode<TItem> node, TItem newItem)
         {
             while (true)
             {
@@ -149,36 +149,37 @@ namespace CITI.EVO.Tools.Structures
         private bool RemoveInternal(BNode<TItem> node, TItem itemToDelete)
         {
             var count = BinarySearchFindFirst(node.Items, itemToDelete);
+
             if (count < node.Items.Count && CompareItems(node.Items[count], itemToDelete) == 0)
                 return RemoveItemFromNode(node, itemToDelete, count);
 
             if (!node.IsLeaf)
-                return RemoveItemFromSubtree(node, itemToDelete, count);
+                return RemoveItemFromSubTree(node, itemToDelete, count);
 
             return false;
         }
 
-        private bool RemoveItemFromSubtree(BNode<TItem> parentNode, TItem itemToDelete, int subtreeIndexInNode)
+        private bool RemoveItemFromSubTree(BNode<TItem> parentNode, TItem itemToDelete, int subTreeIndex)
         {
-            var childNode = parentNode.Nodes[subtreeIndexInNode];
+            var childNode = parentNode.Nodes[subTreeIndex];
 
             // node has reached min # of entries, and removing any from it will break the btree property,
             // so this block makes sure that the "child" has at least "degree" # of nodes by moving an 
             // entry from a sibling node or merging nodes
             if (childNode.HasReachedMinSize)
             {
-                var leftIndex = subtreeIndexInNode - 1;
-                var leftSibling = subtreeIndexInNode > 0 ? parentNode.Nodes[leftIndex] : null;
+                var leftIndex = subTreeIndex - 1;
+                var leftSibling = subTreeIndex > 0 ? parentNode.Nodes[leftIndex] : null;
 
-                var rightIndex = subtreeIndexInNode + 1;
-                var rightSibling = subtreeIndexInNode < parentNode.Nodes.Count - 1 ? parentNode.Nodes[rightIndex] : null;
+                var rightIndex = subTreeIndex + 1;
+                var rightSibling = subTreeIndex < parentNode.Nodes.Count - 1 ? parentNode.Nodes[rightIndex] : null;
 
                 if (leftSibling != null && leftSibling.Items.Count > _degree - 1)
                 {
                     // left sibling has a node to spare, so this moves one node from left sibling 
                     // into parent's node and one node from parent into this current node ("child")
-                    childNode.InsertItem(0, parentNode.Items[subtreeIndexInNode]);
-                    parentNode.Items[subtreeIndexInNode] = leftSibling.Items[leftSibling.Items.Count - 1];
+                    childNode.InsertItem(0, parentNode.Items[subTreeIndex]);
+                    parentNode.Items[subTreeIndex] = leftSibling.Items[leftSibling.Items.Count - 1];
                     leftSibling.RemoveItem(leftSibling.Items.Count - 1);
 
                     if (!leftSibling.IsLeaf)
@@ -191,8 +192,8 @@ namespace CITI.EVO.Tools.Structures
                 {
                     // right sibling has a node to spare, so this moves one node from right sibling 
                     // into parent's node and one node from parent into this current node ("child")
-                    childNode.InsertItem(parentNode.Items[subtreeIndexInNode]);
-                    parentNode.Items[subtreeIndexInNode] = rightSibling.Items[0];
+                    childNode.InsertItem(parentNode.Items[subTreeIndex]);
+                    parentNode.Items[subTreeIndex] = rightSibling.Items[0];
                     rightSibling.RemoveItem(0);
 
                     if (!rightSibling.IsLeaf)
@@ -206,7 +207,7 @@ namespace CITI.EVO.Tools.Structures
                     // this block merges either left or right sibling into the current node "child"
                     if (leftSibling != null)
                     {
-                        childNode.InsertItem(0, parentNode.Items[subtreeIndexInNode]);
+                        childNode.InsertItem(0, parentNode.Items[subTreeIndex]);
 
                         var oldEntries = childNode.Items;
 
@@ -222,11 +223,11 @@ namespace CITI.EVO.Tools.Structures
                         }
 
                         parentNode.RemoveNode(leftIndex);
-                        parentNode.RemoveItem(subtreeIndexInNode);
+                        parentNode.RemoveItem(subTreeIndex);
                     }
                     else
                     {
-                        childNode.InsertItem(parentNode.Items[subtreeIndexInNode]);
+                        childNode.InsertItem(parentNode.Items[subTreeIndex]);
                         childNode.InsertItems(rightSibling.Items);
 
                         if (!rightSibling.IsLeaf)
@@ -235,7 +236,7 @@ namespace CITI.EVO.Tools.Structures
                         }
 
                         parentNode.RemoveNode(rightIndex);
-                        parentNode.RemoveItem(subtreeIndexInNode);
+                        parentNode.RemoveItem(subTreeIndex);
                     }
                 }
             }
@@ -361,30 +362,30 @@ namespace CITI.EVO.Tools.Structures
             }
         }
 
-        private int BinarySearch(IList<TItem> list, TItem value)
-        {
-            var index = 0;
-            var length = list.Count;
+        //private int BinarySearch(IList<TItem> list, TItem value)
+        //{
+        //    var index = 0;
+        //    var length = list.Count;
 
-            int low = index;
-            int high = low + length - 1;
+        //    int low = index;
+        //    int high = low + length - 1;
 
-            while (low <= high)
-            {
-                var mid = low + ((high - low) / 2);
+        //    while (low <= high)
+        //    {
+        //        var mid = low + ((high - low) / 2);
 
-                var order = CompareItems(value, list[mid]);
-                if (order == 0)
-                    return mid;
+        //        var order = CompareItems(value, list[mid]);
+        //        if (order == 0)
+        //            return mid;
 
-                if (order < 0)
-                    high = mid - 1;
-                else
-                    low = mid + 1;
-            }
+        //        if (order < 0)
+        //            high = mid - 1;
+        //        else
+        //            low = mid + 1;
+        //    }
 
-            return ~low;
-        }
+        //    return ~low;
+        //}
         private int BinarySearchFindFirst(IList<TItem> list, TItem item)
         {
             if (list.Count > 0)
@@ -486,11 +487,11 @@ namespace CITI.EVO.Tools.Structures
             return _comparer.Compare(x, y);
         }
 
-        public IEnumerable<TItem> TraversalItems()
+        public IEnumerable<TItem> PreOrderTraversalItems()
         {
-            return TraversalItems(_root);
+            return PreOrderTraversalItems(_root);
         }
-        private IEnumerable<TItem> TraversalItems(BNode<TItem> node)
+        private IEnumerable<TItem> PreOrderTraversalItems(BNode<TItem> node)
         {
             if (node == null)
             {
@@ -523,11 +524,42 @@ namespace CITI.EVO.Tools.Structures
             }
         }
 
-        public IEnumerable<BNode<TItem>> TraversalNodes()
+        public IEnumerable<TItem> InOrderTraversalItems()
         {
-            return TraversalNodes(_root);
+            return InOrderTraversalItems(_root);
         }
-        private IEnumerable<BNode<TItem>> TraversalNodes(BNode<TItem> node)
+        private IEnumerable<TItem> InOrderTraversalItems(BNode<TItem> node)
+        {
+            if (node == null)
+                yield break;
+
+            for (int i = 0; i < node.Items.Count; i++)
+            {
+                if (!node.IsLeaf)
+                {
+                    var child = node.Nodes[i];
+
+                    foreach (var n in InOrderTraversalItems(child))
+                        yield return n;
+                }
+
+                yield return node.Items[i];
+            }
+
+            if (!node.IsLeaf)
+            {
+                var child = node.Nodes[node.Nodes.Count - 1];
+
+                foreach (var n in InOrderTraversalItems(child))
+                    yield return n;
+            }
+        }
+
+        public IEnumerable<BNode<TItem>> PreOrderTraversalNodes()
+        {
+            return PreOrderTraversalNodes(_root);
+        }
+        private IEnumerable<BNode<TItem>> PreOrderTraversalNodes(BNode<TItem> node)
         {
             if (node == null)
                 yield break;
@@ -551,6 +583,27 @@ namespace CITI.EVO.Tools.Structures
                         }
                     }
                 }
+            }
+        }
+
+        public IEnumerable<BNode<TItem>> InOrderTraversalNodes()
+        {
+            return InOrderTraversalNodes(_root);
+        }
+        private IEnumerable<BNode<TItem>> InOrderTraversalNodes(BNode<TItem> node)
+        {
+            if (node == null)
+                yield break;
+
+            foreach (var child in node.Nodes)
+            {
+                if (!child.IsLeaf)
+                {
+                    foreach (var n in InOrderTraversalNodes(child))
+                        yield return n;
+                }
+
+                yield return child;
             }
         }
 

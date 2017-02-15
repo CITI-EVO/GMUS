@@ -1,0 +1,392 @@
+﻿.navigation-main a:active {
+    color: #d7322f;
+}
+
+.navigation-main .primary a.selected {
+    background-color: #02a7e0;
+}
+
+.navigation-main .primary .home {
+    -webkit-transition: background-color 0.25s, width 0.25s;
+    -moz-transition: background-color 0.25s, width 0.25s;
+    -ms-transition: background-color 0.25s, width 0.25s;
+    -o-transition: background-color 0.25s, width 0.25s;
+    transition: background-color 0.25s, width 0.25s;
+    background-color: #191b1f;
+    height: 110px;
+    width: 100%;
+    padding: 0;
+    text-align: center;
+}
+
+    .navigation-main .primary .home img {
+        -webkit-transition: width 0.25s;
+        -moz-transition: width 0.25s;
+        -ms-transition: width 0.25s;
+        -o-transition: width 0.25s;
+        transition: width 0.25s;
+        padding: 35px 0 0 0;
+        width: 105px;
+    }
+
+    .navigation-main .primary .home:hover {
+        background-color: #141619;
+    }
+
+@media screen and (max-width: 1180px) {
+    .navigation-main .primary .home {
+        height: 70px;
+    }
+
+        .navigation-main .primary .home img {
+            padding: 25px 0 15px;
+            width: 40px;
+        }
+}
+
+.lte8 .short-viewport .navigation-main .primary .home {
+    height: 70px;
+}
+
+    .lte8 .short-viewport .navigation-main .primary .home img {
+        padding: 25px 0 15px;
+        width: 40px;
+    }
+
+a {
+    -webkit-transition: color 0.5s;
+    -moz-transition: color 0.5s;
+    -ms-transition: color 0.5s;
+    -o-transition: color 0.5s;
+    transition: color 0.5s;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+::selection,
+::-moz-selection {
+    background: #66ddff;
+    text-shadow: none;
+    color: white;
+}
+
+.light {
+    color: #383d43;
+}
+
+    .light p {
+        color: #999;
+    }
+
+.dark,
+.Dark {
+    color: #FFF;
+}
+
+.grey {
+    color: #FFF;
+}
+
+    .grey p {
+        color: #888f92;
+    }
+
+.navigation-main.show-about .menu {
+    display: none;
+}
+
+.navigation-main ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.navigation-main a {
+    color: #5a6273;
+    display: block;
+    font-size: 14px;
+    /*height: $padding;
+    line-height: $padding;*/
+    padding: 19px;
+    line-height: 1.6em;
+    text-decoration: none;
+}
+
+.navigation-main .primary {
+    -webkit-box-shadow: 0 0 19px -1px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 19px -1px rgba(0, 0, 0, 0.1);
+    -ms-box-shadow: 0 0 19px -1px rgba(0, 0, 0, 0.1);
+    -o-box-shadow: 0 0 19px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 19px -1px rgba(0, 0, 0, 0.1);
+    -webkit-transition: width 0.25s;
+    -moz-transition: width 0.25s;
+    -ms-transition: width 0.25s;
+    -o-transition: width 0.25s;
+    transition: width 0.25s;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    background: #191B1F;
+    bottom: 0;
+    /*position: absolute;*/
+    top: 0;
+}
+
+    .navigation-main .primary > li > a {
+        z-index: 10004;
+    }
+
+    .navigation-main .primary:after {
+        content: '';
+        background-color: #191B1F;
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 10003;
+    }
+
+    .navigation-main .primary li {
+        overflow: hidden;
+    }
+
+    .navigation-main .primary a {
+        padding-left: 10%;
+        position: relative;
+        width: 242px;
+        min-height: 60px;
+        height: 60px;
+        float: left;
+    }
+
+        .navigation-main .primary a .icon {
+            -webkit-transition: left 0.25s;
+            -moz-transition: left 0.25s;
+            -ms-transition: left 0.25s;
+            -o-transition: left 0.25s;
+            transition: left 0.25s;
+            left: 10px;
+            position: absolute;
+            text-transform: lowercase;
+            top: 34%;
+        }
+
+        .navigation-main .primary a .text {
+            -webkit-transition: left 0.25s;
+            -moz-transition: left 0.25s;
+            -ms-transition: left 0.25s;
+            -o-transition: left 0.25s;
+            transition: left 0.25s;
+            left: 60px;
+            position: absolute;
+            top: 34%;
+            cursor:pointer;
+        }
+
+        .navigation-main .primary a .label {
+            -webkit-transition: opacity 0.25s 0.18s;
+            -moz-transition: opacity 0.25s 0.18s;
+            -ms-transition: opacity 0.25s 0.18s;
+            -o-transition: opacity 0.25s 0.18s;
+            transition: opacity 0.25s 0.18s;
+            font-family: 'Bpg Arial';
+            font-weight: normal;
+            opacity: 1;
+        }
+
+
+@media screen and (max-width: 1180px) {
+    .navigation-main .primary a {
+        line-height: 0.8em;
+        min-height: 50px;
+        height: 50px;
+        width: 60px;
+    }
+}
+
+.lte8 .short-viewport .navigation-main .primary a {
+    line-height: 0.8em;
+    min-height: 50px;
+    height: 50px;
+}
+
+.navigation-main .primary .menu {
+    height: 60px;
+}
+
+@media screen and (max-width: 1180px) {
+    .navigation-main .primary .menu {
+        height: 50px;
+        width: 60px;
+    }
+}
+
+.lte8 .short-viewport .navigation-main .primary .menu {
+    height: 50px;
+}
+
+@media screen and (max-width: 1180px) {
+    .navigation-main .primary .menu .icon {
+        top: 15px;
+    }
+}
+
+.lte8 .short-viewport .navigation-main .primary .menu .icon {
+    top: 15px;
+}
+
+@media screen and (min-height: 0) {
+    .navigation-main .primary .menu .label {
+        top: 36%;
+        left: 80px;
+        position: absolute;
+    }
+
+    .language-pt .navigation-main .primary .menu .label {
+        left: 70px;
+    }
+}
+
+.navigation-main .primary .high {
+    color: white;
+    background-color: #1f2228;
+    border-top: 1px solid #262930;
+    border-bottom: 1px solid #191b1f;
+    font-family: 'Bpg Arial';
+    font-weight: normal;
+}
+
+
+
+    .navigation-main .primary .high.selected {
+        background-color: #00b1ee;
+        border-top: 1px solid #00b1ee;
+        border-bottom: 1px solid #00b1ee;
+    }
+
+        .navigation-main .primary .high.selected:hover {
+            color: #5a6273;
+            background-color: #f2f6f7;
+            border-color: #f2f6f7;
+        }
+
+
+
+    .navigation-main .primary .high:hover {
+        color: #5a6273;
+        background-color: #f2f6f7;
+        border-color: #f2f6f7;
+    }
+
+.navigation-main .primary .hover .high {
+    background-color: #f2f6f7;
+    border-color: #f2f6f7;
+    color: #5a6273;
+}
+
+    .navigation-main .primary .hover .high .icon {
+        color: #5a6273;
+    }
+
+/*abc*/
+
+.navigation-main .primary .highh {
+    color: white;
+    background-color: #003399;
+    border-top: 1px solid #3366CC;
+    border-bottom: 1px solid #3366CC;
+    font-family: 'Bpg Arial';
+    font-weight: normal;
+}
+.sub_active {
+    background-color: white;
+}
+/*.navigation-main .primary .highlevel {
+    color: white;
+    background-color: #d7322f;
+    border-top: 1px solid #41a3de;
+    border-bottom: 1px solid #41a3de;
+    font-family: 'Bpg Arial';
+    font-weight: normal;
+}
+
+.highlevel_active {
+    background-color: #30a2e6;
+}
+
+a.highlevel_active {
+    color: white;
+}
+
+
+
+.navigation-main .primary .highlevel.selected {
+    background-color: #00b1ee;
+    border-top: 1px solid #00b1ee;
+    border-bottom: 1px solid #00b1ee;
+}
+
+    .navigation-main .primary .highlevel.selected:hover {
+        color: #5a6273;
+        background-color: #f2f6f7;
+        border-color: #f2f6f7;
+    }
+
+
+
+.navigation-main .primary .highlevel:hover {
+    color: #5a6273;
+    background-color: #f2f6f7;
+    border-color: #f2f6f7;
+}
+
+.navigation-main .primary .hover .highlevel {
+    background-color: #f2f6f7;
+    border-color: #f2f6f7;
+    color: #5a6273;
+}*/
+
+    .navigation-main .primary .hover .highlevel .icon {
+        color: #5a6273;
+    }
+
+.navigation-main .primary .sub {
+    background-color: #e1d7d6;
+    border-bottom: 1px solid #fff;
+    -webkit-transition: background-color 0.1s, color 0.1s;
+    -moz-transition: background-color 0.1s, color 0.1s;
+    -ms-transition: background-color 0.1s, color 0.1s;
+    -o-transition: background-color 0.1s, color 0.1s;
+    transition: background-color 0.1s, color 0.1s;
+    color: #5a6273;
+}
+
+
+    .navigation-main .primary .sub.last {
+        border-bottom: 1px solid #191b1f;
+    }
+
+        .navigation-main .primary .sub.last:hover {
+            border-bottom: none;
+        }
+
+    .navigation-main .primary .sub:hover {
+        background-color: #f2f6f7;
+        border-color: #f2f6f7;
+        color: #5a6273;
+    }
+
+    .navigation-main .primary .sub.selected {
+        background-color: #01b1ed;
+        color: white;
+    }

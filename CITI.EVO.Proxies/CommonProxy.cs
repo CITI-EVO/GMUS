@@ -12,24 +12,6 @@ namespace CITI.EVO.Proxies
 {
 	public static class CommonProxy
 	{
-		//[RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetListOfCardReaders")]
-		//public static List<String> GetListOfCardReaders()
-		//{
-		//	return RpcInvoker.InvokeMethod<List<String>>();
-		//}
-
-		//[RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetDataFromCardReader")]
-		//public static CardReaderDocumentContract GetDataFromCardReader(String name)
-		//{
-		//	return RpcInvoker.InvokeMethod<CardReaderDocumentContract>(name);
-		//}
-
-		//[RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetPersonScore")]
-		//public static PersonScoreContract GetPersonScore(String personalID, DateTime birthDate)
-		//{
-		//	return RpcInvoker.InvokeMethod<PersonScoreContract>(personalID, birthDate);
-		//}
-
 		[RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetAreas")]
 		public static List<AreaContract> GetAreas(AreaTypesEnum type, RecordTypesEnum recordType)
 		{

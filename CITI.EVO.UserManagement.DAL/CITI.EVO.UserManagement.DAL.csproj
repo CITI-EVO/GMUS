@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\EntityFactory.cs" />
     <Compile Include="Domain\UM_AttributeField.cs" />
     <Compile Include="Domain\UM_AttributeSchema.cs" />
     <Compile Include="Domain\UM_AttributeValue.cs" />
@@ -60,7 +59,6 @@
     <Compile Include="Domain\UM_User.cs" />
     <Compile Include="Domain\UM_UserCategory.cs" />
     <Compile Include="Domain\UM_UserLog.cs" />
-    <Compile Include="Interfaces\IDbEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -68,7 +66,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CITI.EVO.Core\CITI.EVO.Core.csproj">
+      <Project>{4930efab-19d6-41fe-a198-7177b00e908d}</Project>
+      <Name>CITI.EVO.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

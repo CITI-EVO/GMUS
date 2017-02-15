@@ -1,8 +1,9 @@
 ﻿using System;
+using CITI.EVO.Core.Interfaces;
 
 namespace CITI.EVO.CommonData.DAL.Domain
 {
-    public class CD_Language 
+    public class CD_Language : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual String DisplayName { get; set; }

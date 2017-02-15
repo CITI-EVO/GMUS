@@ -8,301 +8,305 @@ using System.Web;
 
 namespace CITI.EVO.Tools.Helpers
 {
-	public class UrlHelper : IEnumerable<KeyValuePair<String, Object>>
-	{
-		private static readonly Regex nameRegex = new Regex(@"(?<name>[\W]params[\W])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-		private static readonly Regex pairRegex = new Regex(@"(?<Key>.*?)=(?<Value>.*?)(&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    public class UrlHelper : IEnumerable<KeyValuePair<String, Object>>
+    {
+        private static readonly Regex nameRegex = new Regex(@"(?<name>[\W]params[\W])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex pairRegex = new Regex(@"(?<Key>.*?)=(?<Value>.*?)(&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-		private const String PairDelimiter = "=";
-		private const String ItemDelimiter = "&";
+        private const String PairDelimiter = "=";
+        private const String ItemDelimiter = "&";
 
-		private const String DefaultParamName = "[params]";
+        private const String DefaultParamName = "[params]";
 
-		private readonly String _urlBase;
-		private readonly IDictionary<String, Object> _urlParams;
+        private readonly String _urlBase;
+        private readonly IDictionary<String, Object> _urlParams;
 
-		public UrlHelper(Uri uri)
-			: this(uri, true)
-		{
-		}
-		public UrlHelper(Uri uri, bool mayBeEncoded)
-			: this(Convert.ToString(uri), mayBeEncoded)
-		{
-		}
-		public UrlHelper(String url)
-			: this(url, true)
-		{
-		}
-		public UrlHelper(String url, bool mayBeEncoded)
-		{
-			_urlBase = Uri.UnescapeDataString(url);
-			_urlParams = new Dictionary<String, Object>(StringComparer.OrdinalIgnoreCase);
+        public UrlHelper(Uri uri) : this(uri, true)
+        {
+        }
+        public UrlHelper(Uri uri, bool mayBeEncoded) : this(Convert.ToString(uri), mayBeEncoded)
+        {
+        }
 
-			if (String.IsNullOrWhiteSpace(_urlBase))
-			{
-				return;
-			}
+        public UrlHelper(String url) : this(url, true)
+        {
+        }
+        public UrlHelper(String url, bool mayBeEncoded)
+        {
+            _urlBase = Uri.UnescapeDataString(url);
+            _urlParams = new Dictionary<String, Object>(StringComparer.OrdinalIgnoreCase);
 
-			var urlParts = SplitBasePart(_urlBase);
-			_urlBase = urlParts[0];
+            if (String.IsNullOrWhiteSpace(_urlBase))
+            {
+                return;
+            }
 
-			if (urlParts.Length > 1)
-			{
-				TryParseParams(urlParts[1]);
-				TryDecode(mayBeEncoded);
-			}
-		}
+            var urlParts = SplitBasePart(_urlBase);
+            _urlBase = urlParts[0];
 
-		public String HandlerUrl
-		{
-			get { return _urlBase; }
-		}
+            if (urlParts.Length > 1)
+            {
+                TryParseParams(urlParts[1]);
+                TryDecode(mayBeEncoded);
+            }
+        }
 
-		public Object this[String key]
-		{
-			get
-			{
-				Object parameter;
-				if (!_urlParams.TryGetValue(key, out parameter))
-				{
-					return null;
-				}
+        public UrlHelper(UrlHelper urlHelper)
+        {
+            _urlBase = urlHelper._urlBase;
+            _urlParams = new Dictionary<String, Object>(urlHelper._urlParams);
+        }
 
-				return parameter;
-			}
-			set
-			{
-				_urlParams[key] = value;
-			}
-		}
+        public String HandlerUrl
+        {
+            get { return _urlBase; }
+        }
 
-	    public bool Remove(String key)
-	    {
-	        return _urlParams.Remove(key);
-	    }
+        public Object this[String key]
+        {
+            get
+            {
+                Object parameter;
+                if (!_urlParams.TryGetValue(key, out parameter))
+                {
+                    return null;
+                }
 
-		public IEnumerator<KeyValuePair<String, Object>> GetEnumerator()
-		{
-			foreach (var pair in _urlParams)
-			{
-				yield return new KeyValuePair<String, Object>(pair.Key, pair.Value);
-			}
-		}
+                return parameter;
+            }
+            set
+            {
+                _urlParams[key] = value;
+            }
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+        public bool Remove(String key)
+        {
+            return _urlParams.Remove(key);
+        }
 
-		public override String ToString()
-		{
-			return ConvertToString(_urlBase, _urlParams);
-		}
+        public IEnumerator<KeyValuePair<String, Object>> GetEnumerator()
+        {
+            foreach (var pair in _urlParams)
+            {
+                yield return new KeyValuePair<String, Object>(pair.Key, pair.Value);
+            }
+        }
 
-		public Uri ToUri()
-		{
-			return new Uri(ToString());
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
-		public String ToEncodedUrl()
-		{
-			return ToEncodedUrl(null);
-		}
-		public String ToEncodedUrl(params String[] exceptParams)
-		{
-			exceptParams = (exceptParams ?? new String[0]);
+        public override String ToString()
+        {
+            return ConvertToString(_urlBase, _urlParams);
+        }
 
-			var comparer = StringComparer.OrdinalIgnoreCase;
-			var @set = new HashSet<String>(exceptParams, comparer);
+        public Uri ToUri()
+        {
+            return new Uri(ToString());
+        }
 
-			var outputParams = new Dictionary<String, Object>(comparer);
-			var encodeParams = new Dictionary<String, Object>(comparer);
+        public String ToEncodedUrl()
+        {
+            return ToEncodedUrl(null);
+        }
+        public String ToEncodedUrl(params String[] exceptParams)
+        {
+            exceptParams = (exceptParams ?? new String[0]);
 
-			foreach (var pair in _urlParams)
-			{
-				if (@set.Contains(pair.Key))
-					outputParams[pair.Key] = pair.Value;
-				else
-					encodeParams[pair.Key] = pair.Value;
-			}
+            var comparer = StringComparer.OrdinalIgnoreCase;
+            var @set = new HashSet<String>(exceptParams, comparer);
 
-			var encodeItems = encodeParams.Select(n => String.Concat(n.Key, PairDelimiter, n.Value));
-			var encodeItemsText = String.Join(ItemDelimiter, encodeItems);
+            var outputParams = new Dictionary<String, Object>(comparer);
+            var encodeParams = new Dictionary<String, Object>(comparer);
 
-			var base64 = GetEncodedForUrl(encodeItemsText);
-			outputParams[DefaultParamName] = base64;
+            foreach (var pair in _urlParams)
+            {
+                if (@set.Contains(pair.Key))
+                    outputParams[pair.Key] = pair.Value;
+                else
+                    encodeParams[pair.Key] = pair.Value;
+            }
 
-			var encodedUrl = ConvertToString(_urlBase, outputParams);
-			return encodedUrl;
-		}
+            var encodeItems = encodeParams.Select(n => String.Concat(n.Key, PairDelimiter, n.Value));
+            var encodeItemsText = String.Join(ItemDelimiter, encodeItems);
 
-		public Uri ToEncodedUri()
-		{
-			return new Uri(ToEncodedUrl());
-		}
-		public Uri ToEncodedUri(params String[] exceptParams)
-		{
-			return new Uri(ToEncodedUrl(exceptParams));
-		}
+            var base64 = GetEncodedForUrl(encodeItemsText);
+            outputParams[DefaultParamName] = base64;
 
-		private String[] SplitBasePart(String url)
-		{
-			var index = url.IndexOf("?", StringComparison.Ordinal);
-			if (index > 0)
-			{
-				var @base = url.Substring(0, index);
-				var @params = url.Substring(index + 1);
+            var encodedUrl = ConvertToString(_urlBase, outputParams);
+            return encodedUrl;
+        }
 
-				if (String.IsNullOrWhiteSpace(@params))
-				{
-					return new[] { @base };
-				}
+        public Uri ToEncodedUri()
+        {
+            return new Uri(ToEncodedUrl());
+        }
+        public Uri ToEncodedUri(params String[] exceptParams)
+        {
+            return new Uri(ToEncodedUrl(exceptParams));
+        }
 
-				var array = new[]
-				{
-					@base,
-					@params
-				};
+        private String[] SplitBasePart(String url)
+        {
+            var index = url.IndexOf("?", StringComparison.Ordinal);
+            if (index > 0)
+            {
+                var @base = url.Substring(0, index);
+                var @params = url.Substring(index + 1);
 
-				return array;
-			}
+                if (String.IsNullOrWhiteSpace(@params))
+                {
+                    return new[] { @base };
+                }
 
-			return new[] { url };
-		}
+                var array = new[]
+                {
+                    @base,
+                    @params
+                };
 
-		private void TryParseParams(String urlParams)
-		{
-			var collection = HttpUtility.ParseQueryString(urlParams);
-			if (collection.Count == 0)
-				return;
+                return array;
+            }
 
-			foreach (var paramKey in collection.AllKeys)
-			{
-				var key = (paramKey ?? String.Empty);
+            return new[] { url };
+        }
 
-				var paramValue = collection[paramKey];
-				SetValue(key, paramValue);
-			}
-		}
+        private void TryParseParams(String urlParams)
+        {
+            var collection = HttpUtility.ParseQueryString(urlParams);
+            if (collection.Count == 0)
+                return;
 
-		private void SetValue(String key, Object value)
-		{
-			Object oldVal;
-			if (_urlParams.TryGetValue(key, out oldVal))
-				value = String.Join(",", oldVal, value);
+            foreach (var paramKey in collection.AllKeys)
+            {
+                var key = (paramKey ?? String.Empty);
 
-			_urlParams[key] = value;
-		}
+                var paramValue = collection[paramKey];
+                SetValue(key, paramValue);
+            }
+        }
 
-		private void TryDecode(bool mayBeEncoded)
-		{
-			if (!mayBeEncoded)
-				return;
+        private void SetValue(String key, Object value)
+        {
+            Object oldVal;
+            if (_urlParams.TryGetValue(key, out oldVal))
+                value = String.Join(",", oldVal, value);
 
-			var name = GetEncodedParamName(_urlParams.Keys);
-			if (String.IsNullOrWhiteSpace(name))
-				return;
+            _urlParams[key] = value;
+        }
 
-			Object val;
-			if (!_urlParams.TryGetValue(name, out val))
-				return;
+        private void TryDecode(bool mayBeEncoded)
+        {
+            if (!mayBeEncoded)
+                return;
 
-			var @params = ConvertFromBase64(Convert.ToString(val));
-			if (String.IsNullOrWhiteSpace(@params))
-				return;
+            var name = GetEncodedParamName(_urlParams.Keys);
+            if (String.IsNullOrWhiteSpace(name))
+                return;
 
-			_urlParams.Remove(name);
+            Object val;
+            if (!_urlParams.TryGetValue(name, out val))
+                return;
 
-			var extracted = ExtractEncoded(@params);
-			foreach (var pair in extracted)
-			{
-				var key = pair.Key;
-				var value = pair.Value;
+            var @params = ConvertFromBase64(Convert.ToString(val));
+            if (String.IsNullOrWhiteSpace(@params))
+                return;
 
-				SetValue(key, value);
-			}
-		}
+            _urlParams.Remove(name);
 
-		private String GetEncodedParamName(IEnumerable<String> collection)
-		{
-			foreach (var item in collection)
-			{
-				if (nameRegex.IsMatch(item))
-					return item;
-			}
+            var extracted = ExtractEncoded(@params);
+            foreach (var pair in extracted)
+            {
+                var key = pair.Key;
+                var value = pair.Value;
 
-			return null;
-		}
+                SetValue(key, value);
+            }
+        }
 
-		private String GetEncodedForUrl(String text)
-		{
-			var bytes = Encoding.UTF8.GetBytes(text);
+        private String GetEncodedParamName(IEnumerable<String> collection)
+        {
+            foreach (var item in collection)
+            {
+                if (nameRegex.IsMatch(item))
+                    return item;
+            }
 
-			var encoded = HttpServerUtility.UrlTokenEncode(bytes);
-			return encoded;
-		}
+            return null;
+        }
 
-		private String ConvertFromBase64(String text)
-		{
-			try
-			{
-				var bytes = HttpServerUtility.UrlTokenDecode(text);
+        private String GetEncodedForUrl(String text)
+        {
+            var bytes = Encoding.UTF8.GetBytes(text);
 
-				var @string = Encoding.UTF8.GetString(bytes);
-				return @string;
-			}
-			catch (Exception)
-			{
-				return null;
-			}
-		}
+            var encoded = HttpServerUtility.UrlTokenEncode(bytes);
+            return encoded;
+        }
 
-		private String ConvertToString(String handlerUrl, IDictionary<String, Object> @params)
-		{
-			var sb = new StringBuilder(handlerUrl);
+        private String ConvertFromBase64(String text)
+        {
+            try
+            {
+                var bytes = HttpServerUtility.UrlTokenDecode(text);
 
-			if (@params.Count > 0)
-			{
-				sb.Append("?");
+                var @string = Encoding.UTF8.GetString(bytes);
+                return @string;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
-				foreach (var pair in @params)
-				{
-					sb.Append(pair.Key);
-					sb.Append("=");
+        private String ConvertToString(String handlerUrl, IDictionary<String, Object> @params)
+        {
+            var sb = new StringBuilder(handlerUrl);
 
-					var value = pair.Value;
-					if (value is Array)
-					{
-						var array = ((IEnumerable)value).Cast<Object>();
-						value = String.Join(",", array);
-					}
+            if (@params.Count > 0)
+            {
+                sb.Append("?");
 
-					sb.Append(value);
+                foreach (var pair in @params)
+                {
+                    sb.Append(pair.Key);
+                    sb.Append("=");
 
-					sb.Append("&");
-				}
+                    var value = pair.Value;
+                    if (value is Array)
+                    {
+                        var array = ((IEnumerable)value).Cast<Object>();
+                        value = String.Join(",", array);
+                    }
 
-				sb = sb.Remove(sb.Length - 1, 1);
-			}
+                    sb.Append(value);
 
-			return sb.ToString();
-		}
+                    sb.Append("&");
+                }
 
-		private IEnumerable<KeyValuePair<String, Object>> ExtractEncoded(String text)
-		{
-			if (pairRegex.IsMatch(text))
-			{
-				var matches = pairRegex.Matches(text);
-				foreach (Match match in matches)
-				{
-					var key = match.Groups["Key"].Value;
-					var value = match.Groups["Value"].Value;
+                sb = sb.Remove(sb.Length - 1, 1);
+            }
 
-					var pair = new KeyValuePair<String, Object>(key, value);
-					yield return pair;
-				}
-			}
-		}
-	}
+            return sb.ToString();
+        }
+
+        private IEnumerable<KeyValuePair<String, Object>> ExtractEncoded(String text)
+        {
+            if (pairRegex.IsMatch(text))
+            {
+                var matches = pairRegex.Matches(text);
+                foreach (Match match in matches)
+                {
+                    var key = match.Groups["Key"].Value;
+                    var value = match.Groups["Value"].Value;
+
+                    var pair = new KeyValuePair<String, Object>(key, value);
+                    yield return pair;
+                }
+            }
+        }
+    }
 
 }

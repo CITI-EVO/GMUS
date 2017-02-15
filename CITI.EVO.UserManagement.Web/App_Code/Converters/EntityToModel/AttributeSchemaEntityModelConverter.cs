@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
+using CITI.EVO.Core.Common;
 using CITI.EVO.UserManagement.DAL.Domain;
-using CITI.EVO.UserManagement.Web.Converters.Common;
 using CITI.EVO.UserManagement.Web.Models;
 using NHibernate;
 

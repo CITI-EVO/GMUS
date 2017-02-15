@@ -40,8 +40,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Domain\GM_Report.cs" />
+    <Compile Include="Domain\GM_Column.cs" />
+    <Compile Include="Domain\GM_Form.cs" />
+    <Compile Include="Domain\GM_Logic.cs" />
+    <Compile Include="Domain\GM_ReportLogic.cs" />
+    <Compile Include="Domain\GM_Table.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schemas\nhibernate-configuration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\nhibernate-mapping.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CITI.EVO.Core\CITI.EVO.Core.csproj">
+      <Project>{4930efab-19d6-41fe-a198-7177b00e908d}</Project>
+      <Name>CITI.EVO.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Form.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

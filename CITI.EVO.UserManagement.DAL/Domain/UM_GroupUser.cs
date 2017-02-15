@@ -1,5 +1,5 @@
 ﻿using System;
-using CITI.EVO.UserManagement.DAL.Interfaces;
+using CITI.EVO.Core.Interfaces;
 
 namespace CITI.EVO.UserManagement.DAL.Domain
 {

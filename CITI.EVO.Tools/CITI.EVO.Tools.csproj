@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CommonObjectCache.cs" />
-    <Compile Include="Collections\BTSet.cs" />
+    <Compile Include="Collections\BTeeSet.cs" />
     <Compile Include="Extensions\Hb8Extensions.cs" />
     <Compile Include="Structures\BTree.cs" />
     <Compile Include="Structures\BNode.cs" />
@@ -236,6 +236,9 @@
     <Compile Include="Web\UI\Helpers\CollectionDataView.cs" />
     <Compile Include="Web\UI\Helpers\CollectionItemDescriptor.cs" />
     <Compile Include="Web\UI\Helpers\CollectionItemPropertyDescriptor.cs" />
+    <Compile Include="Web\UI\Helpers\DictionaryDataView.cs" />
+    <Compile Include="Web\UI\Helpers\DictionaryItemDescriptor.cs" />
+    <Compile Include="Web\UI\Helpers\DictionaryItemPropertyDescriptor.cs" />
     <Compile Include="WorkflowEngine\Configs\ExpressionConfig.cs" />
     <Compile Include="WorkflowEngine\Configs\NamedFieldConfig.cs" />
     <Compile Include="WorkflowEngine\Configs\ProcessorConfig.cs" />

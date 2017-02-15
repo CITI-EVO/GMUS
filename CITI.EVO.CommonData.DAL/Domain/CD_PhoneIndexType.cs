@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using CITI.EVO.Core.Interfaces;
 
 namespace CITI.EVO.CommonData.DAL.Domain
 {
-    public class CD_PhoneIndexType 
+    public class CD_PhoneIndexType : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual String Name { get; set; }

@@ -1,8 +1,9 @@
 ﻿using System;
+using CITI.EVO.Core.Interfaces;
 
 namespace CITI.EVO.CommonData.DAL.Domain
 {
-    public class CD_PhoneIndex 
+    public class CD_PhoneIndex : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual Guid PhoneIndexTypeID{ get; set; }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using CITI.EVO.Core.Interfaces;
 
 namespace CITI.EVO.CommonData.DAL.Domain
 {
-    public class CD_Area 
+    public class CD_Area : IDbEntity
     {
        
         public virtual Guid ID { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}"
 EndProject
@@ -141,6 +141,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gms.Portal.Svc", "Gms.Porta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gms.Portal.DAL", "Gms.Portal.DAL\Gms.Portal.DAL.csproj", "{37A05A5F-A479-4F4D-B643-40DC8087F959}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CITI.EVO.Core", "CITI.EVO.Core\CITI.EVO.Core.csproj", "{4930EFAB-19D6-41FE-A198-7177B00E908D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -203,6 +205,10 @@ Global
 		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37A05A5F-A479-4F4D-B643-40DC8087F959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4930EFAB-19D6-41FE-A198-7177B00E908D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4930EFAB-19D6-41FE-A198-7177B00E908D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4930EFAB-19D6-41FE-A198-7177B00E908D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4930EFAB-19D6-41FE-A198-7177B00E908D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -226,5 +232,6 @@ Global
 		{55B576B9-0874-4B74-93C4-E54E69E22A2A} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
 		{2333A78D-B018-4C45-88BC-C45CB39746AD} = {0B8964DB-77A7-465E-9B37-73122C70CF07}
 		{37A05A5F-A479-4F4D-B643-40DC8087F959} = {0B8964DB-77A7-465E-9B37-73122C70CF07}
+		{4930EFAB-19D6-41FE-A198-7177B00E908D} = {C83D7735-C604-4891-BB18-67FDFDFF1269}
 	EndGlobalSection
 EndGlobal
