@@ -5,7 +5,7 @@ namespace Gms.Portal.Web.Models
     [Serializable]
     public class TableDataModel
     {
-        public TableModel Table { get; set; }
+        public FormModel Form { get; set; }
 
         public LogicModel Logic { get; set; }
     }

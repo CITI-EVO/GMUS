@@ -1,12 +1,8 @@
 ﻿using System;
-using CITI.EVO.UserManagement.Web.Bases;
 using NHibernate;
 
 namespace Gms.Portal.Web.Bases
 {
-    /// <summary>
-    /// Summary description for MasterPageBase
-    /// </summary>
     public class MasterPageBase : CITI.EVO.Tools.Web.Bases.MasterPageBase
     {
         private BasePage CurrentBasePage

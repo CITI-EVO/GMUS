@@ -16,7 +16,7 @@ namespace CITI.EVO.Tools.Web.UI.Controls
     [ParseChildren(true, "Text")]
     [ToolboxData("<{0}:ImageLinkButton runat=\"server\"></{0}:ImageLinkButton>")]
     [SupportsEventValidation]
-    public class ImageLinkButton : LinkButton, ITranslatable, ICommand, IPermissionDependent
+    public class ImageLinkButton : System.Web.UI.WebControls.LinkButton, ITranslatable, ICommand, IPermissionDependent
     {
         #region Configuration
 

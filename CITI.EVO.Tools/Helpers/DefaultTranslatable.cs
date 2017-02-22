@@ -9,50 +9,53 @@ using CITI.EVO.Tools.Web.UI.Common;
 
 namespace CITI.EVO.Tools.Helpers
 {
-	public class DefaultTranslatable : ITranslatable
-	{
-		public DefaultTranslatable()
-		{
-		}
+    public class DefaultTranslatable : ITranslatable
+    {
+        public DefaultTranslatable()
+        {
+        }
 
-		public DefaultTranslatable(String text)
-			: this(null, null, text, true)
-		{
-		}
+        public DefaultTranslatable(String text) : this(text, true)
+        {
+        }
 
-		public DefaultTranslatable(String trnKey, String text)
-			: this(null, trnKey, text, true)
-		{
-		}
+        public DefaultTranslatable(String text, bool translate) : this(CryptographyUtil.ComputeMD5(text), text, translate)
+        {
+        }
 
-		public DefaultTranslatable(StateBag viewState, String trnKey, String text)
-			: this(viewState, trnKey, text, true)
-		{
-		}
+        public DefaultTranslatable(String trnKey, String text) : this(trnKey, text, true)
+        {
+        }
 
-		public DefaultTranslatable(StateBag viewState, String trnKey, String text, bool applyTranslation)
-		{
-			ViewState = viewState;
-			TrnKey = trnKey;
-			Text = text;
+        public DefaultTranslatable(String trnKey, String text, bool translate) : this(null, trnKey, text, translate)
+        {
+        }
 
-			Translated = applyTranslation;
+        public DefaultTranslatable(StateBag viewState, String trnKey, String text) : this(viewState, trnKey, text, true)
+        {
+        }
 
-			if (applyTranslation)
-			{
-				TranslationUtil.ApplyTranslation(this);
-			}
-		}
+        public DefaultTranslatable(StateBag viewState, String trnKey, String text, bool translate)
+        {
+            ViewState = viewState;
+            TrnKey = trnKey;
+            Text = text;
 
-		#region Implementation of ITranslatable
+            Translated = translate;
 
-		public bool Translated { get; private set; }
+            if (translate)
+                TranslationUtil.ApplyTranslation(this);
+        }
 
-		public StateBag ViewState { get; private set; }
+        #region Implementation of ITranslatable
 
-		public String TrnKey { get; set; }
+        public bool Translated { get; private set; }
 
-		public String Text { get; set; }
+        public StateBag ViewState { get; private set; }
+
+        public String TrnKey { get; set; }
+
+        public String Text { get; set; }
 
         public String Link { get; set; }
 

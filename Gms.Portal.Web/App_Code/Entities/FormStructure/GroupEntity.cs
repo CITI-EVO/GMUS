@@ -5,7 +5,9 @@ namespace Gms.Portal.Web.Entities.FormStructure
 {
     [Serializable]
     [XmlRoot("Group")]
-    public class GroupEntity : ContainerControlEntity
+    public class GroupEntity : ContentEntity
     {
+        [XmlElement("Size")]
+        public int? Size { get; set; }
     }
 }

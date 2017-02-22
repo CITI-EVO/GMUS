@@ -9,7 +9,8 @@
     </id>
     <property name="Name" />
     <property name="Number" />
-    <property name="Language" />
+    <property name="OrderIndex" />
+    <property name="Visible" />
     <property name="XmlData" />
     <property name="DateCreated" />
     <property name="DateChanged" />

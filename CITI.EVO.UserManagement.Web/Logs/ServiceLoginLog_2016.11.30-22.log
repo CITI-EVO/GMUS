@@ -1,4 +1,0 @@
-﻿2016-11-30 21:03:04,404 [6] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: 99b7722b-bdc9-48d0-a307-8143cb74e2b9
-2016-11-30 21:03:04,539 [10] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: superadmin; Password: resetpass; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 99b7722b-bdc9-48d0-a307-8143cb74e2b9; SessionID: ylinotcetcbi0huyiqtszbue; ClientIP: ::1, ::1; Success: True
-2016-11-30 21:50:20,820 [7] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: a024b759-d88f-4d81-9809-3348c55ef69f
-2016-11-30 21:50:20,895 [14] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: superadmin; Password: resetpass; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: a024b759-d88f-4d81-9809-3348c55ef69f; SessionID: ylinotcetcbi0huyiqtszbue; ClientIP: ::1, ::1; Success: True

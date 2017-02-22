@@ -3,6 +3,7 @@ using Gms.Portal.Web.Entities.FormStructure;
 
 namespace Gms.Portal.Web.Models
 {
+    [Serializable]
     public class FormModel
     {
         public Guid ID { get; set; }
@@ -11,8 +12,10 @@ namespace Gms.Portal.Web.Models
 
         public String Number { get; set; }
 
-        public String Language { get; set; }
+        public int? OrderIndex { get; set; }
 
-        public FormEntity FormEntity { get; set; }
+        public bool? Visible { get; set; }
+
+        public FormEntity Entity { get; set; }
     }
 }

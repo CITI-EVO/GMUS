@@ -1,50 +1,60 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="AddEditLogic.aspx.cs" Inherits="Gms.Portal.Web.Pages.Management.AddEditLogic" %>
 
-<%@ Register Src="~/Controls/Management/LogicControl.ascx" TagPrefix="lmis" TagName="LogicControl" %>
+<%@ Register Src="~/Controls/Management/LogicControl.ascx" TagPrefix="local" TagName="LogicControl" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-    <div style="margin-bottom: 60px;">
-        <div class="left" style="padding-right: 10px;">
-            <ce:ImageLinkButton runat="server" DefaultImageUrl="~/App_Themes/Default/Images/save.png" ID="btnSaveLogic" ToolTip="დამატება" OnClick="btnSaveLogic_OnClick" />
-        </div>
-        <div class="left">
-            <ce:ImageLinkButton runat="server" DefaultImageUrl="~/App_Themes/Default/Images/close.png" ID="btnCancelLogic" ToolTip="დახურვა" OnClick="btnCancelLogic_OnClick" />
-        </div>
-        <div>
-            <ce:ImageLinkButton runat="server" DefaultImageUrl="~/App_Themes/Default/Images/view.png" ID="btnPreview" ToolTip="გადახედვა" OnClick="btnPreview_OnClick" />
-        </div>
-    </div>
-    <div>
-        <lmis:LogicControl runat="server" ID="logicControl" />
-    </div>
-    <div>
-        <act:ModalPopupExtender runat="server" ID="mpeAddEdit" TargetControlID="btnAddEditFake"
-            Enabled="true" BackgroundCssClass="modalBackground" PopupControlID="pnlAddEdit"
-            CancelControlID="btnCancel" />
-        <asp:Button runat="server" ID="btnAddEditFake" Style="display: none" />
-        <asp:Panel runat="server" ID="pnlAddEdit">
-            <div class="popup">
-                <div class="popup_fieldset">
-                    <div class="popup-title">
-                        <ce:Label runat="server">Data</ce:Label>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <asp:LinkButton runat="server" ID="btnSaveLogic" ToolTip="Save" OnClick="btnSaveLogic_OnClick" CssClass="btn btn-success">
+                            <asp:Label runat="server" CssClass="fa fa-save"/>
+                        </asp:LinkButton>
+                        <asp:LinkButton runat="server" ID="btnCancelLogic" ToolTip="Close" OnClick="btnCancelLogic_OnClick" CssClass="btn btn-warning">
+                            <asp:Label runat="server" CssClass="fa fa-close"/>
+                        </asp:LinkButton>
                     </div>
-                    <div class="title_separator"></div>
-                    <div class="box">
-                        <div>
-                            <ce:Label runat="server" ID="lblError" ForeColor="Red"></ce:Label>
-                        </div>
-                        <div>
-                            <dx:ASPxGridView ID="gvData" runat="server" AutoGenerateColumns="True" ClientInstanceName="gvData" KeyFieldName="ID" Width="100%"
-                                ClientIDMode="AutoID" EnableRowsCache="False" EnableViewState="False">
-                            </dx:ASPxGridView>
-                        </div>
-                    </div>
+                    <local:LogicControl runat="server" ID="logicControl" />
                 </div>
-                <div class="fieldsetforicons">
-                    <div class="left">
-                        <ce:ImageLinkButton runat="server" DefaultImageUrl="~/App_Themes/Default/Images/close.png" ID="btnCancel" ToolTip="დახურვა" />
+            </div>
+        </div>
+    </div>
+    <div>
+        <asp:Panel runat="server" ID="pnlPreview">
+            <asp:Button runat="server" ID="btnPreviewFake" Style="display: none" />
+            <act:ModalPopupExtender runat="server" ID="mpePreview" TargetControlID="btnPreviewFake"
+                Enabled="true" BackgroundCssClass="modalBackground" PopupControlID="pnlPreview"
+                CancelControlID="btnCancel" />
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>
+                                        <ce:Label runat="server" Text="Data" />
+                                    </h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <asp:Label ID="lblFormElement" runat="server" ForeColor="Red"></asp:Label>
+                                    </div>
+                                    <div class="form-group">
+                                        <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="True" Width="100%" EnableViewState="False">
+                                        </asp:GridView>
+                                    </div>
+                                    <div class="form-group">
+                                        <asp:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning">
+                                            <asp:Label runat="server" CssClass="fa fa-close"/>
+                                            <ce:Label runat="server" CssClass="linkTitle" Text="Close" />
+                                        </asp:LinkButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

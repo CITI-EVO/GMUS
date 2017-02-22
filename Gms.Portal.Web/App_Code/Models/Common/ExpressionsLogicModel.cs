@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Gms.Portal.Web.Models.Common
 {

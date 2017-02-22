@@ -3,8 +3,7 @@ using CITI.EVO.Tools.Utils;
 using CITI.EVO.Tools.Web.Bases;
 using NHibernate;
 
-
-namespace CITI.EVO.UserManagement.Web.Bases
+namespace Gms.Portal.Web.Bases
 {
     public class BasePage : PageBase
     {

@@ -4,17 +4,30 @@ using System.Web.UI.WebControls;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
-using CITI.EVO.UserManagement.Web.Bases;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using NHibernate.Linq;
 
-namespace CITI.EVO.UserManagement.Web
+namespace Gms.Portal.Web
 {
     public partial class Site : MasterPageBase
     {
         protected void Page_Init(object sender, EventArgs e)
         {
+            if (Page.PostBackControl == btEngLang)
+                LanguageUtil.SetLanguage("en-US");
+
+            if (Page.PostBackControl == btGeoLang)
+                LanguageUtil.SetLanguage("ka-GE");
+
+            if (Page.PostBackControl == btTranslationMode)
+                TranslationUtil.TranslationMode = !TranslationUtil.TranslationMode;
+
+            if (!UmUtil.Instance.IsLogged || !UmUtil.Instance.CurrentUser.IsSuperAdmin)
+            {
+                if (TranslationUtil.TranslationMode)
+                    TranslationUtil.TranslationMode = false;
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -37,7 +50,7 @@ namespace CITI.EVO.UserManagement.Web
 
             var list = (from n in HbSession.Query<GM_Form>()
                         where n.DateDeleted == null
-                        orderby n.Name
+                        orderby n.OrderIndex, n.Name
                         select n).ToList();
 
             rptLinks.DataSource = list;

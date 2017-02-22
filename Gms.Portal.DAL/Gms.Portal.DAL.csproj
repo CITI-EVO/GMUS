@@ -40,12 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\GM_Collection.cs" />
     <Compile Include="Domain\GM_Report.cs" />
-    <Compile Include="Domain\GM_Column.cs" />
     <Compile Include="Domain\GM_Form.cs" />
     <Compile Include="Domain\GM_Logic.cs" />
     <Compile Include="Domain\GM_ReportLogic.cs" />
-    <Compile Include="Domain\GM_Table.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +55,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_ReportLogic.hbm.xml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CITI.EVO.Core\CITI.EVO.Core.csproj">
       <Project>{4930efab-19d6-41fe-a198-7177b00e908d}</Project>
@@ -65,6 +66,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mapping\GM_Form.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Logic.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Report.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Collection.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

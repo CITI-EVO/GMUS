@@ -5,8 +5,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.Utils;
 using CITI.EVO.Tools.Extensions;
-using CITI.EVO.UserManagement.Web.Bases;
 using Gms.Portal.DAL.Domain;
+using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Converters.ModelToEntity;
 using NHibernate.Linq;
@@ -19,7 +19,7 @@ namespace Gms.Portal.Web.Pages.Management
         {
             if (!IsPostBack)
             {
-                var logicID = DataConverter.ToNullableGuid(Request["LogicID"]);
+                var logicID = DataConverter.ToNullableGuid(RequestUrl["LogicID"]);
                 if (logicID == null)
                     return;
 
@@ -41,7 +41,7 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void btnSaveLogic_OnClick(object sender, EventArgs e)
         {
-            var logicID = DataConverter.ToNullableGuid(Request["LogicID"]);
+            var logicID = DataConverter.ToNullableGuid(RequestUrl["LogicID"]);
 
             var entity = HbSession.Query<GM_Logic>().FirstOrDefault(n => n.ID == logicID);
 
@@ -49,51 +49,13 @@ namespace Gms.Portal.Web.Pages.Management
 
             var model = logicControl.Model;
             if (entity == null)
-            {
                 entity = converter.Convert(model);
-            }
             else
-            {
                 converter.FillObject(entity, model);
-            }
 
             HbSession.SubmitChanges(entity);
 
             Response.Redirect("~/Pages/Management/LogicsList.aspx");
-        }
-
-        protected void btnPreview_OnClick(object sender, EventArgs e)
-        {
-            //try
-            //{
-            //    lblError.Text = String.Empty;
-
-            //    var model = logicControl.Model;
-
-            //    var queryGen = new QueryGenerator(DataContext, model);
-            //    var sqlQuery = queryGen.SelectQuery();
-
-            //    var connString = ConfigurationManager.ConnectionStrings["RepositoryConnectionString"];
-
-            //    var sqlDs = new SqlDataSource
-            //    {
-            //        ConnectionString = connString.ConnectionString,
-            //        SelectCommand = sqlQuery,
-            //        CacheKeyDependency = sqlQuery.ComputeMd5(),
-            //        CacheExpirationPolicy = DataSourceCacheExpiry.Sliding,
-            //        CacheDuration = 900,
-            //        EnableCaching = true,
-            //    };
-
-            //    gvData.DataSource = sqlDs;
-            //    gvData.DataBind();
-            //}
-            //catch (Exception ex)
-            //{
-            //    lblError.Text = ex.ToString();
-            //}
-
-            //mpeAddEdit.Show();
         }
     }
 }

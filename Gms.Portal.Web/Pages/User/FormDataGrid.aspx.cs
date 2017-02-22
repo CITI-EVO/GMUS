@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Utils;
 using CITI.EVO.Tools.Web.UI.Helpers;
-using CITI.EVO.UserManagement.Web.Bases;
 using Gms.Portal.DAL.Domain;
+using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
+using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 using NHibernate.Linq;
 using MongoDB.Bson;
@@ -35,6 +37,17 @@ namespace Gms.Portal.Web.Pages.User
             get { return DataConverter.ToNullableGuid(RequestUrl["ParentID"]); }
         }
 
+        public Guid? UserID
+        {
+            get
+            {
+                if (UserUtil.IsSuperAdmin())
+                    return DataConverter.ToNullableGuid(RequestUrl["ParentID"]);
+
+                return UserUtil.GetCurrentUserID();
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             FillGridView();
@@ -53,49 +66,37 @@ namespace Gms.Portal.Web.Pages.User
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void btnEdit_OnCommand(object sender, CommandEventArgs e)
+        protected void formDataGridControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
-            var recordID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (recordID == null)
-                return;
-
             var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
             urlHelper["Mode"] = "Edit";
             urlHelper["FormID"] = FormID;
             urlHelper["OwnerID"] = (OwnerID ?? FormID);
-            urlHelper["RecordID"] = recordID;
+            urlHelper["RecordID"] = e.Value;
             urlHelper["ParentID"] = ParentID;
             urlHelper["ReturnUrl"] = RequestUrl.ToEncodedUrl();
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void btnView_OnCommand(object sender, CommandEventArgs e)
+        protected void formDataGridControl_OnView(object sender, GenericEventArgs<Guid> e)
         {
-            var recordID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (recordID == null)
-                return;
-
             var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
             urlHelper["Mode"] = "View";
             urlHelper["FormID"] = FormID;
             urlHelper["OwnerID"] = (OwnerID ?? FormID);
-            urlHelper["RecordID"] = recordID;
+            urlHelper["RecordID"] = e.Value;
             urlHelper["ParentID"] = ParentID;
             urlHelper["ReturnUrl"] = RequestUrl.ToEncodedUrl();
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void btnDelete_OnCommand(object sender, CommandEventArgs e)
+        protected void formDataGridControl_OnDelete(object sender, GenericEventArgs<Guid> e)
         {
-            var recordID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (recordID == null)
-                return;
-
             var collection = MongoDbUtil.GetCollection(OwnerID);
 
-            var filter = Builders<BsonDocument>.Filter.Eq("ID", recordID);
+            var filter = Builders<BsonDocument>.Filter.Eq("ID", e.Value);
             var update = Builders<BsonDocument>.Update.Set("DateDeleted", DateTime.Now);
 
             collection.UpdateMany(filter, update);
@@ -115,44 +116,35 @@ namespace Gms.Portal.Web.Pages.User
             var converter = new FormEntityModelConverter(HbSession);
             var model = converter.Convert(dbForm);
 
-            var formEntity = model.FormEntity;
+            var formEntity = model.Entity;
             if (formEntity == null)
                 return;
 
-            var formDataList = new FormDataLazyList(FormID, OwnerID, ParentID);
+            var controls = FormStructureUtil.OrderedFirstLevelTraversal(formEntity);
 
-            var collection = formDataList.Cast<IDictionary<String, Object>>();
-            var fieldSet = formDataList.SelectMany(n => n.Keys).ToHashSet();
+            var list = (from n in controls.OfType<FieldEntity>()
+                        where n.Visible && 
+                              n.DisplayOnGrid
+                        select n).ToList();
 
-            var formDataView = new DictionaryDataView(collection, fieldSet);
+            var formFields = list.Select(n => Convert.ToString(n.ID)).Union(FormDataUnit.DefaultFields);
+            var fieldSet = formFields.ToHashSet();
 
-            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(formEntity);
+            var userID = UserID;
+            if (!UserUtil.IsSuperAdmin())
+                userID = UserUtil.GetCurrentUserID();
 
-            var fields = (from n in controls
-                          let f = n as FieldEntity
-                          where f != null
-                          select f);
+            var formDataList = new FormDataLazyList(FormID, OwnerID, ParentID, userID);
+            var formDataView = new DictionaryDataView(formDataList, fieldSet);
 
-            var existFields = (from n in gvData.Columns.Cast<DataControlField>()
-                               let c = n as BoundField
-                               where c != null
-                               select c.DataField).ToHashSet();
-
-            foreach (var field in fields)
+            var dataGridModel = new FormDataGridModel
             {
-                var dataField = Convert.ToString(field.ID);
-                if (existFields.Contains(dataField))
-                    continue;
+                Fields = list,
+                DataView = formDataView
+            };
 
-                var column = new BoundField();
-                column.HeaderText = field.Name;
-                column.DataField = Convert.ToString(field.ID);
-
-                gvData.Columns.Add(column);
-            }
-
-            gvData.DataSource = formDataView;
-            gvData.DataBind();
+            formDataGridControl.Model = dataGridModel;
+            formDataGridControl.DataBind();
         }
     }
 }

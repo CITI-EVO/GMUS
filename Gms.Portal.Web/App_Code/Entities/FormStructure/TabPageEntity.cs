@@ -5,7 +5,7 @@ namespace Gms.Portal.Web.Entities.FormStructure
 {
     [Serializable]
     [XmlRoot("TabPage")]
-    public class TabPageEntity : ContainerControlEntity
+    public class TabPageEntity : ContentEntity
     {
     }
 }

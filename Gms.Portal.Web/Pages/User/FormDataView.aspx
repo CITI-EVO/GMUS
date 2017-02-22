@@ -5,12 +5,20 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-    <div>
-        <asp:LinkButton runat="server" Text="Save" ID="btnSave" OnClick="btnSave_OnClick"/>
-        <asp:LinkButton runat="server" Text="Cancel" ID="btnCancel" OnClick="btnCancel_OnClick"/>
-    </div>
-    <div>
-        <local:FormDataControl runat="server" ID="formDataControl" OnCommand="formDataControl_OnCommand" />
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="form-group">
+                    <asp:LinkButton runat="server" ID="btnSave" OnClick="btnSave_OnClick" CssClass="btn btn-success">
+                        <asp:Label runat="server" CssClass="fa fa-save"></asp:Label>
+                    </asp:LinkButton>
+                    <asp:LinkButton runat="server" ID="btnCancel" OnClick="btnCancel_OnClick" CssClass="btn btn-warning">
+                        <asp:Label runat="server" CssClass="fa fa-close"></asp:Label>
+                    </asp:LinkButton>
+                </div>
+                <local:FormDataControl runat="server" ID="formDataControl" OnCommand="formDataControl_OnCommand" />
+            </div>
+        </div>
     </div>
 </asp:Content>
 

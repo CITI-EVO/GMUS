@@ -1,5 +1,0 @@
-﻿2016-12-23 20:12:44,218 [7] INFO  ServiceLoginLogger [(null)] - Login - LoginName: org1, Password: 123456, ClientIP: ::1, ::1, Token: 4ad83283-dda1-4cfc-a770-c59adb9f2726
-2016-12-23 20:12:44,368 [9] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: org1; Password: 123456; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 4ad83283-dda1-4cfc-a770-c59adb9f2726; SessionID: rtfmwagut2juxztrpyww4ots; ClientIP: ::1, ::1; Success: True
-2016-12-23 20:45:08,487 [7] INFO  ServiceLoginLogger [(null)] - Logout - LoginName: org1, Password: 123456, ClientIP: ::1, ::1, Token: 4ad83283-dda1-4cfc-a770-c59adb9f2726
-2016-12-23 20:45:14,449 [15] INFO  ServiceLoginLogger [(null)] - Login - LoginName: org2, Password: 123456, ClientIP: ::1, ::1, Token: b0b41473-b58e-4660-9303-cf106d6d67c7
-2016-12-23 20:45:14,496 [31] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: org2; Password: 123456; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: b0b41473-b58e-4660-9303-cf106d6d67c7; SessionID: rtfmwagut2juxztrpyww4ots; ClientIP: ::1, ::1; Success: True

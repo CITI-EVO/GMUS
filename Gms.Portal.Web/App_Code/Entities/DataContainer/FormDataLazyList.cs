@@ -26,6 +26,10 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
         }
 
+        public FormDataLazyList(Guid? formID, Guid? ownerID, Guid? parentID, Guid? userID) : base(formID, ownerID, parentID, userID)
+        {
+        }
+
         public override IEnumerator<FormDataUnit> GetEnumerator()
         {
             InitializeItems();
@@ -55,6 +59,16 @@ namespace Gms.Portal.Web.Entities.DataContainer
                          select doc);
             }
 
+            if (UserID != null)
+            {
+                query = (from doc in query
+                         where doc[FormDataUnit.UserIDField] == UserID
+                         select doc);
+            }
+
+            query = (from doc in query
+                     orderby doc[FormDataUnit.DateCreatedField] descending 
+                     select doc);
             //var commonFilter = Builders<BsonDocument>.Filter.Eq("DateDeleted", (DateTime?)null);
             //if (ParentID != null)
             //{
@@ -64,8 +78,8 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
             //var documents = Enumerable.ToList(MongoDbUtil.FindObject(collection, commonFilter));
 
-            var converter = new BsonDocumentToFormDataUnitConverter();
-            foreach (var formDataUnit in converter.Convert(query))
+            var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(query);
+            foreach (var formDataUnit in formDataUnits)
             {
                 formDataUnit.FormID = FormID;
                 formDataUnit.OwnerID = OwnerID;

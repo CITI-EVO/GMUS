@@ -3,31 +3,53 @@
 <%@ Register Src="~/Controls/Common/NamedExpressionsListControl.ascx" TagPrefix="local" TagName="NamedExpressionsListControl" %>
 <%@ Register Src="~/Controls/Common/ExpressionsListControl.ascx" TagPrefix="local" TagName="ExpressionsListControl" %>
 
-<div class="popup-title">
-	<ce:Label runat="server">Where conditions</ce:Label></div>
-<div class="admin-title-separator"></div>
-<div class="admin-fieldset">
-	<local:ExpressionsListControl runat="server" ID="filterByControl" Property="ExpressionsLogicModel.FilterBy" />
-</div>
-<div class="popup-title">
-	<ce:Label runat="server">Group By</ce:Label></div>
-<div class="admin-title-separator"></div>
-<div class="admin-fieldset">
-	<local:ExpressionsListControl runat="server" ID="groupByControl" Property="ExpressionsLogicModel.GroupBy" />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Filters</h5>
+            </div>
+            <div class="ibox-content">
+                <local:ExpressionsListControl runat="server" ID="filterByControl" Property="{ExpressionsLogicModel.FilterBy=Model}" />
+            </div>
+        </div>
 
+    </div>
 </div>
-<div class="popup-title">
-	<ce:Label runat="server">Order By</ce:Label></div>
-<div class="admin-title-separator"></div>
-<div class="admin-fieldset">
-	<local:ExpressionsListControl runat="server" ID="orderByControl" Property="ExpressionsLogicModel.OrderBy" />
-
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Group By</h5>
+            </div>
+            <div class="ibox-content">
+                <local:ExpressionsListControl runat="server" ID="groupByControl" Property="{ExpressionsLogicModel.GroupBy=Model}" />
+            </div>
+        </div>
+    </div>
 </div>
-<div class="popup-title">
-	<ce:Label runat="server">Select</ce:Label></div>
-<div class="admin-title-separator"></div>
-<div class="admin-fieldset">
-	<local:NamedExpressionsListControl runat="server" ID="selectControl" Property="ExpressionsLogicModel.Select" />
-
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Order By</h5>
+            </div>
+            <div class="ibox-content">
+                <local:ExpressionsListControl runat="server" ID="orderByControl" Property="{ExpressionsLogicModel.OrderBy=Model}" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Select</h5>
+            </div>
+            <div class="ibox-content">
+                <local:NamedExpressionsListControl runat="server" ID="selectControl" Property="{ExpressionsLogicModel.Select=Model}" />
+            </div>
+        </div>
+    </div>
 </div>
 

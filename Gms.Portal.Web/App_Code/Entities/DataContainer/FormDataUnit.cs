@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CITI.EVO.Tools.Utils;
 
 namespace Gms.Portal.Web.Entities.DataContainer
@@ -9,13 +10,43 @@ namespace Gms.Portal.Web.Entities.DataContainer
     {
         public const String IDField = "ID";
         public const String FormIDField = "FormID";
+        public const String UserIDField = "UserID";
         public const String OwnerIDField = "OwnerID";
         public const String ParentIDField = "ParentID";
         public const String PreviousIDField = "PreviousID";
 
+        public const String PrivacyField = "PrivaryFields";
+
         public const String DateCreatedField = "DateCreated";
         public const String DateChangedField = "DateChanged";
         public const String DateDeletedField = "DateDeleted";
+
+        private static ISet<String> _defaultFields;
+        public static ISet<String> DefaultFields
+        {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            get
+            {
+                if (_defaultFields == null)
+                {
+                    _defaultFields = new HashSet<String>(new[]
+                    {
+                        IDField,
+                        FormIDField,
+                        UserIDField,
+                        OwnerIDField,
+                        ParentIDField,
+                        PreviousIDField,
+                        PrivacyField,
+                        DateCreatedField,
+                        DateChangedField,
+                        DateDeletedField,
+                    });
+                }
+
+                return _defaultFields;
+            }
+        }
 
         public FormDataUnit() : this(null)
         {
@@ -63,6 +94,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             set
             {
                 SetValue(FormIDField, value);
+            }
+        }
+
+        public Guid? UserID
+        {
+            get
+            {
+                var val = GetValue(UserIDField);
+                return DataConverter.ToNullableGuid(val);
+            }
+            set
+            {
+                SetValue(UserIDField, value);
             }
         }
 
@@ -141,6 +185,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             set
             {
                 SetValue(DateCreatedField, value);
+            }
+        }
+
+        public ISet<String> PrivateFields
+        {
+            get
+            {
+                var val = GetValue(PrivacyField) as ISet<String>;
+                return val;
+            }
+            set
+            {
+                SetValue(PrivacyField, value);
             }
         }
 

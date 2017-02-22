@@ -4,6 +4,8 @@ using CITI.EVO.Core.Common;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Models;
+using Gms.Portal.Web.Utils;
+using iTextSharp.text.xml;
 using NHibernate;
 
 namespace Gms.Portal.Web.Converters.EntityToModel
@@ -27,23 +29,12 @@ namespace Gms.Portal.Web.Converters.EntityToModel
             target.ID = source.ID;
             target.Name = source.Name;
             target.Number = source.Number;
-            target.Language = source.Language;
+            target.Visible = source.Visible;
+            target.OrderIndex = source.OrderIndex;
 
-            target.FormEntity = Deserialize(source.XmlData);
+            target.Entity = XmlUtil.Deserialize<FormEntity>(source.XmlData);
         }
 
-        private FormEntity Deserialize(XDocument document)
-        {
-            if (document == null)
-                return null;
 
-            using (var xmlReader = document.CreateReader())
-            {
-                var serializer = new XmlSerializer(typeof(FormEntity));
-
-                var entity = (FormEntity)serializer.Deserialize(xmlReader);
-                return entity;
-            }
-        }
     }
 }

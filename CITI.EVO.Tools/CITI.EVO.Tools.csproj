@@ -225,9 +225,11 @@
     <Compile Include="Web\UI\Controls\GridView.cs" />
     <Compile Include="Web\UI\Controls\GridViewDataColumn.cs" />
     <Compile Include="Web\UI\Common\ICommand.cs" />
+    <Compile Include="Web\UI\Controls\HtmlElement.cs" />
     <Compile Include="Web\UI\Controls\ImageLinkButton.cs" />
     <Compile Include="Web\UI\Common\ITranslatable.cs" />
     <Compile Include="Web\UI\Controls\Label.cs" />
+    <Compile Include="Web\UI\Controls\LinkButton.cs" />
     <Compile Include="Web\UI\Controls\ListBox.cs" />
     <Compile Include="Web\UI\Controls\Panel.cs" />
     <Compile Include="Web\UI\Controls\RadioButton.cs" />

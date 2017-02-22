@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -40,7 +41,11 @@ namespace CITI.EVO.TwoWayModel.Processing
             var dictionary = (IDictionary)modelProperty.GetValue(model);
             if (dictionary == null)
             {
-                dictionary = (IDictionary)Activator.CreateInstance(modelProperty.PropertyType);
+                if (modelProperty.PropertyType.IsInterface)
+                    dictionary = new Dictionary<String, Object>();
+                else
+                    dictionary = (IDictionary)Activator.CreateInstance(modelProperty.PropertyType);
+
                 modelProperty.SetValue(model, dictionary);
             }
 

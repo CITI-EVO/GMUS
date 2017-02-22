@@ -6,9 +6,9 @@ namespace Gms.Portal.Web.Entities.FormStructure
 {
     [Serializable]
     [XmlRoot("Grid")]
-    public class GridEntity : ContainerControlEntity
+    public class GridEntity : ContentEntity
     {
-        [XmlAttribute("DetailsFormID")]
-        public Guid DetailsFormID { get; set; }
+        [XmlElement("DetailsFormID")]
+        public Guid? DetailsFormID { get; set; }
     }
 }

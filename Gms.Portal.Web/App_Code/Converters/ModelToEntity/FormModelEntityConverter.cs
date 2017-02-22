@@ -7,6 +7,7 @@ using CITI.EVO.Core.Common;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Models;
+using Gms.Portal.Web.Utils;
 using NHibernate;
 
 namespace Gms.Portal.Web.Converters.ModelToEntity
@@ -30,24 +31,10 @@ namespace Gms.Portal.Web.Converters.ModelToEntity
             //target.ID = source.ID;
             target.Name = source.Name;
             target.Number = source.Number;
-            target.Language = source.Language;
-            target.XmlData = Serialize(source.FormEntity);
+            target.Visible = source.Visible;
+            target.OrderIndex = source.OrderIndex;
+            target.XmlData = XmlUtil.Serialize(source.Entity);
         }
 
-        private XDocument Serialize(FormEntity entity)
-        {
-            if (entity == null)
-                return null;
-
-            var xDoc = new XDocument();
-            
-            using (var xmlWriter = xDoc.CreateWriter())
-            {
-                var serializer = new XmlSerializer(typeof(FormEntity));
-                serializer.Serialize(xmlWriter, entity);
-
-                return xDoc;
-            }
-        }
     }
 }

@@ -7,5 +7,5 @@
 <asp:HiddenField runat="server" ID="hdEnabled" />
 <asp:HiddenField runat="server" ID="hdDateCreated" />
 
-<asp:Panel runat="server" ID="pnlMain">
+<asp:Panel runat="server" ID="pnlMain" CssClass="row">
 </asp:Panel>

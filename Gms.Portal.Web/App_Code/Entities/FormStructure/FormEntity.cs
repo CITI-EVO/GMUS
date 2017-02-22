@@ -5,7 +5,7 @@ namespace Gms.Portal.Web.Entities.FormStructure
 {
     [Serializable]
     [XmlRoot("Form")]
-    public class FormEntity : ContainerControlEntity
+    public class FormEntity : ContentEntity
     {
     }
 }

@@ -20,9 +20,9 @@ namespace Gms.Portal.Web.Controls.Management
 
         private void FillLists(LogicModel model)
         {
-            if (model.SourceType == "Table")
+            if (model.SourceType == "Form")
             {
-                var query = (from n in HbSession.Query<GM_Table>()
+                var query = (from n in HbSession.Query<GM_Form>()
                              where n.DateDeleted == null
                              orderby n.Name
                              select n);

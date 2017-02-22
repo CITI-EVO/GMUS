@@ -103,22 +103,19 @@ namespace Gms.Portal.Web.Controls.Common
 			mpeExpression.Show();
 		}
 
-		public override void FillModel(object model)
-		{
-			var expModel = model as ExpressionsListModel;
-			if (expModel == null)
-				return;
 
-			expModel.Expressions = Expressions;
+		public override ExpressionsListModel GetModel()
+		{
+            var model = (ExpressionsListModel)GetModel(typeof(ExpressionsListModel));
+            model.Expressions = Expressions;
+
+            return model;
 		}
 
-        public override void SetModel(object model)
-		{
-			var expModel = model as ExpressionsListModel;
-			if (expModel == null)
-				return;
-
-			Expressions = expModel.Expressions;
-		}
+        public override void SetModel(ExpressionsListModel model)
+        {
+            base.SetModel(model);
+            Expressions = model.Expressions;
+        }
 	}
 }

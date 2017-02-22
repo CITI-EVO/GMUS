@@ -1,24 +1,48 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="LogicsControl.ascx.cs" Inherits="Gms.Portal.Web.Controls.Management.LogicsControl" %>
-<dx:ASPxGridView ID="gvData"
-	runat="server"
-	AutoGenerateColumns="False"
-	ClientInstanceName="gvData"
-	KeyFieldName="ID"
-	Width="100%"
-	ClientIDMode="AutoID"
-	EnableRowsCache="False"
-	EnableViewState="False">
-    <Settings ShowFilterRow="True"></Settings>
-	<Columns>
-		<dx:GridViewDataTextColumn Caption=" " FieldName="" VisibleIndex="0" Name="colViewCommand">
-			<DataItemTemplate>
-				<ce:ImageLinkButton runat="server" ToolTip="View" Target="_blank" CommandArgument='<%# Eval("ID") %>' DefaultImageUrl="~/App_Themes/Default/images/view.png" ID="btnView" OnCommand="btnView_OnCommand" />
-				<ce:ImageLinkButton runat="server" ToolTip="Edit" Target="_blank" CommandArgument='<%# Eval("ID") %>' DefaultImageUrl="~/App_Themes/Default/images/edit.png" ID="btnEdit" OnCommand="btnEdit_OnCommand" />
-				<ce:ImageLinkButton runat="server" ToolTip="Delete" Target="_blank" CommandArgument='<%# Eval("ID") %>' DefaultImageUrl="~/App_Themes/Default/images/delete.png" ID="btnDelete" OnCommand="btnDelete_OnCommand" OnClientClick="return confirm('Are you sure you want to delete?');" />
-			</DataItemTemplate>
-		</dx:GridViewDataTextColumn>
-		<dx:GridViewDataTextColumn Caption="Name" FieldName="Name"/>
-		<dx:GridViewDataTextColumn Caption="Type" FieldName="Type"/>
-		<dx:GridViewDataTextColumn Caption="SourceType" FieldName="SourceType"/>
-	</Columns>
-</dx:ASPxGridView>
+<div class="table-responsive">
+    <div class="dataTables_wrapper form-inline dt-bootstrap">
+        <ce:GridView runat="server" ID="gvData" UseAccessibleHeader="True" TableSectionHeader="True" AutoGenerateColumns="False" EnableViewState="False"
+            CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" Property="{LogicsModel.List=DataSource, Mode=Assigne}">
+            <Columns>
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:LinkButton runat="server" ID="btnView" ToolTip="View" CommandArgument='<%# Eval("ID") %>' OnCommand="btnView_OnCommand" CssClass="btn btn-info btn-sm">
+                            <asp:Label runat="server" CssClass="fa fa-file"/>
+                        </asp:LinkButton>
+                        <asp:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-sm">
+                            <asp:Label runat="server" CssClass="fa fa-edit"/>
+                        </asp:LinkButton>
+                        <asp:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-sm">
+                            <asp:Label runat="server" CssClass="fa fa-trash-o"/>
+                        </asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <ce:Label runat="server" Text="Name" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <ce:Label runat="server" Text='<%# Eval("Name") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <ce:Label runat="server" Text="Type" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <ce:Label runat="server" Text='<%# Eval("Type") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <ce:Label runat="server" Text="SourceType" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <ce:Label runat="server" Text='<%# Eval("SourceType") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </ce:GridView>
+    </div>
+</div>
+

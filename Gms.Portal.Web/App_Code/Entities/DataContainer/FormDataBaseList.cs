@@ -14,29 +14,33 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             _list = new List<FormDataUnit>();
         }
-
-        public FormDataBaseList(Guid? formID) : this(formID, formID, null)
+        public FormDataBaseList(Guid? formID) : this(formID, formID, null, null)
         {
         }
-        public FormDataBaseList(Guid? formID, Guid? ownerID) : this(formID, ownerID, null)
+        public FormDataBaseList(Guid? formID, Guid? ownerID) : this(formID, ownerID, null, null)
         {
         }
-        public FormDataBaseList(Guid? formID, Guid? ownerID, Guid? parentID) : this()
+        public FormDataBaseList(Guid? formID, Guid? ownerID, Guid? parentID) : this(formID, ownerID, parentID, null)
+        {
+        }
+        public FormDataBaseList(Guid? formID, Guid? ownerID, Guid? parentID, Guid? userID) : this()
         {
             if (formID == null || ownerID == null)
                 throw new Exception();
 
+            UserID = userID;
             FormID = formID;
             OwnerID = ownerID;
             ParentID = parentID;
         }
-
 
         public Guid? FormID { get; set; }
 
         public Guid? OwnerID { get; set; }
 
         public Guid? ParentID { get; set; }
+
+        public Guid? UserID { get; set; }
 
         public FormDataUnit this[int index]
         {

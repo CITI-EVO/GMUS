@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="CITI.EVO.UserManagement.Web.Site" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Gms.Portal.Web.Site" %>
 
 <%@ Register TagPrefix="local" TagName="CurrentLoginControl" Src="~/Controls/Common/CurrentLoginControl.ascx" %>
 
@@ -8,74 +8,178 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <asp:ContentPlaceHolder ID="cphHead" runat="server">
     </asp:ContentPlaceHolder>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="form1" runat="server" class="form-horizontal">
         <asp:ScriptManager runat="Server" EnableScriptGlobalization="true" EnableScriptLocalization="true" ID="ScriptManager1">
             <Scripts>
-                <asp:ScriptReference Path="~/Scripts/jquery-1.10.2.js" />
-                <asp:ScriptReference Path="~/Scripts/jquery-1.9.1.js" />
-                <asp:ScriptReference Path="~/Scripts/jquery.mCustomScrollbar.js" />
             </Scripts>
         </asp:ScriptManager>
-        <script>
-            $(window).load(function () {
-                $(".content").mCustomScrollbar();
-            });
-        </script>
-        <div id="main">
-            <div id="left_panel" class="content">
-                <nav id="navigation-main" class="navigation-main" data-folded="false" style="top: 0;">
-                    <ul class="primary">
-                        <li>
-                            <a href="" class="home" title="Home">
-                                <asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/logo.png" />
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="highh" runat="server" ToolTip="ადმინისტრირება" Text='' NavigateUrl='~/Pages/Management/FormStructure.aspx'>
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/usermanagementactive.png" /></span>
-                                <label class="text">ადმინისტრირება</label>
-                            </asp:HyperLink>
-                        </li>
-                        <asp:Repeater runat="server" ID="rptLinks">
-                            <ItemTemplate>
-                                <li class="menu">
-                                    <asp:HyperLink CssClass="sub" runat="server" NavigateUrl='<%# GetLinkUrl(Eval("ID")) %>' ToolTip='<%# Eval("Name") %>' Text=''>
-                                        <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/projects.png" /></span>
-                                        <label class="text"><%# Eval("Name") %></label>
-                                    </asp:HyperLink>
-                                </li>                                
-                            </ItemTemplate>
-                        </asp:Repeater>
-                        <li>
-                            <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
-                        </li>
-					</ul>
-                 </nav>
-            </div>
 
-            <div class="logout_box">
-                <div style="margin-bottom: 1px;">
-                    <asp:LinkButton ID="lnkChangePassword" runat="server" CssClass="icon" ToolTip="პაროლის შეცვლა" Text="" OnClick="lnkChangePassword_OnClick">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/password.png" /></span>
-                    </asp:LinkButton>
+        <div id="wrapper">
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="nav-header">
+                            <div class="dropdown profile-element">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                    <span class="clear">
+                                        <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo.png" />
+                                        <span class="text-muted text-xs block">Shota Rustaveli National Science Foundation<b class="caret"></b>
+                                        </span>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="logo-element">
+                                <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo_small.png" />
+                            </div>
+                        </li>
+                        <li class="active">
+                            <a href="#" runat="server"><i class="fa fa-cubes"></i><span class="nav-label">ადმინისტრირება</span></a>
+                            <ul class="nav nav-second-level collapse in">
+                                <li>
+                                    <a href="~/Pages/Management/FormsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ფორმები</span></a>
+                                </li>
+                                <li>
+                                    <a href="~/Pages/Management/LogicsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ლოგიკები</span></a>
+                                </li>
+                                <li>
+                                    <a href="~/Pages/Management/CollectionsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ცნობარები</span></a>
+                                </li>
+                                <li>
+                                    <a href="/RNSF/Gms/CITI.EVO.UserManagement.Web" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">მომხმარებლები</span></a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <asp:Repeater runat="server" ID="rptLinks">
+                                <ItemTemplate>
+                                    <a href='<%# GetLinkUrl(Eval("ID")) %>' runat="server"><i class="fa fa-th-large"></i><span class="nav-label"><%# Eval("Name") %></span> </a>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </li>
+                    </ul>
                 </div>
-                <asp:LinkButton ID="lnkLogout" runat="server" CssClass="icon" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/logout.png" /></span>
-                </asp:LinkButton>
-            </div>
-            <div id="content">
-                <h2>
-                    <asp:Label runat="server" ID="lblLoginName" />
-                    <asp:Label runat="server" ID="lblFirstName" />
-                    <asp:Label runat="server" ID="lblLastName" />
-                </h2>
+            </nav>
 
-                <asp:ContentPlaceHolder ID="cphContent" runat="server">
-                </asp:ContentPlaceHolder>
+            <div id="page-wrapper" class="gray-bg">
+                <div class="row border-bottom">
+                    <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                        <div class="navbar-header">
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-top-links navbar-right">
+                            <li>
+                                <asp:LinkButton runat="server" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
+                                 <i class="fa fa-sign-out"></i>სისტემიდან გასვლა
+                                </asp:LinkButton>
+                            </li>
+                            <li>
+                                <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
+                            </li>
+                            <li runat="server">
+                                <asp:LinkButton runat="server" ID="btGeoLang">Geo</asp:LinkButton>
+                            </li>
+                            <li runat="server">
+                                <asp:LinkButton runat="server" ID="btEngLang">Eng</asp:LinkButton>
+                            </li>
+                            <li runat="server" visible="False">
+                                <asp:LinkButton runat="server" ID="btTranslationMode">Translation Mode</asp:LinkButton>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="m-t-lg">
+                                <h2>
+                                    <asp:Label runat="server" ID="lblLoginName" />
+                                    <asp:Label runat="server" ID="lblFirstName" />
+                                    <asp:Label runat="server" ID="lblLastName" />
+                                </h2>
+                                <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="pull-right">
+                        Consulting & <strong>IT</strong> Innovations
+                    </div>
+                    <div>
+                        <strong>Copyright</strong> CITI &copy; 2017
+                    </div>
+                </div>
             </div>
         </div>
+
+        <script src='<%=ResolveUrl("~/Scripts/jquery-3.1.1.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/bootstrap.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/touchspin/jquery.bootstrap-touchspin.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/slimscroll/jquery.slimscroll.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/datapicker/bootstrap-datepicker.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/metisMenu/jquery.metisMenu.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/dataTables/datatables.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/dataTables/datatables.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/jasny/jasny-bootstrap.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/clockpicker/clockpicker.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/chosen/chosen.jquery.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/plugins/pace/pace.min.js")%>' type='text/javascript'></script>
+        <script src='<%=ResolveUrl("~/Scripts/inspinia.js")%>' type='text/javascript'></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.table').DataTable();
+
+                $('.clockpicker').clockpicker();
+
+                $('.chosen-select').chosen();
+
+                $(".intSpinEdit").TouchSpin({
+                    min: 0,
+                    max: 65535,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+                $(".groupSizeSpin").TouchSpin({
+                    min: 1,
+                    max: 12,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+                //$(".touchspin2").TouchSpin({
+                //    min: 0,
+                //    max: 100,
+                //    step: 0.1,
+                //    decimals: 2,
+                //    boostat: 5,
+                //    maxboostedstep: 10,
+                //    postfix: '%',
+                //    buttondown_class: 'btn btn-white',
+                //    buttonup_class: 'btn btn-white'
+                //});
+
+                //$(".touchspin3").TouchSpin({
+                //    verticalbuttons: true,
+                //    buttondown_class: 'btn btn-white',
+                //    buttonup_class: 'btn btn-white'
+                //});
+
+                $('.input-group.date').datepicker({
+                    todayBtn: "linked",
+                    keyboardNavigation: false,
+                    forceParse: false,
+                    calendarWeeks: true,
+                    autoclose: true
+                });
+            });
+        </script>
     </form>
 </body>
 </html>

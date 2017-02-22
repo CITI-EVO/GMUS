@@ -1,2 +1,0 @@
-﻿2016-11-14 18:22:49,640 [8] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: 690dc7d4-0a51-4644-9cad-b59548ea0c4a
-2016-11-14 18:22:49,736 [7] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: superadmin; Password: resetpass; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 690dc7d4-0a51-4644-9cad-b59548ea0c4a; SessionID: uw0fymmnzvxp12x00am0a5em; ClientIP: ::1, ::1; Success: True

@@ -4,9 +4,10 @@ using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Helpers;
+using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
-using CITI.EVO.UserManagement.Web.Bases;
 using Gms.Portal.DAL.Domain;
+using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
@@ -39,6 +40,11 @@ namespace Gms.Portal.Web.Pages.User
             get { return DataConverter.ToNullableGuid(RequestUrl["ParentID"]); }
         }
 
+        public bool Enabled
+        {
+            get { return (Convert.ToString(RequestUrl["Mode"]) != "View"); }
+        }
+
         protected void Page_Init(object sender, EventArgs e)
         {
             if (OwnerID == null)
@@ -56,12 +62,13 @@ namespace Gms.Portal.Web.Pages.User
             var converter = new FormEntityModelConverter(HbSession);
             var model = converter.Convert(dbForm);
 
-            var formEntity = model.FormEntity;
+            var formEntity = model.Entity;
             if (formEntity == null)
                 return;
 
-            var mode = Convert.ToString(RequestUrl["Mode"]);
-            formDataControl.Enabled = (mode != "View");
+            btnSave.Visible = Enabled;
+            btnSave.CssClass = (Enabled ? "btn btn-success" : "btn btn-default");
+            formDataControl.Enabled = Enabled;
 
             if (OwnerID != null && OwnerID != FormID && formEntity.Controls != null)
             {
@@ -92,6 +99,7 @@ namespace Gms.Portal.Web.Pages.User
             newFormDataUnit.FormID = FormID;
             newFormDataUnit.OwnerID = OwnerID;
             newFormDataUnit.ParentID = ParentID;
+            newFormDataUnit.UserID = UserUtil.GetCurrentUserID();
 
             var oldRecordID = newFormDataUnit.ID;
             var newRecordID = Guid.NewGuid();
@@ -107,6 +115,9 @@ namespace Gms.Portal.Web.Pages.User
                     collection.UpdateMany(filter, update);
 
                     newFormDataUnit.PreviousID = oldRecordID;
+
+                    if (UserUtil.IsSuperAdmin())
+                        newFormDataUnit.UserID = oldFormDataUnit.UserID;
 
                     var listRefs = (from n in newFormDataUnit
                                     let l = n.Value as FormDataListRef
@@ -128,18 +139,11 @@ namespace Gms.Portal.Web.Pages.User
             newFormDataUnit.ID = newRecordID;
             newFormDataUnit.DateCreated = DateTime.Now;
 
-            var converter = new FormDataUnitToBsonDocumentConverter();
-            var document = converter.Convert(newFormDataUnit);
+            var document = BsonDocumentConverter.ConvertToBsonDocument(newFormDataUnit);
 
             collection.InsertOne(document);
 
-            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
-            if (!String.IsNullOrWhiteSpace(returnUrl))
-            {
-                var returnUrlHelper = new UrlHelper(returnUrl);
-                Response.Redirect(returnUrlHelper.ToEncodedUrl());
-            }
-            else
+            if (RecordID == null)
             {
                 var urlHelper = new UrlHelper(RequestUrl);
                 urlHelper["FormID"] = FormID;
@@ -148,6 +152,15 @@ namespace Gms.Portal.Web.Pages.User
                 urlHelper["ParentID"] = ParentID;
 
                 Response.Redirect(urlHelper.ToEncodedUrl());
+            }
+            else
+            {
+                var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
+                if (!String.IsNullOrWhiteSpace(returnUrl))
+                {
+                    var returnUrlHelper = new UrlHelper(returnUrl);
+                    Response.Redirect(returnUrlHelper.ToEncodedUrl());
+                }
             }
         }
 
@@ -230,8 +243,7 @@ namespace Gms.Portal.Web.Pages.User
             if (document == null)
                 return null;
 
-            var converter = new BsonDocumentToFormDataUnitConverter();
-            return converter.Convert(document);
+            return BsonDocumentConverter.ConvertToFormDataUnit(document);
         }
 
     }

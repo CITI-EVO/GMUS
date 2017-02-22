@@ -13,101 +13,134 @@
     <form id="form1" runat="server">
         <asp:ScriptManager runat="Server" EnableScriptGlobalization="true" EnableScriptLocalization="true" ID="ScriptManager1">
             <Scripts>
-                <asp:ScriptReference Path="~/Scripts/jquery-1.10.2.js" />
-                <asp:ScriptReference Path="~/Scripts/jquery-1.9.1.js" />
-                <asp:ScriptReference Path="~/Scripts/jquery.mCustomScrollbar.js" />
+
+                <asp:ScriptReference Path="~/js/bootstrap.min.js" />
+                <asp:ScriptReference Path="~/js/jquery-3.1.1.min.js" />
+                <asp:ScriptReference Path="js/plugins/metisMenu/jquery.metisMenu.js" />
+                <asp:ScriptReference Path="js/plugins/slimscroll/jquery.slimscroll.min.js" />
+                <asp:ScriptReference Path="js/plugins/flot/jquery.flot.js" />
+                <asp:ScriptReference Path="js/plugins/flot/jquery.flot.tooltip.min.js" />
+                <asp:ScriptReference Path="js/plugins/flot/jquery.flot.spline.js" />
+                <asp:ScriptReference Path="js/plugins/flot/jquery.flot.resize.js" />
+                <asp:ScriptReference Path="js/plugins/flot/jquery.flot.pie.js" />
+                <asp:ScriptReference Path="js/plugins/peity/jquery.peity.min.js" />
+                <asp:ScriptReference Path="js/inspinia.js" />
+                <asp:ScriptReference Path="js/plugins/jquery-ui/jquery-ui.min.js" />
+                <asp:ScriptReference Path="js/plugins/gritter/jquery.gritter.min.js" />
+                <asp:ScriptReference Path="js/plugins/sparkline/jquery.sparkline.min.js" />
+                <asp:ScriptReference Path="js/plugins/toastr/toastr.min.js" />
+
+
+
             </Scripts>
         </asp:ScriptManager>
-        <script>
-            $(window).load(function () {
-                $(".content").mCustomScrollbar();
-            });
-        </script>
-        <div id="main">
-            <div id="left_panel" class="content">
-                <nav id="navigation-main" class="navigation-main" data-folded="false" style="top: 0;">
-                    <ul class="primary">
-                        <li>
-                            <a href="" class="home" title="Home">
-                                <asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/logo.png" />
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="highh" runat="server" ToolTip="უფლებები" Text="" NavigateUrl='#'>
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/usermanagementactive.png" /></span>
-                                <label class="text">რესურსებზე წვდომა</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl='~/Pages/Management/ProjectsList.aspx' ToolTip="მოდულები" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/projects.png" /></span>
-                                <label class="text">მოდულები</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl="~/Pages/Management/UsersList.aspx" ToolTip="მომხმარებლები" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/users.png" /></span>
-                                <label class="text">მომხმარებლები</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl="~/Pages/Management/GroupsList.aspx" ToolTip="მომხმარებლები" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/groups.png" /></span>
-                                <label class="text">ჯგუფები</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl="~/Pages/Management/AttributesSchemasList.aspx" ToolTip="ატრიბუტების სქემები" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/attributesschemas.png" /></span>
-                                <label class="text">ატრიბუტების სქემები</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl="~/Pages/Management/ResourceList.aspx" ToolTip="რესურსების მართვა" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/resourcelist.png" /></span>
-                                <label class="text">რესურსების მართვა</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink CssClass="sub" runat="server" NavigateUrl="~/Pages/Management/PermissionList.aspx" ToolTip="უფლებების დაწესება" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/permissionlist.png" /></span>
-                                <label class="text">უფლებების დაწესება</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li class="menu">
-                            <asp:HyperLink runat="server" CssClass="high" NavigateUrl='/Moe/Wms/Wms.Portal.Web/Default.aspx?loginToken={loginToken}' ToolTip="დაწესებულება" Text="">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/organization.png" /></span>
-                                <label class="text">ნარჩენების მართვა</label>
-                            </asp:HyperLink>
-                        </li>
-                        <li>
-                            <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
-                        </li>
-					</ul>
-                 </nav>
+        <div id="wrapper">
+
+            <nav class="navbar-default navbar-static-side" role="navigation">
+        
+                <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">CITI</strong>
+                             </span> <span class="text-muted text-xs block">Consulting & IT Innovations<b class="caret"></b></span> </span> </a>
+                   <%--         <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                             <li><asp:LinkButton ID="lnkChangePassword" runat="server" CssClass="icon" ToolTip="პაროლის შეცვლა" Text="" OnClick="lnkChangePassword_OnClick">
+                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/password.png" /></span>
+            </asp:LinkButton></li>     
+                            </ul>  --%>
+                    </div>
+                    
+         
+         
+                    
+
+                    <div class="logo-element">
+                        CITI
+                    </div>
+                </li>
+                <li class="active">
+                    <a href="index.html"><i class="fa fa-cubes"></i> <span class="nav-label">რესურსებზე წვდომა</span></a>
+                </li>
+                <li>
+                    <a href="~/Pages/Management/ProjectsList.aspx" runat="server"><i class="fa fa-th-large"></i> <span class="nav-label">მოდულები</span> </a>
+                </li>
+                 <li>
+                    <a href="~/Pages/Management/UsersList.aspx" runat="server"><i class="fa fa-group"></i> <span class="nav-label">მომხმარებლები</span> </a>
+                </li>   
+                
+                 <li>
+                    <a href="~/Pages/Management/GroupsList.aspx" runat="server"><i class="fa fa-object-group"></i> <span class="nav-label">ჯგუფები</span> </a>
+                </li> 
+                <li>
+                    <a href="~/Pages/Management/AttributesSchemasList.aspx" runat="server"><i class="fa fa-window-restore"></i> <span class="nav-label">ატრიბუტების სქემები</span> </a>
+                </li>
+                <li>
+                    <a href="~/Pages/Management/ResourceList.aspx" runat="server"><i class="fa fa-th-large"></i> <span class="nav-label">რესურსების მართვა</span> </a>
+                </li>
+                <li>
+                    <a href="~/Pages/Management/PermissionList.aspx" runat="server"><i class="fa fa-th-large"></i> <span class="nav-label">უფლებების დაწესება</span> </a>
+                </li>
+                <li>
+                    <a href='~/Moe/Wms/Wms.Portal.Web/Default.aspx?loginToken={loginToken}' runat="server" ><i class="fa fa-th-large"></i> <span class="nav-label">ნარჩენების მართვა</span> </a>
+                </li>
+            </ul>
+
+        </div>
+                
+                </nav>
+            <div id="page-wrapper" class="gray-bg">
+                <div class="row border-bottom">
+                    <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                   
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                          
+                             <li> <asp:LinkButton ID="LinkButton1" runat="server" CssClass="icon" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
+                                 <i class="fa fa-sign-out"></i>სისტემიდან გასვლა
+            </asp:LinkButton></li>     
+                </ul>
+
+            </nav>
+                </div>
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center m-t-lg">
+
+                                <asp:Label runat="server" ID="lblLoginName" />
+                                <asp:Label runat="server" ID="lblFirstName" />
+                                <asp:Label runat="server" ID="lblLastName" />
+
+
+                                <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="pull-right">
+                       Consulting & <strong>IT</strong> Innovations
+                    </div>
+                    <div>
+                        <strong>Copyright</strong> CITI &copy; 2017
+                    </div>
+                </div>
             </div>
 
-            <div class="logout_box">
-                <div style="margin-bottom: 1px;">
-                    <asp:LinkButton ID="lnkChangePassword" runat="server" CssClass="icon" ToolTip="პაროლის შეცვლა" Text="" OnClick="lnkChangePassword_OnClick">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/password.png" /></span>
-                    </asp:LinkButton>
-                </div>
-                <asp:LinkButton ID="lnkLogout" runat="server" CssClass="icon" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
-                                <span class="icon"><asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/logout.png" /></span>
-                </asp:LinkButton>
-            </div>
-            <div id="content">
-                <h2>
-                    <asp:Label runat="server" ID="lblLoginName" />
-                    <asp:Label runat="server" ID="lblFirstName" />
-                    <asp:Label runat="server" ID="lblLastName" />
-                </h2>
-          
-                <asp:ContentPlaceHolder ID="cphContent" runat="server">
-                </asp:ContentPlaceHolder>
-            </div>
+
+
+
+
+
+
+
         </div>
     </form>
+
 </body>
 </html>

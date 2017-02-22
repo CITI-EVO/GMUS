@@ -2,7 +2,6 @@
 using System.Web.UI;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.TwoWayModel.UIBases.Generic;
-using CITI.EVO.UserManagement.Web.Bases;
 using NHibernate;
 
 namespace Gms.Portal.Web.Bases
