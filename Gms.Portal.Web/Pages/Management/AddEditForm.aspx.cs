@@ -7,6 +7,7 @@ using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Converters.ModelToEntity;
 using NHibernate.Linq;
 using System.Linq;
+using Gms.Portal.Web.Models;
 
 namespace Gms.Portal.Web.Pages.Management
 {
@@ -16,16 +17,21 @@ namespace Gms.Portal.Web.Pages.Management
         {
             if (!IsPostBack)
             {
+                var model = new FormModel
+                {
+                    Number = Convert.ToString((uint)Guid.NewGuid().GetHashCode()),
+                };
+
                 var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
-                if (formID == null)
-                    return;
-
-                var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formID);
-                if (entity == null)
-                    return;
-
-                var converter = new FormEntityModelConverter(HbSession);
-                var model = converter.Convert(entity);
+                if (formID != null)
+                {
+                    var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formID);
+                    if (entity == null)
+                    {
+                        var converter = new FormEntityModelConverter(HbSession);
+                        model = converter.Convert(entity);
+                    }
+                }
 
                 formControl.Model = model;
             }

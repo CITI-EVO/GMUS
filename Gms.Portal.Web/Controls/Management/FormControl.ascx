@@ -16,7 +16,7 @@
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Number</ce:Label>
     <div class="col-lg-10">
-        <asp:TextBox runat="server" ID="tbxNumber" Property="{FormModel.Number=Text}" CssClass="form-control" />
+        <asp:TextBox runat="server" ID="tbxNumber" Property="{FormModel.Number=Text}" CssClass="form-control" Enabled="False" />
     </div>
 </div>
 <div class="hr-line-dashed"></div>

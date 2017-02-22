@@ -1,0 +1,1 @@
+﻿2017-02-22 17:41:12,688 [7] INFO  LoginLogger [(null)] - Event: LoginByToken; LoginName: superadmin; Password: resetpass; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: f6a09343-9959-4a97-bc62-14aefeff1e2d; SessionID: 30dcb1qabd3eobs1ndthlvqx; ClientIP: ::1, ::1; Success: True
