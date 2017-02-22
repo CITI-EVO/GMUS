@@ -137,7 +137,7 @@
 
                 $('.clockpicker').clockpicker();
 
-                $('.chosen-select').chosen();
+                //$('.chosen-select').chosen();
 
                 $(".intSpinEdit").TouchSpin({
                     min: 0,

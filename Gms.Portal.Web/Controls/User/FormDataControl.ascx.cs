@@ -237,6 +237,8 @@ namespace Gms.Portal.Web.Controls.User
                     ClientIDMode = ClientIDMode.Static,
                 };
 
+                MetaControls.Add(checkBox.ID, checkBox);
+
                 privacySpan.Controls.Add(checkBox);
                 container.Controls.Add(privacySpan);
             }
@@ -699,10 +701,22 @@ namespace Gms.Portal.Web.Controls.User
             {
                 var fieldKey = DataConverter.ToNullableGuid(pair.Key);
 
-                if (!isMyData && privateFields != null && privateFields.Count > 0)
+                if (privateFields != null && privateFields.Count > 0)
                 {
                     if (privateFields.Contains(pair.Key))
-                        continue;
+                    {
+                        var secControlID = String.Format(SecIDFormat, fieldKey);
+
+                        var secControl = MetaControls.GetValueOrDefault(secControlID);
+                        if (secControl != null)
+                        {
+                            var checkBox = (CheckBox)secControl;
+                            checkBox.Checked = true;
+                        }
+
+                        if (!isMyData)
+                            continue;
+                    }
                 }
 
                 if (pair.Value is FormDataBaseList || pair.Value is FormDataListRef)
@@ -737,42 +751,65 @@ namespace Gms.Portal.Web.Controls.User
 
                     dataGrid.DataSource = dataView;
                 }
-                else
+
+                var fieldControlID = String.Format(FieldIDFormat, fieldKey);
+                var checkControlID = String.Format(CheckIDFormat, fieldKey);
+                var radioControlID = String.Format(RadioIDFormat, fieldKey);
+                var fileControlID = String.Format(FileIDFormat, fieldKey);
+                //var secControlID = String.Format(SecIDFormat, fieldKey);
+
+                //var secControl = MetaControls.GetValueOrDefault(fieldControlID);
+                //if (secControl != null)
+                //{
+                //    var checkBox = (CheckBox)secControl;
+
+                //    var @bool = true;
+                //    if (Convert.ToString(pair.Value) != "on")
+                //        @bool = DataConverter.ToNullableBool(pair.Value).GetValueOrDefault();
+
+                //    checkBox.Checked = @bool;
+                //}
+
+                var fieldControl = MetaControls.GetValueOrDefault(fieldControlID);
+                if (fieldControl != null)
                 {
-                    var fieldControlID = String.Format(FieldIDFormat, fieldKey);
-
-                    var control = MetaControls.GetValueOrDefault(fieldControlID);
-                    if (control == null)
-                        continue;
-
-                    if (control is TextBox)
+                    if (fieldControl is TextBox)
                     {
-                        var textBox = (TextBox)control;
+                        var textBox = (TextBox)fieldControl;
                         textBox.Text = Convert.ToString(pair.Value);
                     }
-                    else if (control is RadioButton)
+                    else if (fieldControl is DropDownList)
                     {
-                        var radioButton = (RadioButton)control;
-                        radioButton.Checked = DataConverter.ToNullableBool(pair.Value).GetValueOrDefault();
-                    }
-                    else if (control is CheckBox)
-                    {
-                        var checkBox = (CheckBox)control;
-
-                        var @bool = true;
-                        if (Convert.ToString(pair.Value) != "on")
-                            @bool = DataConverter.ToNullableBool(pair.Value).GetValueOrDefault();
-
-                        checkBox.Checked = @bool;
-                    }
-                    else if (control is DropDownList)
-                    {
-                        var dropDownList = (DropDownList)control;
+                        var dropDownList = (DropDownList)fieldControl;
                         dropDownList.TrySetSelectedValue(pair.Value);
                     }
-                    else if (control is FileUpload)
+                }
+
+                var fileControl = MetaControls.GetValueOrDefault(fileControlID);
+                if (fileControl != null)
+                {
+                    if (fileControl is FileUpload)
                     {
                     }
+                }
+
+                var checkControl = MetaControls.GetValueOrDefault(checkControlID);
+                if (checkControl != null)
+                {
+                    var checkBox = (CheckBox)checkControl;
+
+                    var @bool = true;
+                    if (Convert.ToString(pair.Value) != "on")
+                        @bool = DataConverter.ToNullableBool(pair.Value).GetValueOrDefault();
+
+                    checkBox.Checked = @bool;
+                }
+
+                var radioControl = MetaControls.GetValueOrDefault(radioControlID);
+                if (radioControl != null)
+                {
+                    var radioButton = (RadioButton)radioControl;
+                    radioButton.Checked = DataConverter.ToNullableBool(pair.Value).GetValueOrDefault();
                 }
             }
         }
