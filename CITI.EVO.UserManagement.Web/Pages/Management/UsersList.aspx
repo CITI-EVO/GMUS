@@ -41,11 +41,11 @@
                             <asp:Panel ID="pnlFilters" runat="server">
                                 <local:UsersFilterControl runat="server" ID="usersFilterControl" />
 
-                                <asp:LinkButton ID="btnBindData" runat="server" CssClass="btn btn-primary fa fa-search" Text="ნახვა" OnClick="btnBindData_Click" />
+                                <asp:LinkButton ID="btnBindData" runat="server" CssClass="btn btn-primary fa fa-search" ToolTip="ძებნა"  OnClick="btnBindData_Click" />
 
                                 <asp:Label runat="server" Style="padding: 4px 0 0 7px;" ID="lblError" />
 
-                                <asp:LinkButton ID="btnNewUser" CssClass="btn btn-primary fa fa-plus-circle" Text="მომხმარებლის დამატება" runat="server" OnClick="btnNewUser_Click" />
+                                <asp:LinkButton ID="btnNewUser" CssClass="btn btn-primary  fa fa-plus" ToolTip="მომხმარებლის დამატება" runat="server" OnClick="btnNewUser_Click" />
                             </asp:Panel>
                         </div>
                     </div>
@@ -75,28 +75,22 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-6 b-r">
-                                    <h3 class="m-t-none m-b">Sign in</h3>
-
-                                    <p>
+                            <div class="row"> <p>
                                         <asp:Label ID="lblUserError" runat="server" ForeColor="Red"></asp:Label>
                                     </p>
 
-
-                                </div>
-                                <div class="col-sm-6">
+                               
                                     <p>
                                         <asp:Panel runat="server" ID="pnlCreateUser">
                                             <local:CreateUserControl runat="server" ID="createUserControl" />
                                         </asp:Panel>
                                     </p>
 
-                                </div>
+                               
                                 <div class="col-sm-6">
-                                    <asp:LinkButton ID="btUserOK" CssClass="icon" Text="შენახვა" ToolTip="შენახვა" runat="server" OnClick="btnUserOK_Click" />
+                                    <asp:LinkButton ID="btUserOK" CssClass="btn btn-primary fa fa-floppy-o" ToolTip="შენახვა" runat="server" OnClick="btnUserOK_Click" />
 
-                                    <asp:LinkButton ID="btUserCancel" CssClass="icon" Text="დახურვა" ToolTip="დახურვა" runat="server" />
+                                    <asp:LinkButton ID="btUserCancel" CssClass="btn btn-primary fa fa-times" ToolTip="დახურვა" runat="server" />
                                 </div>
                             </div>
                         </div>
