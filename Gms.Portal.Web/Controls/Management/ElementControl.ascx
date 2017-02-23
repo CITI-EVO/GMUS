@@ -97,6 +97,12 @@
         <asp:TextBox runat="server" ID="tbxValidationExp" CssClass="form-control" Property="{ElementModel.ValidationExp=Text}"></asp:TextBox>
     </div>
 </asp:Panel>
+<asp:Panel runat="server" ID="pnlErrorMessage" CssClass="form-group">
+    <ce:Label runat="server" CssClass="col-lg-2 control-label">ValidationExp</ce:Label>
+    <div class="col-lg-10">
+        <asp:TextBox runat="server" ID="tbxErrorMessage" CssClass="form-control" Property="{ElementModel.ErrorMessage=Text}"></asp:TextBox>
+    </div>
+</asp:Panel>
 <asp:Panel runat="server" ID="pnlTag" CssClass="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Tag</ce:Label>
     <div class="col-lg-10">

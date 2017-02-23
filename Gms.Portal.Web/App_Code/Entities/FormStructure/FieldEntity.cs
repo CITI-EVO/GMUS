@@ -35,6 +35,9 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("ValidationExp")]
         public String ValidationExp { get; set; }
 
+        [XmlElement("ErrorMessage")]
+        public String ErrorMessage { get; set; }
+
         [XmlElement("DataSourceID")]
         public Guid? DataSourceID { get; set; }
 

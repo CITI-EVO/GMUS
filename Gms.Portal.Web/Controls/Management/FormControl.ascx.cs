@@ -107,6 +107,7 @@ namespace Gms.Portal.Web.Controls.Management
                 entity.Privacy = model.Privacy;
                 entity.Mandatory = model.Mandatory;
                 entity.Description = model.Description;
+                entity.ErrorMessage = model.ErrorMessage;
                 entity.ValidationExp = model.ValidationExp;
                 entity.DisplayOnGrid = model.DisplayOnGrid;
                 entity.DataSourceID = model.DataSourceID;
@@ -212,6 +213,7 @@ namespace Gms.Portal.Web.Controls.Management
                 model.Mandatory = fieldEntity.Mandatory.GetValueOrDefault();
                 model.ControlType = fieldEntity.Type;
                 model.Description = fieldEntity.Description;
+                model.ErrorMessage = fieldEntity.ErrorMessage;
                 model.ValidationExp = fieldEntity.ValidationExp;
                 model.DisplayOnGrid = fieldEntity.DisplayOnGrid;
                 model.DataSourceID = fieldEntity.DataSourceID;

@@ -37,6 +37,8 @@ namespace Gms.Portal.Web.Models
 
         public String ValidationExp { get; set; }
 
+        public String ErrorMessage { get; set; }
+
         public String Tag { get; set; }
 
         public Guid? DataSourceID { get; set; }

@@ -161,16 +161,20 @@ namespace CITI.EVO.Tools.Helpers
 
         public IDataReader GetData(int i)
         {
-            throw new NotImplementedException();
+            var enumerable = GetValue(i) as IEnumerable<IDictionary<String, Object>>;
+            if (enumerable == null)
+                return null;
 
-            //var enumerable = (IEnumerable<IDictionary<String, Object>>)GetValue(i);
-            //var firstDict = enumerable.FirstOrDefault();
+            var firstDict = enumerable.FirstOrDefault();
+            if (firstDict == null)
+                return null;
 
-            //var fields = new HashSet<String>(firstDict.Keys);
+            var fields = new HashSet<String>(firstDict.Keys);
 
-            //var reader = new Class1(fields, enumerable);
-            //return reader;
+            var reader = new DictionaryDataReader(fields, enumerable);
+            return reader;
         }
+
 
         public bool IsDBNull(int i)
         {
@@ -199,7 +203,7 @@ namespace CITI.EVO.Tools.Helpers
 
         public void Close()
         {
-        
+
         }
 
         public DataTable GetSchemaTable()

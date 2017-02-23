@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.EventArguments;
+using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
+using CITI.EVO.Tools.Web.UI.Helpers;
+using DevExpress.XtraPrinting.Native;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
@@ -15,6 +19,7 @@ using Gms.Portal.Web.Helpers;
 using Gms.Portal.Web.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using CITI.EVO.Tools.Extensions;
 
 namespace Gms.Portal.Web.Pages.User
 {
@@ -45,6 +50,16 @@ namespace Gms.Portal.Web.Pages.User
             get { return (Convert.ToString(RequestUrl["Mode"]) != "View"); }
         }
 
+        private FormEntityModelConverter _modelConverter;
+        protected FormEntityModelConverter ModelConverter
+        {
+            get
+            {
+                _modelConverter = (_modelConverter ?? new FormEntityModelConverter(HbSession));
+                return _modelConverter;
+            }
+        }
+
         protected void Page_Init(object sender, EventArgs e)
         {
             if (OwnerID == null)
@@ -59,8 +74,7 @@ namespace Gms.Portal.Web.Pages.User
             formDataControl.RecordID = RecordID;
             formDataControl.ParentID = ParentID;
 
-            var converter = new FormEntityModelConverter(HbSession);
-            var model = converter.Convert(dbForm);
+            var model = ModelConverter.Convert(dbForm);
 
             var formEntity = model.Entity;
             if (formEntity == null)
@@ -92,8 +106,6 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void btnSave_OnClick(object sender, EventArgs e)
         {
-            var collection = MongoDbUtil.GetCollection(OwnerID);
-
             var newFormDataUnit = formDataControl.GetFormData();
             newFormDataUnit.ID = RecordID;
             newFormDataUnit.FormID = FormID;
@@ -101,8 +113,13 @@ namespace Gms.Portal.Web.Pages.User
             newFormDataUnit.ParentID = ParentID;
             newFormDataUnit.UserID = UserUtil.GetCurrentUserID();
 
+            if (!ValidateFormData(newFormDataUnit))
+                return;
+
             var oldRecordID = newFormDataUnit.ID;
             var newRecordID = Guid.NewGuid();
+
+            var collection = MongoDbUtil.GetCollection(OwnerID);
 
             if (newFormDataUnit.ID != null)
             {
@@ -218,17 +235,6 @@ namespace Gms.Portal.Web.Pages.User
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void FillFormData()
-        {
-            if (RecordID == null)
-                return;
-
-            var formDataUnit = LoadFormDataUnit(OwnerID, RecordID);
-
-            formDataControl.BindFormData(formDataUnit);
-            formDataControl.DataBind();
-        }
-
         protected FormDataUnit LoadFormDataUnit(Guid? ownerID, Guid? recordID)
         {
             if (ownerID == null || recordID == null)
@@ -246,5 +252,72 @@ namespace Gms.Portal.Web.Pages.User
             return BsonDocumentConverter.ConvertToFormDataUnit(document);
         }
 
+        protected bool ValidateFormData(FormDataUnit formDataUnit)
+        {
+            var dbForm = HbSession.Get<GM_Form>(FormID);
+            var formModel = ModelConverter.Convert(dbForm);
+
+            var entity = (ControlEntity)formModel.Entity;
+            if (OwnerID != null && entity.ID != OwnerID)
+            {
+                var children = FormStructureUtil.PreOrderTraversal(entity);
+                entity = children.FirstOrDefault(n => n.ID == OwnerID);
+            }
+
+
+            var container = (ContentEntity)entity;
+
+            var entities = FormStructureUtil.PreOrderTraversal(container);
+            var fields = entities.OfType<FieldEntity>();
+
+            var validateFields = new List<FieldEntity>();
+
+            var valuesDict = new Dictionary<String, Object>();
+
+            foreach (var field in fields)
+            {
+                var key = Convert.ToString(field.ID);
+                valuesDict[field.Name] = formDataUnit[key];
+
+                validateFields.Add(field);
+            }
+
+            var evaluetor = new ExpressionEvaluator(n => valuesDict.GetValueOrDefault(n));
+
+            var validationResults = (from n in validateFields
+                                     let r = evaluetor.Eval(n.ValidationExp) as bool?
+                                     select new
+                                     {
+                                         Name = n.Name,
+                                         Result = r.GetValueOrDefault(),
+                                         Message = n.ErrorMessage,
+                                     }).ToList();
+
+            var messages = (from n in validationResults
+                            where !n.Result
+                            let t = String.Format("[{0}] - {1}", n.Name, n.Message)
+                            select t);
+
+            if (!messages.Any())
+                return true;
+
+            lblErrorMessage.Text = String.Empty;
+            var text = String.Join("<br />", messages);
+
+            lblErrorMessage.Text = text;
+
+            return false;
+        }
+
+        protected void FillFormData()
+        {
+            if (RecordID == null)
+                return;
+
+            var formDataUnit = LoadFormDataUnit(OwnerID, RecordID);
+
+            formDataControl.BindFormData(formDataUnit);
+            formDataControl.DataBind();
+        }
     }
 }

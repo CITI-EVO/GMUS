@@ -16,6 +16,9 @@
                         <asp:Label runat="server" CssClass="fa fa-close"></asp:Label>
                     </asp:LinkButton>
                 </div>
+                <div class="form-group">
+                    <ce:Label runat="server" ID="lblErrorMessage" />
+                </div>
                 <local:FormDataControl runat="server" ID="formDataControl" OnCommand="formDataControl_OnCommand" />
             </div>
         </div>
