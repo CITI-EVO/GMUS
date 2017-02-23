@@ -87,7 +87,7 @@
                                     </p>
 
                                
-                                <div class="col-sm-6">
+                                <div class="col-sm-12">
                                     <asp:LinkButton ID="btUserOK" CssClass="btn btn-primary fa fa-floppy-o" ToolTip="შენახვა" runat="server" OnClick="btnUserOK_Click" />
 
                                     <asp:LinkButton ID="btUserCancel" CssClass="btn btn-primary fa fa-times" ToolTip="დახურვა" runat="server" />

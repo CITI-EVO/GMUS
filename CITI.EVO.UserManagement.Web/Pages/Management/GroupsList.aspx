@@ -11,11 +11,36 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
     <asp:UpdatePanel runat="server" ID="upnlMain" UpdateMode="Always" RenderMode="Block">
         <ContentTemplate>
-            <h1>
-                <asp:Label runat="server">ჯგუფები</asp:Label>
-            </h1>
-            <div class="page_title_separator"></div>
-            <local:GroupsControl ID="groupsControl" runat="server" OnDelete="groupsControl_OnDelete" OnEdit="groupsControl_OnEdit" OnNew="groupsControl_OnNew" OnAddUser="groupsControl_OnAddUser" OnViewAttributes="groupsControl_OnViewAttributes" OnSetAttribute="groupsControl_OnSetAttribute" />
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>ჯგუფები </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <local:GroupsControl ID="groupsControl" runat="server" OnDelete="groupsControl_OnDelete" OnEdit="groupsControl_OnEdit" OnNew="groupsControl_OnNew" OnAddUser="groupsControl_OnAddUser" OnViewAttributes="groupsControl_OnViewAttributes" OnSetAttribute="groupsControl_OnSetAttribute" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ContentTemplate>
     </asp:UpdatePanel>
     <asp:Panel ID="pnlGroup" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btGroupOK">

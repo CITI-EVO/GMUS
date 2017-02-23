@@ -2,4 +2,4 @@
 
 <ce:ASPxComboBox ID="cmbProject" TextField="Value" ValueField="Key" ValueType="System.Guid" runat="server" AutoPostBack="true" Property="{ResourcesFilterModel.ProjectID=Value}">
 </ce:ASPxComboBox>
-<asp:TextBox runat="server" ID="tbxKeyword" Property="{ResourcesFilterModel.Keyword=Text}"></asp:TextBox>
+<asp:TextBox runat="server" class="form-control" ID="tbxKeyword" Property="{ResourcesFilterModel.Keyword=Text}"></asp:TextBox>

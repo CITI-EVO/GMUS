@@ -40,29 +40,29 @@
                             </div>
                         </li>
                         <li class="active">
-                            <a href="index.html"><i class="fa fa-cubes"></i><span class="nav-label">რესურსებზე წვდომა</span></a>
+                            <asp:hyperlink  NavigateUrl="index.html" runat="server"><i class="fa fa-cubes"></i><span class="nav-label">რესურსებზე წვდომა</span></asp:hyperlink>
                         </li>
                         <li>
-                            <a href="~/Pages/Management/ProjectsList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">მოდულები</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/ProjectsList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">მოდულები</span> </asp:hyperlink>
                         </li>
                         <li>
-                            <a href="~/Pages/Management/UsersList.aspx" runat="server"><i class="fa fa-group"></i><span class="nav-label">მომხმარებლები</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/UsersList.aspx" runat="server"><i class="fa fa-group"></i><span class="nav-label">მომხმარებლები</span> </asp:hyperlink>
                         </li>
 
                         <li>
-                            <a href="~/Pages/Management/GroupsList.aspx" runat="server"><i class="fa fa-object-group"></i><span class="nav-label">ჯგუფები</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/GroupsList.aspx" runat="server"><i class="fa fa-object-group"></i><span class="nav-label">ჯგუფები</span> </asp:hyperlink>
                         </li>
                         <li>
-                            <a href="~/Pages/Management/AttributesSchemasList.aspx" runat="server"><i class="fa fa-window-restore"></i><span class="nav-label">ატრიბუტების სქემები</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/AttributesSchemasList.aspx" runat="server"><i class="fa fa-window-restore"></i><span class="nav-label">ატრიბუტების სქემები</span> </asp:hyperlink>
                         </li>
                         <li>
-                            <a href="~/Pages/Management/ResourceList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">რესურსების მართვა</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/ResourceList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">რესურსების მართვა</span> </asp:hyperlink>
                         </li>
                         <li>
-                            <a href="~/Pages/Management/PermissionList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">უფლებების დაწესება</span> </a>
+                            <asp:hyperlink  NavigateUrl="~/Pages/Management/PermissionList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">უფლებების დაწესება</span> </asp:hyperlink>
                         </li>
                         <li>
-                            <a href='~/Moe/Wms/Wms.Portal.Web/Default.aspx?loginToken={loginToken}' runat="server"><i class="fa fa-th-large"></i><span class="nav-label">ნარჩენების მართვა</span> </a>
+                            <asp:hyperlink  NavigateUrl='~/Moe/Wms/Wms.Portal.Web/Default.aspx?loginToken={loginToken}' runat="server"><i class="fa fa-th-large"></i><span class="nav-label">ნარჩენების მართვა</span> </asp:hyperlink>
                         </li>
                     </ul>
 

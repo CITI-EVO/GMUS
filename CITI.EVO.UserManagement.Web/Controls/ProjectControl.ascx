@@ -4,13 +4,17 @@
 
 <local:HiddenFieldValueControl runat="server" ID="hdID" Property="{ProjectModel.ID=Value}" />
 
-<table>
-    <tr>
-        <td><ce:Label runat="server">მოდულის სახელი</ce:Label></td>
-        <td><asp:TextBox ID="tbxName" runat="server" Property="{ProjectModel.Name=Text}"></asp:TextBox></td>
-    </tr>
-    <tr>
-        <td><ce:Label ID="Label1" runat="server">მოდულის სტატუსი</ce:Label></td>
-        <td><ce:CheckBox ID="chkIsActive" runat="server" Property="{ProjectModel.IsActive=Checked}" /></td>
-    </tr>
-</table>
+<div class="form-group">
+    <label class="col-sm-4 control-label">მოდულის სახელი</label>
+    <div class="col-sm-6">
+        <asp:TextBox ID="tbxName" runat="server" class="form-control" Property="{ProjectModel.Name=Text}"></asp:TextBox>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-4 control-label">მოდულის სტატუსი</label>
+    <div class="col-sm-6">
+        <ce:CheckBox ID="CheckBox1" runat="server" Property="{ProjectModel.IsActive=Checked}" />
+    </div>
+</div>
+
+
