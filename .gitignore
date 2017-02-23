@@ -15,7 +15,11 @@
 /CITI.EVO.UserManagement.DAL/obj/Debug
 /CITI.EVO.UserManagement.Svc/obj/Debug
 /CITI.EVO.UserManagement.Web/Bin
+/CITI.EVO.UserManagement.Web/Logs
 /Gms.Portal.DAL/obj/Debug
 /Gms.Portal.Svc/obj/Debug
+/Gms.Portal.Web/Bin
+/Gms.Portal.Web/Logs
 /PrecompiledWeb
+/Dependencies/Local
 /CITI.EVO.Core/obj/Debug

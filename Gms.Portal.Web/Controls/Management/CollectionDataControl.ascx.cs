@@ -10,6 +10,7 @@ using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Models;
 using Panel = System.Web.UI.WebControls.Panel;
 using TextBox = System.Web.UI.WebControls.TextBox;
+using HtmlElement = CITI.EVO.Tools.Web.UI.Controls.HtmlElement;
 
 namespace Gms.Portal.Web.Controls.Management
 {

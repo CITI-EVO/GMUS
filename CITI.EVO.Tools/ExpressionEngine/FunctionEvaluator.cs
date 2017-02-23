@@ -11,7 +11,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 		private static readonly Regex yearRx = new Regex(@"^(19|20)\d\d$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 		private static readonly Regex monthRx = new Regex(@"^(0[1-9]|1[012])$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-		public static Object Eval(ExpressionNode node, ExpressionEvaluator expEvaluator)
+		public static Object Eval(ExpressionNode node, Func<String, Object> varResolver)
 		{
 			var args = new List<Object>();
 
@@ -19,7 +19,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 			{
 				if (paramNode != null)
 				{
-					var value = expEvaluator.Eval(paramNode);
+					var value = ExpressionEvaluator.Eval(paramNode, varResolver);
 
 					//value = ExpressionHelper.GetAny(value);
 
@@ -30,102 +30,56 @@ namespace CITI.EVO.Tools.ExpressionEngine
 			switch (node.Action.ToLower())
 			{
 				case "sqrt":
-					{
 						return Math.Sqrt(Convert.ToDouble(args[0]));
-					}
 				case "sin":
-					{
 						return Math.Sin(Convert.ToDouble(args[0]));
-					}
 				case "cos":
-					{
 						return Math.Cos(Convert.ToDouble(args[0]));
-					}
 				case "tan":
-					{
 						return Math.Tan(Convert.ToDouble(args[0]));
-					}
 				case "asin":
-					{
 						return Math.Asin(Convert.ToDouble(args[0]));
-					}
 				case "acos":
-					{
 						return Math.Acos(Convert.ToDouble(args[0]));
-					}
 				case "atan":
-					{
 						return Math.Atan(Convert.ToDouble(args[0]));
-					}
 				case "abs":
-					{
 						return Math.Abs(Convert.ToDouble(args[0]));
-					}
 				case "atan2":
-					{
 						return Math.Atan2(Convert.ToDouble(args[0]), Convert.ToDouble(args[1]));
-					}
 				case "ceil":
-					{
 						return Math.Ceiling(Convert.ToDouble(args[0]));
-					}
 				case "cosh":
-					{
 						return Math.Cosh(Convert.ToDouble(args[0]));
-					}
 				case "exp":
-					{
 						return Math.Exp(Convert.ToDouble(args[0]));
-					}
 				case "floor":
-					{
 						return Math.Floor(Convert.ToDouble(args[0]));
-					}
 				case "log":
-					{
 						return Math.Log(Convert.ToDouble(args[0]));
-					}
 				case "log10":
-					{
 						return Math.Log10(Convert.ToDouble(args[0]));
-					}
 				case "round":
 					{
 						if (args.Count > 1)
-						{
 							return Math.Round(Convert.ToDouble(args[0]), Convert.ToInt32(args[1]));
-						}
 
 						return Math.Round(Convert.ToDouble(args[0]));
 					}
 				case "sign":
-					{
 						return Math.Sign(Convert.ToDouble(args[0]));
-					}
 				case "sinh":
-					{
 						return Math.Sinh(Convert.ToDouble(args[0]));
-					}
 				case "tanh":
-					{
 						return Math.Tanh(Convert.ToDouble(args[0]));
-					}
 				case "trunc":
-					{
 						return Math.Truncate(Convert.ToDouble(args[0]));
-					}
 				case "pow":
-					{
 						return Math.Pow(Convert.ToDouble(args[0]), Convert.ToDouble(args[1]));
-					}
 				case "xor":
-					{
 						return Convert.ToInt64(args[0]) ^ Convert.ToInt64(args[1]);
-					}
 				case "mod":
-					{
 						return Convert.ToDouble(args[0]) % Convert.ToDouble(args[1]);
-					}
 				case "substring":
 					{
 						var text = Convert.ToString(args[0]);
@@ -140,9 +94,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 					{
 						var currDate = DateTime.Now;
 						if (args.Count == 0)
-						{
 							return currDate;
-						}
 
 						var year = Convert.ToInt32(args.Count > 0 ? args[0] : currDate.Year);
 						var month = Convert.ToInt32(args.Count > 1 ? args[1] : currDate.Month);
@@ -160,9 +112,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 					{
 						var currDate = DateTime.Now.Date;
 						if (args.Count == 0)
-						{
 							return currDate;
-						}
 
 						var year = Convert.ToInt32(args.Count > 0 ? args[0] : currDate.Year);
 						var month = Convert.ToInt32(args.Count > 1 ? args[1] : currDate.Month);
@@ -171,17 +121,11 @@ namespace CITI.EVO.Tools.ExpressionEngine
 						return new DateTime(year, month, day);
 					}
 				case "getlength":
-					{
-						return args[0] != null ? args[0].ToString().Trim().Length : 0;
-					}
+						return (args[0] != null ? args[0].ToString().Trim().Length : 0);
 				case "isempty":
-					{
 						return ExpressionHelper.IsEmptyOrSpace(args[0]);
-					}
 				case "isdate":
-					{
 						return ExpressionHelper.IsDateTime(args[0]);
-					}
 				case "isday":
 					{
 						var input = Convert.ToString(args[0]);
@@ -213,13 +157,9 @@ namespace CITI.EVO.Tools.ExpressionEngine
 						return Regex.IsMatch(input, pattern);
 					}
 				case "min":
-					{
 						return Math.Min(Convert.ToDouble(args[0]), Convert.ToDouble(args[1]));
-					}
 				case "max":
-					{
 						return Math.Max(Convert.ToDouble(args[0]), Convert.ToDouble(args[1]));
-					}
 				case "if":
 					{
 						var flag = Convert.ToBoolean(args[0]);
@@ -228,9 +168,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case "switch":
 					{
 						if (args.Count % 2 > 0)
-						{
 							throw new ArgumentOutOfRangeException();
-						}
 
 						var switchValue = args[0];
 
@@ -240,25 +178,17 @@ namespace CITI.EVO.Tools.ExpressionEngine
 							var result = args[i + 1];
 
 							if (Equals(switchValue, caseValue))
-							{
 								return result;
-							}
 						}
 
 						return args[args.Count - 1];
 					}
 				case "comp":
-					{
 						return Comparer.DefaultInvariant.Compare(args[0], args[1]);
-					}
 				case "lower":
-					{
 						return Convert.ToString(args[0]).ToLower();
-					}
 				case "upper":
-					{
 						return Convert.ToString(args[0]).ToUpper();
-					}
 				case "contains":
 					{
 						var strValue = Convert.ToString(args[0]);
@@ -389,9 +319,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case "print":
 					{
 						foreach (var arg in args)
-						{
 							Console.WriteLine(arg);
-						}
 					}
 					break;
 			}

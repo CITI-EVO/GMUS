@@ -3,68 +3,63 @@ using CITI.EVO.Tools.ExpressionEngine.Common;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
-	public class ExpressionEvaluator
-	{
-		internal readonly Func<string, object> variableResolver;
+    public static class ExpressionEvaluator
+    {
+        private static readonly StringComparer _ordinalComparer;
 
-		public ExpressionEvaluator()
-		{
-		}
-		public ExpressionEvaluator(Func<String, Object> variableResolver)
-		{
-			this.variableResolver = variableResolver;
-		}
+        static ExpressionEvaluator()
+        {
+            _ordinalComparer = StringComparer.OrdinalIgnoreCase;
+        }
 
-		public Object Eval(String expression)
-		{
-			var node = ExpressionParser.Parse(expression);
-			return Eval(node);
-		}
+        public static Object Eval(String expression)
+        {
+            return Eval(expression, null);
+        }
+        public static Object Eval(String expression, Func<String, Object> varResolver)
+        {
+            var node = ExpressionParser.Parse(expression);
+            return Eval(node, varResolver);
+        }
 
-		public Object Eval(ExpressionNode node)
-		{
-			if (node == null)
-			{
-				return null;
-			}
+        public static Object Eval(ExpressionNode node)
+        {
+            return Eval(node, null);
+        }
+        public static Object Eval(ExpressionNode node, Func<String, Object> varResolver)
+        {
+            if (node == null)
+                return null;
 
-			switch (node.ActionType)
-			{
-				case ActionTypes.Function:
-					return FunctionEvaluator.Eval(node, this);
-				case ActionTypes.Operator:
-					return OperatorEvaluator.Eval(node, this);
-			}
+            switch (node.ActionType)
+            {
+                case ActionTypes.Function:
+                    return FunctionEvaluator.Eval(node, varResolver);
+                case ActionTypes.Operator:
+                    return OperatorEvaluator.Eval(node, varResolver);
+            }
 
-			switch (node.ValueType)
-			{
-				case ValueTypes.Variable:
-				{
-					if (String.Equals(node.Action, "e", StringComparison.OrdinalIgnoreCase))
-					{
-						return Math.E;
-					}
+            switch (node.ValueType)
+            {
+                case ValueTypes.Variable:
+                    {
+                        if (_ordinalComparer.Equals(node.Action, "e"))
+                            return Math.E;
 
-					if (String.Equals(node.Action, "pi", StringComparison.OrdinalIgnoreCase))
-					{
-						return Math.PI;
-					}
+                        if (_ordinalComparer.Equals(node.Action, "pi"))
+                            return Math.PI;
 
-					if (String.Equals(node.Action, "true", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
+                        if (_ordinalComparer.Equals(node.Action, "true"))
+                            return true;
 
-					if (String.Equals(node.Action, "false", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
+                        if (_ordinalComparer.Equals(node.Action, "false"))
+                            return false;
 
-					return variableResolver(node.Action);
-				}
-			}
+                        return varResolver(node.Action);
+                    }
+            }
 
-			return node.Value;
-		}
-	}
+            return node.Value;
+        }
+    }
 }

@@ -12,6 +12,6 @@ namespace CITI.EVO.Tools.WorkflowEngine.LogicEngine.Interfaces
 
 		IList<String> OutputFields { get; }
 
-		IEnumerable<IDataItem> Load(IEnumerable<IDataItem> collection);
+		IEnumerable<IDataItem> Process(IEnumerable<IDataItem> collection);
 	}
 }

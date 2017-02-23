@@ -264,7 +264,6 @@ namespace Gms.Portal.Web.Pages.User
                 entity = children.FirstOrDefault(n => n.ID == OwnerID);
             }
 
-
             var container = (ContentEntity)entity;
 
             var entities = FormStructureUtil.PreOrderTraversal(container);
@@ -273,36 +272,36 @@ namespace Gms.Portal.Web.Pages.User
             var validateFields = new List<FieldEntity>();
 
             var valuesDict = new Dictionary<String, Object>();
-
             foreach (var field in fields)
             {
                 var key = Convert.ToString(field.ID);
-                valuesDict[field.Name] = formDataUnit[key];
 
+                valuesDict[field.Name] = formDataUnit[key];
                 validateFields.Add(field);
             }
 
-            var evaluetor = new ExpressionEvaluator(n => valuesDict.GetValueOrDefault(n));
+            var errorMessages = new List<String>();
 
-            var validationResults = (from n in validateFields
-                                     let r = evaluetor.Eval(n.ValidationExp) as bool?
-                                     select new
-                                     {
-                                         Name = n.Name,
-                                         Result = r.GetValueOrDefault(),
-                                         Message = n.ErrorMessage,
-                                     }).ToList();
+            foreach (var field in validateFields)
+            {
+                var key = Convert.ToString(field.ID);
+                var expression = field.ValidationExp;
 
-            var messages = (from n in validationResults
-                            where !n.Result
-                            let t = String.Format("[{0}] - {1}", n.Name, n.Message)
-                            select t);
+                valuesDict["@"] = formDataUnit[key];
 
-            if (!messages.Any())
+                var result = ExpressionEvaluator.Eval(expression, valuesDict.GetValueOrDefault) as bool?;
+                if (result.GetValueOrDefault())
+                {
+                    var message = String.Format("[{0}] - {1}", field.Name, field.ErrorMessage);
+                    errorMessages.Add(message);
+                }
+            }
+
+            if (errorMessages.Count == 0)
                 return true;
 
             lblErrorMessage.Text = String.Empty;
-            var text = String.Join("<br />", messages);
+            var text = String.Join("<br />", errorMessages);
 
             lblErrorMessage.Text = text;
 

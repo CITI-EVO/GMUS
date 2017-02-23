@@ -183,7 +183,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
         protected void ApplyPermissions()
         {
-            if (!UmUtil.Instance.HasAccess("AttributesSchemasNodesList"))
+            if (!UmUtil.Instance.HasAccess("AttributesSchemasList"))
                 Response.Redirect("~/Pages/Management/UsersList.aspx");
         }
 

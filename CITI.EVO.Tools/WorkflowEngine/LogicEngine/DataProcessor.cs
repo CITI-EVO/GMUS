@@ -10,299 +10,309 @@ using CITI.EVO.Tools.WorkflowEngine.LogicEngine.Interfaces;
 
 namespace CITI.EVO.Tools.WorkflowEngine.LogicEngine
 {
-	public class DataProcessor : IDataProcessor
-	{
-		private static readonly Regex _funcRegex;
+    public class DataProcessor : IDataProcessor
+    {
+        private const String _funcExp = @"^(?<funcName>.*?)\((?<expression>.*?)\) as (?<outputName>.*?)$";
 
-		static DataProcessor()
-		{
-			_funcRegex = new Regex(@"^(?<funcName>.*?)\((?<expression>.*?)\) as (?<outputName>.*?)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-		}
+        private static readonly Regex _funcRegex;
 
+        static DataProcessor()
+        {
+            _funcRegex = new Regex(_funcExp, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
 
-		private readonly IList<FieldInfoPair> _orderByFields;
-		private readonly IList<FieldInfoPair> _groupByFields;
-		private readonly IList<FieldInfoPair> _selectFields;
+        private readonly IDictionary<String, ExpressionNode> _expressionCache;
 
-		public DataProcessor(ProcessorConfig config)
-		{
-			FilterByFields = config.FilterByFields.Select(n => n.Expression).ToList();
-			OrderByFields = config.OrderByFields.Select(n => n.Expression).ToList();
-			GroupByFields = config.GroupByFields.Select(n => n.Expression).ToList();
-			SelectFields = config.SelectFields.Select(n => n.Expression).ToList();
+        private readonly IList<FieldInfoPair> _orderByFields;
+        private readonly IList<FieldInfoPair> _groupByFields;
+        private readonly IList<FieldInfoPair> _selectFields;
 
-			_orderByFields = GetFieldInfos(OrderByFields).ToList();
-			_groupByFields = GetFieldInfos(GroupByFields).ToList();
-			_selectFields = GetFieldInfos(SelectFields).ToList();
+        public DataProcessor(ProcessorConfig config)
+        {
+            _expressionCache = new Dictionary<String, ExpressionNode>(StringComparer.OrdinalIgnoreCase);
 
-			var outputFields = _selectFields.Select(n => n.OutputName).ToList();
-			OutputFields = outputFields.AsReadOnly();
-		}
+            FilterByFields = config.FilterByFields.Select(n => n.Expression).ToList();
+            OrderByFields = config.OrderByFields.Select(n => n.Expression).ToList();
+            GroupByFields = config.GroupByFields.Select(n => n.Expression).ToList();
+            SelectFields = config.SelectFields.Select(n => n.Expression).ToList();
 
-		public IList<String> FilterByFields { get; private set; }
-		public IList<String> OrderByFields { get; private set; }
-		public IList<String> GroupByFields { get; private set; }
-		public IList<String> SelectFields { get; private set; }
+            _orderByFields = GetFieldInfos(OrderByFields).ToList();
+            _groupByFields = GetFieldInfos(GroupByFields).ToList();
+            _selectFields = GetFieldInfos(SelectFields).ToList();
 
-		public IList<String> OutputFields { get; private set; }
+            var outputFields = _selectFields.Select(n => n.OutputName).ToList();
+            OutputFields = outputFields.AsReadOnly();
+        }
 
-		public IEnumerable<IDataItem> Load(IEnumerable<IDataItem> collection)
-		{
-			var query = ProcessFilterBy(collection);
+        public IList<String> FilterByFields { get; private set; }
+        public IList<String> OrderByFields { get; private set; }
+        public IList<String> GroupByFields { get; private set; }
+        public IList<String> SelectFields { get; private set; }
 
-			if (_groupByFields != null && _groupByFields.Count > 0)
-			{
-				var groupedQuery = (from n in query
-									let m = GetFieldsValues(_groupByFields, n)
-									group n by m into grp
-									select grp);
+        public IList<String> OutputFields { get; private set; }
 
-				var orderedQuery = ProcessOrderBy(groupedQuery);
+        public IEnumerable<IDataItem> Process(IEnumerable<IDataItem> collection)
+        {
+            var query = ProcessFilterBy(collection);
 
-				foreach (var grp in orderedQuery)
-				{
-					var dataItem = ProcessSelect(grp);
-					yield return dataItem;
-				}
-			}
-			else
-			{
-				var orderedQuery = ProcessOrderBy(query);
+            if (_groupByFields != null && _groupByFields.Count > 0)
+            {
+                var groupedQuery = (from n in query
+                                    let m = GetFieldsValues(_groupByFields, n)
+                                    group n by m into grp
+                                    select grp);
 
-				foreach (var item in orderedQuery)
-				{
-					var dataItem = ProcessSelect(item);
-					yield return dataItem;
-				}
-			}
-		}
+                var orderedQuery = ProcessOrderBy(groupedQuery);
 
-		private IEnumerable<IDataItem> ProcessFilterBy(IEnumerable<IDataItem> collection)
-		{
-			if (FilterByFields != null && FilterByFields.Count > 0)
-			{
-				collection = (from n in collection
-							  where FitsToWhereCongdition(FilterByFields, n)
-							  select n);
-			}
+                foreach (var grp in orderedQuery)
+                {
+                    var dataItem = ProcessSelect(grp);
+                    yield return dataItem;
+                }
+            }
+            else
+            {
+                var orderedQuery = ProcessOrderBy(query);
 
-			return collection;
-		}
+                foreach (var item in orderedQuery)
+                {
+                    var dataItem = ProcessSelect(item);
+                    yield return dataItem;
+                }
+            }
+        }
 
-		private IEnumerable<IGrouping<IComparableDataItem, IDataItem>> ProcessOrderBy(IEnumerable<IGrouping<IComparableDataItem, IDataItem>> collection)
-		{
-			if (_orderByFields != null && _orderByFields.Count > 0)
-			{
-				collection = (from n in collection
-							  let m = GetComputedValues(_orderByFields, n)
-							  orderby m
-							  select n);
-			}
+        private IEnumerable<IDataItem> ProcessFilterBy(IEnumerable<IDataItem> collection)
+        {
+            if (FilterByFields != null && FilterByFields.Count > 0)
+            {
+                collection = (from n in collection
+                              where FitsToWhereCongdition(FilterByFields, n)
+                              select n);
+            }
 
-			return collection;
-		}
-		private IEnumerable<IDataItem> ProcessOrderBy(IEnumerable<IDataItem> collection)
-		{
-			if (_orderByFields != null && _orderByFields.Count > 0)
-			{
-				collection = (from n in collection
-							  let m = GetComputedValues(_orderByFields, n)
-							  orderby m
-							  select n);
-			}
+            return collection;
+        }
 
-			return collection;
-		}
+        private IEnumerable<IGrouping<IComparableDataItem, IDataItem>> ProcessOrderBy(IEnumerable<IGrouping<IComparableDataItem, IDataItem>> collection)
+        {
+            if (_orderByFields != null && _orderByFields.Count > 0)
+            {
+                collection = (from n in collection
+                              let m = GetComputedValues(_orderByFields, n)
+                              orderby m
+                              select n);
+            }
 
-		private IDataItem ProcessSelect(IGrouping<IComparableDataItem, IDataItem> grouping)
-		{
-			if (_selectFields != null && _selectFields.Count > 0)
-			{
-				var itemPair = GetComputedValues(_selectFields, grouping);
-				return itemPair;
-			}
+            return collection;
+        }
+        private IEnumerable<IDataItem> ProcessOrderBy(IEnumerable<IDataItem> collection)
+        {
+            if (_orderByFields != null && _orderByFields.Count > 0)
+            {
+                collection = (from n in collection
+                              let m = GetComputedValues(_orderByFields, n)
+                              orderby m
+                              select n);
+            }
 
-			return grouping.Key;
-		}
-		private IDataItem ProcessSelect(IDataItem dataItem)
-		{
-			if (_selectFields != null && _selectFields.Count > 0)
-			{
-				var itemPair = GetComputedValues(_selectFields, dataItem);
-				return itemPair;
-			}
+            return collection;
+        }
 
-			return dataItem;
-		}
+        private IDataItem ProcessSelect(IGrouping<IComparableDataItem, IDataItem> grouping)
+        {
+            if (_selectFields != null && _selectFields.Count > 0)
+            {
+                var itemPair = GetComputedValues(_selectFields, grouping);
+                return itemPair;
+            }
 
-		private IEnumerable<FieldInfoPair> GetFieldInfos(IEnumerable<String> expressions)
-		{
-			if (expressions == null)
-				yield break;
+            return grouping.Key;
+        }
+        private IDataItem ProcessSelect(IDataItem dataItem)
+        {
+            if (_selectFields != null && _selectFields.Count > 0)
+            {
+                var itemPair = GetComputedValues(_selectFields, dataItem);
+                return itemPair;
+            }
 
-			var index = 0;
+            return dataItem;
+        }
 
-			foreach (var funcExpression in expressions)
-			{
-				if (!_funcRegex.IsMatch(funcExpression))
-				{
-					var entity = new FieldInfoPair
-					{
-						OutputName = funcExpression
-					};
+        private IEnumerable<FieldInfoPair> GetFieldInfos(IEnumerable<String> expressions)
+        {
+            if (expressions == null)
+                yield break;
 
-					yield return entity;
-				}
-				else
-				{
-					var match = _funcRegex.Match(funcExpression);
+            var index = 0;
 
-					var funcName = match.Groups["funcName"].Value.Trim();
-					var expression = match.Groups["expression"].Value.Trim();
-					var outputName = match.Groups["outputName"].Value.Trim();
+            foreach (var funcExpression in expressions)
+            {
+                if (!_funcRegex.IsMatch(funcExpression))
+                {
+                    var entity = new FieldInfoPair
+                    {
+                        OutputName = funcExpression
+                    };
 
-					if (String.IsNullOrWhiteSpace(outputName))
-						outputName = String.Format("Field_{0}", ++index);
+                    yield return entity;
+                }
+                else
+                {
+                    var match = _funcRegex.Match(funcExpression);
 
-					var entity = new FieldInfoPair
-					{
-						FuncName = funcName,
-						Expression = expression,
-						OutputName = outputName
-					};
+                    var funcName = match.Groups["funcName"].Value.Trim();
+                    var expression = match.Groups["expression"].Value.Trim();
+                    var outputName = match.Groups["outputName"].Value.Trim();
 
-					yield return entity;
-				}
-			}
-		}
+                    if (String.IsNullOrWhiteSpace(outputName))
+                        outputName = String.Format("Field_{0}", ++index);
 
-		private IDataItem GetComputedValues(IEnumerable<FieldInfoPair> fieldPairs, IGrouping<IComparableDataItem, IDataItem> grouping)
-		{
-			var groupingPair = new GroupingPair();
+                    var entity = new FieldInfoPair
+                    {
+                        FuncName = funcName,
+                        Expression = expression,
+                        OutputName = outputName
+                    };
 
-			foreach (var fieldPair in fieldPairs)
-			{
-				if (String.IsNullOrWhiteSpace(fieldPair.FuncName) && String.IsNullOrWhiteSpace(fieldPair.Expression))
-					groupingPair[fieldPair.OutputName] = grouping.Key[fieldPair.OutputName];
-				else
-					groupingPair[fieldPair.OutputName] = GetExecFunc(fieldPair.FuncName, fieldPair.Expression, grouping);
-			}
+                    yield return entity;
+                }
+            }
+        }
 
-			return groupingPair;
-		}
-		private IDataItem GetComputedValues(IEnumerable<FieldInfoPair> fieldPairs, IDataItem dataItem)
-		{
-			var dataItemPair = new DataItemPair();
+        private IDataItem GetComputedValues(IEnumerable<FieldInfoPair> fieldPairs, IGrouping<IComparableDataItem, IDataItem> grouping)
+        {
+            var groupingPair = new GroupingPair();
 
-			foreach (var fieldPair in fieldPairs)
-			{
-				if (String.IsNullOrWhiteSpace(fieldPair.Expression))
-					dataItemPair[fieldPair.OutputName] = dataItem[fieldPair.OutputName];
-				else
-					dataItemPair[fieldPair.OutputName] = GetExpressionsValue(fieldPair.Expression, dataItem);
-			}
+            foreach (var fieldPair in fieldPairs)
+            {
+                if (String.IsNullOrWhiteSpace(fieldPair.FuncName) && String.IsNullOrWhiteSpace(fieldPair.Expression))
+                    groupingPair[fieldPair.OutputName] = grouping.Key[fieldPair.OutputName];
+                else
+                    groupingPair[fieldPair.OutputName] = GetExecFunc(fieldPair.FuncName, fieldPair.Expression, grouping);
+            }
 
-			return dataItemPair;
-		}
+            return groupingPair;
+        }
+        private IDataItem GetComputedValues(IEnumerable<FieldInfoPair> fieldPairs, IDataItem dataItem)
+        {
+            var dataItemPair = new DataItemPair();
 
-		private IComparableDataItem GetFieldsValues(IEnumerable<FieldInfoPair> fieldPairs, IDataItem item)
-		{
-			var groupingPair = new GroupingPair();
+            foreach (var fieldPair in fieldPairs)
+            {
+                if (String.IsNullOrWhiteSpace(fieldPair.Expression))
+                    dataItemPair[fieldPair.OutputName] = dataItem[fieldPair.OutputName];
+                else
+                    dataItemPair[fieldPair.OutputName] = GetExpressionsValue(fieldPair.Expression, dataItem);
+            }
 
-			foreach (var fieldPair in fieldPairs)
-			{
-				var value = item.GetValueOrDefault(fieldPair.OutputName, item);
-				groupingPair[fieldPair.OutputName] = value;
-			}
+            return dataItemPair;
+        }
 
-			return groupingPair;
-		}
+        private IComparableDataItem GetFieldsValues(IEnumerable<FieldInfoPair> fieldPairs, IDataItem item)
+        {
+            var groupingPair = new GroupingPair();
 
-		private Object GetExecFunc(String funcName, String expression, IGrouping<IDataItem, IDataItem> grouping)
-		{
-			switch (funcName)
-			{
-				case "All":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.All(n => DataConverter.ToNullableBool(n).GetValueOrDefault());
+            foreach (var fieldPair in fieldPairs)
+            {
+                var value = item.GetValueOrDefault(fieldPair.OutputName, item);
+                groupingPair[fieldPair.OutputName] = value;
+            }
 
-						return result;
-					}
-				case "Any":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.Any(n => DataConverter.ToNullableBool(n).GetValueOrDefault());
+            return groupingPair;
+        }
 
-						return result;
-					}
-				case "Min":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.Min(n => DataConverter.ToNullableDecimal(n));
+        private Object GetExecFunc(String funcName, String expression, IGrouping<IDataItem, IDataItem> grouping)
+        {
+            switch (funcName)
+            {
+                case "All":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.All(n => DataConverter.ToNullableBool(n).GetValueOrDefault());
 
-						return result;
-					}
-				case "Max":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.Max(n => DataConverter.ToNullableDecimal(n));
+                        return result;
+                    }
+                case "Any":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.Any(n => DataConverter.ToNullableBool(n).GetValueOrDefault());
 
-						return result;
-					}
-				case "Sum":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.Sum(n => DataConverter.ToNullableDecimal(n));
+                        return result;
+                    }
+                case "Min":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.Min(n => DataConverter.ToNullableDecimal(n));
 
-						return result;
-					}
-				case "Avg":
-					{
-						var values = GetExpressionsValues(expression, grouping);
-						var result = values.Average(n => DataConverter.ToNullableDecimal(n));
+                        return result;
+                    }
+                case "Max":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.Max(n => DataConverter.ToNullableDecimal(n));
 
-						return result;
-					}
-				case "Count":
-					return grouping.Count();
-				default:
-					throw new Exception();
-			}
-		}
+                        return result;
+                    }
+                case "Sum":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.Sum(n => DataConverter.ToNullableDecimal(n));
 
-		private bool FitsToWhereCongdition(IEnumerable<String> whereExpressions, IDataItem dataItem)
-		{
-			foreach (var expression in whereExpressions)
-			{
-				if (!FitsToWhereCongdition(expression, dataItem))
-					return false;
-			}
+                        return result;
+                    }
+                case "Avg":
+                    {
+                        var values = GetExpressionsValues(expression, grouping);
+                        var result = values.Average(n => DataConverter.ToNullableDecimal(n));
 
-			return true;
-		}
-		private bool FitsToWhereCongdition(String expression, IDataItem dataItem)
-		{
-			var expValue = GetExpressionsValue(expression, dataItem);
-			var @bool = DataConverter.ToNullableBool(expValue);
+                        return result;
+                    }
+                case "Count":
+                    return grouping.Count();
+                default:
+                    throw new Exception();
+            }
+        }
 
-			return @bool.GetValueOrDefault();
-		}
+        private bool FitsToWhereCongdition(IEnumerable<String> whereExpressions, IDataItem dataItem)
+        {
+            foreach (var expression in whereExpressions)
+            {
+                if (!FitsToWhereCongdition(expression, dataItem))
+                    return false;
+            }
 
-		private IEnumerable<Object> GetExpressionsValues(String expression, IEnumerable<IDataItem> dataItems)
-		{
-			foreach (var item in dataItems)
-			{
-				var expValue = GetExpressionsValue(expression, item);
-				yield return expValue;
-			}
-		}
-		private Object GetExpressionsValue(String expression, IDataItem item)
-		{
-			var expEval = new ExpressionEvaluator(item.GetValueOrDefault);
-			var expValue = expEval.Eval(expression);
+            return true;
+        }
+        private bool FitsToWhereCongdition(String expression, IDataItem dataItem)
+        {
+            var expValue = GetExpressionsValue(expression, dataItem);
+            var @bool = DataConverter.ToNullableBool(expValue);
 
-			return expValue;
-		}
-	}
+            return @bool.GetValueOrDefault();
+        }
+
+        private IEnumerable<Object> GetExpressionsValues(String expression, IEnumerable<IDataItem> dataItems)
+        {
+            foreach (var item in dataItems)
+            {
+                var expValue = GetExpressionsValue(expression, item);
+                yield return expValue;
+            }
+        }
+        private Object GetExpressionsValue(String expression, IDataItem item)
+        {
+            ExpressionNode expNode;
+            if (!_expressionCache.TryGetValue(expression, out expNode))
+            {
+                expNode = ExpressionParser.Parse(expression);
+                _expressionCache.Add(expression, expNode);
+            }
+
+            var expValue = ExpressionEvaluator.Eval(expNode, item.GetValueOrDefault);
+            return expValue;
+        }
+    }
 }
