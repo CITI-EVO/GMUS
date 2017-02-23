@@ -4,6 +4,8 @@ namespace CITI.EVO.UserManagement.Web.Models
 {
     public class RegisterUserModel
     {
+        public Guid? GroupID { get; set; }
+
         public String LoginName { get; set; }
 
         public String Email { get; set; }
@@ -19,5 +21,6 @@ namespace CITI.EVO.UserManagement.Web.Models
         public String Password { get; set; }
 
         public String ConfirmPassword { get; set; }
+
     }
 }

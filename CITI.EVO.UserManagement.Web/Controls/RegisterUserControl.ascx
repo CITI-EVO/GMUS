@@ -4,6 +4,15 @@
         <ce:Label runat="server">იდენტიფიკატორი</ce:Label>
     </div>
     <div class="box_bodyregister">
+        <asp:DropDownList runat="server" ID="cbxGroups" DataValueField="ID" DataTextField="Name" Property="{RegisterUserModel.GroupID=SelectedValue}">
+        </asp:DropDownList>
+    </div>
+</div>
+<div class="registerbox">
+    <div class="title">
+        <ce:Label runat="server">იდენტიფიკატორი</ce:Label>
+    </div>
+    <div class="box_bodyregister">
         <asp:TextBox runat="server" ID="tbxLoginName" Property="{RegisterUserModel.LoginName=Text}"></asp:TextBox>
     </div>
 </div>

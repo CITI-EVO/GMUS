@@ -79,7 +79,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                 PasswordExpirationDate = DateTime.Now.AddDays(30),
             };
 
-            var @group = HbSession.Query<UM_Group>().FirstOrDefault(n => n.ID == ConfigUtil.UserRegisterGroupID);
+            var @group = HbSession.Query<UM_Group>().FirstOrDefault(n => n.ID == model.GroupID);
             if (@group != null)
             {
                 var groupUser = new UM_GroupUser
