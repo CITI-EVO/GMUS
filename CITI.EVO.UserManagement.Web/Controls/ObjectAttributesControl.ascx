@@ -1,13 +1,10 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="ObjectAttributesControl.ascx.cs" Inherits="CITI.EVO.UserManagement.Web.Controls.ObjectAttributesControl" %>
 
-<ce:ASPxGridView ID="dwAttributeSchemaNodes" Width="340px" runat="server" EnableViewState="false" Property="{ObjectAttributeUnitsModel.List=DataSource, Mode=Assigne}">
-    <SettingsBehavior AllowSort="false" AllowDragDrop="false"></SettingsBehavior>
+<ce:GridView runat="server" ID="gvData" UseAccessibleHeader="True" TableSectionHeader="True" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" EnableViewState="False"
+    CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" Property="{ObjectAttributeUnitsModel.List=DataSource, Mode=Assigne}">
     <Columns>
-        <dx:GridViewDataColumn Caption="სქემა" FieldName="Schema" VisibleIndex="0">
-        </dx:GridViewDataColumn>
-        <dx:GridViewDataColumn Caption="სახელი" FieldName="Node" VisibleIndex="1">
-        </dx:GridViewDataColumn>
-        <dx:GridViewDataColumn Caption="მნიშვნელიბა" FieldName="Value" VisibleIndex="2">
-        </dx:GridViewDataColumn>
+        <asp:BoundField HeaderText="სქემა" DataField="Schema"  />
+        <asp:BoundField HeaderText="სახელი" DataField="Node" />
+        <asp:BoundField HeaderText="მნიშვნელიბა" DataField="Value" />
     </Columns>
-</ce:ASPxGridView>
+</ce:GridView>

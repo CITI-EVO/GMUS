@@ -207,7 +207,20 @@ namespace CITI.EVO.Tools.Extensions
 			return DataConverter.ToNullableDecimal(textControl.Text);
 		}
 
-		public static void DataBind(this BaseDataBoundControl control, Object dataSource)
+        public static void BindData(this ListControl control, IEnumerable source)
+        {
+            var selValue = control.TryGetStringValue();
+
+            control.Items.Clear();
+
+            control.DataSource = source;
+            control.DataBind();
+
+            control.Items.Insert(0, new ListItem("Select an Option", String.Empty));
+
+            control.TrySetSelectedValue(selValue);
+        }
+        public static void DataBind(this BaseDataBoundControl control, Object dataSource)
 		{
 			control.DataSource = dataSource;
 			control.DataBind();

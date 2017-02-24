@@ -4,21 +4,15 @@
 
 <div>
     <div>
-        <asp:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary">
-            <asp:Label runat="server" CssClass="fa fa-plus"></asp:Label>
-        </asp:LinkButton>
+        <ce:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus" />
     </div>
     <div>
         <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("Key") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-xs">
-                            <asp:Label runat="server" CssClass="fa fa-edit"/>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("Key") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs">
-                            <asp:Label runat="server" CssClass="fa fa-trash-o"/>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("Key") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-xs fa fa-edit" />
+                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("Key") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -60,12 +54,8 @@
                             <div class="ibox-content">
                                 <local:ExpressionControl runat="server" ID="expressionControl" />
                                 <div class="form-group">
-                                    <asp:LinkButton runat="server" ID="btnSave" OnClick="btnSave_OnClick" CssClass="btn btn-success">
-                                        <asp:Label runat="server" CssClass="fa fa-save"/>
-                                    </asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning">
-                                        <asp:Label runat="server" CssClass="fa fa-close"/>
-                                    </asp:LinkButton>
+                                    <ce:LinkButton runat="server" ID="btnSave" ToolTip="Save" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
+                                    <ce:LinkButton runat="server" ID="btnCancel" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                                 </div>
                             </div>
                         </div>

@@ -4,7 +4,7 @@
 
 <lmis:HiddenFieldValueControl runat="server" ID="hdKey" Property="{ExpressionModel.Key=Value}" />
 <div class="form-group">
-    <ce:Label runat="server" Text="Expression:" />
+    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Expression:" />
     <asp:TextBox runat="server" ID="txtExpression" Property="{ExpressionModel.Expression=Text}" Width="180" />
 </div>
 <div class="form-group">

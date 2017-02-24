@@ -25,15 +25,9 @@
     <Columns>
         <dx:TreeListTextColumn VisibleIndex="1">
             <DataCellTemplate>
-                <asp:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" Visible='<%# GetEditVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-info btn-xs">
-                    <asp:Label runat="server" CssClass="fa fa-edit"/>
-                </asp:LinkButton>
-                <asp:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" Visible='<%# GetDeleteVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs">
-                    <asp:Label runat="server" CssClass="fa fa-trash-o"/>
-                </asp:LinkButton>
-                <asp:LinkButton runat="server" ID="btnNew" ToolTip="New" Visible='<%# GetNewVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnNew_OnCommand" CssClass="btn btn-info btn-xs">
-                    <asp:Label runat="server" CssClass="fa fa-plus"/>
-                </asp:LinkButton>
+                <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" Visible='<%# GetEditVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-info btn-xs fa fa-edit" />
+                <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" Visible='<%# GetDeleteVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o" />
+                <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" Visible='<%# GetNewVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnNew_OnCommand" CssClass="btn btn-info btn-xs fa fa-plus" />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="3">

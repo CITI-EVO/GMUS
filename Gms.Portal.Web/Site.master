@@ -72,21 +72,21 @@
                         </div>
                         <ul class="nav navbar-top-links navbar-right">
                             <li>
-                                <asp:LinkButton runat="server" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
+                                <ce:LinkButton runat="server" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
                                  <i class="fa fa-sign-out"></i>სისტემიდან გასვლა
-                                </asp:LinkButton>
+                                </ce:LinkButton>
                             </li>
                             <li>
                                 <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
                             </li>
                             <li runat="server">
-                                <asp:LinkButton runat="server" ID="btGeoLang">Geo</asp:LinkButton>
+                                <ce:LinkButton runat="server" ID="btGeoLang">Geo</ce:LinkButton>
                             </li>
                             <li runat="server">
-                                <asp:LinkButton runat="server" ID="btEngLang">Eng</asp:LinkButton>
+                                <ce:LinkButton runat="server" ID="btEngLang">Eng</ce:LinkButton>
                             </li>
                             <li runat="server" visible="False">
-                                <asp:LinkButton runat="server" ID="btTranslationMode">Translation Mode</asp:LinkButton>
+                                <ce:LinkButton runat="server" ID="btTranslationMode">Translation Mode</ce:LinkButton>
                             </li>
                         </ul>
                     </nav>
@@ -137,7 +137,7 @@
 
                 $('.clockpicker').clockpicker();
 
-                //$('.chosen-select').chosen();
+                $('.chosen-select').chosen();
 
                 $(".intSpinEdit").TouchSpin({
                     min: 0,
@@ -152,24 +152,6 @@
                     buttondown_class: 'btn btn-white',
                     buttonup_class: 'btn btn-white'
                 });
-
-                //$(".touchspin2").TouchSpin({
-                //    min: 0,
-                //    max: 100,
-                //    step: 0.1,
-                //    decimals: 2,
-                //    boostat: 5,
-                //    maxboostedstep: 10,
-                //    postfix: '%',
-                //    buttondown_class: 'btn btn-white',
-                //    buttonup_class: 'btn btn-white'
-                //});
-
-                //$(".touchspin3").TouchSpin({
-                //    verticalbuttons: true,
-                //    buttondown_class: 'btn btn-white',
-                //    buttonup_class: 'btn btn-white'
-                //});
 
                 $('.input-group.date').datepicker({
                     todayBtn: "linked",

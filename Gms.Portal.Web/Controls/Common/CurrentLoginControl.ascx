@@ -3,7 +3,7 @@
 <div>
     <ul runat="server" id="pnlUser">
         <li class="pass">
-            <asp:LinkButton ID="btnChangePass" ToolTip="პაროლის შეცვლა" runat="server" OnClick="btChangePassword_Click"> <i class="fa fa-key"></i> პაროლის შეცვლა   </asp:LinkButton>
+            <ce:LinkButton ID="btnChangePass" ToolTip="პაროლის შეცვლა" runat="server" OnClick="btChangePassword_Click"> <span class="fa fa-key"></span> პაროლის შეცვლა   </ce:LinkButton>
         </li>
         <li class="log_out">
             <ce:ImageLinkButton runat="server" ID="btLogout" OnClick="btLogout_OnClick" ForeColor="white"></ce:ImageLinkButton>

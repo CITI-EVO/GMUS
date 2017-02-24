@@ -4,6 +4,7 @@ using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Models;
 using NHibernate.Linq;
+using CITI.EVO.Tools.Extensions;
 
 namespace CITI.EVO.UserManagement.Web.Controls
 {
@@ -11,7 +12,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            FillUserCategories();
         }
 
         protected void chkChangePassword_CheckChanged(object sender, EventArgs e)
@@ -47,10 +48,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
 
             userCategoris.Insert(0, item);
 
-            cbxUserCategory.DataSource = userCategoris;
-            cbxUserCategory.DataBind();
-
-            cbxUserCategory.SelectedItem = cbxUserCategory.Items.FindByValue(Guid.Empty);
+            cbxUserCategory.BindData(userCategoris);
         }
     }
 }

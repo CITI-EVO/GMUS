@@ -35,14 +35,14 @@ namespace Gms.Portal.Web.Controls.Management
 
             var elementTypes = GetElementTypes(model.ParentType);
 
-            BindData(cbxElementType, elementTypes);
+            cbxElementType.BindData(elementTypes);
 
             var dataSources = (from n in HbSession.Query<GM_Collection>()
                                where n.DateDeleted == null
                                orderby n.Name
                                select n).ToList();
 
-            BindData(cbxDataSource, dataSources);
+            cbxDataSource.BindData(dataSources);
 
             pnlTag.Visible = false;
             pnlType.Visible = false;
@@ -81,19 +81,7 @@ namespace Gms.Portal.Web.Controls.Management
             }
         }
 
-        protected void BindData(ListControl control, IEnumerable source)
-        {
-            var selValue = control.TryGetStringValue();
 
-            control.Items.Clear();
-
-            control.DataSource = source;
-            control.DataBind();
-
-            control.Items.Insert(0, new ListItem("Select an Option", String.Empty));
-
-            control.TrySetSelectedValue(selValue);
-        }
 
         protected IEnumerable<String> GetElementTypes(String parentType)
         {

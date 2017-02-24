@@ -6,15 +6,9 @@
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" ID="btnView" ToolTip="View" CommandArgument='<%# Eval("ID") %>' OnCommand="btnView_OnCommand" CssClass="btn btn-info btn-sm">
-                            <asp:Label runat="server" CssClass="fa fa-file"/>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-sm">
-                            <asp:Label runat="server" CssClass="fa fa-edit"/>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-sm">
-                            <asp:Label runat="server" CssClass="fa fa-trash-o"/>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnView" ToolTip="View" CommandArgument='<%# Eval("ID") %>' OnCommand="btnView_OnCommand" CssClass="btn btn-info btn-sm fa fa-search"/>
+                        <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-sm fa fa-edit" />
+                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-sm fa fa-trash-o" />
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>

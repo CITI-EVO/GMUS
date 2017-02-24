@@ -81,7 +81,7 @@ namespace Gms.Portal.Web.Pages.User
                 return;
 
             btnSave.Visible = Enabled;
-            btnSave.CssClass = (Enabled ? "btn btn-success" : "btn btn-default");
+            btnSave.CssClass = (Enabled ? "btn btn-success fa fa-save" : "btn btn-default fa fa-save");
             formDataControl.Enabled = Enabled;
 
             if (OwnerID != null && OwnerID != FormID && formEntity.Controls != null)

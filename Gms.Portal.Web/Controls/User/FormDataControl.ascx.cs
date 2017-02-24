@@ -361,9 +361,6 @@ namespace Gms.Portal.Web.Controls.User
                 dataGrid.DataBind();
             }
 
-            var newIcon = new Label { CssClass = "fa fa-plus" };
-            var newText = new Label { CssClass = "linkTitle", Text = "New" };
-
             if (RecordID == null)
             {
                 var label = new Label
@@ -381,12 +378,10 @@ namespace Gms.Portal.Web.Controls.User
                 newButton.Click += New_OnClick;
                 newButton.Enabled = Enabled;
                 newButton.Visible = (RecordID != null);
-                newButton.CssClass = (Enabled ? "btn btn-primary btn-sm" : "btn btn-default btn-sm");
+                newButton.CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-plus" : "btn btn-default btn-sm fa fa-plus");
                 newButton.ClientIDMode = ClientIDMode.Static;
                 newButton.CommandName = "New";
                 newButton.CommandArgument = String.Format("{0:n}/@", entity.ID);
-                newButton.Controls.Add(newIcon);
-                newButton.Controls.Add(newText);
 
                 toolsPanel.Controls.Add(newButton);
             }
@@ -489,43 +484,43 @@ namespace Gms.Portal.Web.Controls.User
 
         private IEnumerable<Control> CreateCommands(GridEntity entity)
         {
-            var viewIcon = new Label { CssClass = "fa fa-file" };
-            var viewText = new Label { CssClass = "linkTitle", Text = "View" };
+            //var viewIcon = new Label { CssClass = "fa fa-file" };
+            //var viewText = new Label { CssClass = "linkTitle", Text = "View" };
 
-            var editIcon = new Label { CssClass = "fa fa-edit" };
-            var editText = new Label { CssClass = "linkTitle", Text = "Edit" };
+            //var editIcon = new Label { CssClass = "fa fa-edit" };
+            //var editText = new Label { CssClass = "linkTitle", Text = "Edit" };
 
-            var deleteIcon = new Label { CssClass = "fa fa-trash-o" };
-            var deleteText = new Label { CssClass = "linkTitle", Text = "Delete" };
+            //var deleteIcon = new Label { CssClass = "fa fa-trash-o" };
+            //var deleteText = new Label { CssClass = "linkTitle", Text = "Delete" };
 
             var viewCommand = new LinkButton();
             viewCommand.ID = String.Format(viewCommandIDFormat, entity.ID);
-            viewCommand.CssClass = "btn btn-info btn-xs";
+            viewCommand.CssClass = "btn btn-info btn-xs fa fa-search";
             viewCommand.CommandName = "View";
             viewCommand.Command += command_OnCommand;
             viewCommand.DataBinding += command_OnDataBinding;
-            viewCommand.Controls.Add(viewIcon);
-            viewCommand.Controls.Add(viewText);
+            //viewCommand.Controls.Add(viewIcon);
+            //viewCommand.Controls.Add(viewText);
 
             var editCommand = new LinkButton();
             editCommand.ID = String.Format(editCommandIDFormat, entity.ID);
             editCommand.Visible = Enabled;
-            editCommand.CssClass = (Enabled ? "btn btn-primary btn-xs" : "btn btn-default btn-xs");
+            editCommand.CssClass = (Enabled ? "btn btn-primary btn-xs fa fa-edit" : "btn btn-default btn-xs fa fa-edit");
             editCommand.CommandName = "Edit";
             editCommand.Command += command_OnCommand;
             editCommand.DataBinding += command_OnDataBinding;
-            editCommand.Controls.Add(editIcon);
-            editCommand.Controls.Add(editText);
+            //editCommand.Controls.Add(editIcon);
+            //editCommand.Controls.Add(editText);
 
             var deleteCommand = new LinkButton();
             deleteCommand.ID = String.Format(deleteCommandIDFormat, entity.ID);
             deleteCommand.Visible = Enabled;
-            deleteCommand.CssClass = (Enabled ? "btn btn-danger btn-xs" : "btn btn-default btn-xs");
+            deleteCommand.CssClass = (Enabled ? "btn btn-danger btn-xs fa fa-trash-o" : "btn btn-default btn-xs fa fa-trash-o");
             deleteCommand.CommandName = "Delete";
             deleteCommand.Command += command_OnCommand;
             deleteCommand.DataBinding += command_OnDataBinding;
-            deleteCommand.Controls.Add(deleteIcon);
-            deleteCommand.Controls.Add(deleteText);
+            //deleteCommand.Controls.Add(deleteIcon);
+            //deleteCommand.Controls.Add(deleteText);
 
             return new Control[] { viewCommand, editCommand, deleteCommand };
         }

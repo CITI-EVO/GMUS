@@ -35,9 +35,7 @@
 </div>
 <div class="hr-line-dashed"></div>
 <div class="form-group">
-    <ce:LinkButton runat="server" ID="btnNew" OnClick="btnNew_OnClick" CssClass="btn btn-primary">
-        <asp:Label runat="server" CssClass="fa fa-plus"/>
-    </ce:LinkButton>
+    <ce:LinkButton runat="server" ID="btnNew" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
 </div>
 <div class="form-group">
     <local:ElementsControl runat="server" ID="elementsControl"
@@ -63,12 +61,8 @@
                                 </div>
                                 <local:ElementControl runat="server" ID="elementControl" OnDataChanged="elementControl_OnDataChanged" />
                                 <div class="form-group">
-                                    <asp:LinkButton runat="server" ID="btElementOK" OnClick="btnElementOK_Click" CssClass="btn btn-success">
-                                        <asp:Label runat="server" CssClass="fa fa-save"/>
-                                    </asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="btElementCancel" CssClass="btn btn-warning">
-                                        <asp:Label runat="server" CssClass="fa fa-close"/>
-                                    </asp:LinkButton>
+                                    <ce:LinkButton runat="server" ID="btElementOK" OnClick="btnElementOK_Click" CssClass="btn btn-success fa fa-save" />
+                                    <ce:LinkButton runat="server" ID="btElementCancel" CssClass="btn btn-warning fa fa-close" />
                                 </div>
                             </div>
                         </div>

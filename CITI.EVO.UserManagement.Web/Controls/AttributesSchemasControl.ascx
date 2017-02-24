@@ -24,31 +24,20 @@
         <Header HorizontalAlign="Center" />
     </Styles>
     <Columns>
-        <dx:TreeListHyperLinkColumn VisibleIndex="2" Width="3px">
+        <dx:TreeListDataColumn VisibleIndex="0" Width="3px">
             <DataCellTemplate>
-                <asp:LinkButton ID="lnkEdit" runat="server" ToolTip="რედაქტირება"   CssClass="btn btn-primary fa fa-edit"
-                    CommandArgument='<% #Eval("Key")%>' Visible='<%# GetEditVisible(Eval("Type")) %>' OnCommand="btnEdit_OnCommand" />
+                <asp:LinkButton ID="lnkEdit" runat="server" ToolTip="რედაქტირება"   CssClass="btn btn-primary fa fa-edit" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetEditVisible(Eval("Type")) %>' OnCommand="btnEdit_OnCommand" />
+                <asp:LinkButton  ID="lnkDelete" runat="server" ToolTip="წაშლა"  CssClass="btn btn-danger fa fa-trash" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetDeleteVisible(Eval("Type")) %>' OnCommand="btnDelete_OnCommand" />
+                <asp:LinkButton  ID="lnkNew" runat="server" ToolTip="დამატება"  CssClass="btn btn-primary fa fa-plus" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetNewVisible(Eval("Type")) %>' OnCommand="btnNew_OnCommand" />
             </DataCellTemplate>
-        </dx:TreeListHyperLinkColumn>
-        <dx:TreeListHyperLinkColumn VisibleIndex="3" Width="3px">
-            <DataCellTemplate>
-                <asp:LinkButton  ID="lnkDelete" runat="server" ToolTip="წაშლა"  CssClass="btn btn-danger fa fa-trash"
-                    CommandArgument='<% #Eval("Key")%>' Visible='<%# GetDeleteVisible(Eval("Type")) %>' OnCommand="btnDelete_OnCommand" />
-            </DataCellTemplate>
-        </dx:TreeListHyperLinkColumn>
-        <dx:TreeListHyperLinkColumn VisibleIndex="4" Width="3px">
-            <DataCellTemplate>
-                 <asp:LinkButton  ID="lnkNew" runat="server" ToolTip="დამატება"  CssClass="btn btn-primary fa fa-plus"
-                    CommandArgument='<% #Eval("Key")%>' Visible='<%# GetNewVisible(Eval("Type")) %>' OnCommand="btnNew_OnCommand" />
-            </DataCellTemplate>
-        </dx:TreeListHyperLinkColumn>
-        <dx:TreeListTextColumn VisibleIndex="0">
+        </dx:TreeListDataColumn>
+        <dx:TreeListDataColumn VisibleIndex="1">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="სახელი" />
+                <ce:Label runat="server" Text="სახელი" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
                 <asp:Label runat="server" Text='<%#Eval("Name") %>' />
             </DataCellTemplate>
-        </dx:TreeListTextColumn>
+        </dx:TreeListDataColumn>
     </Columns>
 </ce:ASPxTreeList>

@@ -4,15 +4,15 @@
 
 <lmis:HiddenFieldValueControl runat="server" ID="hdKey" Property="{NamedExpressionModel.Key=Value}" />
 <div class="form-group">
-    <ce:Label runat="server" Text="Name:" />
+    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Name:" />
     <asp:TextBox runat="server" ID="txtName" CssClass="form-control" Property="{NamedExpressionModel.Name=Text}" Width="180" />
 </div>
 <div class="form-group">
-    <ce:Label runat="server" Text="Expression:" />
+    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Expression:" />
     <asp:TextBox runat="server" ID="txtExpression" CssClass="form-control" Property="{NamedExpressionModel.Expression=Text}" Width="180" />
 </div>
 <div class="form-group">
-    <ce:Label runat="server" Text="Type:" />
+    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Type:" />
     <asp:DropDownList runat="server" Width="180" ID="ddlType" Property="{NamedExpressionModel.OutputType=SelectedValue}" CssClass="chosen-select">
         <Items>
             <asp:ListItem Text="Unspecified" Value="Unspecified" />

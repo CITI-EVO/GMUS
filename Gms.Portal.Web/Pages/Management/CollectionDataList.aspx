@@ -13,12 +13,8 @@
                         <asp:Label runat="server"></asp:Label>
                     </h5>
                     <div class="ibox-tools">
-                        <asp:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary">
-                            <asp:Label runat="server" CssClass="fa fa-plus"/>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="btnClear" ToolTip="Clear" OnClick="btnClear_OnClick" CssClass="btn btn-danger">
-                            <asp:Label runat="server" CssClass="fa fa-trash-o"/>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
+                        <ce:LinkButton runat="server" ID="btnClear" ToolTip="Clear" OnClick="btnClear_OnClick" CssClass="btn btn-danger fa fa-trash-o" />
                     </div>
                 </div>
                 <div class="ibox-content">

@@ -20,9 +20,7 @@
         <div class="form-group">
             <label class="col-sm-4 control-label">სახელი</label>
             <div class="col-sm-6">
-
                 <asp:TextBox ID="tbFirstName" runat="server" class="form-control" Property="{UserModel.FirstName=Text}" />
-
             </div>
         </div>
         <div class="form-group">
@@ -41,9 +39,6 @@
         </div>
 
     </div>
-
-
-
 </div>
 <div class="col-sm-6">
     <div class="ibox-content form-horizontal">
@@ -71,11 +66,10 @@
         <div class="form-group">
             <label class="col-sm-4 control-label">კატეგორია</label>
             <div class="col-sm-6">
-                <dx:ASPxComboBox runat="server" ID="cbxUserCategory" class="form-control" ValueField="ID" TextField="Name" ValueType="System.Guid">
-                </dx:ASPxComboBox>
+                <ce:DropDownList runat="server" ID="cbxUserCategory" class="form-control" DataValueField="ID" DataTextField="Name"  Property="{UserModel.CategoryID=SelectedValue}">
+                </ce:DropDownList>
             </div>
         </div>
     </div>
-
 </div>
 

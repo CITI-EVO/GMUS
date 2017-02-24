@@ -10,59 +10,33 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-
     <asp:UpdatePanel runat="server" ID="upnlMain" UpdateMode="Always">
         <ContentTemplate>
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>ფილტრები </h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
+                        <asp:LinkButton ID="btnBindData" runat="server" CssClass="btn btn-primary fa fa-search" ToolTip="ძებნა" OnClick="btnBindData_Click" />
+                        <asp:LinkButton ID="btnNewUser" CssClass="btn btn-primary  fa fa-plus" ToolTip="მომხმარებლის დამატება" runat="server" OnClick="btnNewUser_Click" />
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-
                             <asp:Panel ID="pnlFilters" runat="server">
                                 <local:UsersFilterControl runat="server" ID="usersFilterControl" />
 
-                                <asp:LinkButton ID="btnBindData" runat="server" CssClass="btn btn-primary fa fa-search" ToolTip="ძებნა"  OnClick="btnBindData_Click" />
-
                                 <asp:Label runat="server" Style="padding: 4px 0 0 7px;" ID="lblError" />
-
-                                <asp:LinkButton ID="btnNewUser" CssClass="btn btn-primary  fa fa-plus" ToolTip="მომხმარებლის დამატება" runat="server" OnClick="btnNewUser_Click" />
                             </asp:Panel>
+                        </div>
+                        <div class="row">
+                            <local:UsersControl runat="server" ID="usersControl"
+                                OnEdit="usersControl_OnEdit"
+                                OnView="usersControl_OnView"
+                                OnDelete="usersControl_OnDelete"
+                                OnNewMessage="usersControl_OnNewMessage"
+                                OnSetAttribute="usersControl_OnSetAttribute"
+                                OnViewAttributes="usersControl_OnViewAttributes" />
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-            <div>
-                <local:UsersControl runat="server" ID="usersControl"
-                    OnEdit="usersControl_OnEdit"
-                    OnView="usersControl_OnView"
-                    OnDelete="usersControl_OnDelete"
-                    OnNewMessage="usersControl_OnNewMessage"
-                    OnSetAttribute="usersControl_OnSetAttribute"
-                    OnViewAttributes="usersControl_OnViewAttributes" />
             </div>
         </ContentTemplate>
     </asp:UpdatePanel>
@@ -75,18 +49,19 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <div class="row"> <p>
-                                        <asp:Label ID="lblUserError" runat="server" ForeColor="Red"></asp:Label>
-                                    </p>
+                            <div class="row">
+                                <p>
+                                    <asp:Label ID="lblUserError" runat="server" ForeColor="Red"></asp:Label>
+                                </p>
 
-                               
-                                    <p>
-                                        <asp:Panel runat="server" ID="pnlCreateUser">
-                                            <local:CreateUserControl runat="server" ID="createUserControl" />
-                                        </asp:Panel>
-                                    </p>
 
-                               
+                                <p>
+                                    <asp:Panel runat="server" ID="pnlCreateUser">
+                                        <local:CreateUserControl runat="server" ID="createUserControl" />
+                                    </asp:Panel>
+                                </p>
+
+
                                 <div class="col-sm-12">
                                     <asp:LinkButton ID="btUserOK" CssClass="btn btn-primary fa fa-floppy-o" ToolTip="შენახვა" runat="server" OnClick="btnUserOK_Click" />
 

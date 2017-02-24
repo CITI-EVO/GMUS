@@ -5,7 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-        <div class="row">
+    <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -13,9 +13,7 @@
                         <asp:Label runat="server"></asp:Label>
                     </h5>
                     <div class="ibox-tools">
-                        <asp:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary">
-                            <asp:Label runat="server" CssClass="fa fa-plus"/>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
                     </div>
                 </div>
                 <div class="ibox-content">

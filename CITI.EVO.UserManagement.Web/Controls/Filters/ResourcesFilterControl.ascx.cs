@@ -5,6 +5,7 @@ using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Models.Filters;
 using NHibernate.Linq;
+using CITI.EVO.Tools.Extensions;
 
 namespace CITI.EVO.UserManagement.Web.Controls.Filters
 {
@@ -24,13 +25,10 @@ namespace CITI.EVO.UserManagement.Web.Controls.Filters
             var list = projects.Select(n => new KeyValuePair<Guid?, String>(n.ID, n.Name)).ToList();
             list.Insert(0, new KeyValuePair<Guid?, String>(null, "Global"));
 
-            cmbProject.DataSource = list;
-            cmbProject.DataBind();
+            cmbProject.BindData(list);
 
             if (!IsPostBack)
-            {
                 cmbProject.SelectedIndex = 0;
-            }
         }
     }
 }

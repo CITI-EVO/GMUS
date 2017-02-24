@@ -14,9 +14,7 @@
 </div>
 <div class="hr-line-dashed"></div>
 <div class="form-group">
-    <asp:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary">
-        <asp:Label runat="server" CssClass="fa fa-plus"/>
-    </asp:LinkButton>
+    <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
 </div>
 <div class="form-group">
     <local:FieldsControl runat="server" ID="fieldsControl" OnEdit="fieldsControl_OnEdit" OnDelete="fieldsControl_OnDelete" />
@@ -39,12 +37,8 @@
                                 </div>
                                 <local:NamedControl runat="server" ID="namedControl" OnDataChanged="namedControl_OnDataChanged" />
                                 <div class="form-group">
-                                    <asp:LinkButton runat="server" ID="btFieldOK" ToolTip="Save" OnClick="btnFieldOK_Click" CssClass="btn btn-success">
-                                        <asp:Label runat="server" CssClass="fa fa-save"/>
-                                    </asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" CssClass="btn btn-warning">
-                                        <asp:Label runat="server" CssClass="fa fa-close"/>
-                                    </asp:LinkButton>
+                                    <ce:LinkButton runat="server" ID="btFieldOK" ToolTip="Save" OnClick="btnFieldOK_Click" CssClass="btn btn-success fa fa-save" />
+                                    <ce:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                                 </div>
                             </div>
                         </div>

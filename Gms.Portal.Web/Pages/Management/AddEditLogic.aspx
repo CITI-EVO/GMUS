@@ -10,12 +10,8 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
                     <div class="form-group">
-                        <asp:LinkButton runat="server" ID="btnSaveLogic" ToolTip="Save" OnClick="btnSaveLogic_OnClick" CssClass="btn btn-success">
-                            <asp:Label runat="server" CssClass="fa fa-save"/>
-                        </asp:LinkButton>
-                        <asp:LinkButton runat="server" ID="btnCancelLogic" ToolTip="Close" OnClick="btnCancelLogic_OnClick" CssClass="btn btn-warning">
-                            <asp:Label runat="server" CssClass="fa fa-close"/>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnSaveLogic" ToolTip="Save" OnClick="btnSaveLogic_OnClick" CssClass="btn btn-success fa fa-save"/>
+                        <ce:LinkButton runat="server" ID="btnCancelLogic" ToolTip="Close" OnClick="btnCancelLogic_OnClick" CssClass="btn btn-warning fa fa-close"/>
                     </div>
                     <local:LogicControl runat="server" ID="logicControl" />
                 </div>
@@ -47,10 +43,7 @@
                                         </asp:GridView>
                                     </div>
                                     <div class="form-group">
-                                        <asp:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning">
-                                            <asp:Label runat="server" CssClass="fa fa-close"/>
-                                            <ce:Label runat="server" CssClass="linkTitle" Text="Close" />
-                                        </asp:LinkButton>
+                                        <ce:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning fa fa-close" />
                                     </div>
                                 </div>
                             </div>

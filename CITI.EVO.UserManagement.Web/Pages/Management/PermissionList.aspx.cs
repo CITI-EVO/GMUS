@@ -33,10 +33,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             FillProjects();
 
             if (!IsPostBack)
-            {
-                cmbProject.SelectedIndex = 0;
                 cmbProject_SelectedIndexChanged(cmbProject, EventArgs.Empty);
-            }
 
             FillGroups();
             FillResources();
@@ -65,9 +62,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         {
             var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value);
             if (projectID == null)
-            {
                 return;
-            }
 
             var resources = (from n in HbSession.Query<UM_Resource>()
                              where n.DateDeleted == null && n.ProjectID == projectID
@@ -235,8 +230,15 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                             orderby n.Name
                             select n).ToList();
 
-            cmbProject.DataSource = projects;
-            cmbProject.DataBind();
+            cmbProject.BindData(projects);
+
+            var selValue = cmbProject.TryGetGuidValue();
+            if (selValue == null)
+            {
+                var first = projects.FirstOrDefault();
+                if (first != null)
+                    cmbProject.TrySetSelectedValue(first.ID);
+            }
         }
 
         protected void DisplayRelatedRule()
@@ -457,7 +459,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         {
             var permissionKey = new PermissionKeyContainer();
 
-            var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value.ToString());
+            var projectID = cmbProject.TryGetGuidValue();
             permissionKey.ProjectID = projectID.Value;
 
             if (tlGroups.FocusedNode != null)
@@ -480,9 +482,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         protected void ApplyPermissions()
         {
             if (!UmUtil.Instance.HasAccess("PermissionList"))
-            {
                 Response.Redirect("~/Pages/Management/UsersList.aspx");
-            }
         }
 
         #endregion

@@ -13,9 +13,7 @@
                         <asp:Label runat="server"></asp:Label>
                     </h5>
                     <div class="btn-group">
-                        <asp:LinkButton runat="server" ID="btnNew" OnClick="btnNew_OnClick" CssClass="btn btn-primary">
-                            <asp:Label runat="server" CssClass="fa fa-plus"></asp:Label>
-                        </asp:LinkButton>
+                        <ce:LinkButton runat="server" ID="btnNew" OnClick="btnNew_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus"/>
                     </div>
                 </div>
                 <div class="ibox-content">

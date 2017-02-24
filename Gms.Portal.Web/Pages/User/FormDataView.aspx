@@ -9,12 +9,8 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <div class="form-group">
-                    <asp:LinkButton runat="server" ID="btnSave" OnClick="btnSave_OnClick" CssClass="btn btn-success">
-                        <asp:Label runat="server" CssClass="fa fa-save"></asp:Label>
-                    </asp:LinkButton>
-                    <asp:LinkButton runat="server" ID="btnCancel" OnClick="btnCancel_OnClick" CssClass="btn btn-warning">
-                        <asp:Label runat="server" CssClass="fa fa-close"></asp:Label>
-                    </asp:LinkButton>
+                    <ce:LinkButton runat="server" ID="btnSave" OnClick="btnSave_OnClick" ToolTip="Save" CssClass="btn btn-success fa fa-save"/>
+                    <ce:LinkButton runat="server" ID="btnCancel" OnClick="btnCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close"/>
                 </div>
                 <div class="form-group">
                     <ce:Label runat="server" ID="lblErrorMessage" />
