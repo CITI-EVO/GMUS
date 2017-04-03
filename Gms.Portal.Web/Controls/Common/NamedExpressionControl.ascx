@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="NamedExpressionControl.ascx.cs" Inherits="Gms.Portal.Web.Controls.Common.NamedExpressionControl" %>
 
-<%@ Register Src="~/Controls/Common/HiddenFieldValueControl.ascx" TagPrefix="lmis" TagName="HiddenFieldValueControl" %>
+<%@ Register Src="~/Controls/Common/HiddenFieldValueControl.ascx" TagPrefix="local" TagName="HiddenFieldValueControl" %>
 
-<lmis:HiddenFieldValueControl runat="server" ID="hdKey" Property="{NamedExpressionModel.Key=Value}" />
+<local:HiddenFieldValueControl runat="server" ID="hdKey" Property="{NamedExpressionModel.Key=Value}" />
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Name:" />
     <asp:TextBox runat="server" ID="txtName" CssClass="form-control" Property="{NamedExpressionModel.Name=Text}" Width="180" />

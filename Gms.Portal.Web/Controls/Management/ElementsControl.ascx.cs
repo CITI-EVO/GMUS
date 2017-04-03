@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Web.UI.WebControls;
+using CITI.EVO.Tools.EventArguments;
+using CITI.EVO.Tools.Utils;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Models.Helpers;
 
@@ -9,6 +12,16 @@ namespace Gms.Portal.Web.Controls.Management
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public event EventHandler<GenericEventArgs<Guid>> Move;
+        protected void btnMove_OnCommand(object sender, CommandEventArgs e)
+        {
+            var id = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (id != null && Move != null)
+            {
+                Move(sender, new GenericEventArgs<Guid>(id.Value));
+            }
         }
 
         protected String GetImageClass(object eval)
@@ -54,5 +67,12 @@ namespace Gms.Portal.Web.Controls.Management
 
             return true;
         }
+
+        protected bool GetMoveVisible(object eval)
+        {
+            return eval != null;
+        }
+
+
     }
 }

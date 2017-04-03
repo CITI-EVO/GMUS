@@ -12,11 +12,19 @@ namespace Gms.Portal.Web.Bases
         {
         }
 
-        private BasePage CurrentBasePage
+        protected UrlHelper RequestUrl
         {
             get
             {
-                return base.Page as BasePage;
+                return CurrentBasePage.RequestUrl;
+            }
+        }
+
+        protected BasePage CurrentBasePage
+        {
+            get
+            {
+                return Page as BasePage;
             }
         }
 
@@ -66,7 +74,7 @@ namespace Gms.Portal.Web.Bases
         {
             get
             {
-                return base.Page as BasePage;
+                return Page as BasePage;
             }
         }
 

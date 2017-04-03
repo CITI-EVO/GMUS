@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="CollectionsList.aspx.cs" Inherits="Gms.Portal.Web.Pages.Management.CollectionsList" %>
 
-<%@ Register Src="~/Controls/Management/CollectionsControl.ascx" TagPrefix="lmis" TagName="CollectionsControl" %>
+<%@ Register Src="~/Controls/Management/CollectionsControl.ascx" TagPrefix="local" TagName="CollectionsControl" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <lmis:CollectionsControl runat="server" ID="collectionsControl" OnEdit="collectionsControl_OnEdit" OnDelete="collectionsControl_OnDelete" OnView="collectionsControl_OnView" />
+                    <local:CollectionsControl runat="server" ID="collectionsControl" OnEdit="collectionsControl_OnEdit" OnDelete="collectionsControl_OnDelete" OnView="collectionsControl_OnView" />
                 </div>
             </div>
         </div>

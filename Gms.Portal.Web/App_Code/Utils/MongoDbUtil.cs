@@ -37,7 +37,7 @@ namespace Gms.Portal.Web.Utils
                 return null;
 
             var query = (from n in collection.AsQueryable()
-                         where n[FormDataUnit.IDField] == recordID
+                         where n[FormDataConstants.IDField] == recordID
                          select n);
 
             var document = query.FirstOrDefault();

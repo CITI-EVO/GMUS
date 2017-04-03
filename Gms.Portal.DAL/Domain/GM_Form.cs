@@ -17,6 +17,10 @@ namespace Gms.Portal.DAL.Domain
 
         public virtual bool? Visible { get; set; }
 
+        public virtual String UserMode { get; set; }
+
+        public virtual Guid? CategoryID { get; set; }
+
         public virtual XDocument XmlData { get; set; }
 
         public virtual DateTime DateCreated { get; set; }

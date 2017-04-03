@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Web.UI;
 using CITI.EVO.TwoWayModel.Entities;
+using CITI.EVO.TwoWayModel.Utils;
 
 namespace CITI.EVO.TwoWayModel.Processing
 {
@@ -184,6 +185,15 @@ namespace CITI.EVO.TwoWayModel.Processing
             var destinationType = type;
             if (IsNullable(destinationType))
                 destinationType = Nullable.GetUnderlyingType(destinationType);
+
+            if (destinationType == typeof(DateTime))
+            {
+                DateTime dateValue;
+                if (!DateTimeParser.TryParse(Convert.ToString(value), out dateValue))
+                    throw new Exception("Invalid DateTime Format");
+
+                return dateValue;
+            }
 
             var converter = TypeDescriptor.GetConverter(destinationType);
             if (converter.CanConvertFrom(sourceType))

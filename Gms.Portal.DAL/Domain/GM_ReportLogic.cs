@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Xml.Linq;
+using CITI.EVO.Core.Interfaces;
 
 namespace Gms.Portal.DAL.Domain
 {
     [Serializable]
-    public partial class GM_ReportLogic
+    public partial class GM_ReportLogic : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual Guid? ReportID { get; set; }

@@ -17,7 +17,7 @@ namespace Gms.Portal.Web.Models
 
         public int? OrderIndex { get; set; }
 
-        public bool Privacy { get; set; }
+        public bool? Privacy { get; set; }
 
         public String ControlType { get; set; }
 
@@ -25,26 +25,42 @@ namespace Gms.Portal.Web.Models
 
         public String Mask { get; set; }
 
-        public bool Visible { get; set; }
+        public bool? Visible { get; set; }
 
-        public bool Enabled { get; set; }
+        public bool? Enabled { get; set; }
 
-        public bool Mandatory { get; set; }
+        public bool? Mandatory { get; set; }
+
+        public bool? Inversion { get; set; }
+
+        public int? CaptionSize { get; set; }
+
+        public int? ControlSize { get; set; }
 
         public String Description { get; set; }
 
-        public bool DisplayOnGrid { get; set; }
+        public bool? DisplayOnGrid { get; set; }
 
         public String ValidationExp { get; set; }
 
         public String ErrorMessage { get; set; }
 
-        public String Tag { get; set; }
-
         public Guid? DataSourceID { get; set; }
+
+        public String DataSourceFilterExp { get; set; }
+
+        public String DataSourceSortExp { get; set; }
 
         public String TextExpression { get; set; }
 
         public String ValueExpression { get; set; }
+
+        public Guid? DependentFieldID { get; set; }
+
+        public String DependentExp { get; set; }
+
+        public String DependentFillExp { get; set; }
+
+        public String Tag { get; set; }
     }
 }

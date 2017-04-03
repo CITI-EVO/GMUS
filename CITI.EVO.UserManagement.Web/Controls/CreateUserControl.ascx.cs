@@ -10,5 +10,15 @@ namespace CITI.EVO.UserManagement.Web.Controls
         {
 
         }
+
+        protected void userDataControl_OnDataChanged(object sender, EventArgs e)
+        {
+            OnDataChanged(e);
+        }
+
+        protected void SelectGroupsControl_OnDataChanged(object sender, EventArgs e)
+        {
+            OnDataChanged(e);
+        }
     }
 }

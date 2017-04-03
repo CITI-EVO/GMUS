@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Utils;
@@ -13,6 +14,7 @@ using Gms.Portal.Web.Entities.Others;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Models.Helpers;
 using Gms.Portal.Web.Utils;
+using NHibernate.Linq;
 
 namespace Gms.Portal.Web.Controls.Management
 {
@@ -26,6 +28,7 @@ namespace Gms.Portal.Web.Controls.Management
 
         protected void Page_Init(object sender, EventArgs e)
         {
+            FillCategoreisList();
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -51,7 +54,9 @@ namespace Gms.Portal.Web.Controls.Management
                 OrderIndex = orderIndex.GetValueOrDefault() + 10
             };
 
+            elementControl.FillDependentFields(FormEntity);
             elementControl.Model = model;
+
             mpeElement.Show();
         }
 
@@ -96,33 +101,44 @@ namespace Gms.Portal.Web.Controls.Management
                 entity.Size = model.GroupSize.GetValueOrDefault(12);
             }
 
+            if (model.ElementType == "Grid")
+            {
+                var entity = (GridEntity)childControl;
+                entity.ValidationExp = model.ValidationExp;
+                entity.ErrorMessage = model.ErrorMessage;
+            }
+
             if (model.ElementType == "Field")
             {
                 var entity = (FieldEntity)childControl;
 
-                entity.Type = model.ControlType;
                 entity.Tag = model.Tag;
+                entity.Type = model.ControlType;
                 entity.Mask = model.Mask;
                 entity.Enabled = model.Enabled;
                 entity.Privacy = model.Privacy;
+                entity.Inversion = model.Inversion;
                 entity.Mandatory = model.Mandatory;
                 entity.Description = model.Description;
+                entity.CaptionSize = model.CaptionSize;
+                entity.ControlSize = model.ControlSize;
                 entity.ErrorMessage = model.ErrorMessage;
+                entity.DependentExp = model.DependentExp;
+                entity.DataSourceID = model.DataSourceID;
                 entity.ValidationExp = model.ValidationExp;
                 entity.DisplayOnGrid = model.DisplayOnGrid;
-                entity.DataSourceID = model.DataSourceID;
                 entity.TextExpression = model.TextExpression;
                 entity.ValueExpression = model.ValueExpression;
+                entity.DependentFieldID = model.DependentFieldID;
+                entity.DataSourceSortExp = model.DataSourceSortExp;
+                entity.DataSourceFilterExp = model.DataSourceFilterExp;
             }
 
             childControl.Name = model.Name;
-            childControl.Visible = model.Visible;
+            childControl.Visible = model.Visible.GetValueOrDefault();
             childControl.OrderIndex = model.OrderIndex.GetValueOrDefault();
-        }
-
-        protected void elementControl_OnDataChanged(object sender, EventArgs e)
-        {
-            mpeElement.Show();
+            childControl.DependentExp = model.DependentExp;
+            childControl.DependentFieldID = model.DependentFieldID;
         }
 
         protected void elementsControl_OnNew(object sender, GenericEventArgs<Guid> e)
@@ -149,8 +165,66 @@ namespace Gms.Portal.Web.Controls.Management
                 OrderIndex = orderIndex.GetValueOrDefault() + 10,
             };
 
+            elementControl.FillDependentFields(entity);
             elementControl.Model = model;
+
             mpeElement.Show();
+        }
+
+        protected void elementsControl_OnMove(object sender, GenericEventArgs<Guid> e)
+        {
+            var formTree = GetPossibleMovingElements(FormEntity).ToList();
+
+            var model = new ElementMoveModel
+            {
+                ElementId = e.Value,
+                FormTree = formTree
+            };
+
+            elementMoveControl.Model = model;
+            mpeElementMove.Show();
+        }
+
+        protected void btnElementMoveOK_OnClick(object sender, EventArgs e)
+        {
+            var model = elementMoveControl.Model;
+
+            var tree = FormStructureUtil.CreateTree(FormEntity);
+            var fields = FormStructureUtil.InOrderTraversal(FormEntity).ToList();
+
+            var childControl = tree.FirstOrDefault(n => n.ID == model.ElementId);
+            var destinationControl = fields.FirstOrDefault(n => n.ID == model.DestinationId) as ContentEntity;
+
+            if (childControl == null || destinationControl == null)
+                return;
+
+            var oldParent = fields.FirstOrDefault(n => n.ID == childControl.ParentID) as ContentEntity;
+            var child = fields.FirstOrDefault(n => n.ID == childControl.ID);
+
+            if (oldParent == null || child == null)
+                return;
+
+            var result = CanMoveElement(destinationControl, child);
+            if (result)
+            {
+                destinationControl.Controls.Add(child);
+                oldParent.Controls.RemoveAll(n => n.ID == child.ID);
+            }
+        }
+
+        private bool CanMoveElement(ContentEntity parent, ControlEntity child)
+        {
+            if (child is TabPageEntity)
+            {
+                if (!(parent is TabContainerEntity))
+                    return false;
+            }
+
+            if (parent is TabContainerEntity && child is TabContainerEntity)
+                return false;
+
+
+            return true;
         }
 
         protected void elementsControl_OnEdit(object sender, GenericEventArgs<Guid> e)
@@ -178,6 +252,8 @@ namespace Gms.Portal.Web.Controls.Management
                 Visible = childNode.Visible,
                 OrderIndex = childNode.OrderIndex,
                 ElementType = childNode.ElementType,
+                DependentExp = childControl.DependentExp,
+                DependentFieldID = childControl.DependentFieldID,
             };
 
             if (parentNode == null)
@@ -200,6 +276,16 @@ namespace Gms.Portal.Web.Controls.Management
                 model.GroupSize = groupEntity.Size;
             }
 
+            if (childNode.ElementType == "Grid")
+            {
+                var groupEntity = childControl as GridEntity;
+                if (groupEntity == null)
+                    return;
+
+                model.ValidationExp = groupEntity.ValidationExp;
+                model.ErrorMessage = groupEntity.ErrorMessage;
+            }
+
             if (childNode.ElementType == "Field")
             {
                 var fieldEntity = childControl as FieldEntity;
@@ -211,17 +297,25 @@ namespace Gms.Portal.Web.Controls.Management
                 model.Enabled = fieldEntity.Enabled;
                 model.Privacy = fieldEntity.Privacy.GetValueOrDefault();
                 model.Mandatory = fieldEntity.Mandatory.GetValueOrDefault();
+                model.Inversion = fieldEntity.Inversion.GetValueOrDefault();
+                model.CaptionSize = fieldEntity.CaptionSize;
+                model.ControlSize = fieldEntity.ControlSize;
                 model.ControlType = fieldEntity.Type;
                 model.Description = fieldEntity.Description;
                 model.ErrorMessage = fieldEntity.ErrorMessage;
+                model.DataSourceID = fieldEntity.DataSourceID;
                 model.ValidationExp = fieldEntity.ValidationExp;
                 model.DisplayOnGrid = fieldEntity.DisplayOnGrid;
-                model.DataSourceID = fieldEntity.DataSourceID;
                 model.TextExpression = fieldEntity.TextExpression;
                 model.ValueExpression = fieldEntity.ValueExpression;
+                model.DependentFillExp = fieldEntity.DependentFillExp;
+                model.DataSourceSortExp = fieldEntity.DataSourceSortExp;
+                model.DataSourceFilterExp = fieldEntity.DataSourceFilterExp;
             }
 
+            elementControl.FillDependentFields(entity);
             elementControl.Model = model;
+
             mpeElement.Show();
         }
 
@@ -257,6 +351,11 @@ namespace Gms.Portal.Web.Controls.Management
                 return;
         }
 
+        protected void elementControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeElement.Show();
+        }
+
         public override FormModel GetModel()
         {
             var model = base.GetModel();
@@ -276,6 +375,7 @@ namespace Gms.Portal.Web.Controls.Management
         public override void SetModel(FormModel model)
         {
             FormEntity = model.Entity;
+
             base.SetModel(model);
 
             FillElementsTree();
@@ -290,6 +390,16 @@ namespace Gms.Portal.Web.Controls.Management
 
             elementsControl.Model = units;
             elementsControl.DataBind();
+        }
+
+        protected void FillCategoreisList()
+        {
+            var categories = (from n in HbSession.Query<GM_Category>()
+                              where n.DateDeleted == null
+                              orderby n.OrderIndex
+                              select n).ToList();
+
+            cbxCategory.BindData(categories);
         }
 
         protected ControlEntity CreateNewEntity(String elementType)
@@ -385,5 +495,30 @@ namespace Gms.Portal.Web.Controls.Management
 
             return new[] { parent, child };
         }
+
+        private IEnumerable<ListItem> GetPossibleMovingElements(ControlEntity control, int level = 0)
+        {
+            if (!(control is FieldEntity))
+            {
+                var name = string.Empty;
+                name += new string('-', level);
+                name += control.Name;
+                yield return new ListItem(name, DataConverter.ToString(control.ID));
+            }
+
+            if (control is ContentEntity)
+            {
+                ++level;
+                var content = control as ContentEntity;
+                foreach (var item in content.Controls)
+                {
+                    foreach (var listItem in GetPossibleMovingElements(item, level))
+                    {
+                        yield return listItem;
+                    }
+                }
+            }
+        }
+
     }
 }

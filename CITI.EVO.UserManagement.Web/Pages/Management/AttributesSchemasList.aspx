@@ -7,82 +7,71 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-    <asp:UpdatePanel runat="server" ID="upnlMain" UpdateMode="Always" RenderMode="Block">
-        <ContentTemplate>
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>ატრიბუტების სქემები</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            <local:AttributesSchemasControl ID="attributesSchemasControl" runat="server" OnDelete="attributesSchemasControl_OnDelete" OnEdit="attributesSchemasControl_OnEdit" OnNew="attributesSchemasControl_OnNew" />
+
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>ატრიბუტების სქემები</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <local:AttributesSchemasControl ID="attributesSchemasControl" runat="server" OnDelete="attributesSchemasControl_OnDelete" OnEdit="attributesSchemasControl_OnEdit" OnNew="attributesSchemasControl_OnNew" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <asp:Panel ID="pnlAttributeSchema" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btAttributeSchemaOK">
+        <asp:Button ID="btAttributeSchemaPopup" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeAttributeSchema" TargetControlID="btAttributeSchemaPopup" PopupControlID="pnlAttributeSchema" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            ატრიბუტის დამატება
+                        </p>
+                        <asp:Label ID="lblAttributeSchemaError" runat="server" ForeColor="Red"></asp:Label>
+                        <div class="ibox-content form-horizontal">
+                            <div class="col-sm-12">
+                                <local:AttributeSchemaControl ID="attributeSchemaControl" runat="server" />
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeSchemaOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeSchemaOK_Click" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-times" ID="btAttributeSchemaCancel" runat="server" ToolTip="დახურვა" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </ContentTemplate>
-    </asp:UpdatePanel>
-    <asp:Panel ID="pnlAttributeSchema" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btAttributeSchemaOK">
-        <asp:UpdatePanel ID="upnlAttributeSchema" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <asp:Button ID="btAttributeSchemaPopup" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeAttributeSchema" TargetControlID="btAttributeSchemaPopup" PopupControlID="pnlAttributeSchema" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        </div>
 
-                <div class="popup">
-                    <div class="popup_fieldset">
-                        <h2></h2>
-                        <asp:Label ID="lblAttributeSchemaError" runat="server" ForeColor="Red"></asp:Label>
-                        <div class="title_separator"></div>
-                        <local:AttributeSchemaControl ID="attributeSchemaControl" runat="server" />
-
-                        <div class="box">
-                            <h3></h3>
-                            <div class="box_body">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fieldsetforicons">
-                        <div class="left">
-                            <asp:LinkButton CssClass="icon" ID="btAttributeSchemaOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btAttributeSchemaOK_Click" />
-                        </div>
-                        <div class="right">
-                            <asp:LinkButton CssClass="icon" ID="btAttributeSchemaCancel" runat="server" ToolTip="დახურვა" Text="დახურვა" />
-                        </div>
-                    </div>
-                </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
     </asp:Panel>
     <asp:Panel ID="pnlAttributeSchemaNode" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btAttributeSchemaNodeOK">
-        <asp:UpdatePanel ID="upnlAttributeSchemaNode" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <asp:Button ID="btAttributeSchemaNodePopup" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeAttributeSchemaNode" TargetControlID="btAttributeSchemaNodePopup" PopupControlID="pnlAttributeSchemaNode" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <asp:Button ID="btAttributeSchemaNodePopup" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeAttributeSchemaNode" TargetControlID="btAttributeSchemaNodePopup" PopupControlID="pnlAttributeSchemaNode" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            ატრიბუტის დამატება
+                        </p>
+                        <asp:Label runat="server" ForeColor="Red"></asp:Label>
+                        <div class="ibox-content form-horizontal">
+                            <div class="col-sm-12">
+                                <local:AttributeFieldControl ID="attributeFieldControl" runat="server" />
 
-                <div class="popup">
-                    <div class="popup_fieldset">
-                        <h2></h2>
-                        <asp:Label ID="Label1" runat="server" ForeColor="Red"></asp:Label>
-                        <div class="title_separator"></div>
-                        <local:AttributeFieldControl ID="attributeFieldControl" runat="server" />
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeSchemaNodeOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeSchemaNodeOK_Click" />
 
-                        <div class="box">
-                            <h3></h3>
-                            <div class="box_body">
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeSchemaNodeCancel" runat="server" ToolTip="დახურვა" />
                             </div>
                         </div>
                     </div>
-                    <div class="fieldsetforicons">
-                        <div class="left">
-                            <asp:LinkButton CssClass="icon" ID="btAttributeSchemaNodeOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btAttributeSchemaNodeOK_Click" />
-                        </div>
-                        <div class="right">
-                            <asp:LinkButton CssClass="icon" ID="btAttributeSchemaNodeCancel" runat="server" ToolTip="დახურვა" Text="დახურვა" />
-                        </div>
-                    </div>
                 </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+            </div>
+        </div>
     </asp:Panel>
 </asp:Content>

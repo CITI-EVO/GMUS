@@ -3,9 +3,9 @@
 <%@ Register TagPrefix="local" TagName="UserDataControl" Src="~/Controls/UserDataControl.ascx" %>
 <%@ Register TagPrefix="local" TagName="SelectGroupsControl" Src="~/Controls/SelectGroupsControl.ascx" %>
 
-<div>
-    <local:UserDataControl runat="server" ID="userDataControl" Property="{CreateUserModel.User=Model}" />
-</div>
-<div>
-    <local:SelectGroupsControl runat="server" ID="SelectGroupsControl" Property="{CreateUserModel.Groups=Model}" />
-</div>
+<asp:Panel runat="server" CssClass="form-group">
+    <local:UserDataControl runat="server" ID="userDataControl" Property="{CreateUserModel.User=Model}" OnDataChanged="userDataControl_OnDataChanged" />
+</asp:Panel>
+<asp:Panel runat="server" CssClass="form-group" Visible="False">
+    <local:SelectGroupsControl runat="server" ID="SelectGroupsControl" Property="{CreateUserModel.Groups=Model}" OnDataChanged="SelectGroupsControl_OnDataChanged" />
+</asp:Panel>

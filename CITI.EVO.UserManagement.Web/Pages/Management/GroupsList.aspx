@@ -9,100 +9,123 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-    <asp:UpdatePanel runat="server" ID="upnlMain" UpdateMode="Always" RenderMode="Block">
-        <ContentTemplate>
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>ჯგუფები </h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <local:GroupsControl ID="groupsControl" runat="server" OnDelete="groupsControl_OnDelete" OnEdit="groupsControl_OnEdit" OnNew="groupsControl_OnNew" OnAddUser="groupsControl_OnAddUser" OnViewAttributes="groupsControl_OnViewAttributes" OnSetAttribute="groupsControl_OnSetAttribute" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <asp:Panel ID="pnlGroup" runat="server" Style="display: none;" DefaultButton="btGroupOK">
+        <asp:Button ID="btGroupFake" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeGroup" TargetControlID="btGroupFake" PopupControlID="pnlGroup" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
 
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>ჯგუფები </h5>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            <local:GroupsControl ID="groupsControl" runat="server" OnDelete="groupsControl_OnDelete" OnEdit="groupsControl_OnEdit" OnNew="groupsControl_OnNew" OnAddUser="groupsControl_OnAddUser" OnViewAttributes="groupsControl_OnViewAttributes" OnSetAttribute="groupsControl_OnSetAttribute" />
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            ჯგუფები
+                        </p>
+                        <asp:Label runat="server" ID="lblGroupError"></asp:Label>
+
+                        <div class="ibox-content form-horizontal">
+                            <div class="col-sm-12">
+                                <local:GroupControl ID="groupControl" runat="server" />
+
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btGroupOK" runat="server" ToolTip="შენახვა" OnClick="btGroupOK_Click" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btGroupCancel" runat="server" ToolTip="დახურვა" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </ContentTemplate>
-    </asp:UpdatePanel>
-    <asp:Panel ID="pnlGroup" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btGroupOK">
-        <asp:UpdatePanel ID="upnlGroup" runat="server" UpdateMode="Always">
-            <ContentTemplate>
-                <asp:Button ID="btGroupFake" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeGroup" TargetControlID="btGroupFake" PopupControlID="pnlGroup" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
-                <div>
-                    <asp:Label runat="server" ID="lblGroupError"></asp:Label>
-                </div>
-                <div>
-                    <local:GroupControl ID="groupControl" runat="server" />
-                </div>
-                <div class="fieldsetforicons">
-                    <div class="left">
-                        <asp:LinkButton CssClass="icon" ID="btGroupOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btGroupOK_Click" />
-                    </div>
-                    <div class="right">
-                        <asp:LinkButton CssClass="icon" ID="btGroupCancel" runat="server" ToolTip="დახურვა" Text="დახურვა" />
-                    </div>
-                </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+        </div>
     </asp:Panel>
-    <asp:Panel ID="pnlGroupAttributes" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btAttributeOK">
-        <asp:UpdatePanel ID="upnlGroupAttributes" runat="server" UpdateMode="Always">
-            <ContentTemplate>
-                <asp:Button ID="btGroupAttributesFake" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeGroupAttributes" TargetControlID="btGroupAttributesFake" PopupControlID="pnlGroupAttributes" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
-                <div>
-                    <local:ObjectAttributeControl ID="objectAttributeControl" runat="server" />
-                </div>
-                <div class="fieldsetforicons">
-                    <div class="left">
-                        <asp:LinkButton CssClass="icon" ID="btAttributeOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btAttributeOK_Click" />
+    <asp:Panel ID="pnlGroupAttributes" runat="server" Style="display: none;" DefaultButton="btAttributeOK">
+        <asp:Button ID="btGroupAttributesFake" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeGroupAttributes" TargetControlID="btGroupAttributesFake" PopupControlID="pnlGroupAttributes" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            ატრიბუტი
+                        </p>
+                        <div class="ibox-content form-horizontal">
+                            <div class="col-sm-12">
+                                <local:ObjectAttributeControl ID="objectAttributeControl" runat="server" OnDataChanged="objectAttributeControl_OnDataChanged" />
+
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeOK_Click" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeCancel" runat="server" ToolTip="დახურვა" />
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="right">
-                        <asp:LinkButton CssClass="icon" ID="btAttributeCancel" runat="server" ToolTip="დახურვა" Text="დახურვა" />
-                    </div>
                 </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+            </div>
+        </div>
     </asp:Panel>
-    <asp:Panel ID="pnlViewGroupAttributes" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btViewAttributeOK">
-        <asp:UpdatePanel ID="upnlViewGroupAttributes" runat="server" UpdateMode="Always">
-            <ContentTemplate>
-                <asp:Button ID="btViewGroupAttributesFake" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeViewGroupAttributes" TargetControlID="btViewGroupAttributesFake" PopupControlID="pnlViewGroupAttributes" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
-                <div>
-                    <local:ObjectAttributesControl ID="objectAttributesControl" runat="server" />
-                </div>
-                <div class="fieldsetforicons">
-                    <div class="left">
-                        <asp:LinkButton CssClass="icon" ID="btViewAttributeOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btViewAttributeOK_Click" />
+    <asp:Panel ID="pnlViewGroupAttributes" runat="server" Style="display: none;" DefaultButton="btViewAttributeOK">
+        <asp:Button ID="btViewGroupAttributesFake" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeViewGroupAttributes" TargetControlID="btViewGroupAttributesFake" PopupControlID="pnlViewGroupAttributes" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            ატრიბუტის ნახვა
+                        </p>
+                        <div class="ibox-content form-horizontal">
+                            <div class="col-sm-12">
+                                <local:ObjectAttributesControl ID="objectAttributesControl" runat="server" />
+
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btViewAttributeOK" runat="server" ToolTip="შენახვა" OnClick="btViewAttributeOK_Click" />
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+            </div>
+        </div>
     </asp:Panel>
-    <asp:Panel ID="pnlUsers" runat="server" Style="display: none;" CssClass="modalWindow" Width="333px" DefaultButton="btUserOK">
-        <asp:UpdatePanel ID="upnlUsers" runat="server" UpdateMode="Always">
-            <ContentTemplate>
-                <asp:Button ID="btUsersFake" runat="server" Style="display: none;" />
-                <act:ModalPopupExtender ID="mpeUsers" TargetControlID="btUsersFake" PopupControlID="pnlUsers" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
-                <div>
-                </div>
-                <div>
-                    <local:SelectUserControl ID="selectUserControl" runat="server" OnDataChanged="selectUserControl_OnDataChanged" />
-                </div>
-                <div class="fieldsetforicons">
-                    <div class="left">
-                        <asp:LinkButton CssClass="icon" ID="btUserOK" runat="server" ToolTip="შენახვა" Text="შენახვა" OnClick="btUserOK_Click" />
+    <asp:Panel ID="pnlUsers" runat="server" Style="display: none;" CssClass="modalWindow" DefaultButton="btUserOK">
+        <asp:Button ID="btUsersFake" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeUsers" TargetControlID="btUsersFake" PopupControlID="pnlUsers" runat="server" Enabled="True" BackgroundCssClass="modalBackground" />
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row ">
+                        <p>
+                            მომხმარებლის დამატება
+                        </p>
+                        <div class="ibox-content">
+                            <div class="col-sm-12 form-horizontal">
+                                <local:SelectUserControl ID="selectUserControl" runat="server" OnDataChanged="selectUserControl_OnDataChanged" />
+
+                            </div>
+                            <div class="col-sm-12">
+                                <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btUserOK" runat="server" ToolTip="შენახვა" OnClick="btUserOK_Click" />
+
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btUserCancel" runat="server" ToolTip="დახურვა" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="right">
-                        <asp:LinkButton CssClass="icon" ID="btUserCancel" runat="server" ToolTip="დახურვა" Text="დახურვა" />
-                    </div>
                 </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+            </div>
+        </div>
     </asp:Panel>
     <ce:MessageControl ID="ucMessage" runat="server" />
 </asp:Content>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using CITI.EVO.Tools.Extensions;
+using CITI.EVO.Tools.Helpers;
+using CITI.EVO.Tools.Security;
 using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Utils;
@@ -12,16 +14,21 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            pnlError.Visible = false;
+            pnlUser.Visible = false;
+
             if (!ConfigUtil.UserActivationEnabled)
             {
-                lblMessage.Text = "მომხმარებელის ავტომატური აქტივაცია გათიშულია, გთხოვთ დაელოდოთ ადმინისტრატორს ხელოვნური აქტივირებისთვის";
+                lblError.Text = "მომხმარებელის ავტომატური აქტივაცია გათიშულია, გთხოვთ დაელოდოთ ადმინისტრატორს ხელოვნური აქტივირებისთვის";
+                pnlError.Visible = true;
                 return;
             }
 
             var userCode = Request["UserCode"];
             if (String.IsNullOrWhiteSpace(userCode))
             {
-                lblMessage.Text = "მომხმარებელი ვერ მოიძებნა";
+                lblError.Text = "მომხმარებელი ვერ მოიძებნა";
+                pnlError.Visible = true;
                 return;
             }
 
@@ -32,7 +39,8 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             if (user == null)
             {
-                lblMessage.Text = "მომხმარებელი ვერ მოიძებნა";
+                lblError.Text = "მომხმარებელი ვერ მოიძებნა";
+                pnlError.Visible = true;
                 return;
             }
 
@@ -43,7 +51,16 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             HbSession.SubmitUpdate(user);
 
-            lblMessage.Text = String.Format("მომხმარებელი ({0} - {1} {2}) აქტივირებულია", user.LoginName, user.FirstName, user.LastName);
+            if (!UmUtil.Instance.Login(user.LoginName, user.Password))
+                throw new Exception();
+
+            var url = new UrlHelper("/Rnsf/Gms/Gms.Portal.Web/");
+            url["loginToken"] = UmUtil.Instance.CurrentToken;
+
+            lnkAuth.NavigateUrl = url.ToString();
+
+            lblUser.Text = String.Format("({0} - {1} {2})", user.LoginName, user.FirstName, user.LastName);
+            pnlUser.Visible = true;
         }
     }
 }

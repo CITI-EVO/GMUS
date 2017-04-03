@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div>
+        You successfully registered in the system
+    </div>
+    <table>
+        <tr>
+            <td>User:</td>
+            <td>$!{user.LoginName}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>$!{user.Password}</td>
+        </tr>
+    </table>
+    <div>
+        To login in the system please follow the <a href="http://192.168.100.111/Rnsf/Gms/CITI.EVO.UserManagement.Web/Pages/User/Activate.aspx?UserCode=$!{user.UserCode}&languagePair=en-US">[link]</a>
+    </div>
+</body>
+</html>

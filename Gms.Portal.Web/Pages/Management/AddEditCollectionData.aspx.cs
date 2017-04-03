@@ -24,7 +24,7 @@ namespace Gms.Portal.Web.Pages.Management
             var entity = GetEntity();
 
             var fields = entity.Fields.ToDictionary(n => (Object)n.ID, n => n.Name);
-            fields.Add(FormDataUnit.IDField, FormDataUnit.IDField);
+            fields.Add(FormDataConstants.IDField, FormDataConstants.IDField);
 
             collectionDataControl.InitStructure(fields);
         }
@@ -84,12 +84,12 @@ namespace Gms.Portal.Web.Pages.Management
             var dataModel = collectionDataControl.Model;
             var dictionary = dataModel.Data;
 
-            if (dictionary.ContainsKey(FormDataUnit.IDField))
+            if (dictionary.ContainsKey(FormDataConstants.IDField))
             {
-                var value = dictionary[FormDataUnit.IDField];
+                var value = dictionary[FormDataConstants.IDField];
                 var guid = DataConverter.ToNullableGuid(value);
 
-                dictionary[FormDataUnit.IDField] = guid;
+                dictionary[FormDataConstants.IDField] = guid;
             }
 
             var newDocument = BsonDocumentConverter.ConvertToBsonDocument(dictionary);
@@ -100,7 +100,7 @@ namespace Gms.Portal.Web.Pages.Management
             if (isNew)
             {
                 recordID = Guid.NewGuid();
-                oldDocument[FormDataUnit.IDField] = BsonValue.Create(recordID);
+                oldDocument[FormDataConstants.IDField] = BsonValue.Create(recordID);
             }
 
             if (isNew)

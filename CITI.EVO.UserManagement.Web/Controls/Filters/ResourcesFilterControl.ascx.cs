@@ -23,7 +23,7 @@ namespace CITI.EVO.UserManagement.Web.Controls.Filters
                             select n).ToList();
 
             var list = projects.Select(n => new KeyValuePair<Guid?, String>(n.ID, n.Name)).ToList();
-            list.Insert(0, new KeyValuePair<Guid?, String>(null, "Global"));
+            list.Insert(0, new KeyValuePair<Guid?, String>(Guid.Empty, "Global"));
 
             cmbProject.BindData(list);
 

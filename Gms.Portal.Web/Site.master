@@ -1,6 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Gms.Portal.Web.Site" %>
 
 <%@ Register TagPrefix="local" TagName="CurrentLoginControl" Src="~/Controls/Common/CurrentLoginControl.ascx" %>
+<%@ Register TagPrefix="local" TagName="CategoriesLinksControl" Src="~/Controls/User/CategoriesLinksControl.ascx" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,7 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <asp:ContentPlaceHolder ID="cphHead" runat="server">
     </asp:ContentPlaceHolder>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server" class="form-horizontal">
@@ -19,15 +20,14 @@
 
         <div id="wrapper">
             <nav class="navbar-default navbar-static-side" role="navigation">
-                <div class="sidebar-collapse">
+                <div class="sidebar-collapse" runat="server" id="menuDiv">
                     <ul class="nav metismenu" id="side-menu">
                         <li class="nav-header">
                             <div class="dropdown profile-element">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <a data-toggle="dropdown" class="dropdown-toggle text-center" href="#">
                                     <span class="clear">
                                         <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo.png" />
-                                        <span class="text-muted text-xs block">Shota Rustaveli National Science Foundation<b class="caret"></b>
-                                        </span>
+                                        <ce:Label runat="server" CssClass="text-muted text-xs block" Text="Shota Rustaveli National Science Foundation" />
                                     </span>
                                 </a>
                             </div>
@@ -35,31 +35,32 @@
                                 <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo_small.png" />
                             </div>
                         </li>
-                        <li class="active">
-                            <a href="#" runat="server"><i class="fa fa-cubes"></i><span class="nav-label">ადმინისტრირება</span></a>
-                            <ul class="nav nav-second-level collapse in">
-                                <li>
-                                    <a href="~/Pages/Management/FormsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ფორმები</span></a>
-                                </li>
-                                <li>
-                                    <a href="~/Pages/Management/LogicsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ლოგიკები</span></a>
-                                </li>
-                                <li>
-                                    <a href="~/Pages/Management/CollectionsList.aspx" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">ცნობარები</span></a>
-                                </li>
-                                <li>
-                                    <a href="/RNSF/Gms/CITI.EVO.UserManagement.Web" runat="server"><span class="fa fa-cubes"></span><span class="nav-label">მომხმარებლები</span></a>
-                                </li>
+                        <li runat="server" id="liAdmin" class="landing_link">
+                            <a href="index.html"><i class="fa fa-th-large"></i><span class="nav-label">
+                                <ce:HtmlLabel runat="server" Text="ადმინისტრირება" />
+                            </span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse" runat="server">
+                                <li runat="server">
+                                    <asp:HyperLink NavigateUrl="~/Pages/Management/CategoriesList.aspx" runat="server"><ce:HtmlLabel runat="server" Text="კატეგორიები"/></asp:HyperLink></li>
+                                <li runat="server">
+                                    <asp:HyperLink NavigateUrl="~/Pages/Management/FormsList.aspx" runat="server">
+                                        <ce:HtmlLabel runat="server" Text="ფორმები"/>
+                                    </asp:HyperLink></li>
+                                <li runat="server">
+                                    <asp:HyperLink NavigateUrl="~/Pages/Management/LogicsList.aspx" runat="server">
+                                        <ce:HtmlLabel runat="server" Text="ლოგიკები"/>
+                                    </asp:HyperLink></li>
+                                <li runat="server">
+                                    <asp:HyperLink NavigateUrl="~/Pages/Management/CollectionsList.aspx" runat="server">
+                                        <ce:HtmlLabel runat="server" Text="ცნობარები"/>
+                                    </asp:HyperLink></li>
+                                <li runat="server">
+                                    <asp:HyperLink NavigateUrl="/RNSF/Gms/CITI.EVO.UserManagement.Web" runat="server">
+                                        <ce:HtmlLabel runat="server" Text="მომხმარებლები"/>
+                                    </asp:HyperLink></li>
                             </ul>
-
                         </li>
-                        <li>
-                            <asp:Repeater runat="server" ID="rptLinks">
-                                <ItemTemplate>
-                                    <a href='<%# GetLinkUrl(Eval("ID")) %>' runat="server"><i class="fa fa-th-large"></i><span class="nav-label"><%# Eval("Name") %></span> </a>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </li>
+                        <local:CategoriesLinksControl runat="server" ID="categoriesLinksControl" />
                     </ul>
                 </div>
             </nav>
@@ -68,25 +69,31 @@
                 <div class="row border-bottom">
                     <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
                         <div class="navbar-header">
-                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-success" href="#"><i class="fa fa-bars"></i></a>
+
                         </div>
                         <ul class="nav navbar-top-links navbar-right">
-                            <li>
-                                <ce:LinkButton runat="server" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
-                                 <i class="fa fa-sign-out"></i>სისტემიდან გასვლა
-                                </ce:LinkButton>
-                            </li>
-                            <li>
+                            <li class="b-r">
                                 <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
                             </li>
-                            <li runat="server">
-                                <ce:LinkButton runat="server" ID="btGeoLang">Geo</ce:LinkButton>
+                            <li>
+                                <ce:LinkButton ID="btnChangePass" ToolTip="პაროლის შეცვლა" runat="server" OnClick="btChangePassword_Click" CssClass="top-memu-link fa fa-key">
+                                    <ce:label runat="server" />
+                                </ce:LinkButton>
+                            </li>
+                            <li class="b-r" style="color: #4d608a;">
+                                <ce:LinkButton runat="server" ToolTip="სისტემიდან გასვლა" CssClass="top-memu-link fa fa-sign-out" OnClick="btLogout_OnClick">
+                                    <ce:label runat="server" />
+                                </ce:LinkButton>
                             </li>
                             <li runat="server">
-                                <ce:LinkButton runat="server" ID="btEngLang">Eng</ce:LinkButton>
+                                <asp:HyperLink runat="server" CssClass="top-memu-lang" ID="btGeoLang"><ce:Label runat="server" Text="Geo"/></asp:HyperLink>
                             </li>
-                            <li runat="server" visible="False">
-                                <ce:LinkButton runat="server" ID="btTranslationMode">Translation Mode</ce:LinkButton>
+                            <li runat="server">
+                                <asp:HyperLink runat="server" CssClass="top-memu-lang" ID="btEngLang"><ce:Label runat="server" Text="Eng"/></asp:HyperLink>
+                            </li>
+                            <li runat="server" id="liTrnMode" visible="False">
+                                <asp:HyperLink runat="server" CssClass="top-memu-langtr" ID="btTranslationMode"><ce:Label runat="server" Text="Translation Mode"/></asp:HyperLink>
                             </li>
                         </ul>
                     </nav>
@@ -94,19 +101,15 @@
                 <div class="wrapper wrapper-content animated fadeInRight">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="m-t-lg">
-                                <h2>
-                                    <asp:Label runat="server" ID="lblLoginName" />
-                                    <asp:Label runat="server" ID="lblFirstName" />
-                                    <asp:Label runat="server" ID="lblLastName" />
-                                </h2>
-                                <asp:ContentPlaceHolder ID="cphContent" runat="server">
-                                </asp:ContentPlaceHolder>
-                            </div>
+                            <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                            </asp:ContentPlaceHolder>
                         </div>
                     </div>
                 </div>
                 <div class="footer">
+                    <div class="pull-right" style="padding-left: 12px; padding-right: 12px;">
+                        <a href="http://evolution.ge" target="_blank">Evolution.ge</a>
+                    </div>
                     <div class="pull-right">
                         Consulting & <strong>IT</strong> Innovations
                     </div>
@@ -133,15 +136,30 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('.table').DataTable();
+                $('.tableStd').DataTable({
+                    dom: '<"left"f>rt<"bottom"lpb>'
+                });
+
+                $('.tableIntern').DataTable({
+                    dom: 'rt'
+                });
 
                 $('.clockpicker').clockpicker();
 
-                $('.chosen-select').chosen();
+                $('.chosen-select').chosen({
+                     width: "100%"
+                });
 
                 $(".intSpinEdit").TouchSpin({
                     min: 0,
                     max: 65535,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+                $(".elementSizeSpinEdit").TouchSpin({
+                    min: 1,
+                    max: 12,
                     buttondown_class: 'btn btn-white',
                     buttonup_class: 'btn btn-white'
                 });
@@ -153,6 +171,8 @@
                     buttonup_class: 'btn btn-white'
                 });
 
+                $.fn.datepicker.defaults.format = "dd.mm.yyyy";
+
                 $('.input-group.date').datepicker({
                     todayBtn: "linked",
                     keyboardNavigation: false,
@@ -160,7 +180,32 @@
                     calendarWeeks: true,
                     autoclose: true
                 });
+
+                $('.input-daterange').datepicker({
+                    keyboardNavigation: false,
+                    forceParse: false,
+                    autoclose: true
+                });
             });
+
+            function onSave() {
+                var val = Page_ClientValidate();
+
+                if (!val) {
+                    for (var i = 0; i < Page_Validators.length; i++) {
+                        var validator = Page_Validators[i];
+                        var elemnId = validator.controltovalidate;
+
+                        $("#" + elemnId).css("background-color", "white");
+
+                        if (!validator.isvalid) {
+                            $("#" + elemnId).css("background-color", "rgb(255, 184, 184)");
+                        }
+                    }
+                }
+
+                return val;
+            }
         </script>
     </form>
 </body>

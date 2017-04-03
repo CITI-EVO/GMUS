@@ -236,7 +236,8 @@ namespace CITI.EVO.Tools.ExpressionEngine
 							return DateTime.DaysInMonth(year, month);
 						}
 					}
-				case "getyears":
+                case "getyear":
+                case "getyears":
 					{
 						if (args.Count == 0)
 							return DateTime.Now.Year;
@@ -244,7 +245,8 @@ namespace CITI.EVO.Tools.ExpressionEngine
 						var dateValue = ExpressionHelper.GetDateTime(args[0]);
 						return dateValue.Year;
 					}
-				case "getmonths":
+                case "getmonth":
+                case "getmonths":
 					{
 						if (args.Count == 0)
 							return DateTime.Now.Month;
@@ -252,7 +254,8 @@ namespace CITI.EVO.Tools.ExpressionEngine
 						var dateValue = ExpressionHelper.GetDateTime(args[0]);
 						return dateValue.Month;
 					}
-				case "getdays":
+                case "getday":
+                case "getdays":
 				case "getdayofmonth":
 					{
 						if (args.Count == 0)

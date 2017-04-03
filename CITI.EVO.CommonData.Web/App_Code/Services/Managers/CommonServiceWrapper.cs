@@ -50,7 +50,19 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 			return CommonDataManager.GetLanguages();
 		}
 
-		[RpcAllowRemoteCall]
+        [RpcAllowRemoteCall]
+        public static TranslationContract GetTranslation(String moduleName, String languagePair, String trnKey)
+        {
+            return CommonDataManager.GetTranslation(moduleName, languagePair, trnKey);
+        }
+
+        [RpcAllowRemoteCall]
+        public static void SetTranslation(String moduleName, String languagePair, String trnKey, TranslationContract contract)
+        {
+            CommonDataManager.SetTranslation(moduleName, languagePair, trnKey, contract);
+        }
+
+        [RpcAllowRemoteCall]
 		public static String GetTranslatedText(String moduleName, String trnKey, String languagePair, String defaultText)
 		{
 			return CommonDataManager.GetTranslatedText(moduleName, trnKey, languagePair, defaultText);

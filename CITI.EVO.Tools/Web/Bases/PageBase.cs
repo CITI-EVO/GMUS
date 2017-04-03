@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using AjaxControlToolkit;
 using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
@@ -12,203 +13,236 @@ using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.Web.Bases
 {
-	public class PageBase : Page
-	{
-		private ILookup<String, Control> _controlsCache;
+    public class PageBase : Page
+    {
+        private ILookup<String, Control> _controlsCache;
 
-		public new MasterPageBase Master
-		{
-			get { return base.Master as MasterPageBase; }
-		}
+        public MasterPageBase BaseMaster
+        {
+            get { return base.Master as MasterPageBase; }
+        }
 
-		public String PageTitle
-		{
-			get { return Title; }
-			set { Title = value; }
-		}
+        public String PageTitle
+        {
+            get { return Title; }
+            set { Title = value; }
+        }
 
-		private Control postBackControl;
-		public Control PostBackControl
-		{
-			get
-			{
-				postBackControl = (postBackControl ?? GetPostBackControl());
-				return postBackControl;
-			}
-		}
+        private Control _postBackControl;
+        public Control PostBackControl
+        {
+            get
+            {
+                if (BaseMaster != null)
+                    return BaseMaster.PostBackControl;
 
-		private UrlHelper requestUrl;
-		public UrlHelper RequestUrl
-		{
-			get
-			{
-				if (Master != null)
-					return Master.RequestUrl;
+                _postBackControl = (_postBackControl ?? GetPostBackControl());
+                return _postBackControl;
+            }
+        }
 
-				requestUrl = (requestUrl ?? Request.RequestUrl());
-				return requestUrl;
-			}
-		}
+        private UrlHelper _requestUrl;
+        public UrlHelper RequestUrl
+        {
+            get
+            {
+                if (Master != null)
+                    return BaseMaster.RequestUrl;
 
-		public NameObjectCollection PageSession
-		{
-			get { return InitPageSessionData(); }
-		}
+                _requestUrl = (_requestUrl ?? Request.RequestUrl());
+                return _requestUrl;
+            }
+        }
 
-		protected override void OnInit(EventArgs e)
-		{
-			if (base.Master == null)
-				UmUtil.Instance.Login();
+        public NameObjectCollection PageSession
+        {
+            get { return InitPageSessionData(); }
+        }
 
-			base.OnInit(e);
-		}
+        protected override void OnInit(EventArgs e)
+        {
+            if (base.Master == null)
+                UmUtil.Instance.Login();
 
-		protected override Object LoadPageStateFromPersistenceMedium()
-		{
-			var compress = ConfigurationManager.AppSettings["PageSettings:CompressViewState"];
-			compress = (compress ?? String.Empty).ToLower();
+            base.OnInit(e);
+        }
 
-			if (compress != "lz" && compress != "def")
-			{
-				return base.LoadPageStateFromPersistenceMedium();
-			}
+        protected override void OnLoad(EventArgs e)
+        {
+            if (BaseMaster == null)
+                DisplayPopupsIfNeeded();
 
-			var viewState = Request.Form["__VSTATE"];
-			var bytes = Convert.FromBase64String(viewState);
+            base.OnLoad(e);
+        }
 
-			var formatter = new LosFormatter();
+        protected override Object LoadPageStateFromPersistenceMedium()
+        {
+            var compress = ConfigurationManager.AppSettings["PageSettings:CompressViewState"];
+            compress = (compress ?? String.Empty).ToLower();
 
-			switch (compress.ToLower())
-			{
-				case "lz":
-					bytes = bytes.DecompressLZ();
-					break;
-				case "def":
-					bytes = bytes.DecompressDef();
-					break;
-			}
+            if (compress != "lz" && compress != "def")
+            {
+                return base.LoadPageStateFromPersistenceMedium();
+            }
 
-			var pageState = formatter.Deserialize(Convert.ToBase64String(bytes));
-			return pageState;
-		}
+            var viewState = Request.Form["__VSTATE"];
+            var bytes = Convert.FromBase64String(viewState);
 
-		protected override void SavePageStateToPersistenceMedium(Object viewState)
-		{
-			var compress = ConfigurationManager.AppSettings["PageSettings:CompressViewState"];
-			compress = (compress ?? String.Empty).ToLower();
+            var formatter = new LosFormatter();
 
-			if (compress != "lz" && compress != "def")
-			{
-				base.SavePageStateToPersistenceMedium(viewState);
-				return;
-			}
+            switch (compress.ToLower())
+            {
+                case "lz":
+                    bytes = bytes.DecompressLZ();
+                    break;
+                case "def":
+                    bytes = bytes.DecompressDef();
+                    break;
+            }
 
-			using (var writer = new StringWriter())
-			{
-				var formatter = new LosFormatter();
-				formatter.Serialize(writer, viewState);
+            var pageState = formatter.Deserialize(Convert.ToBase64String(bytes));
+            return pageState;
+        }
 
-				var viewStateString = writer.ToString();
-				var bytes = Convert.FromBase64String(viewStateString);
+        protected override void SavePageStateToPersistenceMedium(Object viewState)
+        {
+            var compress = ConfigurationManager.AppSettings["PageSettings:CompressViewState"];
+            compress = (compress ?? String.Empty).ToLower();
 
-				switch (compress.ToLower())
-				{
-					case "lz":
-						bytes = bytes.CompressLZ();
-						break;
-					case "def":
-						bytes = bytes.CompressDef();
-						break;
-				}
+            if (compress != "lz" && compress != "def")
+            {
+                base.SavePageStateToPersistenceMedium(viewState);
+                return;
+            }
 
-				ClientScript.RegisterHiddenField("__VSTATE", Convert.ToBase64String(bytes));
-			}
-		}
+            using (var writer = new StringWriter())
+            {
+                var formatter = new LosFormatter();
+                formatter.Serialize(writer, viewState);
 
-		public Control FindControlRec(String controlID)
-		{
-			if (_controlsCache == null)
-			{
-				var allControls = UserInterfaceUtil.TraverseChildren(this);
-				_controlsCache = allControls.ToLookup(n => n.ID);
-			}
+                var viewStateString = writer.ToString();
+                var bytes = Convert.FromBase64String(viewStateString);
 
-			var result = _controlsCache[controlID];
-			return result.FirstOrDefault();
-		}
+                switch (compress.ToLower())
+                {
+                    case "lz":
+                        bytes = bytes.CompressLZ();
+                        break;
+                    case "def":
+                        bytes = bytes.CompressDef();
+                        break;
+                }
 
-		private NameObjectCollection InitPageSessionData()
-		{
-			var sessinID = InitPageSessionID();
+                ClientScript.RegisterHiddenField("__VSTATE", Convert.ToBase64String(bytes));
+            }
+        }
 
-			var nameObjectCollection = Session[sessinID] as NameObjectCollection;
-			if (nameObjectCollection == null)
-			{
-				nameObjectCollection = new NameObjectCollection();
-				Session[sessinID] = nameObjectCollection;
-			}
+        public Control FindControlRec(String controlID)
+        {
+            if (_controlsCache == null)
+            {
+                var allControls = UserInterfaceUtil.TraverseChildren(this);
+                _controlsCache = allControls.ToLookup(n => n.ID);
+            }
 
-			return nameObjectCollection;
-		}
+            var result = _controlsCache[controlID];
+            return result.FirstOrDefault();
+        }
 
-		private Control GetPostBackControl()
-		{
-			Control control = null;
-			var request = Page.Request;
+        protected void DisplayPopupsIfNeeded()
+        {
+            var enabled = DataConverter.ToNullableBool(ConfigurationManager.AppSettings["PopupsAutoControl"]);
+            if (!enabled.GetValueOrDefault())
+                return;
 
-			var ctrlName = request.Params["__EVENTTARGET"];
-			if (!String.IsNullOrEmpty(ctrlName))
-			{
-				control = Page.FindControl(ctrlName);
-			}
-			else
-			{
-				//handle the Button control postbacks
-				foreach (String ctl in request.Form)
-				{
-					var ctrl = Page.FindControl(ctl);
-					if (ctrl is Button)
-					{
-						control = ctrl;
-						break;
-					}
-				}
-			}
+            var target = PostBackControl;
+            if (target == null)
+                return;
 
-			//handle the ImageButton control postbacks
-			if (control == null)
-			{
-				for (int i = 0; i < request.Form.Count; i++)
-				{
-					var key = request.Form.Keys[i];
-					if (!String.IsNullOrWhiteSpace(key) && (key.EndsWith(".x") || key.EndsWith(".y")))
-					{
-						control = Page.FindControl(request.Form.Keys[i].Substring(0, key.Length - 2));
-						return control;
-					}
-				}
-			}
+            var root = ((Control)base.Master ?? this);
 
-			return control;
-		}
+            var popups = UserInterfaceUtil.TraverseChildren(root).OfType<ModalPopupExtender>();
+            var parents = UserInterfaceUtil.TraverseParents(target).OfType<Panel>();
 
-		private String InitPageSessionID()
-		{
-			var sessinID = Convert.ToString(RequestUrl["PageSession"]);
-			if (String.IsNullOrWhiteSpace(sessinID))
-			{
-				//throw new Exception("Invalid page session ID");
+            var @set = parents.Select(n => n.ID).ToHashSet();
+            var pops = popups.Where(n => @set.Contains(n.PopupControlID));
 
-				sessinID = Convert.ToString(ViewState["PageSession"]);
-				if (String.IsNullOrWhiteSpace(sessinID))
-				{
-					sessinID = Convert.ToString(Guid.NewGuid());
-				}
-			}
+            foreach (var item in pops)
+                item.Show();
+        }
 
-			ViewState["PageSession"] = sessinID;
+        private NameObjectCollection InitPageSessionData()
+        {
+            var sessinID = InitPageSessionID();
 
-			return sessinID;
-		}
-	}
+            var nameObjectCollection = Session[sessinID] as NameObjectCollection;
+            if (nameObjectCollection == null)
+            {
+                nameObjectCollection = new NameObjectCollection();
+                Session[sessinID] = nameObjectCollection;
+            }
+
+            return nameObjectCollection;
+        }
+
+        private Control GetPostBackControl()
+        {
+            Control control = null;
+            var request = Page.Request;
+
+            var ctrlName = request.Params["__EVENTTARGET"];
+            if (!String.IsNullOrEmpty(ctrlName))
+            {
+                control = Page.FindControl(ctrlName);
+            }
+            else
+            {
+                //handle the Button control postbacks
+                foreach (String ctl in request.Form)
+                {
+                    var ctrl = Page.FindControl(ctl);
+                    if (ctrl is Button)
+                    {
+                        control = ctrl;
+                        break;
+                    }
+                }
+            }
+
+            //handle the ImageButton control postbacks
+            if (control == null)
+            {
+                for (int i = 0; i < request.Form.Count; i++)
+                {
+                    var key = request.Form.Keys[i];
+                    if (!String.IsNullOrWhiteSpace(key) && (key.EndsWith(".x") || key.EndsWith(".y")))
+                    {
+                        control = Page.FindControl(request.Form.Keys[i].Substring(0, key.Length - 2));
+                        return control;
+                    }
+                }
+            }
+
+            return control;
+        }
+
+        private String InitPageSessionID()
+        {
+            var sessinID = Convert.ToString(RequestUrl["PageSession"]);
+            if (String.IsNullOrWhiteSpace(sessinID))
+            {
+                //throw new Exception("Invalid page session ID");
+
+                sessinID = Convert.ToString(ViewState["PageSession"]);
+                if (String.IsNullOrWhiteSpace(sessinID))
+                {
+                    sessinID = Convert.ToString(Guid.NewGuid());
+                }
+            }
+
+            ViewState["PageSession"] = sessinID;
+
+            return sessinID;
+        }
+    }
 }

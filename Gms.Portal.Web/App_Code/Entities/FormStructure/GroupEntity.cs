@@ -9,5 +9,6 @@ namespace Gms.Portal.Web.Entities.FormStructure
     {
         [XmlElement("Size")]
         public int? Size { get; set; }
+
     }
 }

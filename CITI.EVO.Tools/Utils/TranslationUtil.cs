@@ -22,18 +22,19 @@ namespace CITI.EVO.Tools.Utils
     public class TranslationUtil
     {
 
-        private const String trnKeyKey = "TrnKey";
-        private const String defaultTextKey = "DefaultText";
-        private const String trnEditPageKey = "TrnEditPage";
+        private const String TrnKeyKey = "TrnKey";
+        private const String DefaultTextKey = "DefaultText";
+        private const String TrnEditPageKey = "TrnEditPage";
 
-        private const String trnCacheKey = "$[TranslationUtil_Translations]";
+        private const String TrnCacheKey = "$[TranslationUtil_Translations]";
 
-        private const String requestTranslationModeKey = "translationMode";
-        private const String sessionTranslationModeKey = "TranslationUtil_translationMode";
+        public const String RequestTranslationModeKey = "translationMode";
 
-        private const String contextEnableTranslationKey = "TranslationUtil_enableTranslation";
+        private const String SessionTranslationModeKey = "TranslationUtil_translationMode";
 
-        private const String editLinkFormat = @"[<a target='_blank' href='{0}?moduleName={1}&trnKey={2}&languagePair={3}'>TRN</a>]";
+        private const String ContextEnableTranslationKey = "TranslationUtil_enableTranslation";
+
+        private const String EditLinkFormat = @"[<a target='_blank' href='{0}?moduleName={1}&trnKey={2}&languagePair={3}'>TRN</a>]";
 
         public static bool TranslationMode
         {
@@ -43,7 +44,8 @@ namespace CITI.EVO.Tools.Utils
                 var context = HttpContext.Current;
                 if (context != null)
                 {
-                    return (context.Session[sessionTranslationModeKey] != null || context.Request[requestTranslationModeKey] != null);
+                    var urlHelper = HttpServerUtil.RequestUrl;
+                    return (context.Session[SessionTranslationModeKey] != null || urlHelper[RequestTranslationModeKey] != null);
                 }
 
                 return false;
@@ -55,13 +57,9 @@ namespace CITI.EVO.Tools.Utils
                 if (context != null)
                 {
                     if (value)
-                    {
-                        context.Session[sessionTranslationModeKey] = "ON";
-                    }
+                        context.Session[SessionTranslationModeKey] = "ON";
                     else
-                    {
-                        context.Session[sessionTranslationModeKey] = null;
-                    }
+                        context.Session[SessionTranslationModeKey] = null;
                 }
             }
         }
@@ -73,13 +71,13 @@ namespace CITI.EVO.Tools.Utils
             {
                 var context = HttpContext.Current;
 
-                var value = DataConverter.ToNullableBool(context.Items[contextEnableTranslationKey]);
+                var value = DataConverter.ToNullableBool(context.Items[ContextEnableTranslationKey]);
                 if (value == null)
                 {
                     value = DataConverter.ToNullableBool(ConfigurationManager.AppSettings["EnableTranslations"]);
                     value = value.GetValueOrDefault(true);
 
-                    context.Items[contextEnableTranslationKey] = value;
+                    context.Items[ContextEnableTranslationKey] = value;
                 }
 
                 return value.GetValueOrDefault();
@@ -92,7 +90,7 @@ namespace CITI.EVO.Tools.Utils
             if (context != null)
             {
                 var cache = context.Cache;
-                cache.Remove(trnCacheKey);
+                cache.Remove(TrnCacheKey);
             }
         }
 
@@ -149,9 +147,38 @@ namespace CITI.EVO.Tools.Utils
             return defaultText;
         }
 
+
+        public static void SetTranslatedText(String trnKey, String defaultText, String languagePair, String translatedText)
+        {
+            if (!EnableTranslation)
+            {
+                return;
+            }
+
+            if (String.IsNullOrWhiteSpace(trnKey))
+            {
+                return;
+            }
+
+            var moduleName = PermissionUtil.ModuleName;
+            var cacheKey = String.Format("{0}|{1}|{2}", moduleName, trnKey, languagePair);
+
+            var trnText = GetCacheTranslation(cacheKey);
+            if (!String.IsNullOrWhiteSpace(trnText))
+            {
+                SetCacheTranslation(cacheKey, translatedText);
+            }
+
+            trnText = CommonProxy.GetTranslatedText(moduleName, languagePair, trnKey, defaultText);
+            if (!String.IsNullOrWhiteSpace(trnText))
+            {
+                CommonProxy.SetTranslatedText(moduleName, languagePair, trnKey, translatedText);
+            }
+        }
+
         private static void SetCacheTranslation(String cacheKey, String translateText)
         {
-            var cache = CommonObjectCache.InitObjectCache(trnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
             SetCacheTranslation(cache, cacheKey, translateText);
         }
         private static void SetCacheTranslation(IDictionary<String, String> cache, String cacheKey, String translateText)
@@ -167,7 +194,7 @@ namespace CITI.EVO.Tools.Utils
 
         private static String GetCacheTranslation(String cacheKey)
         {
-            var cache = CommonObjectCache.InitObjectCache(trnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
             return GetCacheTranslation(cache, cacheKey);
         }
         private static String GetCacheTranslation(IDictionary<String, String> cache, String cacheKey)
@@ -186,7 +213,7 @@ namespace CITI.EVO.Tools.Utils
 
         private static bool ContainsCacheTranslation(String cacheKey)
         {
-            var cache = CommonObjectCache.InitObjectCache(trnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
             return ContainsCacheTranslation(cache, cacheKey);
         }
         private static bool ContainsCacheTranslation(IDictionary<String, String> cache, String cacheKey)
@@ -207,7 +234,7 @@ namespace CITI.EVO.Tools.Utils
             var languagePair = Thread.CurrentThread.CurrentCulture.Name;
 
 
-            var cache = CommonObjectCache.InitObjectCache(trnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
             var controls = UserInterfaceUtil.TraverseChildren(control);
 
             var query = from ctl in controls
@@ -322,9 +349,9 @@ namespace CITI.EVO.Tools.Utils
         }
         public static String GetTranslationLink(String moduleName, String trnKey, String languagePair)
         {
-            var trnEditPage = ConfigurationManager.AppSettings[trnEditPageKey];
+            var trnEditPage = ConfigurationManager.AppSettings[TrnEditPageKey];
 
-            var editLink = String.Format(editLinkFormat, trnEditPage, moduleName, trnKey, languagePair);
+            var editLink = String.Format(EditLinkFormat, trnEditPage, moduleName, trnKey, languagePair);
             return editLink;
         }
     }

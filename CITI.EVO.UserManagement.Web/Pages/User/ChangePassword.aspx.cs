@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Web;
+using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
+using CITI.EVO.Tools.Utils;
+using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Svc.Enums;
+using CITI.EVO.UserManagement.Web.Bases;
+using NHibernate.Linq;
 
 namespace CITI.EVO.UserManagement.Web.Pages.User
 {
-    public partial class ChangePassword : System.Web.UI.Page
+    public partial class ChangePassword : BasePage
     {
         private UmUtil instance;
         public UmUtil Instance
@@ -17,6 +23,17 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                 instance = (instance ?? UmUtil.Instance);
                 return instance;
             }
+        }
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            var urlHelper = new UrlHelper(Request.Url);
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "en-US";
+            btEngLang.NavigateUrl = urlHelper.ToEncodedUrl();
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "ka-GE";
+            btGeoLang.NavigateUrl = urlHelper.ToEncodedUrl();
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -38,25 +55,59 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
             }
 
             var model = changePassword.Model;
-
             if (Instance.CurrentUser.Password != model.OldPassword)
             {
                 lstErrorMessages.Text = "ძველი პაროლი არასწორია";
                 return;
             }
 
-            if (model.NewPassword != model.ConfirmPassword)
+            if (String.IsNullOrWhiteSpace(model.NewPassword))
             {
-                lstErrorMessages.Text = "ახალი პაროლი და ახალი პაროლი გამეორებით არ ემთხვევა ერთმანეთს";
+                lstErrorMessages.Text = "გთხოვთ შეიყვანეთ პაროლი";
                 return;
             }
 
-            var result = Instance.ChangePassword(model.NewPassword, model.OldPassword);
-            if (result != PasswordChangeResultEnum.Success)
+            if (model.NewPassword != model.ConfirmPassword)
             {
-                lstErrorMessages.Text = "ახალი ან ძველი პაროლი არასწორია";
+                lstErrorMessages.Text = "პაროლები არ ემთხვევა ერთმანეთს";
                 return;
             }
+
+
+            var user = (from n in HbSession.Query<UM_User>()
+                        where n.DateDeleted == null &&
+                              n.ID == Instance.CurrentUser.ID
+                        select n).FirstOrDefault();
+
+            if (user == null)
+            {
+                lstErrorMessages.Text = "მომხმარებელი ვერ მოიძებნა";
+                return;
+            }
+
+            user.Password = model.NewPassword;
+
+            if (!String.IsNullOrWhiteSpace(model.Email))
+            {
+                var emailUser = (from n in HbSession.Query<UM_User>()
+                                 where n.DateDeleted == null &&
+                                       n.Email == model.Email
+                                 select n).FirstOrDefault();
+
+                if (emailUser != null && emailUser.ID != Instance.CurrentUser.ID)
+                {
+                    lstErrorMessages.Text = "მითითებული ელ-ფოსტა უკვე რეგისტრირებულია";
+                    return;
+                }
+
+                user.Email = model.Email;
+            }
+
+
+            HbSession.SubmitUpdate(user);
+
+            Instance.Logout();
+            Instance.Login(user.LoginName, model.NewPassword);
 
             var redirectUrl = GetReturnUrl();
             if (String.IsNullOrEmpty(redirectUrl))

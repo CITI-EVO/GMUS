@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Gms.Portal.DAL"
+                   namespace="Gms.Portal.DAL.Domain">
+
+  <class name="GM_Category" table="GM_Categories">
+    <id name="ID">
+      <generator class="assigned" />
+    </id>
+    <property name="ParentID" />
+    <property name="Name" />
+    <property name="OrderIndex" />
+    <property name="Visible" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <bag name="Children">
+      <key column="ParentID" />
+      <one-to-many class="GM_Category" />
+    </bag>
+
+    <bag name="Forms">
+      <key column="CategoryID" />
+      <one-to-many class="GM_Form" />
+    </bag>
+  </class>
+</hibernate-mapping>

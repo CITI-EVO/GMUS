@@ -16,10 +16,21 @@ namespace CITI.EVO.UserManagement.Web.Controls
         protected void Page_Load(object sender, EventArgs e)
         {
             var groups = (from n in HbSession.Query<UM_Group>()
-                          where Enumerable.Contains(ConfigUtil.UserRegisterGroupID, n.ID)
+                          where n.DateDeleted == null &&
+                                Enumerable.Contains(ConfigUtil.UserRegisterGroupID, n.ID)
                           select n).ToList();
 
             BindData(cbxGroups, groups);
+
+            pnlGroup.Visible = true;
+
+            if (groups.Count == 1)
+            {
+                var group = groups[0];
+
+                pnlGroup.Visible = false;
+                cbxGroups.TrySetSelectedValue(group.ID);
+            }
         }
 
         protected void BindData(ListControl control, IEnumerable source)

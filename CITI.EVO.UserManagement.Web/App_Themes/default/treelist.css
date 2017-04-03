@@ -1,0 +1,14 @@
+.dxtlControl a {
+    color: white;
+}
+
+.dxtlControl
+{
+	cursor: default;
+	font: 14px Tahoma, Geneva, sans-serif;
+	color: black;
+	border: 1px none #9f9f9f;
+}
+.user-title {
+    color: #ed5565;
+}

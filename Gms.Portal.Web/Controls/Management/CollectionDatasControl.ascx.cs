@@ -28,7 +28,7 @@ namespace Gms.Portal.Web.Controls.Management
             foreach (var pair in model.Fields)
             {
                 var dataField = Convert.ToString(pair.Key);
-                var visible = (dataField != FormDataUnit.IDField);
+                var visible = (dataField != FormDataConstants.IDField);
 
                 if (existFields.Contains(dataField))
                     continue;

@@ -5,13 +5,15 @@
 
   <class name="GM_Form" table="GM_Forms">
     <id name="ID">
-      <generator class="guid" />
+      <generator class="assigned" />
     </id>
     <property name="Name" />
     <property name="Number" />
     <property name="OrderIndex" />
     <property name="Visible" />
+    <property name="UserMode" />
     <property name="XmlData" />
+    <property name="CategoryID" />
     <property name="DateCreated" />
     <property name="DateChanged" />
     <property name="DateDeleted" />

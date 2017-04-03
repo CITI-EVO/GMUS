@@ -78,14 +78,16 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             contract.ResourceID = entity.ResourceID;
             contract.ResourcePath = entity.Resource.FullPath();
             contract.RuleValue = (RulePermissionsEnum)entity.RuleValue;
-            contract.PermissionParameter = entity.PermissionParameters.ToDictionary(k => k.Name, v => v.Value);
+
+            if (entity.PermissionParameters != null)
+                contract.PermissionParameter = entity.PermissionParameters.ToDictionary(k => k.Name, v => v.Value);
 
             return contract;
         }
 
         public static String FullPath(this UM_Resource resource)
         {
-			var list = new List<String>();
+            var list = new List<String>();
 
             var parent = resource;
             while (parent != null)
@@ -131,7 +133,7 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             contract.PermissionID = entity.PermissionID;
             contract.Name = entity.Name;
             contract.Value = entity.Value;
-            contract.DateCreated = contract.DateCreated;
+            contract.DateCreated = entity.DateCreated;
             contract.DateChanged = entity.DateChanged;
             contract.DateDeleted = entity.DateDeleted;
 
@@ -147,12 +149,12 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             }
 
             var contract = new GroupUserContract();
+            contract.ID = entity.ID;
+            contract.GroupID = entity.GroupID.GetValueOrDefault();
+            contract.UserID = entity.UserID.GetValueOrDefault();
             contract.DateChanged = entity.DateChanged;
             contract.DateCreated = entity.DateCreated;
             contract.DateDeleted = entity.DateDeleted;
-            contract.GroupID = entity.GroupID;
-            contract.ID = entity.ID;
-            contract.UserID = entity.UserID;
 
             return contract;
         }
@@ -165,12 +167,12 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             }
 
             var contract = new ProjectContract();
-            contract.DateChanged = entity.DateChanged;
-            contract.DateCreated = entity.DateCreated;
-            contract.DateDeleted = entity.DateDeleted;
             contract.ID = entity.ID;
             contract.Name = entity.Name;
             contract.IsActive = entity.IsActive;
+            contract.DateChanged = entity.DateChanged;
+            contract.DateCreated = entity.DateCreated;
+            contract.DateDeleted = entity.DateDeleted;
 
             return contract;
         }
@@ -184,17 +186,17 @@ namespace CITI.EVO.UserManagement.Web.Extensions
 
 
             var contract = new RuleContract();
+            contract.ID = entity.ID;
+            contract.Name = entity.Name;
+            contract.ProjectID = entity.ProjectID;
+            contract.AccessLevel = entity.AccessLevel;
+            contract.CanAdd = entity.CanAdd;
+            contract.CanEdit = entity.CanEdit;
+            contract.CanView = entity.CanView;
+            contract.CanDelete = entity.CanDelete;
             contract.DateChanged = entity.DateChanged;
             contract.DateCreated = entity.DateCreated;
             contract.DateDeleted = entity.DateDeleted;
-            contract.ID = entity.ID;
-            contract.ProjectID = entity.ProjectID;
-            contract.Name = entity.Name;
-            contract.AccessLevel = entity.AccessLevel;
-            contract.CanAdd = entity.CanAdd;
-            contract.CanDelete = entity.CanDelete;
-            contract.CanEdit = entity.CanEdit;
-            contract.CanView = entity.CanView;
 
             return contract;
         }
@@ -208,20 +210,20 @@ namespace CITI.EVO.UserManagement.Web.Extensions
 
             var contract = new UserContract();
 
-            contract.Address = entity.Address;
-            contract.DateChanged = entity.DateChanged;
-            contract.DateCreated = entity.DateCreated;
-            contract.DateDeleted = entity.DateDeleted;
-            contract.Email = entity.Email;
-            contract.FirstName = entity.FirstName;
             contract.ID = entity.ID;
-            contract.LastName = entity.LastName;
+            contract.Address = entity.Address;
+            contract.Email = entity.Email;
             contract.LoginName = entity.LoginName;
+            contract.FirstName = entity.FirstName;
+            contract.LastName = entity.LastName;
             contract.Password = entity.Password;
             contract.IsActive = entity.IsActive;
             contract.IsSuperAdmin = entity.IsSuperAdmin;
-            contract.PasswordExpirationDate = entity.PasswordExpirationDate;
             contract.UserCategoryID = entity.UserCategoryID;
+            contract.PasswordExpirationDate = entity.PasswordExpirationDate;
+            contract.DateChanged = entity.DateChanged;
+            contract.DateCreated = entity.DateCreated;
+            contract.DateDeleted = entity.DateDeleted;
 
             return contract;
         }
@@ -237,8 +239,8 @@ namespace CITI.EVO.UserManagement.Web.Extensions
 
             contract.ID = entity.ID;
             contract.Text = entity.Text;
-            contract.ObjectID = entity.ObjectID;
             contract.Type = entity.Type;
+            contract.ObjectID = entity.ObjectID;
             contract.DateCreated = entity.DateCreated;
             contract.DateChanged = entity.DateChanged;
             contract.DateDeleted = entity.DateDeleted;
@@ -257,8 +259,8 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             var contract = new MessageViewerContract();
 
             contract.ID = entity.ID;
-            contract.MessageID = entity.MessageID;
             contract.UserID = entity.UserID;
+            contract.MessageID = entity.MessageID;
             contract.DateCreated = entity.DateCreated;
             contract.DateChanged = entity.DateChanged;
             contract.DateDeleted = entity.DateDeleted;

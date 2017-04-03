@@ -167,7 +167,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             HbSession.SubmitChanges(attributeValue);
 
-            upnlGroupAttributes.Update();
             mpeGroupAttributes.Show();
         }
         protected void btViewAttributeOK_Click(object sender, EventArgs e)
@@ -199,13 +198,16 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
         protected void groupsControl_OnDelete(object sender, GenericEventArgs<Guid> e)
         {
-            var group = HbSession.Query<UM_Group>().FirstOrDefault(n => n.ID == e.Value);
-            if (group != null)
+            using (var transaction = HbSession.BeginTransaction())
             {
-                using (var transaction = HbSession.BeginTransaction())
+                var group = HbSession.Query<UM_Group>().FirstOrDefault(n => n.ID == e.Value);
+                if (group != null)
                 {
-                    group.DateDeleted = DateTime.Now;
-                    HbSession.Update(group);
+                    if (group.DateDeleted == null)
+                    {
+                        group.DateDeleted = DateTime.Now;
+                        HbSession.Update(group);
+                    }
 
                     foreach (var item in group.GroupUsers)
                     {
@@ -219,14 +221,18 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                     transaction.Commit();
                 }
 
-                return;
-            }
 
-            var groupUser = HbSession.Query<UM_GroupUser>().FirstOrDefault(n => n.ID == e.Value);
-            if (groupUser != null)
-            {
-                groupUser.DateDeleted = DateTime.Now;
-                HbSession.Update(groupUser);
+                var groupUser = HbSession.Query<UM_GroupUser>().FirstOrDefault(n => n.ID == e.Value);
+                if (groupUser != null)
+                {
+                    if (groupUser.DateDeleted == null)
+                    {
+                        groupUser.DateDeleted = DateTime.Now;
+                        HbSession.Update(groupUser);
+                    }
+
+                    transaction.Commit();
+                }
             }
 
             FillGroupsTree();
@@ -290,7 +296,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             };
 
             selectUserControl.Model = model;
-            mpeGroup.Show();
+            mpeUsers.Show();
         }
 
         protected void groupsControl_OnSetAttribute(object sender, GenericEventArgs<Guid> e)
@@ -345,10 +351,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             mpeUsers.Show();
         }
 
+        protected void objectAttributeControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeGroupAttributes.Show();
+        }
+
         #endregion
 
         #region Methods
-
 
         protected void FillGroupsTree()
         {
@@ -368,5 +378,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         }
 
         #endregion
+
+
     }
 }

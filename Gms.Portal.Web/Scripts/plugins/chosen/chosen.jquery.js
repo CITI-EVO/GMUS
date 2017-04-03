@@ -564,6 +564,7 @@
             if (this.is_rtl) {
                 container_classes.push("chosen-rtl");
             }
+			
             container_props = {
                 'class': container_classes.join(' '),
                 'style': "width: " + (this.container_width()) + ";",

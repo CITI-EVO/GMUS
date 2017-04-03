@@ -28,15 +28,11 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case ActionTypes.Function:
 				{
 					if (Params == null || Params.Count == 0)
-					{
 						return String.Format("{0}()", Action);
-					}
 
 					var strParams = new String[Params.Count];
 					for (int i = 0; i < Params.Count; i++)
-					{
 						strParams[i] = Params[i].ToString();
-					}
 
 					var args = String.Join(", ", strParams);
 					return String.Format("{0}({1})", Action, args);
@@ -44,9 +40,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case ActionTypes.Operator:
 				{
 					if (!ExpressionHelper.IsEmptyOrSpace(Action))
-					{
 						return String.Format("{0} {1} {2}", Params[0], Action, Params[1]);
-					}
 
 					return Convert.ToString(Value);
 				}

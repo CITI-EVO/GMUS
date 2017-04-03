@@ -7,7 +7,7 @@
         <ce:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus"/>
     </div>
     <div>
-        <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
+        <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>

@@ -4,12 +4,9 @@
 
 <local:HiddenFieldValueControl runat="server" ID="hdID" Property="{AttributeSchemaModel.ID=Value}" />
 <local:HiddenFieldValueControl runat="server" ID="hdProjectID" Property="{AttributeSchemaModel.ProjectID=Value}" />
-
-<div class="box">
-    <h3>
-        <asp:Label runat="server">სახელი</asp:Label>
-    </h3>
-    <div class="box_body">
-        <asp:TextBox ID="tbxName" runat="server" Property="{AttributeSchemaModel.Name=Text}"></asp:TextBox>
+<div class="form-group">
+    <label class="col-sm-2 font-normal">სახელი</label>
+    <div class="col-sm-12">
+        <asp:TextBox ID="tbxName" runat="server" class="form-control" Property="{AttributeSchemaModel.Name=Text}"></asp:TextBox>
     </div>
 </div>

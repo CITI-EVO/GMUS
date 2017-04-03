@@ -2,14 +2,13 @@
 
 <%@ Register TagPrefix="local" TagName="HiddenFieldValueControl" Src="~/Controls/HiddenFieldValueControl.ascx" %>
 
-<local:HiddenFieldValueControl runat="server" ID="hdID" Property="{AttributeSchemaNodeModel.ID=Value}" />
-<local:HiddenFieldValueControl runat="server" ID="hdSchemaID" Property="{AttributeSchemaNodeModel.SchemaID=Value}" />
+<local:HiddenFieldValueControl runat="server" ID="hdID" Property="{AttributeFieldModel.ID=Value}" />
+<local:HiddenFieldValueControl runat="server" ID="hdSchemaID" Property="{AttributeFieldModel.SchemaID=Value}" />
 
-<div class="box">
-    <h3>
-        <asp:Label runat="server">სახელი</asp:Label>
-    </h3>
-    <div class="box_body">
-        <asp:TextBox ID="tbxName" runat="server" Property="{AttributeSchemaNodeModel.Name=Text}"></asp:TextBox>
+
+<div class="form-group">
+    <label class="col-sm-2 font-normal">სახელი</label>
+    <div class="col-sm-12">
+        <asp:TextBox ID="tbxName" runat="server" CssClass="form-control" Property="{AttributeFieldModel.Name=Text}"></asp:TextBox>
     </div>
 </div>

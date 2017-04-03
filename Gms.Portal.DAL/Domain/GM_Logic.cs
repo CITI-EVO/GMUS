@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using CITI.EVO.Core.Interfaces;
 
 namespace Gms.Portal.DAL.Domain
 {
     [Serializable]
-    public partial class GM_Logic 
+    public partial class GM_Logic : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual String Name { get; set; }

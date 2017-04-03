@@ -4,168 +4,141 @@ using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
-	internal static class ExpressionHelper
-	{
-		public static Object GetAny(Object value)
-		{
-			if (IsNumber(value))
-			{
-				return GetNumber(value);
-			}
+    internal static class ExpressionHelper
+    {
+        public static Object GetAny(Object value)
+        {
+            if (IsNumber(value))
+                return GetNumber(value);
 
-			if (IsString(value))
-			{
-				return GetString(value);
-			}
+            if (IsString(value))
+                return GetString(value);
 
-			if (IsDateTime(value))
-			{
-				return GetDateTime(value);
-			}
+            if (IsDateTime(value))
+                return GetDateTime(value);
 
-			return value;
-		}
+            return value;
+        }
 
-		public static double GetNumber(Object value)
-		{
-			if (value is double)
-			{
-				return (double)value;
-			}
+        public static double GetNumber(Object value)
+        {
+            if (value is double)
+                return (double)value;
 
-			return double.Parse(Convert.ToString(value), NumberStyles.Any, NumberFormatInfo.InvariantInfo);
-		}
+            var number = DataConverter.ToNullableDouble(value);
+            return number.Value;
+        }
 
-		public static String GetString(Object value)
-		{
-			var strValue = Convert.ToString(value);
+        public static String GetString(Object value)
+        {
+            var strValue = Convert.ToString(value);
 
-			if (IsString(value))
-			{
-				return strValue.Substring(1, strValue.Length - 2);
-			}
+            if (IsString(value))
+                return strValue.Substring(1, strValue.Length - 2);
 
-			return strValue;
-		}
+            return strValue;
+        }
 
-		public static String GetQuota(Object value)
-		{
-			var strValue = Convert.ToString(value);
+        public static String GetQuota(Object value)
+        {
+            var strValue = Convert.ToString(value);
 
-			if (IsString(value))
-			{
-				return strValue.Substring(0, 1);
-			}
+            if (IsString(value))
+                return strValue.Substring(0, 1);
 
-			throw new Exception();
-		}
+            throw new Exception();
+        }
 
-		public static DateTime GetDateTime(Object value)
-		{
-			if (value is DateTime)
-			{
-				return (DateTime)value;
-			}
+        public static DateTime GetDateTime(Object value)
+        {
+            if (value is DateTime)
+                return (DateTime)value;
 
-			var strValue = Convert.ToString(value);
+            var strValue = Convert.ToString(value);
 
-			if (IsDateTime(value))
-			{
-				strValue = strValue.Substring(1, strValue.Length - 2);
+            if (IsDateTime(value))
+            {
+                strValue = strValue.Substring(1, strValue.Length - 2);
 
-				var dateTimeValue = DateTime.ParseExact(strValue, new[] { "dd.MM.yyyy", "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy hh:mm:ss", "dd.MM.yyyy h:mm:ss" }, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None);
-				return dateTimeValue;
-			}
+                var dateTime = DataConverter.ToNullableDateTime(strValue);
+                if (dateTime == null)
+                    throw new Exception();
 
-			var result = DataConverter.ToNullableDateTime(strValue);
-			if (result.HasValue)
-			{
-				return result.Value;
-			}
+                return dateTime.Value;
+            }
 
-			throw new Exception();
-		}
+            var result = DataConverter.ToNullableDateTime(strValue);
+            if (result.HasValue)
+                return result.Value;
 
-		public static bool IsNumber(Object value)
-		{
-			if (value is double)
-			{
-				return true;
-			}
+            throw new Exception();
+        }
 
-			double d;
-			return double.TryParse(Convert.ToString(value), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out d);
-		}
+        public static bool IsNumber(Object value)
+        {
+            if (value is double)
+                return true;
 
-		public static bool IsString(Object value)
-		{
-			if (IsNumber(value))
-			{
-				return false;
-			}
+            var number = DataConverter.ToNullableDouble(value);
+            return (number != null);
+        }
 
-			var strValue = Convert.ToString(value);
-			if (strValue.StartsWith("'"))
-			{
-				var nextIndex = strValue.IndexOf('\'', 1);
-				if (nextIndex == strValue.Length - 1)
-				{
-					return true;
-				}
-			}
-			else if (strValue.StartsWith("\""))
-			{
-				var nextIndex = strValue.IndexOf('\"', 1);
-				if (nextIndex == strValue.Length - 1)
-				{
-					return true;
-				}
-			}
+        public static bool IsString(Object value)
+        {
+            if (IsNumber(value))
+                return false;
 
-			return false;
-		}
+            var strValue = Convert.ToString(value);
+            if (strValue.StartsWith("'"))
+            {
+                var nextIndex = strValue.IndexOf('\'', 1);
+                if (nextIndex == strValue.Length - 1)
+                    return true;
+            }
+            else if (strValue.StartsWith("\""))
+            {
+                var nextIndex = strValue.IndexOf('\"', 1);
+                if (nextIndex == strValue.Length - 1)
+                    return true;
+            }
 
-		public static bool IsDateTime(Object value)
-		{
+            return false;
+        }
 
-			if (value is DateTime)
-			{
-				return true;
-			}
+        public static bool IsDateTime(Object value)
+        {
+            if (value is DateTime)
+                return true;
 
-			if (IsNumber(value))
-			{
-				return false;
-			}
+            if (IsNumber(value))
+                return false;
 
-			var strValue = Convert.ToString(value);
-			if (strValue.StartsWith("["))
-			{
-				var nextIndex = strValue.IndexOf(']', 1);
-				if (nextIndex == strValue.Length - 1)
-				{
-					return true;
-				}
-			}
+            var strValue = Convert.ToString(value);
+            if (strValue.StartsWith("["))
+            {
+                var nextIndex = strValue.IndexOf(']', 1);
+                if (nextIndex == strValue.Length - 1)
+                    return true;
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		public static bool IsInteger(Object value)
-		{
-			if (IsNumber(value))
-			{
-				var number = GetNumber(value);
-				return Math.Abs(Math.Truncate(number) - number) < double.Epsilon;
-			}
+        public static bool IsInteger(Object value)
+        {
+            if (IsNumber(value))
+            {
+                var number = GetNumber(value);
+                return Math.Abs(Math.Truncate(number) - number) < double.Epsilon;
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		public static bool IsEmptyOrSpace(Object value)
-		{
-			var strValue = Convert.ToString(value);
-			return String.IsNullOrEmpty(strValue) || String.IsNullOrEmpty(strValue.Trim());
-		}
-	}
+        public static bool IsEmptyOrSpace(Object value)
+        {
+            var strValue = Convert.ToString(value);
+            return String.IsNullOrEmpty(strValue) || String.IsNullOrEmpty(strValue.Trim());
+        }
+    }
 }

@@ -12,8 +12,6 @@ using CITI.EVO.Tools.Extensions;
 
 public partial class Pages_EditTranslation : System.Web.UI.Page
 {
-    //moduleName={1}&trnKey={2}&languagePair={3}
-
     private const String trnIDKey = "trnID";
     private const String trnKeyKey = "trnKey";
     private const String moduleNameKey = "moduleName";

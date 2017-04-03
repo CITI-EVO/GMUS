@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="CITI.EVO.UserManagement.Web.Site" %>
+﻿ <%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="CITI.EVO.UserManagement.Web.Site" %>
 
 <%@ Register TagPrefix="local" TagName="CurrentLoginControl" Src="~/Controls/CurrentLoginControl.ascx" %>
 
@@ -14,52 +14,46 @@
         <asp:ScriptManager runat="Server" EnableScriptGlobalization="true" EnableScriptLocalization="true" ID="ScriptManager1">
         </asp:ScriptManager>
         <div id="wrapper">
-
             <nav class="navbar-default navbar-static-side" role="navigation">
-
                 <div class="sidebar-collapse">
                     <ul class="nav metismenu" id="side-menu">
-                        <li class="nav-header">
+                      <li class="nav-header">
                             <div class="dropdown profile-element">
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <a data-toggle="dropdown" class="dropdown-toggle text-center" href="#">
                                     <span class="clear">
-                                        <span class="block m-t-xs">
-                                            <strong class="font-bold">CITI</strong>
-                                        </span>
-                                        <span class="text-muted text-xs block">Consulting & IT Innovations<b class="caret"></b></span>
+                                        <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo.png" />
+                                        <ce:Label runat="server" CssClass="text-muted text-xs block" Text="შოთა რუსთაველის ეროვნული სამეცნიერო ფონდი" />
                                     </span>
                                 </a>
                             </div>
+
                             <div class="logo-element">
-                                CITI
+                                <asp:Image runat="server" ImageUrl="~/App_Themes/Default/images/rust_logo_small.png" />
                             </div>
                         </li>
-                        <li class="active">
-                            <asp:HyperLink NavigateUrl="index.html" runat="server"><i class="fa fa-cubes"></i><span class="nav-label">რესურსებზე წვდომა</span></asp:HyperLink>
-                        </li>
-                        <li>
+                        <li class="landing_link">
                             <asp:HyperLink NavigateUrl="~/Pages/Management/ProjectsList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">მოდულები</span> </asp:HyperLink>
                         </li>
-                        <li>
-                            <asp:HyperLink NavigateUrl="~/Pages/Management/UsersList.aspx" runat="server"><i class="fa fa-group"></i><span class="nav-label">მომხმარებლები</span> </asp:HyperLink>
-                        </li>
-
-                        <li>
+                        <li class="landing_link">
                             <asp:HyperLink NavigateUrl="~/Pages/Management/GroupsList.aspx" runat="server"><i class="fa fa-object-group"></i><span class="nav-label">ჯგუფები</span> </asp:HyperLink>
                         </li>
-                        <li>
+                        <li class="landing_link">
+                            <asp:HyperLink NavigateUrl="~/Pages/Management/UsersList.aspx" runat="server"><i class="fa fa-group"></i><span class="nav-label">მომხმარებლები</span> </asp:HyperLink>
+                        </li>
+                        <li class="landing_link">
                             <asp:HyperLink NavigateUrl="~/Pages/Management/AttributesSchemasList.aspx" runat="server"><i class="fa fa-window-restore"></i><span class="nav-label">ატრიბუტების სქემები</span> </asp:HyperLink>
                         </li>
-                        <li>
-                            <asp:HyperLink NavigateUrl="~/Pages/Management/ResourceList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">რესურსების მართვა</span> </asp:HyperLink>
+                        <li class="landing_link">
+                            <asp:HyperLink NavigateUrl="~/Pages/Management/ResourceList.aspx" runat="server"><i class="fa fa-dot-circle-o"></i><span class="nav-label">რესურსების მართვა</span> </asp:HyperLink>
                         </li>
-                        <li>
-                            <asp:HyperLink NavigateUrl="~/Pages/Management/PermissionList.aspx" runat="server"><i class="fa fa-th-large"></i><span class="nav-label">უფლებების დაწესება</span> </asp:HyperLink>
+                        <li class="landing_link">
+                            <asp:HyperLink NavigateUrl="~/Pages/Management/PermissionList.aspx" runat="server"><i class="fa fa-unlock"></i><span class="nav-label">უფლებების დაწესება</span> </asp:HyperLink>
                         </li>
-                        <li>
-                            <asp:HyperLink NavigateUrl='/Rnsf/Gms/Gms.Portal.Web/Default.aspx?loginToken={loginToken}' runat="server"><i class="fa fa-th-large"></i><span class="nav-label">რუსთაველის ეროვნული ფონდი</span> </asp:HyperLink>
+                        <li class="landing_link">
+                            <asp:HyperLink NavigateUrl='/Rnsf/Gms/Gms.Portal.Web/Default.aspx?loginToken={loginToken}' runat="server"><i class="fa fa-wpforms"></i><span class="nav-label">ფორმები</span> </asp:HyperLink>
                         </li>
                     </ul>
+
 
                 </div>
 
@@ -68,13 +62,26 @@
                 <div class="row border-bottom">
                     <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
                         <div class="navbar-header">
-                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-success " href="#"><i class="fa fa-bars"></i></a>
                         </div>
                         <ul class="nav navbar-top-links navbar-right">
-                            <li>
-                                <asp:LinkButton ID="LinkButton1" runat="server" CssClass="icon" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
-                                 <i class="fa fa-sign-out"></i>სისტემიდან გასვლა
+                            <li class="b-r">
+                                <local:CurrentLoginControl ID="currentLoginControl" runat="server" />
+                            </li>
+                            <li class="b-r">
+                                <asp:LinkButton ID="LinkButton1" runat="server" CssClass="top-memu-link fa fa-sign-out" ToolTip="სისტემიდან გასვლა" Text="" OnClick="lnkLogout_OnClick">
+                             
                                 </asp:LinkButton>
+                            </li>
+                            <li runat="server">
+                                <asp:HyperLink runat="server" CssClass="top-memu-lang" ID="btGeoLang">
+                                    <ce:Label runat="server" Text="Geo"/>
+                                </asp:HyperLink>
+                            </li>
+                            <li runat="server">
+                                <asp:HyperLink runat="server" CssClass="top-memu-lang" ID="btEngLang">
+                                    <ce:Label runat="server" Text="Eng"/>
+                                </asp:HyperLink>
                             </li>
                         </ul>
                     </nav>
@@ -82,27 +89,25 @@
                 <div class="wrapper wrapper-content animated fadeInRight">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="text-left m-t-lg">
-
-                                <asp:Label runat="server" ID="lblLoginName" />
-                                <asp:Label runat="server" ID="lblFirstName" />
-                                <asp:Label runat="server" ID="lblLastName" />
-
-
-                                <asp:ContentPlaceHolder ID="cphContent" runat="server">
-                                </asp:ContentPlaceHolder>
-                            </div>
+                            <asp:Label runat="server" ID="lblUser" />
+                            <asp:ContentPlaceHolder ID="cphContent" runat="server">
+                            </asp:ContentPlaceHolder>
                         </div>
                     </div>
+
                 </div>
-                <div class="footer">
-                    <div class="pull-right">
-                        Consulting & <strong>IT</strong> Innovations
-                    </div>
-                    <div>
-                        <strong>Copyright</strong> CITI &copy; 2017
-                    </div>
+            <div class="footer">
+                <div class="pull-right" style="padding-left: 12px; padding-right: 12px;">
+                    <a href="http://evolution.ge" target="_blank">Evolution.ge</a>
                 </div>
+                <div class="pull-right">
+                    Consulting & <strong>IT</strong> Innovations
+                </div>
+                <div>
+                    <strong>Copyright</strong> CITI &copy; 2017
+                </div>
+
+            </div>
             </div>
         </div>
 
@@ -122,11 +127,15 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('.table').DataTable();
+                $('.table').DataTable({
+                    "dom": 'ifrtlpb'
+                });
 
                 $('.clockpicker').clockpicker();
 
-                $('.chosen-select').chosen();
+                $('.chosen-select').chosen({
+                    width: "100%"
+                });
 
                 $(".intSpinEdit").TouchSpin({
                     min: 0,
@@ -142,24 +151,7 @@
                     buttonup_class: 'btn btn-white'
                 });
 
-                //$(".touchspin2").TouchSpin({
-                //    min: 0,
-                //    max: 100,
-                //    step: 0.1,
-                //    decimals: 2,
-                //    boostat: 5,
-                //    maxboostedstep: 10,
-                //    postfix: '%',
-                //    buttondown_class: 'btn btn-white',
-                //    buttonup_class: 'btn btn-white'
-                //});
-
-                //$(".touchspin3").TouchSpin({
-                //    verticalbuttons: true,
-                //    buttondown_class: 'btn btn-white',
-                //    buttonup_class: 'btn btn-white'
-                //});
-
+                $.fn.datepicker.defaults.format = "dd.mm.yyyy";
                 $('.input-group.date').datepicker({
                     todayBtn: "linked",
                     keyboardNavigation: false,

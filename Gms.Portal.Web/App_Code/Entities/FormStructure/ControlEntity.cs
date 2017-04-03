@@ -18,5 +18,11 @@ namespace Gms.Portal.Web.Entities.FormStructure
 
         [XmlAttribute("Visible")]
         public bool Visible { get; set; }
+
+        [XmlElement("DependentFieldID")]
+        public Guid? DependentFieldID { get; set; }
+
+        [XmlElement("DependentExp")]
+        public String DependentExp { get; set; }
     }
 }

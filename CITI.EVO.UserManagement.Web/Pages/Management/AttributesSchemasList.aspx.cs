@@ -3,6 +3,7 @@ using System.Linq;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Security;
+using CITI.EVO.Tools.Utils;
 using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Converters.EntityToModel;
@@ -49,7 +50,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                     }
                 }
             }
-            else if (item.Type == "Node")
+            else if (item.Type == "Field")
             {
                 var attributeSchemaNode = HbSession.Query<UM_AttributeField>().FirstOrDefault(n => n.ID == item.ID);
                 if (attributeSchemaNode != null)
@@ -96,9 +97,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             if (item.Type == "Project")
             {
+                var entity = HbSession.Get<UM_Project>(item.ID);
+
                 var model = new AttributeSchemaModel
                 {
-                    ProjectID = item.ID
+                    ProjectID = entity.ID
                 };
 
                 attributeSchemaControl.Model = model;
@@ -106,9 +109,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             }
             else if (item.Type == "Schema")
             {
+                var entity = HbSession.Get<UM_AttributeSchema>(item.ID.GetValueOrDefault());
+
                 var model = new AttributeFieldModel
                 {
-                    SchemaID = item.ID
+                    SchemaID = entity.ID
                 };
 
                 attributeFieldControl.Model = model;
@@ -121,7 +126,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         {
             var model = attributeSchemaControl.Model;
 
-            var entity = HbSession.Query<UM_AttributeSchema>().FirstOrDefault(n => n.ID == model.ID);
+            var entity = HbSession.Get<UM_AttributeSchema>(model.ID.GetValueOrDefault());
             if (entity == null)
             {
                 entity = new UM_AttributeSchema
@@ -143,7 +148,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         {
             var model = attributeFieldControl.Model;
 
-            var entity = HbSession.Query<UM_AttributeField>().FirstOrDefault(n => n.ID == model.ID);
+            var entity = HbSession.Get<UM_AttributeField>(model.ID.GetValueOrDefault());
             if (entity == null)
             {
                 entity = new UM_AttributeField
@@ -163,19 +168,22 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
         protected void FillAttributesTree()
         {
-            var attributesSchemas = (from n in HbSession.Query<UM_AttributeSchema>()
-                                     where n.DateDeleted == null
-                                     select n).ToList();
-
-            var converter = new AttributeSchemaEntityModelConverter(HbSession);
-
-            var model = new AttributeSchemasModel
+            using (var session = Hb8Factory.CreateSession())
             {
-                List = attributesSchemas.Select(n => converter.Convert(n)).ToList()
-            };
+                var attributesSchemas = (from n in session.Query<UM_AttributeSchema>()
+                                         where n.DateDeleted == null
+                                         select n).ToList();
 
-            attributesSchemasControl.Model = model;
-            attributesSchemasControl.DataBind();
+                var converter = new AttributeSchemaEntityModelConverter(session);
+
+                var model = new AttributeSchemasModel
+                {
+                    List = attributesSchemas.Select(n => converter.Convert(n)).ToList()
+                };
+
+                attributesSchemasControl.Model = model;
+                attributesSchemasControl.DataBind();
+            }
         }
 
         #region Methods

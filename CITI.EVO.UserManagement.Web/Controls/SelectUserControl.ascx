@@ -2,16 +2,18 @@
 <%@ Register TagPrefix="local" TagName="HiddenFieldValueControl" Src="~/Controls/HiddenFieldValueControl.ascx" %>
 <%@ Register TagPrefix="local" TagName="SearchUsersControl" Src="~/Controls/SearchUsersControl.ascx" %>
 
-<local:HiddenFieldValueControl runat="server" ID="hdParentID" Property="{SelectUsersModel.ParentID=Value}" />
+<local:HiddenFieldValueControl runat="server" ID="hdParentID" Property="{SelectUserModel.ParentID=Value}" />
 
-<div>
-    <ce:ASPxComboBox ID="ddlAccessLevels" Width="320" runat="server" ValueType="System.Int32" Property="{SelectUsersModel.AccessLevel=Value}">
-        <Items>
-            <dx:ListEditItem Text="სტანდარტული" Value="0" />
-            <dx:ListEditItem Text="ადმინისტრატორი" Value="1" />
-        </Items>
-    </ce:ASPxComboBox>
+<div class="form-group">
+    <label class="col-sm-2  font-normal">უფლებები</label>
+    <div class="col-sm-12">
+        <ce:DropDownList ID="ddlAccessLevels" runat="server" CssClass="chosen-select" Property="{SelectUserModel.AccessLevel=SelectedValue}">
+            <Items>
+                <asp:ListItem Text="სტანდარტული" Value="0" Selected="true" />
+                <asp:ListItem Text="ადმინისტრატორი" Value="1" />
+            </Items>
+        </ce:DropDownList>
+    </div>
 </div>
-<div>
-    <local:SearchUsersControl runat="server" ID="searchUsersControl" Property="{SelectUsersModel.User=Model}" OnDataChanged="searchUsersControl_OnDataChanged" />
-</div>
+<local:SearchUsersControl runat="server" ID="searchUsersControl" Property="{SelectUserModel.User=Model}" OnDataChanged="searchUsersControl_OnDataChanged" />
+

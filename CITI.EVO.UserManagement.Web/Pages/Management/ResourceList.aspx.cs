@@ -127,7 +127,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                         where n.DateDeleted == null
                         select n;
 
-            if (filterModel.ProjectID == null)
+            if (filterModel.ProjectID == Guid.Empty)
             {
                 query = from n in query
                         where n.ProjectID == null

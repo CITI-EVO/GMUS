@@ -46,7 +46,10 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             var model = createUserControl.Model;
 
             if (!ValidateUser(model))
+            {
+                mpeUserForm.Show();
                 return;
+            }
 
             var user = HbSession.Query<UM_User>().FirstOrDefault(n => n.ID == model.User.ID);
             if (user == null)
@@ -200,6 +203,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
         }
 
+        protected void createUserControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeUserForm.Show();
+        }
+
         #endregion
 
         #region Methods
@@ -220,7 +228,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             return attributeValue;
         }
-
 
         protected bool ValidateUser(CreateUserModel model)
         {
@@ -286,10 +293,8 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return false;
             }
 
-            return false;
+            return true;
         }
-
-
 
         protected void FillUserGrid()
         {
@@ -356,6 +361,10 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                         where n.UserCategoryID == filterModel.CategoryID
                         select n;
             }
+
+            query = from n in query
+                    orderby n.DateCreated descending 
+                    select n;
 
             var entities = query.OrderBy(n => n.LoginName).ToList();
 

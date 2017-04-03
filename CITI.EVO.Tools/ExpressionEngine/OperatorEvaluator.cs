@@ -58,7 +58,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                         return Convert.ToDouble(leftValue) + Convert.ToDouble(rightValue);
                     }
                 case "++":
-                    return Convert.ToDouble(rightValue) + 1;
+                    return Convert.ToDouble(rightValue) + 1D;
                 case "-":
                     {
                         if (leftNode == null)
@@ -75,11 +75,11 @@ namespace CITI.EVO.Tools.ExpressionEngine
                         return Convert.ToDouble(leftValue) - Convert.ToDouble(rightValue);
                     }
                 case "--":
-                    return Convert.ToDouble(rightValue) - 1;
+                    return Convert.ToDouble(rightValue) - 1D;
                 case "=":
                     break;
                 case "==":
-                    return Equals(leftValue, rightValue);
+                    return IsEquals(leftValue, rightValue);
                 case "!=":
                 case "<>":
                     {
@@ -90,7 +90,8 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
                             return leftDate != rightDate;
                         }
-                        return !Equals(leftValue, rightValue);
+
+                        return !IsEquals(leftValue, rightValue);
                     }
                 case "<=":
                     {
@@ -115,10 +116,10 @@ namespace CITI.EVO.Tools.ExpressionEngine
                         }
                         return Convert.ToDouble(leftValue) >= Convert.ToDouble(rightValue);
                     }
-                //case "&&":
-                //    return Convert.ToBoolean(leftValue) && Convert.ToBoolean(rightValue);
-                //case "||":
-                //    return Convert.ToBoolean(leftValue) || Convert.ToBoolean(rightValue);
+                case "&&":
+                    return Convert.ToBoolean(leftValue) && Convert.ToBoolean(rightValue);
+                case "||":
+                    return Convert.ToBoolean(leftValue) || Convert.ToBoolean(rightValue);
                 case "^":
                     return Math.Pow(Convert.ToDouble(leftValue), Convert.ToDouble(rightValue));
                 case "&":
@@ -126,7 +127,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 case "|":
                     return Convert.ToInt64(leftValue) | Convert.ToInt64(rightValue);
                 case "%":
-                    return Convert.ToDouble(leftValue) / 100 * Convert.ToDouble(rightValue);
+                    return Convert.ToDouble(leftValue) / 100D * Convert.ToDouble(rightValue);
                 case "*":
                     return Convert.ToDouble(leftValue) * Convert.ToDouble(rightValue);
                 case "/":
@@ -160,9 +161,22 @@ namespace CITI.EVO.Tools.ExpressionEngine
             throw new Exception("Unknown operation");
         }
 
+        private static bool IsEquals(Object x, Object y)
+        {
+            var xVal = Convert.ToString(x);
+            var yVal = Convert.ToString(y);
+
+            return StringComparer.Ordinal.Equals(xVal, yVal);
+        }
+
         private static bool IsDateTimeNode(ExpressionNode node, Object value)
         {
-            return (node.ValueType == ValueTypes.DateTime || (node.ValueType == ValueTypes.Variable && value is DateTime));
+            if ((node.ValueType == ValueTypes.DateTime) ||
+                (node.ValueType == ValueTypes.Variable && value is DateTime) ||
+                (node.ActionType == ActionTypes.Function && value is DateTime))
+                return true;
+
+            return false;
         }
 
         private static bool IsStringNode(ExpressionNode node, Object value)

@@ -6,51 +6,48 @@ using CITI.EVO.Tools.Utils;
 namespace Gms.Portal.Web.Entities.DataContainer
 {
     [Serializable]
-    public class FormDataUnit : Dictionary<String, Object>
+    public class FormDataUnit : FormDataBase
     {
-        public const String IDField = "ID";
-        public const String FormIDField = "FormID";
-        public const String UserIDField = "UserID";
-        public const String OwnerIDField = "OwnerID";
-        public const String ParentIDField = "ParentID";
-        public const String PreviousIDField = "PreviousID";
-
-        public const String PrivacyField = "PrivaryFields";
-
-        public const String DateCreatedField = "DateCreated";
-        public const String DateChangedField = "DateChanged";
-        public const String DateDeletedField = "DateDeleted";
-
-        private static ISet<String> _defaultFields;
-        public static ISet<String> DefaultFields
+        public FormDataUnit() : this((Guid?)null)
         {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                if (_defaultFields == null)
-                {
-                    _defaultFields = new HashSet<String>(new[]
-                    {
-                        IDField,
-                        FormIDField,
-                        UserIDField,
-                        OwnerIDField,
-                        ParentIDField,
-                        PreviousIDField,
-                        PrivacyField,
-                        DateCreatedField,
-                        DateChangedField,
-                        DateDeletedField,
-                    });
-                }
+        }
 
-                return _defaultFields;
+        public FormDataUnit(FormDataUnit formData)
+        {
+            foreach (var pair in formData)
+            {
+                if (pair.Value is FormDataUnit)
+                {
+                    var clone = new FormDataUnit((FormDataUnit)pair.Value);
+                    SetValue(pair.Key, clone);
+                }
+                else if (pair.Value is FormDataBinary)
+                {
+                    var clone = new FormDataBinary((FormDataBinary)pair.Value);
+                    SetValue(pair.Key, clone);
+                }
+                else if (pair.Value is FormDataListRef)
+                {
+                    var clone = new FormDataListRef((FormDataListRef)pair.Value);
+                    SetValue(pair.Key, clone);
+                }
+                else if (pair.Value is FormDataLazyList)
+                {
+                    var clone = new FormDataLazyList((FormDataLazyList)pair.Value);
+                    SetValue(pair.Key, clone);
+                }
+                else if (pair.Value is FormDataBaseList)
+                {
+                    var clone = new FormDataBaseList((FormDataBaseList)pair.Value);
+                    SetValue(pair.Key, clone);
+                }
+                else
+                {
+                    SetValue(pair.Key, pair.Value);
+                }
             }
         }
 
-        public FormDataUnit() : this(null)
-        {
-        }
         public FormDataUnit(Guid? formID) : this(formID, null)
         {
         }
@@ -75,12 +72,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(IDField);
+                var val = GetValue(FormDataConstants.IDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(IDField, value);
+                SetValue(FormDataConstants.IDField, value);
             }
         }
 
@@ -88,12 +85,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(FormIDField);
+                var val = GetValue(FormDataConstants.FormIDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(FormIDField, value);
+                SetValue(FormDataConstants.FormIDField, value);
             }
         }
 
@@ -101,12 +98,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(UserIDField);
+                var val = GetValue(FormDataConstants.UserIDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(UserIDField, value);
+                SetValue(FormDataConstants.UserIDField, value);
             }
         }
 
@@ -114,12 +111,25 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(OwnerIDField);
+                var val = GetValue(FormDataConstants.OwnerIDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(OwnerIDField, value);
+                SetValue(FormDataConstants.OwnerIDField, value);
+            }
+        }
+
+        public Guid? StatusID
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.StatusIDField);
+                return DataConverter.ToNullableGuid(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.StatusIDField, value);
             }
         }
 
@@ -127,12 +137,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(ParentIDField);
+                var val = GetValue(FormDataConstants.ParentIDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(ParentIDField, value);
+                SetValue(FormDataConstants.ParentIDField, value);
             }
         }
 
@@ -140,12 +150,25 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(PreviousIDField);
+                var val = GetValue(FormDataConstants.PreviousIDField);
                 return DataConverter.ToNullableGuid(val);
             }
             set
             {
-                SetValue(PreviousIDField, value);
+                SetValue(FormDataConstants.PreviousIDField, value);
+            }
+        }
+
+        public String Description
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.DescriptionField);
+                return DataConverter.ToString(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.PreviousIDField, value);
             }
         }
 
@@ -153,12 +176,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(DateCreatedField);
+                var val = GetValue(FormDataConstants.DateCreatedField);
                 return DataConverter.ToNullableDateTime(val);
             }
             set
             {
-                SetValue(DateCreatedField, value);
+                SetValue(FormDataConstants.DateCreatedField, value);
             }
         }
 
@@ -166,12 +189,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(DateChangedField);
+                var val = GetValue(FormDataConstants.DateChangedField);
                 return DataConverter.ToNullableDateTime(val);
             }
             set
             {
-                SetValue(DateCreatedField, value);
+                SetValue(FormDataConstants.DateCreatedField, value);
             }
         }
 
@@ -179,12 +202,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(DateDeletedField);
+                var val = GetValue(FormDataConstants.DateDeletedField);
                 return DataConverter.ToNullableDateTime(val);
             }
             set
             {
-                SetValue(DateCreatedField, value);
+                SetValue(FormDataConstants.DateCreatedField, value);
             }
         }
 
@@ -192,33 +215,13 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(PrivacyField) as ISet<String>;
+                var val = GetValue(FormDataConstants.PrivacyField) as ISet<String>;
                 return val;
             }
             set
             {
-                SetValue(PrivacyField, value);
+                SetValue(FormDataConstants.PrivacyField, value);
             }
-        }
-
-        public new Object this[String key]
-        {
-            get { return GetValue(key); }
-            set { SetValue(key, value); }
-        }
-
-        private Object GetValue(String key)
-        {
-            Object val;
-            if (TryGetValue(key, out val))
-                return val;
-
-            return null;
-        }
-
-        private void SetValue(String key, Object val)
-        {
-            base[key] = val;
         }
     }
 }

@@ -54,7 +54,19 @@ namespace CITI.EVO.Proxies
 			return RpcInvoker.InvokeMethod<List<LanguageContract>>();
 		}
 
-		[RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetTranslatedText")]
+        [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetTranslation")]
+        public static TranslationContract GetTranslation(String moduleName, String languagePair, String trnKey)
+        {
+            return RpcInvoker.InvokeMethod<TranslationContract>(moduleName, languagePair, trnKey);
+        }
+
+        [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.SetTranslation")]
+        public static void SetTranslation(String moduleName, String languagePair, String trnKey, TranslationContract contract)
+        {
+            RpcInvoker.InvokeMethod(moduleName, languagePair, trnKey, contract);
+        }
+
+        [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetTranslatedText")]
 		public static String GetTranslatedText(String moduleName, String languagePair, String trnKey, String defaultText)
 		{
 			return RpcInvoker.InvokeMethod<String>(moduleName, languagePair, trnKey, defaultText);

@@ -9,3 +9,11 @@
 
 <asp:Panel runat="server" ID="pnlMain" CssClass="row">
 </asp:Panel>
+
+<script type="text/javascript">
+    function onTabClick(e) {
+        var tabId = $(e).attr("tab-id");
+        var activeStore = $(e).attr("active-store");
+        $('#' + activeStore).val(tabId);
+    }
+</script>

@@ -37,35 +37,42 @@ namespace CITI.EVO.UserManagement.Web.Utils
 
                 yield return projectUnit;
 
-                foreach (var schema in project.AttributesSchemas)
+                if (project.AttributesSchemas != null)
                 {
-                    if (schema.DateDeleted != null)
-                        continue;
-
-                    var schemaUnit = new TreeNodeUnit
+                    foreach (var schema in project.AttributesSchemas)
                     {
-                        ID = schema.ID,
-                        Name = schema.Name,
-                        ParentID = project.ID,
-                        Type = "Schema"
-                    };
-
-                    yield return schemaUnit;
-
-                    foreach (var field in schema.AttributeFields)
-                    {
-                        if (field.DateDeleted != null)
+                        if (schema.DateDeleted != null)
                             continue;
 
-                        var nodeUnit = new TreeNodeUnit
+                        var schemaUnit = new TreeNodeUnit
                         {
-                            ID = field.ID,
-                            Name = field.Name,
-                            ParentID = schema.ID,
-                            Type = "Field"
+                            ID = schema.ID,
+                            Name = schema.Name,
+                            ParentID = project.ID,
+                            Type = "Schema"
                         };
 
-                        yield return nodeUnit;
+                        yield return schemaUnit;
+
+                        if (schema.AttributeFields != null)
+                        {
+                            foreach (var field in schema.AttributeFields)
+                            {
+                                if (field.DateDeleted != null)
+                                    continue;
+
+                                var nodeUnit = new TreeNodeUnit
+                                {
+                                    ID = field.ID,
+                                    Name = field.Name,
+                                    ParentID = schema.ID,
+                                    Type = "Field"
+                                };
+
+                                yield return nodeUnit;
+                            }
+                        }
+
                     }
                 }
             }

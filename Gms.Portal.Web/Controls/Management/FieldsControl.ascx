@@ -7,7 +7,7 @@
                 <asp:TemplateField>
                     <ItemTemplate>
                         <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-sm fa fa-edit" />
-                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-sm fa fa-trash-o" />
+                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-sm fa fa-trash-o"  OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')"/>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -15,7 +15,7 @@
                         <ce:Label runat="server" Text="Name" />
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" Text='<%# Eval("Name") %>' />
+                        <ce:Label runat="server" Text='<%# Eval("Name") %>' />
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

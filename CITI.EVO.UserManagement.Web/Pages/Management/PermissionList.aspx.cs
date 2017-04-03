@@ -170,7 +170,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             gvPermissionParameters.DataBind();
             hdPermissionID.Value = permission.ID.ToString();
 
-            UpdatePanelPermissionParameters.Update();
             mpePermissionParametersForm.Show();
         }
 

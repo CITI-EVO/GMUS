@@ -5,7 +5,7 @@
 
   <class name="GM_Logic" table="GM_Logics">
     <id name="ID">
-      <generator class="guid" />
+      <generator class="assigned" />
     </id>
     <property name="Name" />
     <property name="Type" />

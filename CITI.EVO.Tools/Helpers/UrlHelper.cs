@@ -54,7 +54,7 @@ namespace CITI.EVO.Tools.Helpers
         public UrlHelper(UrlHelper urlHelper)
         {
             _urlBase = urlHelper._urlBase;
-            _urlParams = new Dictionary<String, Object>(urlHelper._urlParams);
+            _urlParams = new Dictionary<String, Object>(urlHelper._urlParams, StringComparer.OrdinalIgnoreCase);
         }
 
         public String HandlerUrl

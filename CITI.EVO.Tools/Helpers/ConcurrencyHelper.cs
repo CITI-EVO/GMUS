@@ -12,9 +12,7 @@ namespace CITI.EVO.Tools.Helpers
             var concurrencyLevel = Environment.ProcessorCount * 4;
 
             if (HostingEnvironment.IsHosted)
-            {
                 concurrencyLevel = Math.Max(HostingEnvironment.MaxConcurrentThreadsPerCPU, concurrencyLevel);
-            }
 
             return concurrencyLevel;
         }
@@ -24,9 +22,7 @@ namespace CITI.EVO.Tools.Helpers
             var capacity = GetDefaultConcurrency() * 31;
 
             if (HostingEnvironment.IsHosted)
-            {
                 capacity = Math.Max(HostingEnvironment.MaxConcurrentRequestsPerCPU, capacity);
-            }
 
             return capacity;
         }

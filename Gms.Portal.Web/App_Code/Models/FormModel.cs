@@ -6,15 +6,19 @@ namespace Gms.Portal.Web.Models
     [Serializable]
     public class FormModel
     {
-        public Guid ID { get; set; }
+        public Guid? ID { get; set; }
 
         public String Name { get; set; }
 
         public String Number { get; set; }
 
+        public Guid? CategoryID { get; set; }
+
         public int? OrderIndex { get; set; }
 
         public bool? Visible { get; set; }
+
+        public String UserMode { get; set; }
 
         public FormEntity Entity { get; set; }
     }

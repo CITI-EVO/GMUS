@@ -9,7 +9,5 @@ namespace CITI.EVO.UserManagement.Web.Models
         public Guid? SchemaID { get; set; }
 
         public String Name { get; set; }
-
-        public AttributeFieldsModel Fields { get; set; }
     }
 }

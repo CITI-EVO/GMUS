@@ -5,7 +5,7 @@
 
   <class name="GM_ReportLogic" table="GM_ReportLogics">
     <id name="ID">
-      <generator class="guid" />
+      <generator class="assigned" />
     </id>
     <property name="ReportID" />
     <property name="LogicID" />

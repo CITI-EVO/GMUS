@@ -1,13 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Web;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Context;
 
 namespace CITI.EVO.Tools.Utils
 {
     public static class Hb8Factory
     {
+        private const String SessionKey = "@{Hb8_Session}";
+
         private static Configuration _configuration;
         private static ISessionFactory _sessionFactory;
 
@@ -41,17 +45,84 @@ namespace CITI.EVO.Tools.Utils
             }
         }
 
+        public static ISession InitSession()
+        {
+            var context = HttpContext.Current;
+            if (context != null)
+            {
+                var session = context.Items[SessionKey] as ISession;
+                if (session == null)
+                {
+                    session = CreateSession();
+                    context.Items[SessionKey] = session;
+                }
+
+                return session;
+            }
+            else
+            {
+                if (!CurrentSessionContext.HasBind(Factory))
+                {
+                    var newSession = CreateSession();
+                    CurrentSessionContext.Bind(newSession);
+                }
+
+                var session = GetCurrentSession();
+                return session;
+            }
+
+        }
+
         public static ISession CreateSession()
         {
             return Factory.OpenSession();
         }
 
-        public static IStatelessSession CreateStateless()
+        public static ISession GetCurrentSession()
         {
-            var configuration = new Configuration();
-            configuration.Configure();
+            var context = HttpContext.Current;
+            if (context != null)
+                return context.Items[SessionKey] as ISession;
 
+            return Factory.GetCurrentSession();
+        }
+
+        public static IStatelessSession OpenStateless()
+        {
             return Factory.OpenStatelessSession();
+        }
+
+        public static void ReleaseSession()
+        {
+            ReleaseSession(true);
+        }
+        public static void ReleaseSession(bool commit)
+        {
+            using (var session = GetCurrentSession())
+            {
+                if (session == null)
+                    return;
+
+                if (!commit)
+                    return;
+
+                var transaction = session.Transaction;
+                if (transaction == null)
+                    return;
+
+                if(!transaction.IsActive)
+                    return;
+
+                try
+                {
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
         }
     }
 }

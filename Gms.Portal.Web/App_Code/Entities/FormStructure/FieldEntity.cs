@@ -17,11 +17,14 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("Tag")]
         public String Tag { get; set; }
 
-        [XmlAttribute("Enabled")]
-        public bool Enabled { get; set; }
+        [XmlElement("Enabled")]
+        public bool? Enabled { get; set; }
 
         [XmlElement("Privacy")]
         public bool? Privacy { get; set; }
+
+        [XmlElement("Inversion")]
+        public bool? Inversion { get; set; }
 
         [XmlElement("Mandatory")]
         public bool? Mandatory { get; set; }
@@ -29,11 +32,26 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("Description")]
         public String Description { get; set; }
 
-        [XmlAttribute("DisplayOnGrid")]
-        public bool DisplayOnGrid { get; set; }
+        [XmlElement("CaptionSize")]
+        public int? CaptionSize { get; set; }
+
+        [XmlElement("ControlSize")]
+        public int? ControlSize { get; set; }
+
+        [XmlElement("DisplayOnGrid")]
+        public bool? DisplayOnGrid { get; set; }
 
         [XmlElement("ValidationExp")]
         public String ValidationExp { get; set; }
+
+        [XmlElement("DependentFillExp")]
+        public String DependentFillExp { get; set; }
+
+        [XmlElement("DataSourceFilterExp")]
+        public String DataSourceFilterExp { get; set; }
+
+        [XmlElement("DataSourceSortExp")]
+        public String DataSourceSortExp { get; set; }
 
         [XmlElement("ErrorMessage")]
         public String ErrorMessage { get; set; }

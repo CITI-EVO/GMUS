@@ -6,11 +6,12 @@
 <local:HiddenFieldValueControl runat="server" ID="hdParentID" Property="{GroupModel.ParentID=Value}" />
 <local:HiddenFieldValueControl runat="server" ID="hdProjectID" Property="{GroupModel.ProjectID=Value}" />
 
-<div class="box">
-    <h3>
-        <asp:Label runat="server">ჯგუფის სახელი</asp:Label>
-    </h3>
-    <div class="box_body">
-        <asp:TextBox ID="tbxName" runat="server" Property="{GroupModel.Name=Text}"></asp:TextBox>
-    </div>
-</div>
+
+  <div class="form-group">
+            <label class="col-sm-4 control-label">ჯგუფის სახელი</label>
+            <div class="col-sm-6">
+        <asp:TextBox ID="tbxName" runat="server"  class="form-control"  Property="{GroupModel.Name=Text}"></asp:TextBox>
+
+            </div>
+        </div>
+

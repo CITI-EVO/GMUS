@@ -10,5 +10,12 @@ namespace Gms.Portal.Web.Entities.FormStructure
     {
         [XmlElement("DetailsFormID")]
         public Guid? DetailsFormID { get; set; }
+
+        [XmlElement("ValidationExp")]
+        public String ValidationExp { get; set; }
+
+        [XmlElement("ErrorMessage")]
+        public String ErrorMessage { get; set; }
+
     }
 }

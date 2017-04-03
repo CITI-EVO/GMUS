@@ -1,5 +1,6 @@
 using System;
 using CITI.EVO.Tools.ExpressionEngine.Common;
+using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
@@ -54,6 +55,9 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
                         if (_ordinalComparer.Equals(node.Action, "false"))
                             return false;
+
+                        if (_ordinalComparer.Equals(node.Action, "lang"))
+                            return LanguageUtil.GetLanguage();
 
                         return varResolver(node.Action);
                     }

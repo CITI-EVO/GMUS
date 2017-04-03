@@ -2,7 +2,7 @@
 <div class="table-responsive">
     <div class="dataTables_wrapper form-inline dt-bootstrap">
         <ce:GridView runat="server" ID="gvData" UseAccessibleHeader="True" TableSectionHeader="True" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" EnableViewState="False"
-            CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" Property="{CollectionDatasModel.DataView=DataSource, Mode=Assigne}">
+            CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" Property="{CollectionDatasModel.DataView=DataSource, Mode=Assigne}">
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>

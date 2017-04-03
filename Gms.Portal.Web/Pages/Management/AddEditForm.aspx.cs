@@ -26,7 +26,7 @@ namespace Gms.Portal.Web.Pages.Management
                 if (formID != null)
                 {
                     var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formID);
-                    if (entity == null)
+                    if (entity != null)
                     {
                         var converter = new FormEntityModelConverter(HbSession);
                         model = converter.Convert(entity);

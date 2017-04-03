@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Configuration;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Web;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
+using CITI.EVO.Tools.Utils;
 using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Utils;
+using DevExpress.Utils.OAuth.Provider;
 using NHibernate.Linq;
 
 namespace CITI.EVO.UserManagement.Web.Pages.User
@@ -27,6 +30,13 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
         protected void Page_Init(object sender, EventArgs e)
         {
+            var urlHelper = new UrlHelper(Request.Url);
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "en-US";
+            btEngLang.NavigateUrl = urlHelper.ToEncodedUrl();
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "ka-GE";
+            btGeoLang.NavigateUrl = urlHelper.ToEncodedUrl();
         }
 
         protected void btnGoToLicPage_OnClick(object sender, EventArgs e)
@@ -59,15 +69,40 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
         protected void btOK_Click(object sender, EventArgs e)
         {
+
             pnlRecovery.Visible = false;
 
             var model = loginControl.Model;
 
-            bool login = Instance.Login(model.LoginName, model.Password);
+            if (String.IsNullOrWhiteSpace(model.LoginName))
+            {
+                lstErrorMessages.Text = "გთხოვთ შეიყვანეთ მომხმარებლის სახელი";
+                return;
+            }
+
+            var dbUser = (from n in HbSession.Query<UM_User>()
+                          where n.DateDeleted == null &&
+                                n.IsActive == true &&
+                                (
+                                    n.LoginName.ToLower() == model.LoginName.ToLower() ||
+                                    n.Email.ToLower() == model.LoginName.ToLower()
+                                )
+                          select n).FirstOrDefault();
+
+            if (dbUser == null)
+            {
+                lstErrorMessages.Text = "თქვენ არასწორად შეიყვანეთ მომხმარებლის სახელი ან პაროლი";
+                //lstErrorMessages.Text = "Incorrect login name";
+                pnlRecovery.Visible = ConfigUtil.UserRecoveryEnabled;
+                return;
+            }
+
+            bool login = Instance.Login(dbUser.LoginName, model.Password);
 
             if (!login)
             {
                 lstErrorMessages.Text = "თქვენ არასწორად შეიყვანეთ მომხმარებლის სახელი ან პაროლი";
+                //lstErrorMessages.Text = "Incorrect login name";
                 pnlRecovery.Visible = ConfigUtil.UserRecoveryEnabled;
                 return;
             }
@@ -83,6 +118,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             var uriHelper = new UrlHelper(redirectUrl);
             uriHelper["loginToken"] = Convert.ToString(Instance.CurrentToken);
+            uriHelper[LanguageUtil.RequestLanguageKey] = LanguageUtil.GetLanguage();
 
             redirectUrl = uriHelper.ToString();
             Response.Redirect(redirectUrl);
@@ -90,46 +126,65 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
         protected void btnRecovery_Click(object sender, EventArgs e)
         {
+            lstErrorMessages.ForeColor = Color.Red;
+
             var model = loginControl.Model;
 
             if (String.IsNullOrWhiteSpace(model.LoginName))
             {
-                lstErrorMessages.Text = "თქვენ არასწორად შეიყვანეთ მომხმარებლის სახელი";
+                lstErrorMessages.Text = "გთხოვთ შეიყვანეთ მომხმარებლის სახელი";
+                //lstErrorMessages.Text = "Incorrect login name";
                 pnlRecovery.Visible = ConfigUtil.UserRecoveryEnabled;
 
                 return;
             }
 
-            var user = (from n in HbSession.Query<UM_User>()
-                        where n.DateDeleted == null &&
-                              n.LoginName == model.LoginName
-                        select n).FirstOrDefault();
+            var dbUser = (from n in HbSession.Query<UM_User>()
+                          where n.DateDeleted == null &&
+                                n.IsActive == true &&
+                                (
+                                    n.LoginName.ToLower() == model.LoginName.ToLower() ||
+                                    n.Email.ToLower() == model.LoginName.ToLower()
+                                )
+                          select n).FirstOrDefault();
 
-            if (user == null || String.IsNullOrWhiteSpace(user.Email))
+            if (dbUser == null || String.IsNullOrWhiteSpace(dbUser.Email))
             {
-                lstErrorMessages.Text = "თქვენ არასწორად შეიყვანეთ მომხმარებლის სახელი ან თქვენს მომხმარებელზე არ არის მითითებული ელ.ფოსტის მისამართი. გთხოვთ მიმართეთ საიტის ადმინსიტრაციას";
+                lstErrorMessages.Text = "არასწორია ელ.ფოსტის მისამართი";
+                //lstErrorMessages.Text = "Invalid email address";
                 pnlRecovery.Visible = ConfigUtil.UserRecoveryEnabled;
 
                 return;
             }
 
-            user.UserCode = Convert.ToString(Guid.NewGuid());
-            HbSession.SubmitUpdate(user);
+            dbUser.UserCode = Convert.ToString(Guid.NewGuid());
+            HbSession.SubmitUpdate(dbUser);
 
-            EmailUtil.SendRecoveryEmail(user);
+            try
+            {
+                EmailUtil.SendRecoveryEmail(dbUser);
+            }
+            catch (Exception ex)
+            {
+                lstErrorMessages.Text = ex.Message;
+                return;
+            }
 
+            lstErrorMessages.ForeColor = Color.Green;
             lstErrorMessages.Text = "თქვენ მიიღებთ პაროლის აღდგენის ბმულს ელ.ფოსტაზე";
+            //lstErrorMessages.Text = "Please check your email to finish password recovery";
             pnlRecovery.Visible = ConfigUtil.UserRecoveryEnabled;
         }
 
         protected String GetReturnUrl()
         {
-            if (String.IsNullOrEmpty(Request["ReturnUrl"]))
+            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
+            if (String.IsNullOrEmpty(returnUrl))
                 return null;
 
             try
             {
-                var bytes = HttpServerUtility.UrlTokenDecode(Request["ReturnUrl"]);
+                var bytes = HttpServerUtility.UrlTokenDecode(returnUrl);
                 return Encoding.UTF8.GetString(bytes);
             }
             catch (Exception)
@@ -138,14 +193,24 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             try
             {
-                var bytes = Convert.FromBase64String(Request["ReturnUrl"]);
+                var bytes = Convert.FromBase64String(returnUrl);
                 return Encoding.ASCII.GetString(bytes);
             }
             catch (Exception)
             {
             }
 
-            return Request["ReturnUrl"];
+            return returnUrl;
+        }
+
+        protected void btnGeo_OnClick(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnEng_OnClick(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -8,29 +8,30 @@
 <head runat="server">
     <title></title>
 </head>
-<body>
-    <form id="form1" runat="server">
-        <asp:Panel runat="server" DefaultButton="btOK">
-            <section id="login_page">
-                <div class="logo">
-                    <asp:Image runat="server" ImageUrl="~/App_Themes/default/images/l2.png" />
-                </div>
-                <div class="main_content">
-                    <ce:Label ID="lstWarningMessages" runat="server" ForeColor="Red" Style="font-weight: bold;">
-                    </ce:Label>
-                    <ce:Label ID="lstErrorMessages" runat="server">
-                    </ce:Label>
-                    <local:ChangePassword runat="server" ID="changePassword" />
-                    <div class="clear"></div>
-                    <div class="wrapper"></div>
-                    <ce:ImageLinkButton ID="btOK" CssClass="login_button"
-                        Text="შეცვლა" runat="server" OnClick="btOK_Click" />
-                    <div class="wrapper"></div>
-                    <ce:ImageLinkButton ID="btCancel" CssClass="login_button"
-                        Text="უკან დაბრუნება" runat="server" OnClick="btCancel_Click" />
+<body class="gray-bg">
+    <form id="form1" role="form" runat="server" style="height: 100%;">
+        <asp:Panel runat="server" CssClass="middle-box text-center loginscreen animated fadeInDown" DefaultButton="btOK" Style="height: 100%;">
+            <div>
+                <asp:Image runat="server" ImageUrl="~/App_Themes/default/images/rust_logo.png" />
+            </div>
 
-                </div>
-            </section>
+            <div style="padding: 20px 20px;">
+                <ce:HtmlLabel runat="server" Text="შოთა რუსთაველის ეროვნული სამეცნიერო ფონდი" />
+            </div>
+            <div style="padding: 20px 20px;">
+                <asp:HyperLink runat="server" ID="btGeoLang" OnClick="btnGeo_OnClick">GEO</asp:HyperLink>|<asp:HyperLink runat="server" ID="btEngLang" OnClick="btnEng_OnClick">ENG</asp:HyperLink>
+            </div>
+            <local:ChangePassword runat="server" ID="changePassword" />
+
+            <ce:LinkButton ID="btOK" CssClass="btn btn-success block full-width m-b" runat="server" OnClick="btOK_Click">
+                <ce:label runat="server" Text="შეცვლა"/>
+            </ce:LinkButton>
+
+            <ce:LinkButton CssClass="btn btn-success block full-width m-b" runat="server" ID="btCancel" OnClick="btCancel_Click">
+                <ce:label runat="server" Text="უკან დაბრუნება"/>
+            </ce:LinkButton>
+
+            <ce:Label ID="lstErrorMessages" ForeColor="Red" runat="server" />
         </asp:Panel>
     </form>
 </body>

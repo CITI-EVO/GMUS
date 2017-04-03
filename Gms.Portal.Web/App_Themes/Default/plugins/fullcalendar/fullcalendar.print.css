@@ -32,15 +32,6 @@
 /* Table & Day-Row Restyling
 --------------------------------------------------------------------------------------------------*/
 
-th,
-td,
-hr,
-thead,
-tbody,
-.fc-row {
-	border-color: #ccc !important;
-	background: #fff !important;
-}
 
 /* kill the overlaid, absolutely-positioned components */
 /* common... */

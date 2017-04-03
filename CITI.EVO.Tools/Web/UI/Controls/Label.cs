@@ -36,7 +36,7 @@ namespace CITI.EVO.Tools.Web.UI.Controls
             }
         }
 
-        [Localizable(false),Bindable(true)]
+        [Localizable(false), Bindable(true)]
         [Category("Appearance")]
         [DefaultValue("")]
         [PersistenceMode(PersistenceMode.InnerDefaultProperty)]
@@ -62,33 +62,33 @@ namespace CITI.EVO.Tools.Web.UI.Controls
         [DefaultValue("")]
         public String PermissionKey { get; set; }
 
-		[Bindable(true)]
-		[Category("Appearance")]
-		[DefaultValue(true)]
-		public bool DisableIfNoAccess { get; set; }
+        [Bindable(true)]
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool DisableIfNoAccess { get; set; }
 
-		protected override void RenderContents(HtmlTextWriter writer)
+        protected override void RenderContents(HtmlTextWriter writer)
         {
             TranslationUtil.ApplyTranslation(this);
-			PermissionUtil.ApplyPermission(this);
+            PermissionUtil.ApplyPermission(this);
 
-			base.RenderContents(writer);
+            base.RenderContents(writer);
         }
 
         protected override void OnPreRender(EventArgs e)
         {
             TranslationUtil.ApplyTranslation(this);
-			PermissionUtil.ApplyPermission(this);
+            PermissionUtil.ApplyPermission(this);
 
-			base.OnPreRender(e);
+            base.OnPreRender(e);
         }
 
-		public bool HasAccess()
-		{
-			return PermissionUtil.HasAccess(this);
-		}
+        public bool HasAccess()
+        {
+            return PermissionUtil.HasAccess(this);
+        }
 
-		StateBag ITranslatable.ViewState
+        StateBag ITranslatable.ViewState
         {
             get { return ViewState; }
         }

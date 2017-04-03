@@ -41,7 +41,6 @@
     /// <param name="e"></param>
     protected void Application_Start(object sender, EventArgs e)
     {
-
     }
 
     /// <summary>
@@ -70,6 +69,7 @@
     /// <param name="e"></param>
     protected void Application_EndRequest(object sender, EventArgs e)
     {
+        Hb8Factory.ReleaseSession();
     }
 
     /// <summary>

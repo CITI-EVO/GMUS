@@ -2,18 +2,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using Gms.Portal.Web.Utils;
+using MongoDB.Bson;
 
 namespace Gms.Portal.Web.Entities.DataContainer
 {
     [Serializable]
     public class FormDataBaseList : IList<FormDataUnit>
     {
-        private readonly List<FormDataUnit> _list;
+        protected int? _count;
+        protected IList<FormDataUnit> _list;
 
-        private FormDataBaseList()
+        protected FormDataBaseList()
         {
-            _list = new List<FormDataUnit>();
         }
+
+        public FormDataBaseList(FormDataBaseList formDataBaseList)
+        {
+            UserID = formDataBaseList.UserID;
+            FormID = formDataBaseList.FormID;
+            OwnerID = formDataBaseList.OwnerID;
+            ParentID = formDataBaseList.ParentID;
+
+            _count = formDataBaseList._count;
+
+            if (formDataBaseList._list != null)
+                _list = new List<FormDataUnit>(formDataBaseList._list);
+        }
+
         public FormDataBaseList(Guid? formID) : this(formID, formID, null, null)
         {
         }
@@ -44,12 +60,21 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public FormDataUnit this[int index]
         {
-            get { return _list[index]; }
-            set { _list[index] = value; }
+            get
+            {
+                InitItems();
+                return _list[index];
+            }
+            set
+            {
+                InitItems();
+                _list[index] = value;
+            }
         }
 
-        public virtual IEnumerator<FormDataUnit> GetEnumerator()
+        public IEnumerator<FormDataUnit> GetEnumerator()
         {
+            InitItems();
             return _list.GetEnumerator();
         }
 
@@ -60,37 +85,54 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public void Add(FormDataUnit item)
         {
+            InitItems();
             _list.Add(item);
         }
 
         public void AddRange(IEnumerable<FormDataUnit> items)
         {
-            _list.AddRange(items);
+            InitItems();
+
+            foreach (var item in items)
+                _list.Add(item);
         }
 
         public void Clear()
         {
+            InitItems();
             _list.Clear();
         }
 
         public bool Contains(FormDataUnit item)
         {
+            InitItems();
             return _list.Contains(item);
         }
 
         public void CopyTo(FormDataUnit[] array, int arrayIndex)
         {
+            InitItems();
             _list.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(FormDataUnit item)
         {
+            InitItems();
             return _list.Remove(item);
         }
 
         public int Count
         {
-            get { return _list.Count; }
+            get
+            {
+                if (_list == null)
+                {
+                    InitCount();
+                    return _count.GetValueOrDefault();
+                }
+
+                return _list.Count;
+            }
         }
 
         public bool IsReadOnly
@@ -100,17 +142,41 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public int IndexOf(FormDataUnit item)
         {
+            InitItems();
             return _list.IndexOf(item);
         }
 
         public void Insert(int index, FormDataUnit item)
         {
+            InitItems();
             _list.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
+            InitItems();
             _list.RemoveAt(index);
+        }
+
+        private void InitCount()
+        {
+            if (_count == null)
+                _count = InitializeCount();
+        }
+        private void InitItems()
+        {
+            if (_list == null)
+                _list = InitializeItems();
+        }
+
+        protected virtual int InitializeCount()
+        {
+            return 0;
+        }
+
+        protected virtual IList<FormDataUnit> InitializeItems()
+        {
+            return new List<FormDataUnit>();
         }
     }
 }

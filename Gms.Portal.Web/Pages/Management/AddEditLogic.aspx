@@ -10,8 +10,10 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
                     <div class="form-group">
-                        <ce:LinkButton runat="server" ID="btnSaveLogic" ToolTip="Save" OnClick="btnSaveLogic_OnClick" CssClass="btn btn-success fa fa-save"/>
-                        <ce:LinkButton runat="server" ID="btnCancelLogic" ToolTip="Close" OnClick="btnCancelLogic_OnClick" CssClass="btn btn-warning fa fa-close"/>
+                        <div class="col-lg-12">
+                            <ce:LinkButton runat="server" ID="btnSaveLogic" ToolTip="Save" OnClick="btnSaveLogic_OnClick" CssClass="btn btn-success fa fa-save" />
+                            <ce:LinkButton runat="server" ID="btnCancelLogic" ToolTip="Close" OnClick="btnCancelLogic_OnClick" CssClass="btn btn-warning fa fa-close" />
+                        </div>
                     </div>
                     <local:LogicControl runat="server" ID="logicControl" />
                 </div>

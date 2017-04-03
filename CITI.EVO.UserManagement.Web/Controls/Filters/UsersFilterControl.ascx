@@ -9,11 +9,11 @@
     <ce:CheckBox CssClass="checkbox-inline" ID="cbEmail" runat="server" Text="ელ-ფოსტა" Property="{UsersFilterModel.Email=Checked}" />
     <ce:CheckBox CssClass="checkbox-inline" ID="cbAddress" runat="server" Text="მისამართი" Property="{UsersFilterModel.Address=Checked}" />
 </div>
-<div class="form-group">
-    <div class="col-sm-2">
+<div class="">
+    <div class="col-sm-3 m-b-xs">
         <ce:DropDownList ID="ddlUserCategories" runat="server" CssClass="chosen-select" DataTextField="Name" DataValueField="ID" Property="{UsersFilterModel.CategoryID=SelectedValue}" />
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3 m-b-xs">
         <ce:DropDownList ID="ddlStatues" runat="server" CssClass="chosen-select" Property="{UsersFilterModel.Status=SelectedValue}">
             <Items>
                 <asp:ListItem Text="ყველა" Value="" Selected="true" />
@@ -22,8 +22,8 @@
             </Items>
         </ce:DropDownList>
     </div>
-    <div class="col-sm-2">
-        <asp:TextBox ID="txtKeyword" Height="27px" runat="server" CssClass="form-control" Property="{UsersFilterModel.Keyword=Text}" />
+    <div class="col-sm-3 m-b-xs">
+        <asp:TextBox ID="txtKeyword" Height="29px" runat="server" CssClass="form-control" Property="{UsersFilterModel.Keyword=Text}" />
     </div>
 </div>
 

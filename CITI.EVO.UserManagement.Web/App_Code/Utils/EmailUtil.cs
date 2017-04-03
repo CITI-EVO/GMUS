@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
+using CITI.EVO.Tools.Utils;
 using CITI.EVO.UserManagement.DAL.Domain;
 using NVelocityTemplateEngine;
 
@@ -18,6 +19,8 @@ namespace CITI.EVO.UserManagement.Web.Utils
                 return;
 
             var emailText = GetTemplate("UserActivationTemplate", user);
+            if (emailText == null)
+                return;
 
             SendEmail("Account Activation", user.Email, emailText);
         }
@@ -28,6 +31,8 @@ namespace CITI.EVO.UserManagement.Web.Utils
                 return;
 
             var emailText = GetTemplate("UserActivatedTemplate", user);
+            if (emailText == null)
+                return;
 
             SendEmail("Account Activated", user.Email, emailText);
         }
@@ -38,6 +43,9 @@ namespace CITI.EVO.UserManagement.Web.Utils
                 return;
 
             var emailText = GetTemplate("UserRecoveryTemplate", user);
+            if (emailText == null)
+                return;
+
             SendEmail("Account Recovery", user.Email, emailText);
         }
 
@@ -59,13 +67,21 @@ namespace CITI.EVO.UserManagement.Web.Utils
 
         private static String GetTemplate(String key, UM_User user)
         {
-            var virtPath = ConfigurationManager.AppSettings[key];
+            var templateKey = String.Format("{0}_{1}", key, LanguageUtil.GetLanguage());
+
+            var virtPath = ConfigurationManager.AppSettings[templateKey];
+            if (String.IsNullOrWhiteSpace(virtPath))
+                virtPath = ConfigurationManager.AppSettings[key];
+
+            if (String.IsNullOrWhiteSpace(virtPath))
+                return null;
+
             var physicalPath = HttpContext.Current.Server.MapPath(virtPath);
             var templateText = File.ReadAllText(physicalPath);
 
             var context = new Dictionary<String, Object>
             {
-                {"user", user}
+                {"user", user},
             };
 
             var engine = NVelocityEngineFactory.CreateNVelocityMemoryEngine();

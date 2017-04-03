@@ -9,7 +9,7 @@ namespace Gms.Portal.Web.Bases
         {
             get
             {
-                return base.Page as BasePage;
+                return Page as BasePage;
             }
         }
 

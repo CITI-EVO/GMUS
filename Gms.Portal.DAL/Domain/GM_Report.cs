@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using CITI.EVO.Core.Interfaces;
 
 namespace Gms.Portal.DAL.Domain
 {
     [Serializable]
-    public partial class GM_Report 
+    public partial class GM_Report : IDbEntity
     {
         public virtual Guid ID { get; set; }
         public virtual Guid CategoryID { get; set; }

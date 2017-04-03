@@ -1,11 +1,8 @@
-﻿using System.Xml.Linq;
-using System.Xml.Serialization;
-using CITI.EVO.Core.Common;
+﻿using CITI.EVO.Core.Common;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
-using iTextSharp.text.xml;
 using NHibernate;
 
 namespace Gms.Portal.Web.Converters.EntityToModel
@@ -31,10 +28,10 @@ namespace Gms.Portal.Web.Converters.EntityToModel
             target.Number = source.Number;
             target.Visible = source.Visible;
             target.OrderIndex = source.OrderIndex;
+            target.CategoryID = source.CategoryID;
+            target.UserMode = source.UserMode;
 
             target.Entity = XmlUtil.Deserialize<FormEntity>(source.XmlData);
         }
-
-
     }
 }

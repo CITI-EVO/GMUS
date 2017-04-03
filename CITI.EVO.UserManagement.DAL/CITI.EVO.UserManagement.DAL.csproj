@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CITI.EVO.UserManagement.DAL</RootNamespace>
     <AssemblyName>CITI.EVO.UserManagement.DAL</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -70,6 +70,10 @@
     <ProjectReference Include="..\CITI.EVO.Core\CITI.EVO.Core.csproj">
       <Project>{4930efab-19d6-41fe-a198-7177b00e908d}</Project>
       <Name>CITI.EVO.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CITI.EVO.Tools\CITI.EVO.Tools.csproj">
+      <Project>{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}</Project>
+      <Name>CITI.EVO.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

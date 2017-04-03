@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeFile="LogicsList.aspx.cs" Inherits="Gms.Portal.Web.Pages.Management.LogicsList" %>
 
-<%@ Register Src="~/Controls/Management/LogicsControl.ascx" TagPrefix="lmis" TagName="LogicsControl" %>
+<%@ Register Src="~/Controls/Management/LogicsControl.ascx" TagPrefix="local" TagName="LogicsControl" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <lmis:LogicsControl runat="server" ID="logicsControl" OnEdit="logicsControl_OnEdit" OnDelete="logicsControl_OnDelete" OnView="logicsControl_OnView" />
+                    <local:LogicsControl runat="server" ID="logicsControl" OnEdit="logicsControl_OnEdit" OnDelete="logicsControl_OnDelete" OnView="logicsControl_OnView" />
                 </div>
             </div>
         </div>

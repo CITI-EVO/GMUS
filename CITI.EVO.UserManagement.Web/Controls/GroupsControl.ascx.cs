@@ -71,17 +71,17 @@ namespace CITI.EVO.UserManagement.Web.Controls
                 OnMessages(new GenericEventArgs<Guid>(itemID.Value));
         }
 
-        protected String GetImageUrl(object eval)
+        protected String GetImageClass(object eval)
         {
             var val = Convert.ToString(eval);
             if (val == "Project")
-                return "~/App_Themes/Default/Images/projects.png";
+                return "fa fa-th-large";
 
             if (val == "Group")
-                return "~/App_Themes/Default/Images/groups.png";
+                return "fa fa-users";
 
             if (val == "User")
-                return "~/App_Themes/Default/Images/users.png";
+                return "fa fa-user";
 
             return "#";
         }

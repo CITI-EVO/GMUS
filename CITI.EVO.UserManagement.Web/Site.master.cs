@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
 using CITI.EVO.UserManagement.Web.Bases;
@@ -10,6 +11,13 @@ namespace CITI.EVO.UserManagement.Web
     {
         protected void Page_Init(object sender, EventArgs e)
         {
+            var urlHelper = new UrlHelper(RequestUrl);
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "en-US";
+            btEngLang.NavigateUrl = urlHelper.ToEncodedUrl();
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "ka-GE";
+            btGeoLang.NavigateUrl = urlHelper.ToEncodedUrl();
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -39,21 +47,6 @@ namespace CITI.EVO.UserManagement.Web
         protected void lnkChangePassword_OnClick(object sender, EventArgs e)
         {
             UmUtil.Instance.GoToChangePassword();
-        }
-
-        protected void DisplayCurrentUserData()
-        {
-            var instance = UmUtil.Instance;
-            if (instance != null && instance.IsLogged)
-            {
-                var currentUser = instance.CurrentUser;
-                if (currentUser != null)
-                {
-                    lblLoginName.Text = currentUser.LoginName;
-                    lblFirstName.Text = currentUser.FirstName;
-                    lblLastName.Text = currentUser.LastName;
-                }
-            }
         }
     }
 }

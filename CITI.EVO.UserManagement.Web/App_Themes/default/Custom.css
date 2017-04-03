@@ -1,0 +1,48 @@
+.dxtlControl a {
+    color: white;
+}
+
+.dxtlControl
+{
+	cursor: default;
+	font: 14px Tahoma, Geneva, sans-serif;
+	color: black;
+	border: 1px none #9f9f9f;
+}
+.user-title {
+    color: #4d608a;
+        font-size: 13px;
+    font-weight: bold;
+}
+.tabs-container .nav-tabs > li.active > a, .tabs-container .nav-tabs > li.active > a:hover, .tabs-container .nav-tabs > li.active > a:focus {
+    background-color: #4d608a!important;
+    color: white;
+}
+
+.nav.navbar-right > li > a.top-memu-link{
+    color: #4d608a;
+    font-size: 18px;
+}
+.nav.navbar-right > li > a.top-memu-link:hover{
+    color: #999c9e;
+    font-size: 18px;
+}
+.nav.navbar-right > li > a.top-memu-lang{
+
+    color: #4d608a;
+
+}.nav.navbar-right > li > a.top-memu-langtr{
+    color: #f8ac59;
+
+}
+.nav.navbar-right > li > a.top-memu-lang:hover{
+    color: #999c9e;
+  
+}.nav.navbar-right > li > a.top-memu-lang:active{
+    color: #999c9e;
+  
+}
+
+ .dxtlControl a:hover {
+     color: white !important;
+ }

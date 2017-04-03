@@ -11,8 +11,9 @@ namespace Gms.Portal.Web.Entities.DataContainer
     [Serializable]
     public class FormDataLazyList : FormDataBaseList
     {
-        private bool _initialized;
-
+        public FormDataLazyList(FormDataLazyList formDataLazyList) : base(formDataLazyList)
+        {
+        }
         public FormDataLazyList(FormDataListRef formDataListRef)
             : base(formDataListRef.FormID, formDataListRef.OwnerID, formDataListRef.ParentID)
         {
@@ -30,64 +31,100 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
         }
 
-        public override IEnumerator<FormDataUnit> GetEnumerator()
+        protected override int InitializeCount()
         {
-            InitializeItems();
-            return base.GetEnumerator();
+            var collID = (OwnerID ?? FormID);
+
+            var collection = MongoDbUtil.GetCollection(collID);
+            if (collection == null)
+                return 0;
+
+            var builder = Builders<BsonDocument>.Filter;
+            var filter = builder.Eq(FormDataConstants.DateDeletedField, (DateTime?)null);
+
+            if (ParentID != null)
+                filter = filter & builder.Eq(FormDataConstants.ParentIDField, ParentID);
+
+            if (UserID != null)
+                filter = filter & builder.Eq(FormDataConstants.UserIDField, UserID);
+
+            var count = collection.Count(filter);
+            return (int)count;
         }
 
-        private void InitializeItems()
+        protected override IList<FormDataUnit> InitializeItems()
         {
-            if (_initialized)
-                return;
-
             if (FormID == null && OwnerID == null)
                 throw new Exception();
 
             var collID = (OwnerID ?? FormID);
 
-            var collection = MongoDbUtil.GetCollection(collID);
+            var results = new List<FormDataUnit>();
 
-            var query = from doc in collection.AsQueryable()
-                        where doc[FormDataUnit.DateDeletedField] == (DateTime?)null
-                        select doc;
+            var collection = MongoDbUtil.GetCollection(collID);
+            if (collection == null)
+                return results;
+
+            var builder = Builders<BsonDocument>.Filter;
+            var filter = builder.Eq(FormDataConstants.DateDeletedField, (DateTime?)null);
 
             if (ParentID != null)
-            {
-                query = (from doc in query
-                         where doc[FormDataUnit.ParentIDField] == ParentID
-                         select doc);
-            }
+                filter = filter & builder.Eq(FormDataConstants.ParentIDField, ParentID);
 
             if (UserID != null)
+                filter = filter & builder.Eq(FormDataConstants.UserIDField, UserID);
+
+            //var sort = Builders<BsonDocument>.Sort.Descending(FormDataConstants.DateCreatedField);
+
+            var cursor = collection.FindSync(filter);
+            while (cursor.MoveNext())
             {
-                query = (from doc in query
-                         where doc[FormDataUnit.UserIDField] == UserID
-                         select doc);
+                var bsonDocuments = cursor.Current;
+
+                var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(bsonDocuments);
+                foreach (var formDataUnit in formDataUnits)
+                {
+                    formDataUnit.FormID = FormID;
+                    formDataUnit.OwnerID = OwnerID;
+
+                    results.Add(formDataUnit);
+                }
             }
 
-            query = (from doc in query
-                     orderby doc[FormDataUnit.DateCreatedField] descending 
-                     select doc);
-            //var commonFilter = Builders<BsonDocument>.Filter.Eq("DateDeleted", (DateTime?)null);
+            return results;
+
+            //var query = from doc in collection.AsQueryable()
+            //            where doc[FormDataConstants.DateDeletedField] == (DateTime?)null
+            //            select doc;
+
             //if (ParentID != null)
             //{
-            //    var parentFilter = Builders<BsonDocument>.Filter.Eq("ParentID", ParentID);
-            //    commonFilter = Builders<BsonDocument>.Filter.And(commonFilter, parentFilter);
+            //    query = (from doc in query
+            //             where doc[FormDataConstants.ParentIDField] == ParentID
+            //             select doc);
             //}
 
-            //var documents = Enumerable.ToList(MongoDbUtil.FindObject(collection, commonFilter));
+            //if (UserID != null)
+            //{
+            //    query = (from doc in query
+            //             where doc[FormDataConstants.UserIDField] == UserID
+            //             select doc);
+            //}
 
-            var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(query);
-            foreach (var formDataUnit in formDataUnits)
-            {
-                formDataUnit.FormID = FormID;
-                formDataUnit.OwnerID = OwnerID;
+            //query = (from doc in query
+            //         orderby doc[FormDataConstants.DateCreatedField] descending
+            //         select doc);
 
-                Add(formDataUnit);
-            }
+            //var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(query);
+            //foreach (var formDataUnit in formDataUnits)
+            //{
+            //    formDataUnit.FormID = FormID;
+            //    formDataUnit.OwnerID = OwnerID;
 
-            _initialized = true;
+            //    results.Add(formDataUnit);
+            //}
+
+            //return results;
         }
     }
 }

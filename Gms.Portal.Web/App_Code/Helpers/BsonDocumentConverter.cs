@@ -13,11 +13,17 @@ namespace Gms.Portal.Web.Helpers
     {
         public static IEnumerable<IDictionary<String, Object>> ConvertToDictionary(IMongoQueryable<BsonDocument> source)
         {
+            if (source == null)
+                return null;
+
             var list = IAsyncCursorSourceExtensions.ToList(source);
             return ConvertToDictionary(list);
         }
         public static IEnumerable<IDictionary<String, Object>> ConvertToDictionary(IEnumerable<BsonDocument> source)
         {
+            if (source == null)
+                yield break;
+
             foreach (var document in source)
             {
                 var formDataUnit = ConvertToDictionary(document);
@@ -26,6 +32,9 @@ namespace Gms.Portal.Web.Helpers
         }
         public static IDictionary<String, Object> ConvertToDictionary(BsonDocument source)
         {
+            if (source == null)
+                return null;
+
             var dictionary = new Dictionary<String, Object>();
 
             foreach (var element in source.Elements)
@@ -66,11 +75,17 @@ namespace Gms.Portal.Web.Helpers
 
         public static IEnumerable<BsonDocument> ConvertToBsonDocument(IQueryable<IDictionary<String, Object>> source)
         {
+            if (source == null)
+                return null;
+
             var list = source.ToList();
             return ConvertToBsonDocument(list);
         }
         public static IEnumerable<BsonDocument> ConvertToBsonDocument(IEnumerable<IDictionary<String, Object>> source)
         {
+            if (source == null)
+                yield break;
+
             foreach (var document in source)
             {
                 var formDataUnit = ConvertToBsonDocument(document);
@@ -79,6 +94,9 @@ namespace Gms.Portal.Web.Helpers
         }
         public static BsonDocument ConvertToBsonDocument(IDictionary<String, Object> source)
         {
+            if (source == null)
+                return null;
+
             var document = new BsonDocument();
 
             foreach (var pair in source)
@@ -101,12 +119,18 @@ namespace Gms.Portal.Web.Helpers
 
         public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IMongoQueryable<BsonDocument> source)
         {
+            if (source == null)
+                return null;
+
             var list = IAsyncCursorSourceExtensions.ToList(source);
             return ConvertToFormDataUnit(list);
         }
 
         public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IEnumerable<BsonDocument> source)
         {
+            if (source == null)
+                yield break;
+
             foreach (var document in source)
             {
                 var formDataUnit = ConvertToFormDataUnit(document);
@@ -116,7 +140,10 @@ namespace Gms.Portal.Web.Helpers
 
         public static FormDataUnit ConvertToFormDataUnit(BsonDocument source)
         {
-            var recordID = source[FormDataUnit.IDField].AsNullableGuid;
+            if (source == null)
+                return null;
+
+            var recordID = source[FormDataConstants.IDField].AsNullableGuid;
             var formDataUnit = new FormDataUnit();
 
             foreach (var element in source.Elements)
@@ -125,16 +152,31 @@ namespace Gms.Portal.Web.Helpers
 
                 if (bsonValue.IsBsonDocument)
                 {
-                    var listRefDoc = bsonValue.AsBsonDocument;
+                    var subDoc = bsonValue.AsBsonDocument;
 
-                    var subFormID = listRefDoc[FormDataUnit.FormIDField].AsNullableGuid;
-                    var subOwnerID = listRefDoc[FormDataUnit.OwnerIDField].AsNullableGuid;
-                    var subParentID = recordID;
+                    var docType = TryGetValue<String>(subDoc, FormDataConstants.DocTypeField);
+                    if (docType == FormDataConstants.BinaryDocType)
+                    {
+                        var fileName = subDoc[FormDataConstants.FileNameField].AsString;
 
-                    var listRef = new FormDataListRef(subFormID, subOwnerID, subParentID);
-                    formDataUnit[element.Name] = listRef;
+                        var binaryData = subDoc[FormDataConstants.FileBytesField].AsBsonBinaryData;
+                        var fileBytes = (binaryData != null ? binaryData.Bytes : null);
+
+                        var formBinary = new FormDataBinary(fileName, fileBytes);
+
+                        formDataUnit[element.Name] = formBinary;
+                    }
+                    else if (docType == FormDataConstants.ReferenceDocType || String.IsNullOrWhiteSpace(docType))
+                    {
+                        var subFormID = subDoc[FormDataConstants.FormIDField].AsNullableGuid;
+                        var subOwnerID = subDoc[FormDataConstants.OwnerIDField].AsNullableGuid;
+                        var subParentID = recordID;
+
+                        var listRef = new FormDataListRef(subFormID, subOwnerID, subParentID);
+                        formDataUnit[element.Name] = listRef;
+                    }
                 }
-                else if (element.Name == FormDataUnit.PrivacyField)
+                else if (element.Name == FormDataConstants.PrivacyField)
                 {
                     if (!bsonValue.IsBsonNull)
                     {
@@ -172,12 +214,18 @@ namespace Gms.Portal.Web.Helpers
 
         public static IEnumerable<BsonDocument> ConvertToBsonDocument(IQueryable<FormDataUnit> source)
         {
+            if (source == null)
+                return null;
+
             var list = source.ToList();
             return ConvertToBsonDocument(list);
         }
 
         public static IEnumerable<BsonDocument> ConvertToBsonDocument(IEnumerable<FormDataUnit> source)
         {
+            if (source == null)
+                yield break;
+
             foreach (var document in source)
             {
                 var formDataUnit = ConvertToBsonDocument(document);
@@ -187,6 +235,9 @@ namespace Gms.Portal.Web.Helpers
 
         public static BsonDocument ConvertToBsonDocument(FormDataUnit source)
         {
+            if (source == null)
+                return null;
+
             var document = new BsonDocument();
 
             foreach (var pair in source)
@@ -197,14 +248,29 @@ namespace Gms.Portal.Web.Helpers
 
                     var listRefDoc = new BsonDocument
                     {
-                        {"FormID", listRef.FormID },
-                        {"OwnerID", listRef.OwnerID },
-                        {"ParentID", source.ID }
+                        {FormDataConstants.DocTypeField, FormDataConstants.ReferenceDocType },
+
+                        {FormDataConstants.FormIDField, listRef.FormID },
+                        {FormDataConstants.OwnerIDField, listRef.OwnerID },
+                        {FormDataConstants.ParentIDField, source.ID }
                     };
 
                     document[pair.Key] = listRefDoc;
                 }
-                else if (pair.Key == FormDataUnit.PrivacyField)
+                else if (pair.Value is FormDataBinary)
+                {
+                    var binary = (FormDataBinary)pair.Value;
+
+                    var binaryDoc = new BsonDocument
+                    {
+                        {FormDataConstants.DocTypeField, FormDataConstants.BinaryDocType },
+                        {FormDataConstants.FileNameField, binary.FileName },
+                        {FormDataConstants.FileBytesField, BsonBinaryData.Create(binary.FileBytes) },
+                    };
+
+                    document[pair.Key] = binaryDoc;
+                }
+                else if (pair.Key == FormDataConstants.PrivacyField)
                 {
                     var privacyDoc = BsonArray.Create(pair.Value);
                     document[pair.Key] = privacyDoc;
@@ -216,6 +282,15 @@ namespace Gms.Portal.Web.Helpers
             }
 
             return document;
+        }
+
+        private static TValue TryGetValue<TValue>(BsonDocument document, String name)
+        {
+            BsonValue bsonValue;
+            if (!document.TryGetValue(name, out bsonValue))
+                return default(TValue);
+
+            return (TValue)BsonTypeMapper.MapToDotNetValue(bsonValue);
         }
     }
 }

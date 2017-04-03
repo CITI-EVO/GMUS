@@ -32,13 +32,19 @@ namespace CITI.EVO.UserManagement.Web.Converters.EntityToModel
 
         private void FillObject(AttributeFieldsModel target, IEnumerable<UM_AttributeField> source)
         {
+            if (source == null)
+                return;
+
             var converter = new AttributeFieldEntityModelConverter(Session);
 
             target.List = new List<AttributeFieldModel>();
 
-            foreach (var attributesField in source)
+            foreach (var item in source)
             {
-                var model = converter.Convert(attributesField);
+                if (item.DateDeleted != null)
+                    continue;
+
+                var model = converter.Convert(item);
                 target.List.Add(model);
             }
         }

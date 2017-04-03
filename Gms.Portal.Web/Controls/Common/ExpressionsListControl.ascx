@@ -7,12 +7,12 @@
         <ce:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus" />
     </div>
     <div>
-        <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
+        <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>
                         <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" CommandArgument='<%# Eval("Key") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-primary btn-xs fa fa-edit" />
-                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("Key") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o" />
+                        <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" CommandArgument='<%# Eval("Key") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o"  OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')"/>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>

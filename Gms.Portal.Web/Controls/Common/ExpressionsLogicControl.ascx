@@ -7,7 +7,9 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Filters</h5>
+                <h5>
+                    <ce:Label runat="server" Text="Filters" />
+                </h5>
             </div>
             <div class="ibox-content">
                 <local:ExpressionsListControl runat="server" ID="filterByControl" Property="{ExpressionsLogicModel.FilterBy=Model}" />
@@ -20,7 +22,9 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Group By</h5>
+                <h5>
+                    <ce:Label runat="server" Text="Group By" />
+                </h5>
             </div>
             <div class="ibox-content">
                 <local:ExpressionsListControl runat="server" ID="groupByControl" Property="{ExpressionsLogicModel.GroupBy=Model}" />
@@ -32,7 +36,9 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Order By</h5>
+                <h5>
+                    <ce:Label runat="server" Text="Order By" />
+                </h5>
             </div>
             <div class="ibox-content">
                 <local:ExpressionsListControl runat="server" ID="orderByControl" Property="{ExpressionsLogicModel.OrderBy=Model}" />
@@ -44,7 +50,9 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Select</h5>
+                <h5>
+                    <ce:Label runat="server" Text="Select" />
+                </h5>
             </div>
             <div class="ibox-content">
                 <local:NamedExpressionsListControl runat="server" ID="selectControl" Property="{ExpressionsLogicModel.Select=Model}" />

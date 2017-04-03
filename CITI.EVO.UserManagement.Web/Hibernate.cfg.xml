@@ -6,6 +6,7 @@
     <property name="connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
     <property name="connection.connection_string">Data Source=evolution.ge;Initial Catalog=GMS_UserManagement;User ID=sa;Password=@citi_evo_hitman47@</property>
 
+    <property name="current_session_context_class">thread_local</property>
     <property name="show_sql">true</property>
 
     <mapping assembly="CITI.EVO.UserManagement.DAL"/>

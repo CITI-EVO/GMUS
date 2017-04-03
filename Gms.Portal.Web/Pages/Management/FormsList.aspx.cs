@@ -8,6 +8,8 @@ using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Models;
 using NHibernate.Linq;
 using System.Linq;
+using Gms.Portal.Web.Converters.ModelToEntity;
+using Gms.Portal.Web.Utils;
 
 namespace Gms.Portal.Web.Pages.Management
 {
@@ -29,6 +31,44 @@ namespace Gms.Portal.Web.Pages.Management
             urlHelper["FormID"] = e.Value;
 
             Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void formsControl_OnCopy(object sender, GenericEventArgs<Guid> e)
+        {
+            using (var transaction = HbSession.BeginTransaction())
+            {
+                var sourceEntity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == e.Value);
+                if (sourceEntity == null)
+                    return;
+
+                var entityConverter = new FormEntityModelConverter(HbSession);
+                var modelConverter = new FormModelEntityConverter(HbSession);
+
+                var formModel = entityConverter.Convert(sourceEntity);
+
+                var controls = FormStructureUtil.PreOrderTraversal(formModel.Entity);
+                foreach (var control in controls)
+                    control.ID = Guid.NewGuid();
+
+                formModel.Name = String.Format("{0} - Copy {1:dd.MM.yyyy HH:mm:ss}", formModel.Name, DateTime.Now);
+
+                var newEntity = modelConverter.Convert(formModel);
+                newEntity.ID = formModel.Entity.ID;
+
+                HbSession.Save(newEntity);
+
+                try
+                {
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+
+            FillFormsGrid();
         }
 
         protected void formsControl_OnDelete(object sender, GenericEventArgs<Guid> e)
@@ -69,5 +109,6 @@ namespace Gms.Portal.Web.Pages.Management
             formsControl.Model = model;
             formsControl.DataBind();
         }
+
     }
 }

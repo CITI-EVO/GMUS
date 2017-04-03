@@ -27,14 +27,14 @@
     <Columns>
         <dx:TreeListHyperLinkColumn VisibleIndex="0">
             <DataCellTemplate>
-                <ce:ImageLinkButton ID="lnkEdit" runat="server" Style="float: right;" ToolTip="რედაქტირება"
-                    DefaultImageUrl="~/App_Themes/default/images/edit.png" CommandArgument='<% #Eval("ID")%>'
+                <ce:ImageLinkButton ID="lnkEdit" runat="server" ToolTip="რედაქტირება"
+                   CssClass="btn btn-primary btn-sm fa fa-edit"  CommandArgument='<% #Eval("ID")%>'
                     Visible='<%# EditEnabled(Eval("ID")) %>' OnCommand="btnEdit_OnCommand" />
-                <ce:ImageLinkButton ID="lnkDelete" runat="server" Style="float: right;" ToolTip="წაშლა"
-                    DefaultImageUrl="~/App_Themes/default/images/delete.png" OnClientClick="return confirm('გსურთ რესურსის წაშლა?');"
+                <ce:ImageLinkButton ID="lnkDelete" runat="server"  ToolTip="წაშლა"
+                   CssClass="btn btn-danger btn-sm fa fa-trash-o" OnClientClick="return confirm('გსურთ რესურსის წაშლა?');"
                     CommandArgument='<% #Eval("ID")%>' OnCommand="btnDelete_OnCommand" Visible='<%# DeleteEnabled(Eval("ID")) %>' />
-                <ce:ImageLinkButton ID="lnkNew" runat="server" ToolTip="დამატება" Style="float: right;"
-                    DefaultImageUrl="~/App_Themes/default/images/add.png" CommandArgument='<% #Eval("ID")%>'
+                <ce:ImageLinkButton ID="lnkNew" runat="server" ToolTip="დამატება" 
+                    cssclass="btn btn-primary fa fa-plus" CommandArgument='<% #Eval("ID")%>'
                     Visible='<%# NewEnabled(Eval("ID")) %>' OnCommand="btnNew_OnCommand" />
             </DataCellTemplate>
         </dx:TreeListHyperLinkColumn>

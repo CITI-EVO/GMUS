@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using CITI.EVO.Tools.Extensions;
+using CITI.EVO.Tools.Helpers;
+using CITI.EVO.Tools.Utils;
 using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using NHibernate.Linq;
@@ -9,6 +11,17 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 {
     public partial class Recovery : BasePage
     {
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            var urlHelper = new UrlHelper(Request.Url);
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "en-US";
+            btEngLang.NavigateUrl = urlHelper.ToEncodedUrl();
+
+            urlHelper[LanguageUtil.RequestLanguageKey] = "ka-GE";
+            btGeoLang.NavigateUrl = urlHelper.ToEncodedUrl();
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -43,7 +56,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             if (model.NewPassword != model.ConfirmPassword)
             {
-                lblError.Text = "პაროლები არ მეთხვევა ერთმანეთს";
+                lblError.Text = "პაროლები არ ემთხვევა ერთმანეთს";
                 return;
             }
 

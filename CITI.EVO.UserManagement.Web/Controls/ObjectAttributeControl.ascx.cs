@@ -56,7 +56,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
             if (schemaID != null)
             {
                 var nodes = (from n in HbSession.Query<UM_AttributeField>()
-                             where n.DateDeleted == null && n.AttributeSchemaID == schemaID
+                             where n.DateDeleted == null && n.AttributeSchema.ID == schemaID
                              orderby n.Name
                              select n);
 
@@ -72,7 +72,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
                     return;
 
                 var attributeValue = (from n in HbSession.Query<UM_AttributeValue>()
-                                      where n.DateDeleted == null && n.AttributeFieldID == nodeID && n.ParentID == parentID
+                                      where n.DateDeleted == null && n.AttributeField.ID == nodeID && n.ParentID == parentID
                                       select n).FirstOrDefault();
 
                 if (attributeValue != null)

@@ -1,12 +1,12 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="SearchGroupsControl.ascx.cs" Inherits="CITI.EVO.UserManagement.Web.Controls.SearchGroupsControl" %>
 
-<dx:ASPxTreeList ID="tlGroups" runat="server" AutoGenerateColumns="False" Width="600"
+<dx:ASPxTreeList ID="tlGroups" runat="server" AutoGenerateColumns="False" Width="100%"
     KeyFieldName="ID" ParentFieldName="ParentID" ClientIDMode="AutoID"
     ViewStateMode="Disabled">
     <Settings ShowGroupFooter="false" ShowFooter="false" GridLines="Both" ShowTreeLines="True" />
     <SettingsBehavior ExpandCollapseAction="NodeDblClick" AllowSort="True" AllowFocusedNode="true" />
     <SettingsEditing Mode="EditFormAndDisplayNode" />
-    <SettingsPager Position="Bottom" PageSize="25">
+    <SettingsPager Position="Bottom" PageSize="5">
         <Summary Text="{0} გვერდი {1}-დან (სულ {2})"></Summary>
         <PageSizeItemSettings Items="25, 50, 100, 200" Visible="True" Caption="ჩანაწერების რაოდენობა" />
     </SettingsPager>

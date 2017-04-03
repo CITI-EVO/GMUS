@@ -25,6 +25,11 @@ namespace CITI.EVO.Tools.Web.UI.Controls
         [Category("Accessibility")]
         public bool TableSectionHeader { get; set; }
 
+        [DefaultValue(true)]
+        [Category("Accessibility")]
+        public bool TableSectionFooter { get; set; }
+
+
         protected override void RenderContents(HtmlTextWriter writer)
         {
             PrepareGrid();
@@ -43,6 +48,12 @@ namespace CITI.EVO.Tools.Web.UI.Controls
             {
                 if (HeaderRow != null)
                     HeaderRow.TableSection = TableRowSection.TableHeader;
+            }
+
+            if (TableSectionFooter)
+            {
+                if (FooterRow != null)
+                    FooterRow.TableSection = TableRowSection.TableFooter;
             }
 
             Translate();

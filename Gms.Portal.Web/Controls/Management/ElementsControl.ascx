@@ -26,40 +26,41 @@
         <dx:TreeListTextColumn VisibleIndex="1">
             <DataCellTemplate>
                 <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" Visible='<%# GetEditVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-info btn-xs fa fa-edit" />
-                <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" Visible='<%# GetDeleteVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o" />
+                <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" Visible='<%# GetDeleteVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o"  OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')" />
+                <ce:LinkButton runat="server" ID="btnMove" ToolTip="Move" Visible='<%# GetMoveVisible(Eval("ParentID")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnMove_OnCommand" CssClass="btn btn-info btn-xs fa fa-cut" />
                 <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" Visible='<%# GetNewVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnNew_OnCommand" CssClass="btn btn-info btn-xs fa fa-plus" />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="3">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="Name" />
+                <ce:Label runat="server" Text="Name" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
                 <div>
                     <span runat="server" class='<%# GetImageClass(Eval("ElementType")) %>'></span>
-                    <span style="padding: 2px;"><%#Eval("Name") %></span>
+                    <span style="padding: 2px; max-width: 500px;"><%#Eval("Name") %></span>
                 </div>
             </DataCellTemplate>
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="4">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="ElementType" />
+                <ce:Label runat="server" Text="Element Type" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
-                <asp:Label runat="server" Text='<%#Eval("ElementType") %>' />
+                <ce:Label runat="server" Text='<%#Eval("ElementType") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="5">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="ControlType" />
+                <ce:Label runat="server" Text="Control Type" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
-                <asp:Label runat="server" Text='<%#Eval("ControlType") %>' />
+                <ce:Label runat="server" Text='<%#Eval("ControlType") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="6">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="Order Index" />
+                <ce:Label runat="server" Text="Order Index" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
                 <asp:Label runat="server" Text='<%#Eval("OrderIndex") %>' />
@@ -67,10 +68,10 @@
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="7">
             <HeaderCaptionTemplate>
-                <asp:Label runat="server" Text="Visible" />
+                <ce:Label runat="server" Text="Visible" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
-                <asp:Label runat="server" Text='<%#Eval("Visible") %>' />
+                <ce:Label runat="server" Text='<%#Eval("Visible") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
     </Columns>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}"
 EndProject
@@ -16,7 +16,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.RpcHub.Web", "http://localhost/Rnsf/Gms/CITI.EVO.RpcHub.Web", "{6EBA73AD-05CF-41DB-B534-A098D8CE1D36}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
 		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.RpcHub.Web"
 		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.RpcHub.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.RpcHub.Web\"
@@ -37,7 +37,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.UserManagement.Web", "http://localhost/Rnsf/Gms/CITI.EVO.UserManagement.Web", "{DEF34AA1-D98C-479B-BC4B-2DF39AD4D7AC}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
 		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.UserManagement.Web"
 		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.UserManagement.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.UserManagement.Web\"
@@ -89,7 +89,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CITI.EVO.CommonData.Web", "http://localhost/Rnsf/Gms/CITI.EVO.CommonData.Web", "{6365B462-8F7B-4484-8CFB-E54879FE4EDB}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
 		Debug.AspNetCompiler.VirtualPath = "/CITI.EVO.CommonData.Web"
 		Debug.AspNetCompiler.PhysicalPath = "CITI.EVO.CommonData.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CITI.EVO.CommonData.Web\"
@@ -117,7 +117,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Gms.Portal.Web", "http://localhost/Rnsf/Gms/Gms.Portal.Web", "{11EA094C-DD9D-4A3C-93F6-41A96909B51B}"
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
 		Debug.AspNetCompiler.VirtualPath = "/Gms.Portal.Web"
 		Debug.AspNetCompiler.PhysicalPath = "Gms.Portal.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"

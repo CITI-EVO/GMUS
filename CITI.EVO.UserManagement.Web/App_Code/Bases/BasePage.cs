@@ -17,7 +17,7 @@ namespace CITI.EVO.UserManagement.Web.Bases
         {
             get
             {
-                hbSession = (hbSession ?? Hb8Factory.CreateSession());
+                hbSession = (hbSession ?? Hb8Factory.InitSession());
                 return hbSession;
             }
         }

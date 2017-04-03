@@ -36,7 +36,7 @@ namespace Gms.Portal.Web.Controls.Management
 
                 var controlID = controlIDFormat.Replace("@hashCode", fieldID);
 
-                if (fieldKey == FormDataUnit.IDField)
+                if (fieldKey == FormDataConstants.IDField)
                 {
                     property = property.Replace("@propName", "Value");
 

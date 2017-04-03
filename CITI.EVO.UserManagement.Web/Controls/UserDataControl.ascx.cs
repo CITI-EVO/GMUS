@@ -17,6 +17,8 @@ namespace CITI.EVO.UserManagement.Web.Controls
 
         protected void chkChangePassword_CheckChanged(object sender, EventArgs e)
         {
+            OnDataChanged(e);
+
             var model = Model;
 
             if (chkChangePassword.Checked)
@@ -33,22 +35,20 @@ namespace CITI.EVO.UserManagement.Web.Controls
                 tbPassword.Enabled = false;
                 tbPassword.Text = String.Empty;
             }
-
-            OnDataChanged(e);
         }
 
         protected void FillUserCategories()
         {
-            var userCategoris = HbSession.Query<UM_UserCategory>().Where(n => n.DateDeleted == null).ToList();
+            //var userCategoris = HbSession.Query<UM_UserCategory>().Where(n => n.DateDeleted == null).ToList();
 
-            var item = new UM_UserCategory();
-            item.ID = Guid.Empty;
-            item.DateCreated = DateTime.Now;
-            item.Name = "ყველა";
+            //var item = new UM_UserCategory();
+            //item.ID = Guid.Empty;
+            //item.DateCreated = DateTime.Now;
+            //item.Name = "ყველა";
 
-            userCategoris.Insert(0, item);
+            //userCategoris.Insert(0, item);
 
-            cbxUserCategory.BindData(userCategoris);
+            //cbxUserCategory.BindData(userCategoris);
         }
     }
 }
