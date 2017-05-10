@@ -24,9 +24,9 @@ namespace CITI.EVO.Rpc.Collection
 
 			_enumeratorLazy = new Lazy<IEnumerator<Object>>(LoadWhole);
 
-			_resetMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Reset", _peer);
-			_disposeMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Dispose", _peer);
-			_loadWholeMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.LoadWhole", _peer);
+			_resetMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Reset";
+			_disposeMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Dispose";
+			_loadWholeMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.LoadWhole";
 		}
 
 		public String Peer

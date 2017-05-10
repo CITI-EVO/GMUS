@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeSchemaOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeSchemaOK_Click" />
-                                <asp:LinkButton CssClass="btn btn-warning fa fa-times" ID="btAttributeSchemaCancel" runat="server" ToolTip="დახურვა" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-times" ID="btAttributeSchemaCancel" runat="server" ToolTip="დახურვა" OnClick="btAttributeSchemaCancel_OnClick" />
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                             <div class="col-sm-12">
                                 <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeSchemaNodeOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeSchemaNodeOK_Click" />
 
-                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeSchemaNodeCancel" runat="server" ToolTip="დახურვა" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeSchemaNodeCancel" runat="server" ToolTip="დახურვა" OnClick="btAttributeSchemaNodeCancel_OnClick" />
                             </div>
                         </div>
                     </div>

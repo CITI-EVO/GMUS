@@ -10,14 +10,18 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>
-                        <asp:Label runat="server"></asp:Label>
+                        <ce:Label runat="server">Lists</ce:Label>
                     </h5>
                     <div class="ibox-tools">
-                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <local:CollectionsControl runat="server" ID="collectionsControl" OnEdit="collectionsControl_OnEdit" OnDelete="collectionsControl_OnDelete" OnView="collectionsControl_OnView" />
+                    <div class="form-group">
+                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
+                    </div>
+                    <div class="form-group">
+                        <local:CollectionsControl runat="server" ID="collectionsControl" OnEdit="collectionsControl_OnEdit" OnDelete="collectionsControl_OnDelete" OnView="collectionsControl_OnView" />
+                    </div>
                 </div>
             </div>
         </div>

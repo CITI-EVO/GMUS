@@ -270,14 +270,14 @@ namespace CITI.EVO.Tools.Extensions
             var dbCommand = CreateSelectCommand(dataContext, query);
             var tableName = GetTableName(query.ElementType);
 
-            var updatePart = String.Format("UPDATE {0} SET", tableName);
+            var updatePart = $"UPDATE {tableName} SET";
 
             var setParams = new List<String>(updateColumns.Count);
 
             foreach (var pair in updateColumns)
             {
                 var formatedValue = GetFormatedValue(pair.Value);
-                var param = String.Format("{0} = {1}", pair.Key, formatedValue);
+                var param = $"{pair.Key} = {formatedValue}";
 
                 setParams.Add(param);
             }
@@ -294,7 +294,7 @@ namespace CITI.EVO.Tools.Extensions
 
             wherePart = _queryWhereRegex.Replace(wherePart, String.Empty);
 
-            var updateQuery = String.Format("{1}{0}{2}{0}{3}", Environment.NewLine, updatePart, setPart, wherePart);
+            var updateQuery = $"{updatePart}{Environment.NewLine}{setPart}{Environment.NewLine}{wherePart}";
             dbCommand.CommandText = updateQuery;
 
             return dbCommand;
@@ -302,7 +302,7 @@ namespace CITI.EVO.Tools.Extensions
 
         private static DbCommand CreateSelectCommand(DataContext dataContext, IQueryable query)
         {
-            var appSettingKey = String.Format("{0}.InQueryMode", dataContext.GetType().Name);
+            var appSettingKey = $"{dataContext.GetType().Name}.InQueryMode";
 
             var inQueryMode = ConfigurationManager.AppSettings[appSettingKey];
             inQueryMode = (inQueryMode ?? String.Empty);
@@ -358,7 +358,7 @@ namespace CITI.EVO.Tools.Extensions
         {
             var contextTypeName = dataContext.GetType().Name;
 
-            var dbOptimizer = CommonObjectCache.InitObjectCache(contextTypeName, () => CreateDbOptimizer(dataContext));
+            var dbOptimizer = CommonObjectCache.InitObject(contextTypeName, () => CreateDbOptimizer(dataContext));
             return dbOptimizer;
         }
 
@@ -373,7 +373,7 @@ namespace CITI.EVO.Tools.Extensions
         private static IDictionary<String, String> GetDbXmlConverters(DataContext dataContext)
         {
 
-            var prefix = String.Format("{0}.XmlConverter.", dataContext.GetType().Name);
+            var prefix = $"{dataContext.GetType().Name}.XmlConverter.";
             var result = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var key in ConfigurationManager.AppSettings.AllKeys)
@@ -396,7 +396,7 @@ namespace CITI.EVO.Tools.Extensions
             var isolationLevel = GetIsolationLevel(dataContext);
             if (!String.IsNullOrWhiteSpace(isolationLevel))
             {
-                var sqlQuery = String.Format("SET TRANSACTION ISOLATION LEVEL {0}", isolationLevel);
+                var sqlQuery = $"SET TRANSACTION ISOLATION LEVEL {isolationLevel}";
                 command.CommandText = String.Concat(sqlQuery, Environment.NewLine, command.CommandText);
             }
 
@@ -416,7 +416,7 @@ namespace CITI.EVO.Tools.Extensions
         {
             const String countQueryFormat = "SELECT (CASE WHEN EXISTS({0}) THEN 1 ELSE 0 END) AS {1}";
 
-            var resultName = String.Format("[r{0}]", (uint)Guid.NewGuid().GetHashCode());
+            var resultName = $"[r{(uint) Guid.NewGuid().GetHashCode()}]";
 
             sqlCommand.CommandText = String.Format(countQueryFormat, sqlCommand.CommandText, resultName);
         }
@@ -426,7 +426,7 @@ namespace CITI.EVO.Tools.Extensions
             const String countQueryFormat = "SELECT COUNT(*) FROM ({0}) AS {1}";
 
             var hashCode = (uint)sqlCommand.CommandText.GetHashCode();
-            var resultName = String.Format("[t_{0}]", hashCode);
+            var resultName = $"[t_{hashCode}]";
 
             sqlCommand.CommandText = String.Format(countQueryFormat, sqlCommand.CommandText, resultName);
         }
@@ -528,12 +528,12 @@ namespace CITI.EVO.Tools.Extensions
 
             if (value is DateTime)
             {
-                return String.Format("'{0:yyyy-MM-dd HH:mm:ss.fff}'", value);
+                return $"'{value:yyyy-MM-dd HH:mm:ss.fff}'";
             }
 
             if (value is Guid)
             {
-                return String.Format(DateTimeFormatInfo.InvariantInfo, "'{0}'", value);
+                return $"'{value}'";
             }
 
             if (value is bool)
@@ -546,7 +546,7 @@ namespace CITI.EVO.Tools.Extensions
 
             if (value is String)
             {
-                return String.Format("N'{0}'", value);
+                return $"N'{value}'";
             }
 
             if (value is sbyte ||
@@ -640,7 +640,7 @@ namespace CITI.EVO.Tools.Extensions
 
         private static String GetIsolationLevel(DataContext dataContext)
         {
-            var appSettingsKey = String.Format("{0}.AutoTransaction", dataContext.GetType().Name);
+            var appSettingsKey = $"{dataContext.GetType().Name}.AutoTransaction";
             var autoTransaction = ConfigurationManager.AppSettings[appSettingsKey];
 
             IsolationLevel isolationLevel;

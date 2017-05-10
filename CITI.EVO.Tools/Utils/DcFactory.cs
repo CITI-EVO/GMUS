@@ -100,7 +100,7 @@ namespace CITI.EVO.Tools.Utils
 
 		private static String GetDefaultConnectionString(Type type)
 		{
-			var settingName = String.Format("{0}.ConnectionStringName", type.Name);
+			var settingName = $"{type.Name}.ConnectionStringName";
 
 			var defaultConnectionStringName = ConfigurationManager.AppSettings[settingName];
 			return defaultConnectionStringName;
@@ -108,7 +108,7 @@ namespace CITI.EVO.Tools.Utils
 
 		private static int GetDefaultCommandTimeout(Type type)
 		{
-			var settingName = String.Format("{0}.CommandTimeout", type.Name);
+			var settingName = $"{type.Name}.CommandTimeout";
 
 			var defaultCommandTimeout = ConfigurationManager.AppSettings[settingName];
 

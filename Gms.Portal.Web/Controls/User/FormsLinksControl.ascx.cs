@@ -21,9 +21,11 @@ namespace Gms.Portal.Web.Controls.User
 
         protected String GetLinkUrl(object eval)
         {
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataGrid.aspx");
-            urlHelper["FormID"] = eval;
-            urlHelper["OwnerID"] = eval;
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataGrid.aspx")
+            {
+                ["FormID"] = eval,
+                ["OwnerID"] = eval
+            };
 
             return urlHelper.ToEncodedUrl();
         }

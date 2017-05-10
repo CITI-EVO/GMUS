@@ -94,8 +94,8 @@ namespace CITI.EVO.Tools.Helpers
                     }
                 }
 
-                var xmlName = String.Format("xml_{0}", entry.Index);
-                var paramName = String.Format("@{0}", xmlName);
+                var xmlName = $"xml_{entry.Index}";
+                var paramName = $"@{xmlName}";
 
                 var xmlParam = command.CreateParameter();
                 xmlParam.ParameterName = paramName;

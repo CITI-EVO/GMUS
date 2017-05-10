@@ -4,6 +4,7 @@ using System;
 using System.Net.Mime;
 using System.Text;
 using System.Web;
+using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Utils;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Utils;
@@ -24,9 +25,11 @@ public class Download : IHttpHandler
         var request = context.Request;
         var response = context.Response;
 
-        var ownerID = DataConverter.ToNullableGuid(request[FormDataConstants.OwnerIDField]);
-        var recordID = DataConverter.ToNullableGuid(request[FormDataConstants.IDField]);
-        var fieldID = DataConverter.ToNullableGuid(request["FieldID"]);
+        var requestUrl = new UrlHelper(request.Url);
+
+        var ownerID = DataConverter.ToNullableGuid(requestUrl[FormDataConstants.OwnerIDField]);
+        var recordID = DataConverter.ToNullableGuid(requestUrl[FormDataConstants.IDField]);
+        var fieldID = DataConverter.ToNullableGuid(requestUrl["FieldID"]);
 
         var document = MongoDbUtil.GetDocument(ownerID, recordID);
         if (document == null)

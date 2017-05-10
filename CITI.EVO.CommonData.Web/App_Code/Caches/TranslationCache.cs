@@ -23,7 +23,7 @@ namespace CITI.EVO.CommonData.Web.Caches
             {
                 if (_trnCache == null)
                 {
-                    _trnCache = CommonObjectCache.InitObjectCache(cacheKey, LoadTranslations);
+                    _trnCache = CommonObjectCache.InitObject(cacheKey, LoadTranslations);
                 }
 
                 return _trnCache;

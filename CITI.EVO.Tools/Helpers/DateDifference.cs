@@ -88,7 +88,7 @@ namespace CITI.EVO.Tools.Helpers
 
         public override string ToString()
         {
-            return String.Format("{0} Year(s), {1} Month(s), {2} Day(s)", year, month, day);
+            return $"{year} Year(s), {month} Month(s), {day} Day(s)";
         }
 
         public int Years

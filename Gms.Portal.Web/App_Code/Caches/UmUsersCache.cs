@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CITI.EVO.Proxies;
+using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.UserManagement.Svc.Contracts;
@@ -10,13 +11,13 @@ namespace Gms.Portal.Web.Caches
 {
     public static class UmUsersCache
     {
-        private static readonly Object _syncLock;
-
-        private static IDictionary<Guid, UserContract> _usersByIdDict;
-
-        static UmUsersCache()
+        public static IList<UserContract> Users
         {
-            _syncLock = new Object();
+            get
+            {
+                var list = CommonObjectCache.InitObject("@UsersList", LoadUsersList);
+                return list;
+            }
         }
 
         public static UserContract GetUser(Guid? userID)
@@ -24,35 +25,33 @@ namespace Gms.Portal.Web.Caches
             if (userID == null)
                 return null;
 
-            Initialize();
-
-            if (_usersByIdDict == null)
-                return null;
+            var dictionary = CommonObjectCache.InitObject("@UsersDict", LoadUsersDictionary);
 
             UserContract contract;
-            if (!_usersByIdDict.TryGetValue(userID.Value, out contract))
+            if (!dictionary.TryGetValue(userID.Value, out contract))
                 return null;
 
             return contract;
         }
 
-        private static void Initialize()
+        private static IDictionary<Guid, UserContract> LoadUsersDictionary()
         {
-            lock (_syncLock)
-            {
-                var token = UmUtil.Instance.CurrentToken;
-                if (token == null)
-                    return;
+            var list = CommonObjectCache.InitObject("@UsersList", LoadUsersList);
+            var dict = ConcurrencyHelper.CreateDictionary<Guid, UserContract>();
 
-                if (_usersByIdDict == null)
-                {
-                    _usersByIdDict = ConcurrencyHelper.CreateDictionary<Guid, UserContract>();
+            foreach (var item in list)
+                dict.Add(item.ID, item);
 
-                    var users = UserManagementProxy.GetAllUsers(token.Value, true);
-                    foreach (var userContract in users)
-                        _usersByIdDict.Add(userContract.ID, userContract);
-                }
-            }
+            return dict;
+        }
+
+        private static IList<UserContract> LoadUsersList()
+        {
+            var token = UmUtil.Instance.CurrentToken;
+            if (token == null)
+                return null;
+
+            return UserManagementProxy.GetAllUsers(token.Value, true);
         }
     }
 }

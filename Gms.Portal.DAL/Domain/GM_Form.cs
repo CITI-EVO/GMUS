@@ -17,6 +17,16 @@ namespace Gms.Portal.DAL.Domain
 
         public virtual bool? Visible { get; set; }
 
+        public virtual bool? RequiresApprove { get; set; }
+
+        public virtual int? ApprovalDeadline { get; set; }
+
+        public virtual String VisibleExpression { get; set; }
+
+        public virtual String FillingValidationExpression { get; set; }
+
+        public virtual String FillingValidationMessage { get; set; }
+
         public virtual String UserMode { get; set; }
 
         public virtual Guid? CategoryID { get; set; }

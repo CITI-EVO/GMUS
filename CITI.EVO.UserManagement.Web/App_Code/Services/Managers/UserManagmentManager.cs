@@ -80,10 +80,11 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
                 if (HttpContext.Current != null)
                 {
                     var request = HttpContext.Current.Request;
-                    clientIP = String.Format("{0}, {1}", request.UserHostAddress, request.UserHostName);
+                    clientIP = $"{request.UserHostAddress}, {request.UserHostName}";
                 }
 
-                Logger.Info(String.Format("Login - LoginName: {0}, Password: {1}, ClientIP: {2}, Token: {3}", loginName, password, clientIP, token));
+                Logger.Info(
+                    $"Login - LoginName: {loginName}, Password: {password}, ClientIP: {clientIP}, Token: {token}");
             }
 
             return token;
@@ -99,7 +100,7 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
                 {
                     var request = HttpContext.Current.Request;
 
-                    clientIP = String.Format("{0}, {1}", request.UserHostAddress, request.UserHostName);
+                    clientIP = $"{request.UserHostAddress}, {request.UserHostName}";
                 }
 
                 var loginName = String.Empty;
@@ -112,7 +113,8 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
                     password = user.Password;
                 }
 
-                Logger.Info(String.Format("Logout - LoginName: {0}, Password: {1}, ClientIP: {2}, Token: {3}", loginName, password, clientIP, token));
+                Logger.Info(
+                    $"Logout - LoginName: {loginName}, Password: {password}, ClientIP: {clientIP}, Token: {token}");
             }
 
             AccessController.ReleaseUserToken(token);
@@ -579,10 +581,10 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
                             Type = 0
                         };
 
-                        if (parentRes == null)
-                            session.Save(currentRes);
-                        else
-                            parentRes.Children.Add(currentRes);
+                        if (parentRes != null)
+                            currentRes.ParentID = parentRes.ID;
+
+                        session.Save(currentRes);
                     }
 
                     parentRes = currentRes;
@@ -614,7 +616,7 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
                     {
                         if (result.PermissionParameter.ContainsKey(pair.Key))
                         {
-                            var key = String.Format("{0}_{1}", pair.Key, groupID);
+                            var key = $"{pair.Key}_{groupID}";
                             result.PermissionParameter[key] = pair.Value;
                         }
                         else

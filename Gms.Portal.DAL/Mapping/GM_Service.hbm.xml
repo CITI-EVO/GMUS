@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Gms.Portal.DAL"
+                   namespace="Gms.Portal.DAL.Domain">
+
+  <class name="GM_Service" table="GM_Services">
+    <id name="ID">
+      <generator class="assigned" />
+    </id>
+    <property name="Url" />
+    <property name="Name" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+
+    <property name="XmlData" type="System.Xml.Linq.XDocument">
+      <column name="XmlData" sql-type="xml" />
+    </property>
+  </class>
+</hibernate-mapping>

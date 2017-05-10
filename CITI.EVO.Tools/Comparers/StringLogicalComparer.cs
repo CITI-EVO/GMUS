@@ -26,11 +26,11 @@ namespace CITI.EVO.Tools.Comparers
 
 	    private readonly NumberFormatInfo _numberFormatInfo;
         private readonly StringComparer _comparer;
+
 		public StringLogicalComparer()
             : this(false, false)
         {
         }
-
         public StringLogicalComparer(bool ignoreCase, bool floatNumbers)
         {
             IgnoreCase = ignoreCase;
@@ -75,9 +75,7 @@ namespace CITI.EVO.Tools.Comparers
 
                     var order = xNumber.CompareTo(yNumber);
                     if (order != 0)
-                    {
                         return order;
-                    }
                 }
                 else
                 {
@@ -86,9 +84,7 @@ namespace CITI.EVO.Tools.Comparers
 
                     var order = _comparer.Compare(xText, yText);
                     if (order != 0)
-                    {
                         return order;
-                    }
                 }
             }
 
@@ -125,9 +121,7 @@ namespace CITI.EVO.Tools.Comparers
             for (var i = startIndex; i < text.Length; i++)
             {
                 if (char.IsDigit(text[i]))
-                {
                     break;
-                }
 
                 result += text[i];
             }
@@ -144,18 +138,14 @@ namespace CITI.EVO.Tools.Comparers
                 {
                     var strChar = Convert.ToString(text[i]);
                     if (!FloatNumbers || strChar != _numberFormatInfo.NumberDecimalSeparator || result.Contains(strChar))
-                    {
                         break;
-                    }
                 }
 
                 result += text[i];
             }
 
             if (result.EndsWith(_numberFormatInfo.NumberDecimalSeparator))
-            {
                 result = result.Substring(0, result.Length - 1);
-            }
 
             return result;
         }
@@ -168,9 +158,7 @@ namespace CITI.EVO.Tools.Comparers
         public override int GetHashCode(String obj)
         {
             if (obj == null)
-            {
                 return 0;
-            }
 
             return _comparer.GetHashCode(obj);
         }

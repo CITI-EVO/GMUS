@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CITI.EVO.Tools.Collections
 {
+    [Serializable]
     public class HashLookup<TKey, TValue> : ILookup<TKey, TValue>
     {
         private readonly IDictionary<TKey, LookupGroup> _lookup;
@@ -62,6 +63,16 @@ namespace CITI.EVO.Tools.Collections
             return _lookup.ContainsKey(key);
         }
 
+        public bool Contains(TKey key, TValue value)
+        {
+            LookupGroup group;
+            if (!_lookup.TryGetValue(key, out group))
+                return false;
+
+            return group.Contains(value);
+        }
+
+
         public int Count
         {
             get { return _lookup.Count; }
@@ -80,6 +91,7 @@ namespace CITI.EVO.Tools.Collections
             }
         }
 
+        [Serializable]
         private class LookupGroup : List<TValue>, IGrouping<TKey, TValue>
         {
             public LookupGroup(TKey key)

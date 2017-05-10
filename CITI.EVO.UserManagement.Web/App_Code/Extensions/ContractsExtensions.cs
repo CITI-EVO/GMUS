@@ -213,6 +213,7 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             contract.ID = entity.ID;
             contract.Address = entity.Address;
             contract.Email = entity.Email;
+            contract.Phone = entity.Phone;
             contract.LoginName = entity.LoginName;
             contract.FirstName = entity.FirstName;
             contract.LastName = entity.LastName;

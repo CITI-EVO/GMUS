@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Gms.Portal.DAL"
+                   namespace="Gms.Portal.DAL.Domain">
+
+  <class name="GM_NotificationHistory" table="GM_NotificationHistories">
+    <id name="ID">
+      <generator class="assigned" />
+    </id>
+    <property name="RecipientID" />
+    <property name="UserID" />
+    <property name="Email" />
+    <property name="Phone" />
+    <property name="ContactType" />
+    <property name="Subject" />
+    <property name="Body" />
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+  </class>
+</hibernate-mapping>

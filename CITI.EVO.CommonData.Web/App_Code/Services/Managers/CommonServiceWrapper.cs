@@ -38,7 +38,13 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 			return CommonDataManager.GetAllMobileIndexes();
 		}
 
-		[RpcAllowRemoteCall]
+        [RpcAllowRemoteCall]
+        public static void SendSms(String number, String message)
+        {
+            //Add Sms send message
+        }
+
+        [RpcAllowRemoteCall]
 		public static MobileIndexesContract GetMobileIndexByID(Guid? ID)
 		{
 			return CommonDataManager.GetMobileIndexByID(ID);
@@ -79,5 +85,6 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 		{
 			CommonDataManager.SetTranslatedText(moduleName, trnKey, languagePair, translatedText);
 		}
-	}
+
+    }
 }

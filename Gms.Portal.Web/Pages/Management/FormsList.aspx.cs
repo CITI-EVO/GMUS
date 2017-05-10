@@ -27,8 +27,10 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void formsControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditForm.aspx");
-            urlHelper["FormID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditForm.aspx")
+            {
+                ["FormID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -50,7 +52,7 @@ namespace Gms.Portal.Web.Pages.Management
                 foreach (var control in controls)
                     control.ID = Guid.NewGuid();
 
-                formModel.Name = String.Format("{0} - Copy {1:dd.MM.yyyy HH:mm:ss}", formModel.Name, DateTime.Now);
+                formModel.Name = $"{formModel.Name} - Copy {DateTime.Now:dd.MM.yyyy HH:mm:ss}";
 
                 var newEntity = modelConverter.Convert(formModel);
                 newEntity.ID = formModel.Entity.ID;
@@ -84,11 +86,42 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void formsControl_OnView(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditForm.aspx");
-            urlHelper["FormID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditForm.aspx")
+            {
+                ["FormID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
+
+        protected void formsControl_OnPreview(object sender, GenericEventArgs<Guid> e)
+        {
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var url = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = "Preview",
+                ["FormID"] = e.Value,
+                ["OwnerID"] = e.Value,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl),
+            };
+
+            Response.Redirect(url.ToEncodedUrl());
+        }
+
+        protected void formsControl_OnFiles(object sender, GenericEventArgs<Guid> e)
+        {
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var url = new UrlHelper("~/Pages/Management/AddEditFile.aspx")
+            {
+                ["ParentID"] = e.Value,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl),
+            };
+
+            Response.Redirect(url.ToEncodedUrl());
+        }
+
 
         private void FillFormsGrid()
         {

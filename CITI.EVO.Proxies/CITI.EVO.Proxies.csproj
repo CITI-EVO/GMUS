@@ -35,6 +35,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -42,6 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonProxy.cs" />
+    <Compile Include="Connected Services\CuratioCommon\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="UserManagementProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +65,52 @@
       <Project>{0616af18-8b68-4924-93ed-8dc51a0a8d7f}</Project>
       <Name>CITI.EVO.UserManagement.Svc</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Connected Services\CuratioCommon\CITI.EVO.Proxies.CuratioCommon.AreaContract.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CITI.EVO.Proxies.CuratioCommon.LanguageContract.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CITI.EVO.Proxies.CuratioCommon.MobileIndexesContract.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf.wsdl" />
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\CuratioCommon\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\CuratioCommon\CommonDataWcf.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\CuratioCommon\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\CuratioCommon\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\CuratioCommon\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

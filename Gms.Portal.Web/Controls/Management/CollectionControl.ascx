@@ -38,7 +38,7 @@
                                 <local:NamedControl runat="server" ID="namedControl" OnDataChanged="namedControl_OnDataChanged" />
                                 <div class="form-group">
                                     <ce:LinkButton runat="server" ID="btFieldOK" ToolTip="Save" OnClick="btnFieldOK_Click" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
+                                    <ce:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" OnClick="btFieldCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                                 </div>
                             </div>
                         </div>

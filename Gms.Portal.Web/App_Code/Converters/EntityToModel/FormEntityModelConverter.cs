@@ -27,9 +27,14 @@ namespace Gms.Portal.Web.Converters.EntityToModel
             target.Name = source.Name;
             target.Number = source.Number;
             target.Visible = source.Visible;
+            target.VisibleExpression = source.VisibleExpression;
+            target.FillingValidationExpression = source.FillingValidationExpression;
+            target.FillingValidationMessage = source.FillingValidationMessage;
             target.OrderIndex = source.OrderIndex;
             target.CategoryID = source.CategoryID;
             target.UserMode = source.UserMode;
+            target.RequiresApprove = source.RequiresApprove;
+            target.ApprovalDeadline = source.ApprovalDeadline;
 
             target.Entity = XmlUtil.Deserialize<FormEntity>(source.XmlData);
         }

@@ -1,12 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="FullBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Label="Common">
-    <Verbosity>diagnostic</Verbosity>
-
-    <MSBuildExtensionsPath>Dependencies\MSBuild</MSBuildExtensionsPath>
-    <MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\..\..</MSBuildCommunityTasksPath>
-  </PropertyGroup>
-
   <PropertyGroup Label="WebSites">
     <GmsPortalRoot>Gms.Portal.Web</GmsPortalRoot>
     <GmsPortalBin>$(GmsPortalRoot)\Bin</GmsPortalBin>
@@ -15,8 +8,6 @@
   <PropertyGroup Label="Libraries">
     <GmsLibrariesMSBuild>BuildLibraries.MSBuild.xml</GmsLibrariesMSBuild>
   </PropertyGroup>
-
-  <Import Project="$(MSBuildExtensionsPath)\MSBuild.Community.Tasks.Targets"/>
 
   <ItemGroup>
     <GmsLibraries Include="Dependencies\Local\**\*"/>
@@ -28,7 +19,7 @@
     <RemoveDir Directories="PrecompiledWeb\$(GmsPortalRoot)">
       <Output TaskParameter="RemovedDirectories" ItemName="SuccessfullyRemovedDirectories"/>
     </RemoveDir>
-    <Message Text="--------------------------------------------------------" />
+    <Message Text="########################################################" />
   </Target>
 
   <Target Name="DeleteLibraries">
@@ -47,52 +38,33 @@
     <Copy SourceFiles="@(ThirdpartyWebDependencies)" DestinationFolder="$(GmsPortalBin)\%(RecursiveDir)" SkipUnchangedFiles="true">
       <Output TaskParameter="CopiedFiles" ItemName="SuccessfullyCopiedFiles"/>
     </Copy>
-    <Message Text="--------------------------------------------------------" />
+    <Message Text="########################################################" />
   </Target>
 
   <Target Name="BuildLibraries">
     <MSBuild ContinueOnError="false" Projects="$(GmsLibrariesMSBuild)" Properties="Configuration=Debug;Verbosity=$(Verbosity)" />
-    <Message Text="--------------------------------------------------------" />
+    <Message Text="########################################################" />
   </Target>
 
   <Target Name="BuildWebSites">
     <AspNetCompiler ContinueOnError="false" VirtualPath="/$(GmsPortalRoot)" PhysicalPath="$(GmsPortalRoot)\" TargetPath="PrecompiledWeb\$(GmsPortalRoot)" Force="true" Debug="true" Clean="true" />
-    <Message Text="--------------------------------------------------------" />
-  </Target>
-
-  <Target Name="ZipPrecompiledWebs">
-    <CreateItem Include="PrecompiledWeb\$(GmsPortalRoot)\**\*.*" >
-      <Output ItemName="GmsPortalBuilded" TaskParameter="Include"/>
-    </CreateItem>
-    <Delete Files="PrecompiledWeb\$(GmsPortalRoot).zip" >
-      <Output TaskParameter="DeletedFiles" ItemName="SuccessfullyDeletedFiles"/>
-    </Delete>
-    <Zip ZipFileName="PrecompiledWeb\$(GmsPortalRoot).zip" WorkingDirectory="PrecompiledWeb\$(GmsPortalRoot)" Files="@(GmsPortalBuilded)" />
-    <Message Text="--------------------------------------------------------" />
-
+    <Message Text="########################################################" />
   </Target>
 
   <Target Name="FullBuild">
-    <AppPoolController ApplicationPoolName="$(GmsPortalRoot)" Action="Stop" />
-
     <CallTarget Targets="DeleteLibraries" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 
     <CallTarget Targets="BuildLibraries" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 
     <CallTarget Targets="CopyLibraries" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 
     <CallTarget Targets="RemovePrecompiledWeb" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 
     <CallTarget Targets="BuildWebSites" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
-
-    <CallTarget Targets="ZipPrecompiledWebs" />
-    <Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
-
-    <AppPoolController ApplicationPoolName="$(GmsPortalRoot)" Action="Start" />
+    <Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
   </Target>
 </Project>

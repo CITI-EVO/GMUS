@@ -266,7 +266,7 @@ namespace CITI.EVO.TwoWayModel.Processing
             if (StringComparer.OrdinalIgnoreCase.Equals(bindMode, Convert.ToString(BindMode.Receive)))
                 return BindMode.Receive;
 
-            var message = String.Format("Unknown bind mode '{0}'", bindMode);
+            var message = $"Unknown bind mode '{bindMode}'";
             throw new InvalidOperationException(message);
         }
 

@@ -17,8 +17,11 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("Tag")]
         public String Tag { get; set; }
 
-        [XmlElement("Enabled")]
-        public bool? Enabled { get; set; }
+        [XmlElement("Unique")]
+        public bool? Unique { get; set; }
+
+        [XmlElement("ReadOnly")]
+        public bool? ReadOnly { get; set; }
 
         [XmlElement("Privacy")]
         public bool? Privacy { get; set; }
@@ -39,7 +42,16 @@ namespace Gms.Portal.Web.Entities.FormStructure
         public int? ControlSize { get; set; }
 
         [XmlElement("DisplayOnGrid")]
-        public bool? DisplayOnGrid { get; set; }
+        public String DisplayOnGrid { get; set; }
+
+        [XmlElement("FilterByUser")]
+        public bool? FilterByUser { get; set; }
+
+        [XmlElement("RequiresApproval")]
+        public bool? RequiresApproval { get; set; }
+
+        [XmlElement("DisplayOnFilter")]
+        public bool? DisplayOnFilter { get; set; }
 
         [XmlElement("ValidationExp")]
         public String ValidationExp { get; set; }
@@ -57,12 +69,21 @@ namespace Gms.Portal.Web.Entities.FormStructure
         public String ErrorMessage { get; set; }
 
         [XmlElement("DataSourceID")]
-        public Guid? DataSourceID { get; set; }
+        public String DataSourceID { get; set; }
 
         [XmlElement("TextExpression")]
         public String TextExpression { get; set; }
 
         [XmlElement("ValueExpression")]
         public String ValueExpression { get; set; }
+
+        [XmlElement("GridFieldSummary")]
+        public String GridFieldSummary { get; set; }
+
+        [XmlElement("FieldValueExpression")]
+        public String FieldValueExpression { get; set; }
+
+        [XmlElement("Parameters")]
+        public List<ParameterEntity> Parameters { get; set; }
     }
 }

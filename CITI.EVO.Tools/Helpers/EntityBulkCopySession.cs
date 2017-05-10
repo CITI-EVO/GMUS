@@ -124,7 +124,7 @@ namespace CITI.EVO.Tools.Helpers
             var parentDataTable = dataSet.Tables[parentTableName];
             var childDataTable = dataSet.Tables[childTableName];
 
-            var relationName = String.Format("{0}_To_{1}", childDataTable.TableName, parentDataTable.TableName);
+            var relationName = $"{childDataTable.TableName}_To_{parentDataTable.TableName}";
             if (dataSet.Relations.Contains(relationName))
             {
                 return;
@@ -158,7 +158,7 @@ namespace CITI.EVO.Tools.Helpers
             var parentDataTable = dataSet.Tables[parentTableName];
             var childDataTable = dataSet.Tables[childTableName];
 
-            var relationName = String.Format("{0}_To_{1}", childDataTable.TableName, parentDataTable.TableName);
+            var relationName = $"{childDataTable.TableName}_To_{parentDataTable.TableName}";
 
             dataSet.Relations.Remove(relationName);
         }
@@ -420,7 +420,7 @@ namespace CITI.EVO.Tools.Helpers
 
                 if (isPrimary)
                 {
-                    var constraintName = String.Format("PK_{0}", dataColumn.ColumnName);
+                    var constraintName = $"PK_{dataColumn.ColumnName}";
                     dataTable.Constraints.Add(constraintName, dataColumn, true);
                 }
             }

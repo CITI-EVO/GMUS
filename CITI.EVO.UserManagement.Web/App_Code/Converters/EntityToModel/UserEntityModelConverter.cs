@@ -29,6 +29,7 @@ namespace CITI.EVO.UserManagement.Web.Converters.EntityToModel
             target.LastName = source.LastName;
             target.Address = source.Address;
             target.Email = source.Email;
+            target.Phone = source.Phone;
             target.IsActive = source.IsActive;
             target.IsSuperAdmin = source.IsSuperAdmin;
             target.PasswordExpire = source.PasswordExpirationDate;

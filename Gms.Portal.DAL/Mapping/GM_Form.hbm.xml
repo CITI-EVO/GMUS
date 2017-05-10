@@ -11,8 +11,15 @@
     <property name="Number" />
     <property name="OrderIndex" />
     <property name="Visible" />
+    <property name="RequiresApprove" />
+    <property name="ApprovalDeadline" />
+    <property name="VisibleExpression" />
+    <property name="FillingValidationExpression" />
+    <property name="FillingValidationMessage" />
     <property name="UserMode" />
-    <property name="XmlData" />
+    <property name="XmlData" type="System.Xml.Linq.XDocument">
+      <column name="XmlData" sql-type="xml" />
+    </property>
     <property name="CategoryID" />
     <property name="DateCreated" />
     <property name="DateChanged" />

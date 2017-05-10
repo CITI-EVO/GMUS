@@ -38,8 +38,8 @@ namespace CITI.EVO.Tools.Utils
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
             {
                 var colQuery = (from DataColumn col in dataTable.Columns
-                                let v = String.Format("\"{0}\"", col.ColumnName)
-                                select v);
+                                let v = $"\"{col.ColumnName}\""
+                    select v);
 
                 var colLine = String.Join(delimiter, colQuery);
                 writer.WriteLine(colLine);
@@ -47,8 +47,8 @@ namespace CITI.EVO.Tools.Utils
                 foreach (DataRow dataRow in dataTable.Rows)
                 {
                     var query = (from DataColumn col in dataTable.Columns
-                                 let v = String.Format("\"{0}\"", dataRow[col])
-                                 select v);
+                                 let v = $"\"{dataRow[col]}\""
+                        select v);
 
                     var line = String.Join(delimiter, query);
                     writer.WriteLine(line);
@@ -96,7 +96,7 @@ namespace CITI.EVO.Tools.Utils
         {
             foreach (DataTable dataTable in dataSet.Tables)
             {
-                var name = GetCleanText(String.Format("#{0}", dataTable.TableName));
+                var name = GetCleanText($"#{dataTable.TableName}");
                 var sheet = workbook.CreateSheet(name);
 
                 FillSheet(sheet, dataTable);
@@ -104,7 +104,7 @@ namespace CITI.EVO.Tools.Utils
         }
         public static void FillWorkbook(IWorkbook workbook, DataTable dataTable)
         {
-            var name = GetCleanText(String.Format("#{0}", dataTable.TableName));
+            var name = GetCleanText($"#{dataTable.TableName}");
             var sheet = workbook.CreateSheet(name);
 
             FillSheet(sheet, dataTable);
@@ -119,7 +119,7 @@ namespace CITI.EVO.Tools.Utils
             foreach (DataColumn dataColumn in dataTable.Columns)
             {
                 var index = columns.Count;
-                var name = GetCleanText(String.Format("#{0}", dataColumn.ColumnName));
+                var name = GetCleanText($"#{dataColumn.ColumnName}");
 
                 var cell = headerRow.CreateCell(index);
                 cell.SetCellValue(name);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace CITI.EVO.Tools.Collections
 {
+    [Serializable]
     public class ComparableGroup<TKey, TValue> : Dictionary<TKey, TValue>, IComparableGroup<TKey, TValue>
     {
         private readonly IComparer<TValue> _valueComparer;

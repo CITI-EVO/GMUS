@@ -8,7 +8,9 @@
       <generator class="assigned" />
     </id>
     <property name="Name" />
-    <property name="XmlData" />
+    <property name="XmlData" type="System.Xml.Linq.XDocument">
+      <column name="XmlData" sql-type="xml" />
+    </property>
     <property name="DateCreated" />
     <property name="DateChanged" />
     <property name="DateDeleted" />

@@ -30,6 +30,9 @@ namespace CITI.EVO.UserManagement.Svc.Contracts
         public String Email { get; set; }
 
         [DataMember]
+        public String Phone { get; set; }
+
+        [DataMember]
         public String Address { get; set; }
 
         [DataMember]

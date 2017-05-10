@@ -10,5 +10,7 @@ namespace Gms.Portal.Web.Entities.Others
         public Guid? ParentID { get; set; }
 
         public String Name { get; set; }
+
+        public Object Tag { get; set; }
     }
 }

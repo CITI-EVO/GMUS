@@ -15,10 +15,18 @@ namespace CITI.EVO.UserManagement.Web.Controls
             FillUserCategories();
         }
 
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            ApplyViewMode();
+        }
+
         protected void chkChangePassword_CheckChanged(object sender, EventArgs e)
         {
             OnDataChanged(e);
+        }
 
+        protected void ApplyViewMode()
+        {
             var model = Model;
 
             if (chkChangePassword.Checked)

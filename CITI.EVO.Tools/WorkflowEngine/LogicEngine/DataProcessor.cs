@@ -167,7 +167,7 @@ namespace CITI.EVO.Tools.WorkflowEngine.LogicEngine
                     var outputName = match.Groups["outputName"].Value.Trim();
 
                     if (String.IsNullOrWhiteSpace(outputName))
-                        outputName = String.Format("Field_{0}", ++index);
+                        outputName = $"Field_{++index}";
 
                     var entity = new FieldInfoPair
                     {

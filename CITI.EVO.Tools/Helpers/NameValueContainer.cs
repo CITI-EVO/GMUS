@@ -42,7 +42,7 @@ namespace CITI.EVO.Tools.Helpers
 
         public override String ToString()
         {
-            return String.Format("{0} = {1}", Name, Value);
+            return $"{Name} = {Value}";
         }
 
         public static implicit operator String(NameValueContainer d)

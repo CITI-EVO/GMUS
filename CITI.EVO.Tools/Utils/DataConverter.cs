@@ -922,12 +922,21 @@ namespace CITI.EVO.Tools.Utils
 
 		public static TEnum ToEnum<TEnum>(Object value)
 		{
-			return (TEnum)Enum.Parse(typeof(TEnum), Convert.ToString(value));
+			return ToEnum<TEnum>(value, false);
 		}
-		public static TEnum? ToNullableEnum<TEnum>(Object value) where TEnum : struct, IConvertible
+	    public static TEnum ToEnum<TEnum>(Object value, bool ignoreCase)
+	    {
+	        return (TEnum)Enum.Parse(typeof(TEnum), Convert.ToString(value), ignoreCase);
+	    }
+
+        public static TEnum? ToNullableEnum<TEnum>(Object value) where TEnum : struct, IConvertible
+	    {
+	        return ToNullableEnum<TEnum>(value, false);
+	    }
+        public static TEnum? ToNullableEnum<TEnum>(Object value, bool ignoreCase) where TEnum : struct, IConvertible
 		{
 			TEnum result;
-			if (Enum.TryParse(Convert.ToString(value), out result))
+			if (Enum.TryParse(Convert.ToString(value), ignoreCase, out result))
 			{
 				return result;
 			}

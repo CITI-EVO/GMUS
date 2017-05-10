@@ -7,7 +7,7 @@
 <asp:Panel runat="server" CssClass="form-group">
     <ce:Label runat="server" CssClass="col-sm-2 control-label">Status</ce:Label>
     <div class="col-lg-10">
-        <ce:DropDownList runat="server" ID="cbxDataStatus" DataTextField="Name" DataValueField="ID" AppendDataBoundItems="True" Property="{RecordStatusModel.StatusID=SelectedValue}" CssClass="chosen-select" AutoPostBack="True" OnSelectedIndexChanged="comboBox_OnSelectedIndexChanged">
+        <ce:DropDownList runat="server" ID="cbxDataStatus" DataTextField="Name" DataValueField="ID" AppendDataBoundItems="True" Property="{RecordStatusModel.StatusID=SelectedValue}" CssClass="chosen-select" OnSelectedIndexChanged="comboBox_OnSelectedIndexChanged">
         </ce:DropDownList>
     </div>
 </asp:Panel>

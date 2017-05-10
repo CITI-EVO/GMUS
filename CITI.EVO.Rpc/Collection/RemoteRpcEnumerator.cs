@@ -21,9 +21,9 @@ namespace CITI.EVO.Rpc.Collection
 			_peer = peer;
 			_collectionID = collectionID;
 
-			_nextMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Next", _peer);
-			_resetMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Reset", _peer);
-			_disposeMethodName = String.Format("{0}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Dispose", _peer);
+			_nextMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Next";
+			_resetMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Reset";
+			_disposeMethodName = $"{_peer}.CITI.EVO.Rpc.Managers.RpcCollectionManager.Dispose";
 		}
 
 		public String Peer

@@ -227,7 +227,7 @@
                                     <ce:LinkButton ID="btPermissionParameterOK" CssClass="btn btn-success fa fa-floppy-o" ToolTip="შენახვა" runat="server" OnClick="btPermissionParameterOK_Click" />
                                 </div>
                                 <div style="text-align: left; padding: 13px 0 2px 15px; float: left;">
-                                    <ce:LinkButton ID="btProjectCancel" CssClass="btn btn-warning  fa fa-times" ToolTip="დახურვა" runat="server" />
+                                    <ce:LinkButton ID="btProjectCancel" CssClass="btn btn-warning  fa fa-times" ToolTip="დახურვა" runat="server" OnClick="btProjectCancel_OnClick" />
                                 </div>
                             </div>
                         </div>

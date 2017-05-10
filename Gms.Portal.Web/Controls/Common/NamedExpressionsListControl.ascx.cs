@@ -118,5 +118,10 @@ namespace Gms.Portal.Web.Controls.Common
             base.SetModel(model);
 			Expressions = model.Expressions;
 		}
+
+	    protected void btnCancel_OnClick(object sender, EventArgs e)
+	    {
+	        mpeExpression.Hide();
+	    }
 	}
 }

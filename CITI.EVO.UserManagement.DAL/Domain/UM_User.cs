@@ -12,6 +12,7 @@ namespace CITI.EVO.UserManagement.DAL.Domain
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
         public virtual string Email { get; set; }
+        public virtual string Phone { get; set; }
         public virtual string Address { get; set; }
         public virtual bool IsSuperAdmin { get; set; }
         public virtual bool IsActive { get; set; }

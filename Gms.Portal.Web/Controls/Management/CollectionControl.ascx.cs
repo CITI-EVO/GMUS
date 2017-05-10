@@ -114,6 +114,13 @@ namespace Gms.Portal.Web.Controls.Management
             }
 
             field.Name = model.Name;
+
+            mpeField.Hide();
+        }
+
+        protected void btFieldCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeField.Hide();
         }
 
         public override CollectionModel GetModel()
@@ -147,5 +154,6 @@ namespace Gms.Portal.Web.Controls.Management
             fieldsControl.Model = units;
             fieldsControl.DataBind();
         }
+
     }
 }

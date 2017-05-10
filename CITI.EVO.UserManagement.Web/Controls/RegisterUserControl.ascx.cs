@@ -31,6 +31,8 @@ namespace CITI.EVO.UserManagement.Web.Controls
                 pnlGroup.Visible = false;
                 cbxGroups.TrySetSelectedValue(group.ID);
             }
+
+            ApplyViewMode();
         }
 
         protected void BindData(ListControl control, IEnumerable source)
@@ -45,6 +47,38 @@ namespace CITI.EVO.UserManagement.Web.Controls
             control.Items.Insert(0, new ListItem("Select an Option", String.Empty));
 
             control.TrySetSelectedValue(selValue);
+        }
+
+        protected void ApplyViewMode()
+        {
+            var orgGroupID = Guid.Parse("22D342C4-158D-4312-915D-9B0C1EF818A5");
+
+            var model = Model;
+
+            if (model.GroupID == orgGroupID)
+            {
+                pnlPersonalID.Visible = true;
+
+                lblGroups.Text = "ჯგუფი";
+                lblPersonalID.Text = "ორგანიზაციის დასახელება";
+                lblFirstName.Text = "პასუხისმგებელი პირის სახელი";
+                lblLastName.Text = "პასუხისმგებელი პირის გვარი";
+                lblLoginName.Text = "ელექტრონული ფოსტა";
+                lblPassword.Text = "პაროლი";
+                lblConfirmPassword.Text = "დაადასტურეთ პაროლი";
+            }
+            else
+            {
+                pnlPersonalID.Visible = false;
+
+                lblGroups.Text = "ჯგუფი";
+                lblPersonalID.Text = "პირადი N";
+                lblFirstName.Text = "სახელი";
+                lblLastName.Text = "გვარი";
+                lblLoginName.Text = "ელ.ფოსტა";
+                lblPassword.Text = "პაროლი";
+                lblConfirmPassword.Text = "დაადასტურეთ პაროლი";
+            }
         }
     }
 }

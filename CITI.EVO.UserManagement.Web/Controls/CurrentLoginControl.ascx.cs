@@ -12,7 +12,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
             if (UmUtil.Instance.IsLogged)
             {
                 var user = UmUtil.Instance.CurrentUser;
-                lblUser.Text = String.Format("{0} - {1} - {2}", user.LoginName, user.FirstName, user.LastName);
+                lblUser.Text = $"{user.LoginName} - {user.FirstName} - {user.LastName}";
             }
         }
     }

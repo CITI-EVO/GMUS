@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using CITI.EVO.Tools.Cache;
+using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Utils;
 using Gms.Portal.DAL.Domain;
 using NHibernate.Linq;
@@ -10,32 +12,15 @@ namespace Gms.Portal.Web.Caches
 {
     public static class DataStatusCache
     {
-        private static readonly Object _syncLock;
-
-        private static DateTime? _lastUpdate;
-
-        private static IList<GM_DataStatus> _statusesList;
-        private static IDictionary<Guid, GM_DataStatus> _statusesByIdDict;
-        private static IDictionary<String, GM_DataStatus> _statusesByNameDict;
-        private static IDictionary<String, GM_DataStatus> _statusesByCodeDict;
-
-        static DataStatusCache()
-        {
-            _syncLock = new Object();
-        }
-
         private static GM_DataStatus _none;
         public static GM_DataStatus None
         {
             get
             {
-                lock (_syncLock)
-                {
-                    if (_none == null)
-                        _none = GetStatus("None");
+                if (_none == null)
+                    _none = GetStatus("None");
 
-                    return _none;
-                }
+                return _none;
             }
         }
 
@@ -44,13 +29,22 @@ namespace Gms.Portal.Web.Caches
         {
             get
             {
-                lock (_syncLock)
-                {
-                    if (_submit == null)
-                        _submit = GetStatus("Submit");
+                if (_submit == null)
+                    _submit = GetStatus("Submit");
 
-                    return _submit;
-                }
+                return _submit;
+            }
+        }
+
+        private static GM_DataStatus _inProgress;
+        public static GM_DataStatus InProgress
+        {
+            get
+            {
+                if (_inProgress == null)
+                    _inProgress = GetStatus("InProgress");
+
+                return _inProgress;
             }
         }
 
@@ -59,13 +53,10 @@ namespace Gms.Portal.Web.Caches
         {
             get
             {
-                lock (_syncLock)
-                {
-                    if (_accepted == null)
-                        _accepted = GetStatus("Accepted");
+                if (_accepted == null)
+                    _accepted = GetStatus("Accepted");
 
-                    return _accepted;
-                }
+                return _accepted;
             }
         }
 
@@ -74,13 +65,10 @@ namespace Gms.Portal.Web.Caches
         {
             get
             {
-                lock (_syncLock)
-                {
-                    if (_rejected == null)
-                        _rejected = GetStatus("Rejected");
+                if (_rejected == null)
+                    _rejected = GetStatus("Rejected");
 
-                    return _rejected;
-                }
+                return _rejected;
             }
         }
 
@@ -88,72 +76,72 @@ namespace Gms.Portal.Web.Caches
         {
             get
             {
-                Initialize();
-                return _statusesList.ToList();
+                var list = CommonObjectCache.InitObject("@DataStatusList", LoadStatusList);
+                return list;
             }
         }
 
         public static GM_DataStatus GetStatus(Object nameOrCodeOrID)
         {
-            Initialize();
-
             GM_DataStatus item;
 
             var statusID = DataConverter.ToNullableGuid(nameOrCodeOrID);
             if (statusID != null)
             {
-                if (_statusesByIdDict.TryGetValue(statusID.GetValueOrDefault(), out item))
+                var statusByIdDict = CommonObjectCache.InitObject("@DataStatusByIdDict", LoadStatusByIdDict);
+                if (statusByIdDict.TryGetValue(statusID.GetValueOrDefault(), out item))
                     return item;
             }
 
             var key = Convert.ToString(nameOrCodeOrID);
 
-            if (!_statusesByCodeDict.TryGetValue(key, out item))
+            var statusByCodeDict = CommonObjectCache.InitObject("@DataStatusByCodeDict", LoadStatusByCodeDict);
+            if (!statusByCodeDict.TryGetValue(key, out item))
             {
-                if (!_statusesByNameDict.TryGetValue(key, out item))
+                var statusByNameDict = CommonObjectCache.InitObject("@DataStatusByNameDict", LoadStatusByNameDict);
+                if (!statusByNameDict.TryGetValue(key, out item))
                     return null;
             }
 
             return item;
         }
 
-        private static void Initialize()
+        private static IList<GM_DataStatus> LoadStatusList()
         {
-            lock (_syncLock)
-            {
-                if (_lastUpdate != null)
-                {
-                    var elapsed = DateTime.Now - _lastUpdate.Value;
-                    if (elapsed.TotalMinutes < 5D)
-                        return;
-                }
+            var session = Hb8Factory.InitSession();
+            var query = session.Query<GM_DataStatus>().Where(n => n.DateDeleted == null);
 
-                var comparer = StringComparer.OrdinalIgnoreCase;
+            return query.ToList();
+        }
+        private static IDictionary<Guid, GM_DataStatus> LoadStatusByIdDict()
+        {
+            var list = CommonObjectCache.InitObject("@DataStatusList", LoadStatusList);
+            var dict = ConcurrencyHelper.CreateDictionary<Guid, GM_DataStatus>();
 
-                _statusesList = (_statusesList ?? new List<GM_DataStatus>());
-                _statusesByIdDict = (_statusesByIdDict ?? new ConcurrentDictionary<Guid, GM_DataStatus>());
-                _statusesByNameDict = (_statusesByNameDict ?? new ConcurrentDictionary<String, GM_DataStatus>(comparer));
-                _statusesByCodeDict = (_statusesByCodeDict ?? new ConcurrentDictionary<String, GM_DataStatus>(comparer));
+            foreach (var item in list)
+                dict.Add(item.ID, item);
 
-                using (var session = Hb8Factory.CreateSession())
-                {
-                    _statusesList.Clear();
-                    _statusesByIdDict.Clear();
-                    _statusesByNameDict.Clear();
-                    _statusesByCodeDict.Clear();
+            return dict;
+        }
+        private static IDictionary<String, GM_DataStatus> LoadStatusByNameDict()
+        {
+            var list = CommonObjectCache.InitObject("@DataStatusList", LoadStatusList);
+            var dict = ConcurrencyHelper.CreateDictionary<String, GM_DataStatus>(StringComparer.OrdinalIgnoreCase);
 
-                    var query = session.Query<GM_DataStatus>().Where(n => n.DateDeleted == null);
-                    foreach (var item in query)
-                    {
-                        _statusesList.Add(item);
-                        _statusesByIdDict.Add(item.ID, item);
-                        _statusesByNameDict.Add(item.Name, item);
-                        _statusesByCodeDict.Add(item.Code, item);
-                    }
-                }
+            foreach (var item in list)
+                dict.Add(item.Name, item);
 
-                _lastUpdate = DateTime.Now;
-            }
+            return dict;
+        }
+        private static IDictionary<String, GM_DataStatus> LoadStatusByCodeDict()
+        {
+            var list = CommonObjectCache.InitObject("@DataStatusList", LoadStatusList);
+            var dict = ConcurrencyHelper.CreateDictionary<String, GM_DataStatus>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var item in list)
+                dict.Add(item.Code, item);
+
+            return dict;
         }
     }
 }

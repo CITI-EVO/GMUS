@@ -92,7 +92,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             HbSession.SubmitChanges(group);
 
             FillGroupsTree();
+
+            mpeGroup.Hide();
         }
+        protected void btGroupCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeGroup.Hide();
+        }
+
         protected void btUserOK_Click(object sender, EventArgs e)
         {
             var model = selectUserControl.Model;
@@ -132,7 +139,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             HbSession.SubmitChanges(groupUser);
 
             FillGroupsTree();
+
+            mpeGroup.Hide();
         }
+        protected void btUserCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeUsers.Hide();
+        }
+
         protected void btAttributeOK_Click(object sender, EventArgs e)
         {
             var model = objectAttributeControl.Model;
@@ -169,12 +183,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             mpeGroupAttributes.Show();
         }
+        protected void btAttributeCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeGroupAttributes.Hide();
+        }
+
         protected void btViewAttributeOK_Click(object sender, EventArgs e)
         {
             mpeViewGroupAttributes.Hide();
-        }
-        protected void btAttributesCancel_Click(object sender, ImageClickEventArgs e)
-        {
         }
 
         protected void lnkMessage_Click(object sender, EventArgs e)
@@ -364,7 +380,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         {
             var model = new GroupUnitsModel
             {
-                List = UmGroupsUtil.GetAllProjectsGroupsUsers(HbSession).ToList()
+                List = UmGroupsUtil.GetAllProjectsGroupsUsers(HbSession).Distinct(n => n.ID).ToList()
             };
 
             groupsControl.Model = model;
@@ -378,6 +394,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         }
 
         #endregion
+
 
 
     }

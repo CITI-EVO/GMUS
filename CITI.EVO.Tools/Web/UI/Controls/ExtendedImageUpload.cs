@@ -210,7 +210,7 @@ namespace CITI.EVO.Tools.Web.UI.Controls
             response.Clear();
             response.Buffer = true;
             response.ContentType = "application/octet-stream";
-            response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", correctFileName));
+            response.AddHeader("Content-Disposition", $"attachment; filename={correctFileName}");
             response.BinaryWrite(ImageBytes);
             response.End();
         }

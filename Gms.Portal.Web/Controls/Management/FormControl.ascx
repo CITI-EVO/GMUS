@@ -1,12 +1,14 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="FormControl.ascx.cs" Inherits="Gms.Portal.Web.Controls.Management.FormControl" %>
 
-<%@ Register TagPrefix="local" TagName="ElementControl" Src="~/Controls/Management/ElementControl.ascx" %>
-<%@ Register TagPrefix="local" TagName="ElementsControl" Src="~/Controls/Management/ElementsControl.ascx" %>
-<%@ Register TagPrefix="local" TagName="HiddenFieldValueControl" Src="~/Controls/Common/HiddenFieldValueControl.ascx" %>
+<%@ Register Src="~/Controls/Management/ElementControl.ascx" TagPrefix="local" TagName="ElementControl" %>
+<%@ Register Src="~/Controls/Management/ElementsControl.ascx" TagPrefix="local" TagName="ElementsControl" %>
 <%@ Register Src="~/Controls/Management/ElementMoveControl.ascx" TagPrefix="local" TagName="ElementMoveControl" %>
+<%@ Register Src="~/Controls/Management/ElementPasteControl.ascx" TagPrefix="local" TagName="ElementPasteControl" %>
+<%@ Register Src="~/Controls/Common/HiddenFieldValueControl.ascx" TagPrefix="local" TagName="HiddenFieldValueControl" %>
 
 
 <local:HiddenFieldValueControl runat="server" ID="hdID" Property="{FormModel.ID=Value}" />
+   
 
 <div class="ibox float-e-margins">
     <div class="ibox-title" style="background-color: #4d608a;">
@@ -48,6 +50,29 @@
                 <asp:CheckBox runat="server" ID="chkVisible" Property="{FormModel.Visible=Checked}" />
             </div>
         </div>
+        
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <ce:Label runat="server" CssClass="col-lg-2 control-label">Visible Expression</ce:Label>
+            <div class="col-lg-10">
+                <asp:TextBox runat="server" ID="tbxVisibleExpression" Property="{FormModel.VisibleExpression=Text}" CssClass="form-control" />
+            </div>
+        </div>
+
+          <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <ce:Label runat="server" CssClass="col-lg-2 control-label">Filling Validation Expression</ce:Label>
+            <div class="col-lg-10">
+                <asp:TextBox runat="server" ID="tbxFillingValidationExpression" Property="{FormModel.FillingValidationExpression=Text}" CssClass="form-control" />
+            </div>
+        </div>
+             <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <ce:Label runat="server" CssClass="col-lg-2 control-label">Filling Validation Error Message</ce:Label>
+            <div class="col-lg-10">
+                <asp:TextBox runat="server" ID="txtFillingValidationMessage" Property="{FormModel.FillingValidationMessage=Text}" CssClass="form-control" />
+            </div>
+        </div>
         <div class="hr-line-dashed"></div>
         <div class="form-group">
             <ce:Label runat="server" CssClass="col-lg-2 control-label">In Category</ce:Label>
@@ -67,19 +92,37 @@
                 </ce:DropDownList>
             </div>
         </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <ce:Label runat="server" CssClass="col-lg-2 control-label">Requires Approve</ce:Label>
+            <div class="col-lg-10">
+                <asp:CheckBox runat="server" ID="chkRequiresApprove" Property="{FormModel.RequiresApprove=Checked}" />
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <ce:Label runat="server" CssClass="col-lg-2 control-label">Approval Deadline</ce:Label>
+            <div class="col-lg-10">
+                <asp:TextBox runat="server" ID="tbxApprovalDeadline" Property="{FormModel.ApprovalDeadline=Text}" CssClass="intSpinEdit" />
+            </div>
+        </div>
     </div>
 </div>
 <div class="hr-line-dashed"></div>
 <div class="form-group">
     <ce:LinkButton runat="server" ID="btnNew" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
 </div>
+
 <div class="form-group">
     <local:ElementsControl runat="server" ID="elementsControl"
         OnNew="elementsControl_OnNew"
         OnEdit="elementsControl_OnEdit"
         OnDelete="elementsControl_OnDelete" 
+        OnCopy="elementsControl_Copy"
+        OnPaste="elementsControl_Paste"
         OnMove="elementsControl_OnMove" />
 </div>
+
 <div>
     <asp:Panel ID="pnlElement" runat="server" Style="display: none" DefaultButton="btElementOK">
         <asp:Button ID="btnElementFake" runat="server" Style="display: none;" />
@@ -101,7 +144,7 @@
                         </div>
                         <div class="form-group">
                             <ce:LinkButton runat="server" ID="btElementOK" OnClick="btnElementOK_Click" CssClass="btn btn-success fa fa-save" />
-                            <ce:LinkButton runat="server" ID="btElementCancel" CssClass="btn btn-warning fa fa-close" />
+                            <ce:LinkButton runat="server" ID="btElementCancel" OnClick="btElementCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                         </div>
                     </div>
                 </div>
@@ -131,7 +174,7 @@
                         </div>
                         <div class="form-group">
                             <ce:LinkButton runat="server" ID="btnElementMoveOK" OnClick="btnElementMoveOK_OnClick" CssClass="btn btn-success fa fa-save" />
-                            <ce:LinkButton runat="server" ID="btnElementMoveCancel" CssClass="btn btn-warning fa fa-close" />
+                            <ce:LinkButton runat="server" ID="btnElementMoveCancel" OnClick="btnElementMoveCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                         </div>
                     </div>
                 </div>
@@ -140,3 +183,32 @@
     </asp:Panel>
 </div>
 
+<div>
+    <asp:Panel ID="pnlElementPaste" runat="server" Style="display: none" DefaultButton="btElementOK">
+        <asp:Button ID="btnElementPasteFake" runat="server" Style="display: none;" />
+        <act:ModalPopupExtender ID="mpeElementPaste" runat="server" PopupControlID="pnlElementPaste" BackgroundCssClass="modalBackground" TargetControlID="btnElementPasteFake"  CancelControlID="btnElementPasteCancel"/>
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <h5>
+                            <ce:Label runat="server" Text="Element" />
+                        </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <ce:Label ID="lblPasteResult" runat="server" ForeColor="Red"></ce:Label>
+                        </div>
+                        <div class="form-group">
+                            <local:ElementPasteControl runat="server" ID="elementPasteControl" OnDataChanged="elementPasteControl_OnDataChanged" />
+                        </div>
+                        <div class="form-group">
+                            <ce:LinkButton runat="server" ID="btnElementPasteOK" OnClick="btnElementPasteOK_Click" CssClass="btn btn-success fa fa-save" />
+                            <ce:LinkButton runat="server" ID="btnElementPasteCancel" OnClick="btnElementPasteCancel_Click" CssClass="btn btn-warning fa fa-close" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </asp:Panel>
+</div>

@@ -53,7 +53,7 @@
 
                                 <div class="form-group">
                                     <ce:LinkButton runat="server" ID="btnOK" OnClick="btnOK_Click" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning fa fa-close" />
+                                    <ce:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning fa fa-close" OnClick="btnCancel_OnClick" />
                                 </div>
                             </div>
                     

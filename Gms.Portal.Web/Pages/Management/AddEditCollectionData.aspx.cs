@@ -108,8 +108,10 @@ namespace Gms.Portal.Web.Pages.Management
             else
                 MongoDbUtil.UpdateDocument(collectionID, oldDocument);
 
-            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx");
-            urlHelper["collectionID"] = RequestUrl["collectionID"];
+            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx")
+            {
+                ["collectionID"] = RequestUrl["collectionID"]
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
 
@@ -122,8 +124,10 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void btnCancelCollectionData_OnClick(object sender, EventArgs e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx");
-            urlHelper["collectionID"] = RequestUrl["collectionID"];
+            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx")
+            {
+                ["collectionID"] = RequestUrl["collectionID"]
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Utils;
 
 using CITI.EVO.UserManagement.Web.Bases;
@@ -39,7 +40,7 @@ namespace CITI.EVO.UserManagement.Web.Controls
         {
             var allGroups = UmGroupsUtil.GetAllProjectsGroups(HbSession);
 
-            tlGroups.DataSource = allGroups;
+            tlGroups.DataSource = allGroups.Distinct(n => n.ID);
             tlGroups.DataBind();
         }
     }

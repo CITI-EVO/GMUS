@@ -6,7 +6,8 @@ using System.Text;
 
 namespace CITI.EVO.Tools.Collections
 {
-	public class NameObjectCollection : NameObjectCollectionBase
+    [Serializable]
+    public class NameObjectCollection : NameObjectCollectionBase
 	{
 		public Object this[String name]
 		{

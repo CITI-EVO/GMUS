@@ -52,19 +52,20 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div>მომხმარებლის დამატება</div>
-                    <div>                            <asp:Label ID="lblUserError" runat="server" ForeColor="Red"></asp:Label>
-</div>
+                    <div>
+                        <asp:Label ID="lblUserError" runat="server" ForeColor="Red"></asp:Label>
+                    </div>
                     <div class="row">
-                      
-                        <div style="padding-bottom:15px;">
-                        <asp:Panel runat="server" ID="pnlCreateUser"  >
-                            <local:CreateUserControl runat="server" ID="createUserControl" OnDataChanged="createUserControl_OnDataChanged" />
-                        </asp:Panel>
-                            </div>
-                        <div  class="col-sm-12">
+
+                        <div style="padding-bottom: 15px;">
+                            <asp:Panel runat="server" ID="pnlCreateUser">
+                                <local:CreateUserControl runat="server" ID="createUserControl" OnDataChanged="createUserControl_OnDataChanged" />
+                            </asp:Panel>
+                        </div>
+                        <div class="col-sm-12">
                             <asp:LinkButton ID="btUserOK" CssClass="btn btn-success fa fa-floppy-o" ToolTip="შენახვა" runat="server" OnClick="btnUserOK_Click" />
 
-                            <asp:LinkButton ID="btUserCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" />
+                            <asp:LinkButton ID="btUserCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" OnClick="btUserCancel_OnClick" />
                         </div>
                     </div>
                 </div>
@@ -91,7 +92,7 @@
                     <asp:LinkButton CssClass="icon" runat="server" ID="btSetAttributesOK" Text="შენახვა" ToolTip="შენახვა" OnClick="btSetAttributesOK_Click" />
                 </div>
                 <div class="right">
-                    <asp:LinkButton CssClass="icon" ID="btSetAttributesCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" />
+                    <asp:LinkButton CssClass="icon" ID="btSetAttributesCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" OnClick="btSetAttributesCancel_OnClick" />
                 </div>
             </div>
         </div>
@@ -111,7 +112,7 @@
             </div>
             <div class="fieldsetforicons">
                 <div class="left">
-                    <asp:LinkButton ID="btViewAttributesCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" />
+                    <asp:LinkButton ID="btViewAttributesCancel" class="btn btn-warning fa fa-close" ToolTip="დახურვა" runat="server" OnClick="btViewAttributesCancel_OnClick"/>
                 </div>
             </div>
         </div>

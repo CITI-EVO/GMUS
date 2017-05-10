@@ -11,7 +11,9 @@
     <property name="LogicID" />
     <property name="Type" />
     <property name="GeneralType" />
-    <property name="ConfigXml" />
+    <property name="ConfigXml" type="System.Xml.Linq.XDocument">
+      <column name="ConfigXml" sql-type="xml" />
+    </property>
     <property name="DateCreated" />
     <property name="DateChanged" />
     <property name="DateDeleted" />

@@ -44,10 +44,17 @@
     <Compile Include="Domain\GM_Category.cs" />
     <Compile Include="Domain\GM_Collection.cs" />
     <Compile Include="Domain\GM_DataStatus.cs" />
+    <Compile Include="Domain\GM_Event.cs" />
+    <Compile Include="Domain\GM_MessageTemplate.cs" />
+    <Compile Include="Domain\GM_NotificationHistory.cs" />
+    <Compile Include="Domain\GM_File.cs" />
+    <Compile Include="Domain\GM_Recipient.cs" />
+    <Compile Include="Domain\GM_RecipientGroup.cs" />
     <Compile Include="Domain\GM_Report.cs" />
     <Compile Include="Domain\GM_Form.cs" />
     <Compile Include="Domain\GM_Logic.cs" />
     <Compile Include="Domain\GM_ReportLogic.cs" />
+    <Compile Include="Domain\GM_Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +80,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Mapping\GM_Form.hbm.xml" />
+    <EmbeddedResource Include="Mapping\GM_Form.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mapping\GM_Logic.hbm.xml" />
@@ -89,6 +98,25 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mapping\GM_DataStatus.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Recipient.hbm.xml" />
+    <EmbeddedResource Include="Mapping\GM_RecipientGroup.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_File.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_NotificationHistory.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_MessageTemplate.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Event.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_Service.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace CITI.EVO.Tools.Collections
 {
+    [Serializable]
     public class MinHeap<TItem> : IEnumerable<TItem>
     {
         private readonly IComparer<TItem> _comparer;

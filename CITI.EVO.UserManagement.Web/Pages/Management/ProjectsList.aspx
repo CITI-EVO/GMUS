@@ -41,7 +41,7 @@
                             <div class="col-sm-12">
                                 <ce:ImageLinkButton ID="btnOK" runat="server" CssClass="btn btn-success fa fa-floppy-o" ToolTip="შენახვა" OnClick="btnOK_OnClick" />
 
-                                <ce:ImageLinkButton ID="btnCancel" CssClass="btn btn-warning  fa fa-times" runat="server" ToolTip="დახურვა" />
+                                <ce:ImageLinkButton ID="btnCancel" CssClass="btn btn-warning  fa fa-times" runat="server" ToolTip="დახურვა" OnClick="btnCancel_OnClick" />
                             </div>
                         </div>
                     </div>

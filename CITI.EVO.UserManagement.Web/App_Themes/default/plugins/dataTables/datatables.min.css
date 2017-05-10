@@ -17,10 +17,10 @@ table.dataTable {
     max-width: none !important;
     border-collapse: separate !important;
 }
-table.dataTable thead {
 
-    background-color: #c0d4f9;
-}
+    table.dataTable thead {
+        background-color: #c0d4f9;
+    }
 
     table.dataTable td, table.dataTable th {
         -webkit-box-sizing: content-box;
@@ -35,13 +35,13 @@ table.dataTable thead {
         white-space: nowrap;
     }
 
-  
+
 
 div.dataTables_wrapper div.dataTables_length label {
     font-weight: normal;
     text-align: left;
     white-space: nowrap;
-            color: #f7a54a;
+    color: #6C82AB;
 }
 
 div.dataTables_wrapper div.dataTables_length select {
@@ -50,6 +50,7 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 div.dataTables_wrapper div.dataTables_filter {
+
     text-align: right;
 }
 
@@ -57,15 +58,14 @@ div.dataTables_wrapper div.dataTables_filter {
         font-weight: normal;
         white-space: nowrap;
         text-align: right;
-        color: #f7a54a;
-       
+        color: #6C82AB;
     }
 
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: 0.5em;
         display: inline-block;
         width: auto;
-           color: #f7a54a;
+        color: #6C82AB;
     }
 
 div.dataTables_wrapper div.dataTables_info {
@@ -73,20 +73,20 @@ div.dataTables_wrapper div.dataTables_info {
     white-space: nowrap;
     width: 250px;
     float: left;
-         color: #f7a54a;
+    color: #6C82AB;
+    font-weight: bold;
 }
 
 div.dataTables_wrapper div.dataTables_paginate {
     margin: 0;
     white-space: nowrap;
     text-align: right;
-     color: #f7a54a;
+    color: #6C82AB;
 }
 
     div.dataTables_wrapper div.dataTables_paginate ul.pagination {
         margin: 2px 0;
         white-space: nowrap;
-
     }
 
 div.dataTables_wrapper div.dataTables_processing {

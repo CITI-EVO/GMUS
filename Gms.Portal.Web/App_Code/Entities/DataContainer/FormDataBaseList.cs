@@ -1,80 +1,34 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
-using Gms.Portal.Web.Utils;
-using MongoDB.Bson;
 
 namespace Gms.Portal.Web.Entities.DataContainer
 {
     [Serializable]
-    public class FormDataBaseList : IList<FormDataUnit>
+    public class FormDataBaseList : IList<FormDataBase>
     {
         protected int? _count;
-        protected IList<FormDataUnit> _list;
+        protected IList<FormDataBase> _list;
 
-        protected FormDataBaseList()
+        public FormDataBaseList()
         {
+            _list = new List<FormDataBase>();
         }
 
-        public FormDataBaseList(FormDataBaseList formDataBaseList)
+        public FormDataBaseList(IEnumerable<FormDataBase> source)
         {
-            UserID = formDataBaseList.UserID;
-            FormID = formDataBaseList.FormID;
-            OwnerID = formDataBaseList.OwnerID;
-            ParentID = formDataBaseList.ParentID;
-
-            _count = formDataBaseList._count;
-
-            if (formDataBaseList._list != null)
-                _list = new List<FormDataUnit>(formDataBaseList._list);
+            _list = new List<FormDataBase>(source);
         }
 
-        public FormDataBaseList(Guid? formID) : this(formID, formID, null, null)
-        {
-        }
-        public FormDataBaseList(Guid? formID, Guid? ownerID) : this(formID, ownerID, null, null)
-        {
-        }
-        public FormDataBaseList(Guid? formID, Guid? ownerID, Guid? parentID) : this(formID, ownerID, parentID, null)
-        {
-        }
-        public FormDataBaseList(Guid? formID, Guid? ownerID, Guid? parentID, Guid? userID) : this()
-        {
-            if (formID == null || ownerID == null)
-                throw new Exception();
 
-            UserID = userID;
-            FormID = formID;
-            OwnerID = ownerID;
-            ParentID = parentID;
+        public FormDataBase this[int index]
+        {
+            get { return _list[index]; }
+            set { _list[index] = value; }
         }
 
-        public Guid? FormID { get; set; }
-
-        public Guid? OwnerID { get; set; }
-
-        public Guid? ParentID { get; set; }
-
-        public Guid? UserID { get; set; }
-
-        public FormDataUnit this[int index]
+        public IEnumerator<FormDataBase> GetEnumerator()
         {
-            get
-            {
-                InitItems();
-                return _list[index];
-            }
-            set
-            {
-                InitItems();
-                _list[index] = value;
-            }
-        }
-
-        public IEnumerator<FormDataUnit> GetEnumerator()
-        {
-            InitItems();
             return _list.GetEnumerator();
         }
 
@@ -83,41 +37,34 @@ namespace Gms.Portal.Web.Entities.DataContainer
             return GetEnumerator();
         }
 
-        public void Add(FormDataUnit item)
+        public void Add(FormDataBase item)
         {
-            InitItems();
             _list.Add(item);
         }
 
-        public void AddRange(IEnumerable<FormDataUnit> items)
+        public void AddRange(IEnumerable<FormDataBase> items)
         {
-            InitItems();
-
             foreach (var item in items)
                 _list.Add(item);
         }
 
         public void Clear()
         {
-            InitItems();
             _list.Clear();
         }
 
-        public bool Contains(FormDataUnit item)
+        public bool Contains(FormDataBase item)
         {
-            InitItems();
             return _list.Contains(item);
         }
 
-        public void CopyTo(FormDataUnit[] array, int arrayIndex)
+        public void CopyTo(FormDataBase[] array, int arrayIndex)
         {
-            InitItems();
             _list.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(FormDataUnit item)
+        public bool Remove(FormDataBase item)
         {
-            InitItems();
             return _list.Remove(item);
         }
 
@@ -125,12 +72,6 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                if (_list == null)
-                {
-                    InitCount();
-                    return _count.GetValueOrDefault();
-                }
-
                 return _list.Count;
             }
         }
@@ -140,43 +81,25 @@ namespace Gms.Portal.Web.Entities.DataContainer
             get { return false; }
         }
 
-        public int IndexOf(FormDataUnit item)
+        public int IndexOf(FormDataBase item)
         {
-            InitItems();
             return _list.IndexOf(item);
         }
 
-        public void Insert(int index, FormDataUnit item)
+        public void Insert(int index, FormDataBase item)
         {
-            InitItems();
             _list.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            InitItems();
             _list.RemoveAt(index);
         }
 
-        private void InitCount()
+        public void Sort(IComparer<FormDataBase> comparer)
         {
-            if (_count == null)
-                _count = InitializeCount();
-        }
-        private void InitItems()
-        {
-            if (_list == null)
-                _list = InitializeItems();
-        }
-
-        protected virtual int InitializeCount()
-        {
-            return 0;
-        }
-
-        protected virtual IList<FormDataUnit> InitializeItems()
-        {
-            return new List<FormDataUnit>();
+            var list = (List<FormDataBase>)_list;
+            list.Sort(comparer);
         }
     }
 }

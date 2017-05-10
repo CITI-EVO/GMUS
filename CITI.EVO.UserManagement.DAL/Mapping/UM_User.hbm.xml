@@ -13,6 +13,7 @@
     <property name="FirstName" />
     <property name="LastName" />
     <property name="Email" />
+    <property name="Phone" />
     <property name="Address" />
     <property name="IsSuperAdmin" />
     <property name="IsActive" />

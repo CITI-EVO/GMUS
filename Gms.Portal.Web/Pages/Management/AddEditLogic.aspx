@@ -45,7 +45,7 @@
                                         </asp:GridView>
                                     </div>
                                     <div class="form-group">
-                                        <ce:LinkButton runat="server" ID="btnCancel" CssClass="btn btn-warning fa fa-close" />
+                                        <ce:LinkButton runat="server" ID="btnCancel" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                                     </div>
                                 </div>
                             </div>

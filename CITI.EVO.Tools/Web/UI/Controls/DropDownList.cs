@@ -19,15 +19,21 @@ namespace CITI.EVO.Tools.Web.UI.Controls
         [DefaultValue("")]
         public String PermissionKey { get; set; }
 
-		[Bindable(true)]
-		[Category("Appearance")]
-		[DefaultValue(true)]
-		public bool DisableIfNoAccess { get; set; }
+        [Bindable(true)]
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool DisableIfNoAccess { get; set; }
 
-		#endregion
+        public override String SelectedValue
+        {
+            get { return GetValue(); }
+            set { SetValue(value); }
+        }
 
-		#region constructors
-		public DropDownList()
+        #endregion
+
+        #region constructors
+        public DropDownList()
         {
             IncludeInResources = true;
         }
@@ -69,16 +75,32 @@ namespace CITI.EVO.Tools.Web.UI.Controls
                 }
             }
 
-			PermissionUtil.ApplyPermission(this);
+            PermissionUtil.ApplyPermission(this);
 
-			base.OnPreRender(e);
+            base.OnPreRender(e);
         }
 
-		public bool HasAccess()
-		{
-			return PermissionUtil.HasAccess(this);
-		}
+        public bool HasAccess()
+        {
+            return PermissionUtil.HasAccess(this);
+        }
 
-		#endregion
-	}
+        private String GetValue()
+        {
+            return base.SelectedValue;
+        }
+
+        private void SetValue(String value)
+        {
+            try
+            {
+                base.SelectedValue = value;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        #endregion
+    }
 }

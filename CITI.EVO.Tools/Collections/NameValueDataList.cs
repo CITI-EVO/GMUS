@@ -4,7 +4,8 @@ using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.Collections
 {
-	public class NameValueDataList : Dictionary<String, Object>
+    [Serializable]
+    public class NameValueDataList : Dictionary<String, Object>
 	{
 		public NameValueDataList()
 			: base(StringComparer.InvariantCultureIgnoreCase)

@@ -44,6 +44,12 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
         {
             var model = registerUserControl.Model;
 
+            if (model.GroupID == null)
+            {
+                lblError.Text = "გთხოვთ, აირჩიეთ ჯგუფი";
+                return;
+            }
+
             if (String.IsNullOrWhiteSpace(model.LoginName))
             {
                 lblError.Text = "გთხოვთ, შეავსოთ სავალდებულო ველები";

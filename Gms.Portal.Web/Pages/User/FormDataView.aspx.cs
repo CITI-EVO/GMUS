@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.Comparers;
+using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
@@ -23,9 +22,9 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using CITI.EVO.Tools.Extensions;
 using Gms.Portal.Web.Caches;
+using Gms.Portal.Web.Enums;
 using Gms.Portal.Web.Models;
 using NHibernate.Linq;
-using CommonUtil = Gms.Portal.Web.Utils.CommonUtil;
 
 namespace Gms.Portal.Web.Pages.User
 {
@@ -34,6 +33,17 @@ namespace Gms.Portal.Web.Pages.User
         public Guid? FormID
         {
             get { return DataConverter.ToNullableGuid(RequestUrl["FormID"]); }
+        }
+
+        public Guid? UserID
+        {
+            get
+            {
+                if (FormData == null)
+                    return null;
+
+                return FormData.UserID;
+            }
         }
 
         public Guid? OwnerID
@@ -51,9 +61,19 @@ namespace Gms.Portal.Web.Pages.User
             get { return DataConverter.ToNullableGuid(RequestUrl["ParentID"]); }
         }
 
-        public bool Enabled
+        public Guid? ContainerID
         {
-            get { return (Convert.ToString(RequestUrl["Mode"]) != "View"); }
+            get { return DataConverter.ToNullableGuid(RequestUrl["ContainerID"]); }
+        }
+
+        public Guid? StatusID
+        {
+            get { return DataConverter.ToNullableGuid(RequestUrl["StatusID"]); }
+        }
+
+        public FormMode? Mode
+        {
+            get { return DataConverter.ToNullableEnum<FormMode>(RequestUrl["Mode"]); }
         }
 
         private GM_Form _dbForm;
@@ -85,18 +105,18 @@ namespace Gms.Portal.Web.Pages.User
             get { return FormModel.Entity; }
         }
 
-        private FormDataUnit _formDataUnit;
-        protected FormDataUnit FormDataUnit
+        private FormDataUnit _formData;
+        protected FormDataUnit FormData
         {
             get
             {
                 if (RecordID == null)
                     return null;
 
-                if (_formDataUnit == null)
-                    _formDataUnit = LoadFormDataUnit(OwnerID, RecordID);
+                if (_formData == null)
+                    _formData = LoadFormData(OwnerID, RecordID);
 
-                return _formDataUnit;
+                return _formData;
             }
         }
 
@@ -121,28 +141,62 @@ namespace Gms.Portal.Web.Pages.User
             if (FormEntity == null)
                 return;
 
+            var userID = (UserID ?? UserUtil.GetCurrentUserID());
+
             formDataControl.FormID = FormID;
+            formDataControl.UserID = userID;
             formDataControl.OwnerID = OwnerID;
             formDataControl.RecordID = RecordID;
             formDataControl.ParentID = ParentID;
+            formDataControl.StatusID = StatusID;
+            formDataControl.ContainerID = ContainerID;
 
-            btnSave.Visible = Enabled;
-            btnSave.CssClass = (Enabled ? "btn btn-success fa fa-save" : "btn btn-default fa fa-save");
-            formDataControl.Enabled = Enabled;
+            if (Mode == FormMode.Edit || Mode == FormMode.Review || Mode == FormMode.Inspect)
+            {
+                formDataControl.Enabled = true;
+                btnSave.Enabled = true;
+            }
+            else if (FormData != null)
+            {
+                var statusID = FormData.StatusID;
+                if (ParentID != null && StatusID != null)
+                    statusID = StatusID;
+
+                if (statusID == DataStatusCache.Rejected.ID && FormData.ReviewFields != null && FormData.ReviewFields.Count > 0)
+                {
+                    formDataControl.Enabled = true;
+                    btnSave.Enabled = true;
+                }
+                else
+                {
+                    formDataControl.Enabled = false;
+                    btnSave.Enabled = false;
+                }
+            }
+
+            btnSave.CssClass = (btnSave.Enabled ? "btn btn-success fa fa-save" : "btn btn-default fa fa-save");
+            btnFiles.Visible = (ParentID == null);
+
+            formDataControl.Mode = Mode;
+
+            var formData = FormData;
+            var mainEntity = (ContentEntity)FormEntity;
+            var parentEntity = (ContentEntity)null;
 
             if (OwnerID != null && OwnerID != FormID && FormEntity.Controls != null)
             {
                 var allControls = FormStructureUtil.PreOrderTraversal(FormEntity);
                 var control = allControls.FirstOrDefault(n => n.ID == OwnerID);
 
-                var gridEntity = control as GridEntity;
-                if (gridEntity != null)
-                    formDataControl.InitStructure(gridEntity);
+                var contentEntity = control as ContentEntity;
+                if (contentEntity != null)
+                {
+                    mainEntity = contentEntity;
+                    parentEntity = FormEntity;
+                }
             }
-            else
-            {
-                formDataControl.InitStructure(FormEntity);
-            }
+
+            formDataControl.InitStructure(mainEntity, parentEntity, formData);
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -164,90 +218,49 @@ namespace Gms.Portal.Web.Pages.User
                     var @set = tabs.ToHashSet();
                     formDataControl.SetActiveTabs(@set);
                 }
+
+                var canAccessForm = IsFillingAvailable();
+                if (!canAccessForm)
+                {
+                    lblStatusDesc.Text = FormModel.FillingValidationMessage;
+                    lblStatusDesc.Visible = !String.IsNullOrWhiteSpace(lblStatusDesc.Text);
+
+                    btnSave.Visible = false;
+                    btnSubmit.Visible = false;
+                    btnEdit.Visible = false;
+                    btnFiles.Visible = false;
+
+                    formDataControl.Visible = false;
+                }
             }
         }
 
         protected void btnSave_OnClick(object sender, EventArgs e)
         {
-            var oldRecordID = RecordID;
-            var newRecordID = Guid.NewGuid();
-            var currentDate = DateTime.Now;
-            var newFormDataUnit = formDataControl.GetFormData();
+            var newFormData = formDataControl.GetFormData();
 
-            if (ParentID != null)
+            var newRecordID = SaveFormData(newFormData, FormData);
+            if (newRecordID == null)
+                return;
+
+            if (FormData != null)
             {
-                if (!ValidateFormData(newFormDataUnit))
-                    return;
-            }
-
-            newFormDataUnit.ID = newRecordID;
-            newFormDataUnit.FormID = FormID;
-            newFormDataUnit.OwnerID = OwnerID;
-            newFormDataUnit.ParentID = ParentID;
-            newFormDataUnit.DateCreated = currentDate;
-            newFormDataUnit.UserID = UserUtil.GetCurrentUserID();
-            newFormDataUnit.StatusID = DataStatusCache.None.ID;
-
-            var collection = MongoDbUtil.GetCollection(OwnerID);
-
-            if (FormDataUnit != null)
-            {
-                newFormDataUnit.PreviousID = oldRecordID;
-
-                if (UserUtil.IsSuperAdmin())
-                    newFormDataUnit.UserID = FormDataUnit.UserID;
-
-                var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, currentDate);
-                var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, oldRecordID);
-
-                collection.UpdateMany(filter, update);
-
-                var listRefs = (from n in newFormDataUnit
-                                let m = n.Value as FormDataListRef
-                                where m != null
-                                select m);
-
-                foreach (var listRef in listRefs)
+                if (newFormData.StatusID != FormData.StatusID &&
+                    FormData.StatusID == DataStatusCache.Accepted.ID)
                 {
-                    var subCollection = MongoDbUtil.GetCollection(listRef.OwnerID);
-
-                    var subUpdate = Builders<BsonDocument>.Update.Set(FormDataConstants.ParentIDField, newRecordID);
-                    var subFilter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.ParentIDField, oldRecordID);
-
-                    subCollection.UpdateMany(subFilter, subUpdate);
+                    if (Mode == FormMode.Edit)
+                    {
+                        lblNotifyMessage.Text = "Submit required";
+                        mpeNotifyMessage.Show();
+                        return;
+                    }
                 }
             }
-
-            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
-            var formGrids = controls.OfType<GridEntity>();
-
-            foreach (var entity in formGrids)
-            {
-                var key = Convert.ToString(entity.ID);
-
-                if ((newFormDataUnit[key] as FormDataListRef) == null)
-                    newFormDataUnit[key] = new FormDataListRef(FormID, entity.ID, ParentID);
-            }
-
-            var document = BsonDocumentConverter.ConvertToBsonDocument(newFormDataUnit);
-
-            collection.InsertOne(document);
-
-            //if (RecordID == null && ParentID == null)
-            //{
-            //    var urlHelper = new UrlHelper(RequestUrl);
-            //    urlHelper["FormID"] = FormID;
-            //    urlHelper["OwnerID"] = OwnerID;
-            //    urlHelper["RecordID"] = newRecordID;
-            //    urlHelper["ParentID"] = ParentID;
-
-            //    Response.Redirect(urlHelper.ToEncodedUrl());
-            //}
 
             var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
             if (!String.IsNullOrWhiteSpace(returnUrl))
             {
-                var cleanUrl = CommonUtil.ConvertFromBase64(returnUrl);
+                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
 
                 var returnUrlHelper = new UrlHelper(cleanUrl);
                 Response.Redirect(returnUrlHelper.ToEncodedUrl());
@@ -259,11 +272,21 @@ namespace Gms.Portal.Web.Pages.User
             var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
             if (!String.IsNullOrWhiteSpace(returnUrl))
             {
-                var cleanUrl = CommonUtil.ConvertFromBase64(returnUrl);
+                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
 
                 var returnUrlHelper = new UrlHelper(cleanUrl);
                 Response.Redirect(returnUrlHelper.ToEncodedUrl());
             }
+        }
+
+        protected void btnEdit_OnClick(object sender, EventArgs e)
+        {
+            var url = new UrlHelper(RequestUrl)
+            {
+                ["Mode"] = "Edit"
+            };
+
+            Response.Redirect(url.ToEncodedUrl());
         }
 
         protected void btnSubmit_OnClick(object sender, EventArgs e)
@@ -271,7 +294,7 @@ namespace Gms.Portal.Web.Pages.User
             if (RecordID == null)
                 return;
 
-            var formDataUnit = LoadFormDataUnit(OwnerID, RecordID);
+            var formDataUnit = LoadFormData(OwnerID, RecordID);
             if (!ValidateFormData(formDataUnit))
                 return;
 
@@ -281,7 +304,160 @@ namespace Gms.Portal.Web.Pages.User
 
             FormDataDbUtil.ChangeStatus(ownerID, recordID, submitStatus.ID, String.Empty);
 
-            Response.Redirect(RequestUrl.ToEncodedUrl());
+            var redirectUrl = new UrlHelper(RequestUrl)
+            {
+                ["Mode"] = Convert.ToString(FormMode.View)
+            };
+
+            Response.Redirect(redirectUrl.ToEncodedUrl());
+        }
+
+        protected void btnFiles_OnClick(object sender, EventArgs e)
+        {
+            var activeTabs = formDataControl.GetActiveTabs();
+
+            var returnUrl = new UrlHelper(RequestUrl.ToString())
+            {
+                ["Tabs"] = String.Join(",", activeTabs)
+            };
+
+            var urlHelper = new UrlHelper("~/Pages/Management/FilesList.aspx")
+            {
+                ["ParentID"] = FormID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl.ToString())
+            };
+
+            Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void btnCloneDataGridOK_Click(object sender, EventArgs e)
+        {
+            var model = cloneFormGridControl.Model;
+            if (model.SourceGridID == null || model.TargetGridID == null)
+                return;
+
+            var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
+            var dataGrids = allControls.OfType<GridEntity>().ToDictionary(n => n.ID);
+
+            var sourceGrid = dataGrids[model.SourceGridID.Value];
+            var targetGrid = dataGrids[model.TargetGridID.Value];
+
+            var sourceCollection = MongoDbUtil.GetCollection(sourceGrid.ID);
+            var sourceQuery = (from n in sourceCollection.AsQueryable()
+                               where n[FormDataConstants.DateDeletedField] == (DateTime?)null
+                               select n);
+
+            var targetCollection = MongoDbUtil.GetCollection(targetGrid.ID);
+            var targetQuery = (from n in targetCollection.AsQueryable()
+                               where n[FormDataConstants.DateDeletedField] == (DateTime?)null
+                               select n);
+
+            var sourceDocs = sourceQuery.ToList();
+
+            if (model.Mode == "Add" || model.Mode == "Overwrite")
+            {
+                if (model.Mode == "Overwrite")
+                {
+                    foreach (var targetDoc in targetQuery)
+                    {
+                        var recordID = targetDoc[FormDataConstants.IDField].AsNullableGuid;
+
+                        var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, DateTime.Now);
+                        var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
+
+                        targetCollection.UpdateMany(filter, update);
+                    }
+                }
+
+                var targetDocs = sourceDocs.Select(BsonDocumentConverter.CreateClone);
+                targetCollection.InsertMany(targetDocs);
+            }
+            else if (model.Mode == "Merge")
+            {
+                var targetDocs = targetQuery.ToList();
+
+                var sourceFields = sourceDocs.SelectMany(n => n.Names);
+                var targetFields = targetDocs.SelectMany(n => n.Names);
+
+                var allFields = new SortedSet<String>();
+                allFields.UnionWith(sourceFields);
+                allFields.UnionWith(targetFields);
+
+                allFields.ExceptWith(FormDataBase.DefaultFields);
+
+                var hashCodes = BsonDocumentConverter.ComputeHashCodes(targetDocs, allFields).Select(n => n.Key).ToHashSet();
+
+                foreach (var sourceDoc in sourceDocs)
+                {
+                    var hashCode = BsonDocumentConverter.ComputeHashCode(sourceDoc, allFields);
+                    if (hashCodes.Add(hashCode))
+                    {
+                        var targetDoc = BsonDocumentConverter.CreateClone(sourceDoc);
+                        targetCollection.InsertOne(targetDoc);
+                    }
+                }
+            }
+
+            mpeCloneDataGrid.Hide();
+        }
+
+        protected void btnCloneDataGridCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeCloneDataGrid.Hide();
+        }
+
+        protected void btnChangesWarningOK_Click(object sender, EventArgs e)
+        {
+            var newFormData = formDataControl.GetFormData();
+
+            var newRecordID = SaveFormData(newFormData, FormData);
+            if (newRecordID != null)
+            {
+                var returnUrl = hdReturnUrl.Value;
+                var redirectUrl = hdRedirectUrl.Value;
+
+                if (!String.IsNullOrWhiteSpace(redirectUrl))
+                {
+                    var returnUrlHelper = new UrlHelper(returnUrl)
+                    {
+                        ["RecordID"] = newRecordID,
+                    };
+
+                    var redirectUrlHelper = new UrlHelper(redirectUrl)
+                    {
+                        ["ParentID"] = newRecordID,
+                        ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrlHelper.ToString())
+                    };
+
+                    Response.Redirect(redirectUrlHelper.ToEncodedUrl());
+                }
+            }
+
+            mpeChangesWarning.Hide();
+        }
+
+        protected void btnChangesWarningCancel_Click(object sender, EventArgs e)
+        {
+            mpeChangesWarning.Hide();
+        }
+
+        protected void btnNotifyMessageOK_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnNotifyMessageCancel_OnClick(object sender, EventArgs e)
+        {
+            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
+            if (!String.IsNullOrWhiteSpace(returnUrl))
+            {
+                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
+
+                var returnUrlHelper = new UrlHelper(cleanUrl);
+                Response.Redirect(returnUrlHelper.ToEncodedUrl());
+            }
+
+            mpeNotifyMessage.Hide();
         }
 
         protected void formDataControl_OnCommand(object sender, CommandEventArgs e)
@@ -293,18 +469,24 @@ namespace Gms.Portal.Web.Pages.User
             var commandName = e.CommandName;
             var commandArg = Convert.ToString(e.CommandArgument);
 
-            var commandRx = new Regex(@"(?<ownerID>.*)/(?<recordID>.*)", RegexOptions.Compiled);
-
-            if (!commandRx.IsMatch(commandArg))
+            if (!RegexUtil.CommandRx.IsMatch(commandArg))
                 return;
 
-            var commandMatch = commandRx.Match(commandArg);
+            var commandMatch = RegexUtil.CommandRx.Match(commandArg);
 
             var ownerID = DataConverter.ToNullableGuid(commandMatch.Groups["ownerID"].Value);
             var recordID = DataConverter.ToNullableGuid(commandMatch.Groups["recordID"].Value);
+            var containerID = DataConverter.ToNullableGuid(commandMatch.Groups["containerID"].Value);
 
             if (ownerID == null)
                 return;
+
+            if (commandName == "New")
+            {
+                commandName = "Edit";
+                containerID = recordID;
+                recordID = null;
+            }
 
             if (commandName == "Delete")
             {
@@ -323,25 +505,82 @@ namespace Gms.Portal.Web.Pages.User
                 return;
             }
 
+            if (commandName == "Clone")
+            {
+                var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
+                var dataGrids = allControls.OfType<GridEntity>().ToDictionary(n => n.ID);
+
+                var dataGridClones = GetGridClones(ownerID.Value, dataGrids);
+
+                var model = new CloneFormGridModel
+                {
+                    SourceGridID = ownerID,
+                    TargetGridID = null,
+                };
+
+                cloneFormGridControl.BindDataGrids(dataGridClones);
+                cloneFormGridControl.Model = model;
+
+                mpeCloneDataGrid.Show();
+
+                return;
+            }
+
             var activeTabs = formDataControl.GetActiveTabs();
 
-            var returnUrl = new UrlHelper(RequestUrl.ToString());
-            returnUrl["Tabs"] = String.Join(",", activeTabs);
+            var returnUrl = new UrlHelper(RequestUrl.ToString())
+            {
+                ["Tabs"] = String.Join(",", activeTabs)
+            };
 
-            var urlHelper = new UrlHelper(Request.Url);
-            urlHelper["Mode"] = commandName;
-            urlHelper["FormID"] = FormID;
-            urlHelper["OwnerID"] = ownerID;
-            urlHelper["ParentID"] = RecordID;
-            urlHelper["RecordID"] = recordID;
-            urlHelper["ReturnUrl"] = CommonUtil.ConvertToBase64(returnUrl.ToString());
+            var urlHelper = new UrlHelper(Request.Url)
+            {
+                ["Mode"] = commandName,
+                ["FormID"] = FormID,
+                ["OwnerID"] = ownerID,
+                ["ParentID"] = RecordID,
+                ["RecordID"] = recordID,
+                ["StatusID"] = (StatusID ?? formDataControl.StatusID),
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl.ToString()),
+                ["ContainerID"] = containerID,
+            };
+
+            if (FormData != null)
+            {
+                var controls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
+                var fields = controls.Select(n => Convert.ToString(n.ID)).ToHashSet();
+
+                var newFormData = formDataControl.GetFormData();
+
+                if (!FormDataUtil.MergeAndEquals(newFormData, FormData, fields))
+                {
+                    urlHelper.Remove("ReturnUrl");
+
+                    hdReturnUrl.Value = returnUrl.ToEncodedUrl();
+                    hdRedirectUrl.Value = urlHelper.ToEncodedUrl();
+
+                    mpeChangesWarning.Show();
+
+                    return;
+                }
+            }
 
             Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void formDataControl_OnError(object sender, EventArgs e)
+        {
+            var genericEventArgs = e as GenericEventArgs<String>;
+            if (genericEventArgs == null)
+                return;
+
+            BindErrors(genericEventArgs.Value);
         }
 
         protected void ApplyViewMode()
         {
             btnSubmit.Visible = (UmUtil.Instance.HasAccess("Submit") && RecordID != null && ParentID == null);
+            btnEdit.Visible = (UmUtil.Instance.HasAccess("Submit") && RecordID != null && ParentID == null);
         }
 
         protected void FillFormData()
@@ -349,31 +588,69 @@ namespace Gms.Portal.Web.Pages.User
             if (RecordID == null)
                 return;
 
-            var formDataUnit = LoadFormDataUnit(OwnerID, RecordID);
-            formDataControl.BindFormData(formDataUnit, IsPostBack);
+            formDataControl.BindFormData(FormData, IsPostBack);
 
-            DetectChanges(formDataUnit);
-            SetStatusMode(formDataUnit);
+            DetectChanges(FormData);
+            SetStatusMode(FormData);
         }
 
-        protected FormDataUnit LoadFormDataUnit(Guid? ownerID, Guid? recordID)
+        protected bool IsFillingAvailable()
         {
-            if (ownerID == null || recordID == null)
-                return null;
+            if (ParentID != null)
+                return true;
 
-            var collection = MongoDbUtil.GetCollection(ownerID);
+            var expression = FormModel.FillingValidationExpression;
+            if (String.IsNullOrWhiteSpace(expression))
+                return true;
 
-            //var commonFilter = Builders<BsonDocument>.Filter.Eq("ID", recordID);
-            //var document = documents.FirstOrDefault();
+            var expNode = ExpressionParser.GetOrParse(expression);
+            var expGlobals = new ExpressionGlobalsUtil(UserID, FormEntity, FormData);
 
-            var document = collection.AsQueryable().FirstOrDefault(n => n[FormDataConstants.IDField] == recordID);
-            if (document == null)
-                return null;
+            Object result;
+            if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+            {
+                BindErrors("FillingValidationExpression Error");
+                return true;
+            }
 
-            return BsonDocumentConverter.ConvertToFormDataUnit(document);
+            return DataConverter.ToBoolean(result);
         }
 
-        protected bool ValidateFormData(FormDataUnit formDataUnit)
+        protected bool IsDublicateFormData(String hashCode)
+        {
+            if (!String.IsNullOrEmpty(hashCode))
+            {
+                var collection = MongoDbUtil.GetCollection(OwnerID);
+
+                var dataQuery = (from n in collection.AsQueryable()
+                                 where n[FormDataConstants.DateDeletedField] == (DateTime?)null &&
+                                       n[FormDataConstants.HashCodeField] == hashCode
+                                 select n);
+
+                if (ParentID != null)
+                {
+                    dataQuery = (from n in dataQuery
+                                 where n[FormDataConstants.ParentIDField] == ParentID
+                                 select n);
+                }
+
+                if (RecordID != null)
+                {
+                    dataQuery = (from n in dataQuery
+                                 where n[FormDataConstants.IDField] != RecordID
+                                 select n);
+                }
+
+                var list = dataQuery.ToList();
+
+                if (list.Any())
+                    return true;
+            }
+
+            return false;
+        }
+
+        protected bool ValidateFormData(FormDataUnit formData)
         {
             var entity = (ControlEntity)FormEntity;
 
@@ -385,42 +662,21 @@ namespace Gms.Portal.Web.Pages.User
 
             var container = (ContentEntity)entity;
 
-            var entities = (from n in FormStructureUtil.PreOrderFirstLevelTraversal(container)
-                            where n is FieldEntity || n is GridEntity
-                            select n);
-
-            var validateFields = new List<ControlEntity>();
-
-            var valuesDict = new Dictionary<String, Object>();
-            foreach (var field in entities)
-            {
-                var key = Convert.ToString(field.ID);
-
-                var val = formDataUnit[key];
-                if (val is FormDataBinary)
-                {
-                    var binary = (FormDataBinary)val;
-                    val = binary.FileName;
-                }
-                else if (val is FormDataListRef)
-                {
-                    var formListRef = (FormDataListRef)formDataUnit[key];
-                    var formDataList = new FormDataLazyList(formListRef);
-
-                    val = formDataList.Count;
-                }
-
-                valuesDict[field.Name] = val;
-
-                validateFields.Add(field);
-            }
-
             var errorMessages = new List<String>();
 
-            foreach (var control in validateFields)
+            var entities = (from n in FormStructureUtil.PreOrderFirstLevelTraversal(container)
+                            where n is FieldEntity || n is GridEntity || n is TreeEntity
+                            select n).ToList();
+
+            var expGlobals = new ExpressionGlobalsUtil(UserID, container, formData);
+
+            foreach (var control in entities)
             {
-                var key = Convert.ToString(control.ID);
-                var val = formDataUnit[key];
+                var fieldKey = Convert.ToString(control.ID);
+
+                expGlobals.SetAssociation("@", fieldKey);
+                expGlobals.SetAssociation("@val", fieldKey);
+                expGlobals.SetAssociation("@value", fieldKey);
 
                 var mandatory = false;
                 var errorMessage = String.Empty;
@@ -441,12 +697,19 @@ namespace Gms.Portal.Web.Pages.User
                     validationExp = formGrid.ValidationExp;
                 }
 
+                var formTree = control as TreeEntity;
+                if (formTree != null)
+                {
+                    errorMessage = formTree.ErrorMessage;
+                    validationExp = formTree.ValidationExp;
+                }
+
                 if (mandatory)
                 {
-                    var strVal = Convert.ToString(val);
+                    var strVal = Convert.ToString(expGlobals.Eval("@"));
                     if (String.IsNullOrWhiteSpace(strVal) || strVal == "Select an Option")
                     {
-                        var message = String.Format("[{0}] - Is Mandatory", control.Name);
+                        var message = $"[{control.Name}] - Is Mandatory";
                         errorMessages.Add(message);
                     }
                 }
@@ -455,24 +718,37 @@ namespace Gms.Portal.Web.Pages.User
                 if (String.IsNullOrWhiteSpace(expression))
                     continue;
 
-                valuesDict["@"] = val;
-                valuesDict["@val"] = val;
-                valuesDict["@value"] = val;
-
-                var result = ExpressionEvaluator.Eval(expression, valuesDict.GetValueOrDefault);
-
-                var @bool = DataConverter.ToNullableBool(result);
-                if (@bool.GetValueOrDefault())
+                Object result;
+                if (!ExpressionEvaluator.TryEval(expression, expGlobals.Eval, out result))
                 {
-                    var message = String.Format("[{0}] - {1}", control.Name, errorMessage);
+                    var message = $"[{control.Name}] - Incorrect Validation Expression";
                     errorMessages.Add(message);
+                }
+                else
+                {
+                    var @bool = DataConverter.ToNullableBool(result);
+                    if (@bool.GetValueOrDefault())
+                    {
+                        var message = $"[{control.Name}] - {errorMessage}";
+                        errorMessages.Add(message);
+                    }
                 }
             }
 
             if (errorMessages.Count == 0)
                 return true;
 
-            var query = (from n in errorMessages
+            BindErrors(errorMessages);
+            return false;
+        }
+
+        protected void BindErrors(params String[] errors)
+        {
+            BindErrors((IEnumerable<String>)errors);
+        }
+        protected void BindErrors(IEnumerable<String> errors)
+        {
+            var query = (from n in errors
                          where !String.IsNullOrWhiteSpace(n)
                          select new
                          {
@@ -481,27 +757,39 @@ namespace Gms.Portal.Web.Pages.User
 
             rptErrors.DataSource = query;
             rptErrors.DataBind();
-
-            return false;
         }
 
         protected void SetStatusMode(FormDataUnit formDataUnit)
         {
+            btnSave.Visible = false;
+            btnSubmit.Visible = false;
+            btnEdit.Visible = false;
+
+            if (Mode == FormMode.Edit || Mode == FormMode.Review || Mode == FormMode.Inspect)
+                btnSave.Visible = true;
+
             if (formDataUnit == null)
                 return;
 
-            if (formDataUnit.StatusID == DataStatusCache.Submit.ID ||
-                formDataUnit.StatusID == DataStatusCache.Accepted.ID)
-            {
-                btnSubmit.Enabled = false;
-                btnSubmit.CssClass = "btn btn-default fa fa-share-square-o";
-            }
-            else
-            {
-                btnSubmit.CssClass = "btn btn-primary fa fa-share-square-o";
-            }
+            if (formDataUnit.StatusID != DataStatusCache.Submit.ID && formDataUnit.StatusID != DataStatusCache.Accepted.ID)
+                btnSubmit.Visible = true;
+
+            if (formDataUnit.StatusID == DataStatusCache.Accepted.ID && Mode != FormMode.Edit)
+                btnEdit.Visible = true;
 
             lblStatusDesc.Text = String.Empty;
+
+            if (formDataUnit.StatusID == DataStatusCache.Submit.ID)
+            {
+                lblStatusDesc.ForeColor = Color.Green;
+                lblStatusDesc.Text = "Your personal data waiting for progress";
+            }
+
+            if (formDataUnit.StatusID == DataStatusCache.InProgress.ID)
+            {
+                lblStatusDesc.ForeColor = Color.Green;
+                lblStatusDesc.Text = "Your personal data is in progress";
+            }
 
             if (formDataUnit.StatusID == DataStatusCache.Accepted.ID)
             {
@@ -520,114 +808,200 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void DetectChanges(FormDataUnit formDataUnit)
         {
-            if (formDataUnit.StatusID == DataStatusCache.Submit.ID || formDataUnit.PreviousID == null)
+            if (!UmUtil.Instance.HasAccess("Admin"))
                 return;
 
-            var currentFormData = formDataUnit;
+            if (formDataUnit.StatusID != DataStatusCache.Submit.ID || formDataUnit.PreviousID == null)
+                return;
+
+            var oldFormData = formDataUnit;
             while (true)
             {
-                var previousDoc = MongoDbUtil.GetDocument(OwnerID, currentFormData.PreviousID);
-                currentFormData = BsonDocumentConverter.ConvertToFormDataUnit(previousDoc);
-
-                if (currentFormData == null)
+                if (oldFormData.PreviousID == null)
                     return;
 
-                if (currentFormData.StatusID == DataStatusCache.Submit.ID)
+                var previousDoc = MongoDbUtil.GetDocument(OwnerID, oldFormData.PreviousID);
+                oldFormData = BsonDocumentConverter.ConvertToFormDataUnit(previousDoc);
+
+                if (oldFormData == null)
+                    return;
+
+                if (oldFormData.StatusID == DataStatusCache.Submit.ID ||
+                    oldFormData.StatusID == DataStatusCache.Accepted.ID ||
+                    oldFormData.StatusID == DataStatusCache.Rejected.ID)
                     break;
             }
 
-            var changedFields = new HashSet<String>();
+            var changedFields = new Dictionary<Guid, Object>();
             var changedGrids = new HashLookup<String, Guid?>();
 
             var allKeys = new HashSet<String>();
             allKeys.UnionWith(formDataUnit.Keys);
-            allKeys.UnionWith(currentFormData.Keys);
+            allKeys.UnionWith(oldFormData.Keys);
 
             foreach (var key in allKeys)
             {
                 var xVal = formDataUnit[key];
-                var yVal = currentFormData[key];
+                var yVal = oldFormData[key];
 
                 if (xVal is FormDataListRef || yVal is FormDataListRef)
                 {
-                    var xRef = (FormDataListRef)xVal;
-                    var yRef = (FormDataListRef)yVal;
+                    //var xRef = (FormDataListRef)xVal;
+                    //var yRef = (FormDataListRef)yVal;
 
-                    var xList = new FormDataLazyList(xRef);
-                    var xDict = xList.ToDictionary(n => n.ID);
+                    //var xList = new FormDataLazyList(xRef);
+                    //var xDict = xList.ToDictionary(n => n.ID);
 
-                    var yList = new FormDataLazyList(yRef);
+                    //var yList = new FormDataLazyList(yRef);
 
-                    var xIds = xList.Select(n => n.ID);
-                    var yIds = yList.Select(n => n.ID);
+                    //var xIds = xList.Select(n => n.ID);
+                    //var yIds = yList.Select(n => n.ID);
 
-                    var xs = yIds.ToHashSet();
+                    //var xs = yIds.ToHashSet();
 
-                    foreach (var recID in xIds)
-                    {
+                    //foreach (var recID in xIds)
+                    //{
 
-                    }
+                    //}
                 }
                 else
                 {
-                    if (!FormItemEquals(xVal, yVal))
-                        changedFields.Add(key);
+                    if (!FormDataUtil.FormItemEquals(xVal, yVal))
+                    {
+                        var fieldID = DataConverter.ToNullableGuid(key);
+                        if (fieldID != null)
+                            changedFields.Add(fieldID.Value, yVal);
+                    }
                 }
             }
+
+            formDataControl.MarkChangedFields(changedFields);
         }
 
-        protected bool FormItemEquals(Object xVal, Object yVal)
+        protected FormDataUnit LoadFormData(Guid? ownerID, Guid? recordID)
         {
-            return FormItemCompare(xVal, yVal) == 0;
+            if (ownerID == null || recordID == null)
+                return null;
+
+            var collection = MongoDbUtil.GetCollection(ownerID);
+
+            //var commonFilter = Builders<BsonDocument>.Filter.Eq("ID", recordID);
+            //var document = documents.FirstOrDefault();
+
+            var document = collection.AsQueryable().FirstOrDefault(n => n[FormDataConstants.IDField] == recordID);
+            if (document == null)
+                return null;
+
+            return BsonDocumentConverter.ConvertToFormDataUnit(document);
         }
-        protected int FormItemCompare(Object xVal, Object yVal)
+
+        protected Guid? SaveFormData(FormDataUnit newFormData, FormDataUnit oldFormData)
         {
-            if (ReferenceEquals(xVal, yVal))
-                return 0;
+            var oldRecordID = RecordID;
+            var newRecordID = Guid.NewGuid();
+            var currentDate = DateTime.Now;
 
-            if (Equals(xVal, yVal))
-                return 0;
-
-            if (xVal == null && yVal == null)
-                return 0;
-
-            if (xVal != null && yVal == null)
-                return 1;
-
-            if (xVal == null && yVal != null)
-                return -1;
-
-            var ordinalComparer = StringComparer.OrdinalIgnoreCase;
-            var bytesComparer = new ByteArrayComparer();
-
-            if (xVal is FormDataListRef)
-                return 1;
-
-            if (yVal is FormDataListRef)
-                return -1;
-
-            if (xVal is FormDataBinary && yVal is FormDataBinary)
+            var container = (ContentEntity)FormEntity;
+            if (OwnerID != null && OwnerID != FormID)
             {
-                var xBin = (FormDataBinary)xVal;
-                var yBin = (FormDataBinary)yVal;
-
-                var order = ordinalComparer.Compare(xBin.FileName, yBin.FileName);
-                if (order == 0)
-                    order = bytesComparer.Compare(xBin.FileBytes, yBin.FileBytes);
-
-                return order;
+                var subControls = FormStructureUtil.PreOrderTraversal(container);
+                container = subControls.OfType<ContentEntity>().First(n => n.ID == OwnerID);
             }
 
-            if (xVal is FormDataBinary)
-                return 1;
-            if ((yVal is FormDataBinary))
-                return -1;
+            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(container).ToList();
 
-            var xs = Convert.ToString(xVal);
-            var ys = Convert.ToString(yVal);
+            if (ParentID != null)
+            {
+                if (!ValidateFormData(newFormData))
+                    return null;
+            }
 
-            var result = ordinalComparer.Compare(xs, ys);
-            return result;
+            newFormData.ID = newRecordID;
+            newFormData.FormID = FormID;
+            newFormData.OwnerID = OwnerID;
+            newFormData.ParentID = ParentID;
+            newFormData.ContainerID = ContainerID;
+            newFormData.DateCreated = currentDate;
+            newFormData.UserID = UserUtil.GetCurrentUserID();
+            newFormData.StatusID = DataStatusCache.None.ID;
+            newFormData.HashCode = FormStructureUtil.ComputeHashCode(controls, newFormData);
+
+            FormDataUtil.MergeFormDatas(newFormData, oldFormData);
+
+            var treeAndGrids = (from n in controls
+                                where n is GridEntity || n is TreeEntity
+                                select n);
+
+            foreach (var entity in treeAndGrids)
+            {
+                var fieldKey = Convert.ToString(entity.ID);
+
+                var listRef = newFormData[fieldKey] as FormDataListRef;
+                if (listRef == null)
+                {
+                    listRef = new FormDataListRef(FormID, entity.ID, ParentID);
+                    newFormData[fieldKey] = listRef;
+                }
+            }
+
+            if (IsDublicateFormData(newFormData.HashCode))
+            {
+                BindErrors("Dublicate record");
+                return null;
+            }
+
+            var collection = MongoDbUtil.GetCollection(OwnerID);
+
+            if (oldFormData != null)
+            {
+                newFormData.PreviousID = oldRecordID;
+                newFormData.StatusID = oldFormData.StatusID.GetValueOrDefault(DataStatusCache.None.ID);
+                newFormData.HashCode = FormStructureUtil.ComputeHashCode(controls, newFormData);
+
+                if (UserUtil.IsSuperAdmin())
+                    newFormData.UserID = oldFormData.UserID;
+                else if (oldFormData.StatusID == DataStatusCache.Accepted.ID)
+                    newFormData.StatusID = DataStatusCache.None.ID;
+
+                var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, currentDate);
+                var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, oldRecordID);
+
+                collection.UpdateMany(filter, update);
+
+                var listRefs = newFormData.Values.OfType<FormDataListRef>();
+                foreach (var listRef in listRefs)
+                {
+                    var subCollection = MongoDbUtil.GetCollection(listRef.OwnerID);
+
+                    var subUpdate = Builders<BsonDocument>.Update.Set(FormDataConstants.ParentIDField, newRecordID);
+                    var subFilter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.ParentIDField, oldRecordID);
+
+                    subCollection.UpdateMany(subFilter, subUpdate);
+                }
+            }
+
+            var document = BsonDocumentConverter.ConvertToBsonDocument(newFormData);
+
+            collection.InsertOne(document);
+
+            return newRecordID;
+        }
+
+        protected IEnumerable<GridEntity> GetGridClones(Guid dataGridID, IDictionary<Guid, GridEntity> dataGrids)
+        {
+            var primaryGrid = dataGrids[dataGridID];
+            var primaryGridFields = primaryGrid.Controls.Select(n => n.Name).ToHashSet();
+
+            foreach (var otherGrid in dataGrids.Values)
+            {
+                if (otherGrid.ID == primaryGrid.ID)
+                    continue;
+
+                var otherGridFields = otherGrid.Controls.Select(n => n.Name).ToHashSet();
+
+                if (primaryGridFields.SetEquals(otherGridFields))
+                    yield return otherGrid;
+            }
         }
     }
 }

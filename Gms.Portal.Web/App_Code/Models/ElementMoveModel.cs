@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
-using Gms.Portal.Web.Entities.FormStructure;
 
 namespace Gms.Portal.Web.Models
 {

@@ -116,7 +116,7 @@ namespace CITI.EVO.UserManagement.Web.Utils
                             var userEntity = new ParentChildEntity
                             {
                                 ID = item.ID,
-                                Name = String.Format("{0} - {1} {2}", user.LoginName, user.FirstName, user.LastName),
+                                Name = $"{user.LoginName} - {user.FirstName} {user.LastName}",
                                 ParentID = childGroup.ID,
                                 Tag = "User"
                             };

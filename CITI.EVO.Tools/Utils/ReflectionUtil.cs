@@ -714,9 +714,9 @@ namespace CITI.EVO.Tools.Utils
 
 		private static void ComposeComplexOutput(IDictionary<String, Object> output, Object parent, String @namespace, PropertyInfo property)
 		{
-			var name = String.Format("{0}.{1}", @namespace, property.Name);
+			var name = $"{@namespace}.{property.Name}";
 			var obj = property.GetValue(parent, null);
-			output.Add(String.Format("{0}", name), obj);
+			output.Add($"{name}", obj);
 
 			if (obj != null && !obj.GetType().IsValueType && !(obj is IEnumerable)) //TODO: solve IEnumerable
 			{

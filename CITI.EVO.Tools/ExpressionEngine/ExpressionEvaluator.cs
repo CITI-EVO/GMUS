@@ -65,5 +65,65 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
             return node.Value;
         }
+
+        public static bool TryEval(String expression, out object result)
+        {
+            try
+            {
+                result = Eval(expression);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = null;
+                return false;
+            }
+        }
+        public static bool TryEval(String expression, Func<String, Object> varResolver, out object result)
+        {
+            try
+            {
+                result = Eval(expression, varResolver);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = null;
+                return false;
+            }
+        }
+
+        public static bool TryEval(ExpressionNode node, out object result)
+        {
+            try
+            {
+                result = Eval(node);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = null;
+
+                return false;
+            }
+        }
+        public static bool TryEval(ExpressionNode node, Func<String, Object> varResolver, out object result)
+        {
+            try
+            {
+                result = Eval(node, varResolver);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = null;
+
+                return false;
+            }
+        }
     }
 }

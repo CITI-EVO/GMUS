@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
 using CITI.EVO.Tools.ExpressionEngine.Common;
+using System.Globalization;
+using CITI.EVO.Tools.Comparers;
+using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
@@ -42,10 +46,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 case "+":
                     {
                         if (leftNode == null)
-                            return +Convert.ToDouble(rightValue);
-
-                        if (IsStringNode(leftNode, leftValue) || IsStringNode(rightNode, rightValue))
-                            return String.Format("{0}{1}", leftValue, rightValue);
+                            return +ExpressionHelper.GetNumber(rightValue);
 
                         if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
                         {
@@ -55,118 +56,68 @@ namespace CITI.EVO.Tools.ExpressionEngine
                             return leftDate.AddTicks(rightDate.Ticks);
                         }
 
-                        return Convert.ToDouble(leftValue) + Convert.ToDouble(rightValue);
+                        return ExpressionHelper.GetNumber(leftValue) + ExpressionHelper.GetNumber(rightValue);
                     }
                 case "++":
-                    return Convert.ToDouble(rightValue) + 1D;
+                    return ExpressionHelper.GetNumber(rightValue) + 1D;
                 case "-":
                     {
                         if (leftNode == null)
-                            return -Convert.ToDouble(rightValue);
+                            return -ExpressionHelper.GetNumber(rightValue);
 
                         if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
                         {
                             var leftDate = ExpressionHelper.GetDateTime(leftValue);
                             var rightDate = ExpressionHelper.GetDateTime(rightValue);
+                            var ticksDiff = Math.Abs(leftDate.Ticks - rightDate.Ticks);
 
-                            return leftDate.AddTicks(-rightDate.Ticks);
+                            return new DateTime(ticksDiff);
                         }
 
-                        return Convert.ToDouble(leftValue) - Convert.ToDouble(rightValue);
+                        return ExpressionHelper.GetNumber(leftValue) - ExpressionHelper.GetNumber(rightValue);
                     }
                 case "--":
-                    return Convert.ToDouble(rightValue) - 1D;
+                    return ExpressionHelper.GetNumber(rightValue) - 1D;
                 case "=":
                     break;
                 case "==":
-                    return IsEquals(leftValue, rightValue);
+                    return Compare(leftNode, leftValue, rightNode, rightValue) == 0;
                 case "!=":
                 case "<>":
-                    {
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-                        {
-                            var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                            var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                            return leftDate != rightDate;
-                        }
-
-                        return !IsEquals(leftValue, rightValue);
-                    }
+                    return Compare(leftNode, leftValue, rightNode, rightValue) != 0;
                 case "<=":
-                    {
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-                        {
-                            var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                            var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                            return leftDate <= rightDate;
-                        }
-
-                        return Convert.ToDouble(leftValue) <= Convert.ToDouble(rightValue);
-                    }
+                    return Compare(leftNode, leftValue, rightNode, rightValue) <= 0;
                 case ">=":
-                    {
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-                        {
-                            var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                            var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                            return leftDate >= rightDate;
-                        }
-                        return Convert.ToDouble(leftValue) >= Convert.ToDouble(rightValue);
-                    }
+                    return Compare(leftNode, leftValue, rightNode, rightValue) >= 0;
                 case "&&":
                     return Convert.ToBoolean(leftValue) && Convert.ToBoolean(rightValue);
                 case "||":
                     return Convert.ToBoolean(leftValue) || Convert.ToBoolean(rightValue);
                 case "^":
-                    return Math.Pow(Convert.ToDouble(leftValue), Convert.ToDouble(rightValue));
+                    {
+                        var a = ExpressionHelper.GetNumber(leftValue);
+                        var b = ExpressionHelper.GetNumber(rightValue);
+
+                        return Math.Pow(a, b);
+                    }
                 case "&":
-                    return Convert.ToInt64(leftValue) & Convert.ToInt64(rightValue);
+                    return String.Concat(leftValue, rightValue);
                 case "|":
-                    return Convert.ToInt64(leftValue) | Convert.ToInt64(rightValue);
+                    return ExpressionHelper.GetNumber(leftValue) % ExpressionHelper.GetNumber(rightValue);
                 case "%":
-                    return Convert.ToDouble(leftValue) / 100D * Convert.ToDouble(rightValue);
+                    return ExpressionHelper.GetNumber(leftValue) / 100D * ExpressionHelper.GetNumber(rightValue);
                 case "*":
-                    return Convert.ToDouble(leftValue) * Convert.ToDouble(rightValue);
+                    return ExpressionHelper.GetNumber(leftValue) * ExpressionHelper.GetNumber(rightValue);
                 case "/":
                 case "\\":
-                    return Convert.ToDouble(leftValue) / Convert.ToDouble(rightValue);
+                    return ExpressionHelper.GetNumber(leftValue) / ExpressionHelper.GetNumber(rightValue);
                 case "<":
-                    {
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-                        {
-                            var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                            var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                            return leftDate < rightDate;
-                        }
-                        return Convert.ToDouble(leftValue) < Convert.ToDouble(rightValue);
-                    }
+                    return Compare(leftNode, leftValue, rightNode, rightValue) < 0;
                 case ">":
-                    {
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-                        {
-                            var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                            var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                            return leftDate > rightDate;
-                        }
-
-                        return Convert.ToDouble(leftValue) > Convert.ToDouble(rightValue);
-                    }
+                    return Compare(leftNode, leftValue, rightNode, rightValue) > 0;
             }
 
             throw new Exception("Unknown operation");
-        }
-
-        private static bool IsEquals(Object x, Object y)
-        {
-            var xVal = Convert.ToString(x);
-            var yVal = Convert.ToString(y);
-
-            return StringComparer.Ordinal.Equals(xVal, yVal);
         }
 
         private static bool IsDateTimeNode(ExpressionNode node, Object value)
@@ -179,9 +130,23 @@ namespace CITI.EVO.Tools.ExpressionEngine
             return false;
         }
 
-        private static bool IsStringNode(ExpressionNode node, Object value)
+        private static int Compare(ExpressionNode leftNode, Object leftValue, ExpressionNode rightNode, Object rightValue)
         {
-            return (node.ValueType == ValueTypes.String || (node.ValueType == ValueTypes.Variable && value is String));
+            if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
+            {
+                var leftDate = ExpressionHelper.GetDateTime(leftValue);
+                var rightDate = ExpressionHelper.GetDateTime(rightValue);
+
+                return leftDate.CompareTo(rightDate);
+            }
+
+            var leftDbl = DataConverter.ToNullableDouble(leftValue);
+            var rightDbl = DataConverter.ToNullableDouble(rightValue);
+
+            if (leftDbl != null && rightDbl != null)
+                return leftDbl.Value.CompareTo(rightDbl.Value);
+
+            return ExpressionHelper.Compare(leftValue, rightValue);
         }
     }
 }

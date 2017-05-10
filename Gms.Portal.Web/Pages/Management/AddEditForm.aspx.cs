@@ -7,7 +7,9 @@ using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Converters.ModelToEntity;
 using NHibernate.Linq;
 using System.Linq;
+using CITI.EVO.Tools.Helpers;
 using Gms.Portal.Web.Models;
+using Gms.Portal.Web.Utils;
 
 namespace Gms.Portal.Web.Pages.Management
 {
@@ -39,7 +41,11 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void btnCancelForm_OnClick(object sender, EventArgs e)
         {
-            Response.Redirect("~/Pages/Management/FormsList.aspx");
+            var returnUrl = DataConverter.ToString(RequestUrl["ReturnUrl"]);
+            if (string.IsNullOrWhiteSpace(returnUrl))
+                returnUrl = "~/Pages/Management/FormsList.aspx";
+
+            Response.Redirect(returnUrl);
         }
 
         protected void btnSaveForm_OnClick(object sender, EventArgs e)
@@ -58,7 +64,22 @@ namespace Gms.Portal.Web.Pages.Management
 
             HbSession.SubmitChanges(entity);
 
-            Response.Redirect("~/Pages/Management/FormsList.aspx");
+            //Response.Redirect("~/Pages/Management/FormsList.aspx");
+        }
+
+        protected void btnPreviewForm_OnClick(object sender, EventArgs e)
+        {
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var url = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = "Preview",
+                ["FormID"] = RequestUrl["FormID"],
+                ["OwnerID"] = RequestUrl["FormID"],
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl),
+            };
+
+            Response.Redirect(url.ToEncodedUrl());
         }
     }
 }

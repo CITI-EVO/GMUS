@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ed0b6f98-16d7-4e27-ae2b-c5d94cbacfd8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CommonDataWcf.xsd" MetadataType="Schema" ID="7891230b-5262-4e13-ba0f-1c13ddc53913" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd2" />
+    <MetadataFile FileName="CommonDataWcf1.xsd" MetadataType="Schema" ID="39be5ee3-317b-4a70-8d4d-0b2053a60df8" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd1" />
+    <MetadataFile FileName="CommonDataWcf2.xsd" MetadataType="Schema" ID="c3238642-1dad-43d6-b253-51b7586f0591" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd0" />
+    <MetadataFile FileName="CommonDataWcf.disco" MetadataType="Disco" ID="4e54f202-0c43-401e-9231-f72ea919335b" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?disco" />
+    <MetadataFile FileName="CommonDataWcf.wsdl" MetadataType="Wsdl" ID="a29eadc4-001f-4772-8297-082b728ad64b" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?wsdl" />
+    <MetadataFile FileName="CommonDataWcf3.xsd" MetadataType="Schema" ID="348cd952-7443-44f4-834e-83d01451d2be" SourceId="1" SourceUrl="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

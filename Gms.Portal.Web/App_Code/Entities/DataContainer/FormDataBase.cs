@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using MongoDB.Bson;
 
 namespace Gms.Portal.Web.Entities.DataContainer
 {
-    public abstract class FormDataBase : IDictionary<string, object>
+    public class FormDataBase : IDictionary<string, object>
     {
-
-
         private static ISet<String> _defaultFields;
         public static ISet<String> DefaultFields
         {
@@ -20,17 +19,24 @@ namespace Gms.Portal.Web.Entities.DataContainer
                     _defaultFields = new HashSet<String>(new[]
                     {
                         FormDataConstants.IDField,
+                        FormDataConstants.StepField,
+                        FormDataConstants.DocIDField,
                         FormDataConstants.FormIDField,
                         FormDataConstants.UserIDField,
                         FormDataConstants.OwnerIDField,
                         FormDataConstants.StatusIDField,
                         FormDataConstants.ParentIDField,
                         FormDataConstants.PreviousIDField,
+                        FormDataConstants.ContainerIDField,
 
-                        FormDataConstants.PrivacyField,
+                        FormDataConstants.HashCodeField,
+
+                        FormDataConstants.ReviewFields,
+                        FormDataConstants.PrivacyFields,
                         FormDataConstants.DescriptionField,
 
                         FormDataConstants.StatusChangeDateField,
+
                         FormDataConstants.DateCreatedField,
                         FormDataConstants.DateChangedField,
                         FormDataConstants.DateDeletedField,
@@ -43,9 +49,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         private readonly Dictionary<String, Object> _dict;
 
-        protected FormDataBase()
+        public FormDataBase()
         {
-            _dict = new Dictionary<String, Object>();
+            _dict = new Dictionary<String, Object>
+            {
+                [FormDataConstants.DocIDField] = ObjectId.GenerateNewId()
+            };
         }
 
         public Object this[String key]

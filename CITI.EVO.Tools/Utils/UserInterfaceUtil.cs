@@ -34,7 +34,7 @@ namespace CITI.EVO.Tools.Utils
 
             if (text.Length > visibleCharCount)
             {
-                label.Text = String.Format("{0}...", text.Substring(0, visibleCharCount - 3));
+                label.Text = $"{text.Substring(0, visibleCharCount - 3)}...";
                 label.ToolTip = text;
 
                 label.ForeColor = Color.DodgerBlue;

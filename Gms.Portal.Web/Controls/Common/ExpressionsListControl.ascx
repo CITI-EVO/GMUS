@@ -55,7 +55,7 @@
                                 <local:ExpressionControl runat="server" ID="expressionControl" />
                                 <div class="form-group">
                                     <ce:LinkButton runat="server" ID="btnSave" ToolTip="Save" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btnCancel" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
+                                    <ce:LinkButton runat="server" ID="btnCancel" ToolTip="Close" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                                 </div>
                             </div>
                         </div>

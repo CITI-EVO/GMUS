@@ -4715,7 +4715,7 @@ textarea.note-editor .input-group-sm > .input-group-btn > .btn {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 .note-editor .panel-body {
-  padding: 15px;
+    padding: 15px;
 }
 .note-editor .panel-body:before,
 .note-editor .panel-body:after {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.UI.WebControls;
+﻿using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
@@ -10,16 +7,20 @@ using CITI.EVO.Tools.Utils;
 using CITI.EVO.Tools.Web.UI.Helpers;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
+using Gms.Portal.Web.Caches;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
+using Gms.Portal.Web.Enums;
 using Gms.Portal.Web.Helpers;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
-using NHibernate.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using CommonUtil = Gms.Portal.Web.Utils.CommonUtil;
+using NHibernate.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gms.Portal.Web.Pages.User
 {
@@ -44,7 +45,6 @@ namespace Gms.Portal.Web.Pages.User
         {
             get { return DataConverter.ToNullableGuid(RequestUrl["UserID"]); }
         }
-
 
         private GM_Form _dbForm;
         protected GM_Form DbForm
@@ -81,27 +81,34 @@ namespace Gms.Portal.Web.Pages.User
             }
         }
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            formGridFilterControl.InitStructure(FormEntity);
+            formDataGridControl.InitStructure(DbForm);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!UmUtil.Instance.IsLogged)
                 return;
 
-            CheckFormUserMode();
+            CheckUserMode();
             FillGridView();
-            SetControlAccesibilities();
         }
 
         protected void btnNew_OnClick(object sender, EventArgs e)
         {
             var returnUrl = RequestUrl.ToEncodedUrl();
 
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
-            urlHelper["Mode"] = "Edit";
-            urlHelper["FormID"] = FormID;
-            urlHelper["OwnerID"] = (OwnerID ?? FormID);
-            urlHelper["RecordID"] = null;
-            urlHelper["ParentID"] = ParentID;
-            urlHelper["ReturnUrl"] = CommonUtil.ConvertToBase64(returnUrl);
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Edit),
+                ["FormID"] = FormID,
+                ["OwnerID"] = (OwnerID ?? FormID),
+                ["RecordID"] = null,
+                ["ParentID"] = ParentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -115,13 +122,15 @@ namespace Gms.Portal.Web.Pages.User
         {
             var returnUrl = RequestUrl.ToEncodedUrl();
 
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
-            urlHelper["Mode"] = "Edit";
-            urlHelper["FormID"] = FormID;
-            urlHelper["OwnerID"] = (OwnerID ?? FormID);
-            urlHelper["RecordID"] = e.Value;
-            urlHelper["ParentID"] = ParentID;
-            urlHelper["ReturnUrl"] = CommonUtil.ConvertToBase64(returnUrl);
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Edit),
+                ["FormID"] = FormID,
+                ["OwnerID"] = (OwnerID ?? FormID),
+                ["RecordID"] = e.Value,
+                ["ParentID"] = ParentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -130,13 +139,15 @@ namespace Gms.Portal.Web.Pages.User
         {
             var returnUrl = RequestUrl.ToEncodedUrl();
 
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
-            urlHelper["Mode"] = "View";
-            urlHelper["FormID"] = FormID;
-            urlHelper["OwnerID"] = (OwnerID ?? FormID);
-            urlHelper["RecordID"] = e.Value;
-            urlHelper["ParentID"] = ParentID;
-            urlHelper["ReturnUrl"] = CommonUtil.ConvertToBase64(returnUrl);
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.View),
+                ["FormID"] = FormID,
+                ["OwnerID"] = (OwnerID ?? FormID),
+                ["RecordID"] = e.Value,
+                ["ParentID"] = ParentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -173,24 +184,190 @@ namespace Gms.Portal.Web.Pages.User
             mpeRecordStatus.Show();
         }
 
+        protected void formDataGridControl_OnReview(object sender, GenericEventArgs<Guid> e)
+        {
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Review),
+                ["FormID"] = FormID,
+                ["OwnerID"] = (OwnerID ?? FormID),
+                ["RecordID"] = e.Value,
+                ["ParentID"] = ParentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void formDataGridControl_OnInspect(object sender, GenericEventArgs<Guid> e)
+        {
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = "Inspect",
+                ["FormID"] = FormID,
+                ["OwnerID"] = (OwnerID ?? FormID),
+                ["RecordID"] = e.Value,
+                ["ParentID"] = ParentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void formDataGridControl_OnAssigne(object sender, GenericEventArgs<Guid> e)
+        {
+            var model = new AssigneUsersModel
+            {
+                RecordID = e.Value,
+            };
+
+            var recordID = model.RecordID;
+            var ownerID = (OwnerID ?? FormID);
+
+            var document = MongoDbUtil.GetDocument(ownerID, recordID);
+
+            BsonValue bsonValue;
+            if (document.TryGetValue(FormDataConstants.UserStatusesFields, out bsonValue))
+            {
+                var bsonArray = BsonDocumentConverter.ConvertToBsonArray(bsonValue);
+                var statusUsers = BsonDocumentConverter.ConvertToFormStatuses(bsonArray);
+
+                var lookup = new HashLookup<int?, Guid?>();
+
+                foreach (var item in statusUsers)
+                    lookup.Add(item.Step, item.UserID);
+
+                model.Users = lookup;
+            }
+
+            assigneUsersControl.Model = model;
+
+            mpeAssigneUser.Show();
+        }
+
+        protected void formDataGridControl_OnPrint(object sender, GenericEventArgs<Guid> e)
+        {
+            var urlHelper = new UrlHelper("~/Handlers/PrintFormData.ashx")
+            {
+                ["FormID"] = FormID,
+                ["RecordID"] = e.Value,
+                ["LoginToken"] = UmUtil.Instance.CurrentToken,
+            };
+
+            Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
         protected void recordStatusControl_OnDataChanged(object sender, EventArgs e)
         {
             mpeRecordStatus.Show();
         }
 
+        protected void btnAssigneUserOK_Click(object sender, EventArgs e)
+        {
+            var model = assigneUsersControl.Model;
+
+            var users = model.Users;
+            var recordID = model.RecordID;
+            var ownerID = (OwnerID ?? FormID);
+
+            var document = MongoDbUtil.GetDocument(ownerID, recordID);
+            document[FormDataConstants.UserStatusesFields] = CreateNewFormStatuses(document, users);
+
+            MongoDbUtil.UpdateDocument(ownerID, document);
+
+            mpeAssigneUser.Hide();
+        }
+
+        protected void btnAssigneUserCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeAssigneUser.Hide();
+        }
+
         protected void btnRecordStatusOK_Click(object sender, EventArgs e)
         {
             var model = recordStatusControl.Model;
+            if (model.StatusID == DataStatusCache.Accepted.ID)
+            {
+                mpeConfirmAccept.Show();
+                return;
+            }
 
+            ChangeStatus();
+            FillGridView();
+
+            mpeRecordStatus.Hide();
+        }
+
+        protected void btnConfirmAcceptOK_Click(object sender, EventArgs e)
+        {
+            ChangeStatus();
+
+            mpeConfirmAccept.Hide();
+            mpeRecordStatus.Hide();
+        }
+
+        protected void btnRecordStatusCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeRecordStatus.Hide();
+        }
+
+        protected void btnConfirmAcceptCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeConfirmAccept.Hide();
+        }
+
+        protected void assigneUsersControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeAssigneUser.Show();
+        }
+
+        protected void ChangeStatus()
+        {
+            var model = recordStatusControl.Model;
             var ownerID = (OwnerID ?? FormID);
 
             var document = MongoDbUtil.GetDocument(ownerID, model.RecordID);
 
-            var formDataUnit = BsonDocumentConverter.ConvertToFormDataUnit(document);
-            if (formDataUnit == null)
-                return;
+            if (UserUtil.IsSuperAdmin())
+            {
+                var formDataUnit = BsonDocumentConverter.ConvertToFormDataUnit(document);
+                if (formDataUnit == null)
+                    return;
 
-            FormDataDbUtil.ChangeStatus(ownerID.GetValueOrDefault(), model);
+                FormDataDbUtil.ChangeStatus(ownerID.GetValueOrDefault(), model);
+            }
+            else
+            {
+                BsonValue bsonValue;
+                if (!document.TryGetValue(FormDataConstants.UserStatusesFields, out bsonValue))
+                    return;
+
+                var oldArray = BsonDocumentConverter.ConvertToBsonArray(bsonValue);
+                if (oldArray == null)
+                    return;
+
+                var formStatusUnits = BsonDocumentConverter.ConvertToFormStatuses(oldArray).ToList();
+                var dictionary = formStatusUnits.ToDictionary(n => n.UserID);
+
+                var userID = UserUtil.GetCurrentUserID();
+                if (userID == null)
+                    throw new Exception();
+
+                var formStatus = dictionary[userID];
+                formStatus.StatusID = model.StatusID;
+                formStatus.DateOfStatus = DateTime.Now;
+
+                var formStatusDocs = BsonDocumentConverter.ConvertToFormStatuses(formStatusUnits);
+                var newArray = new BsonArray(formStatusDocs);
+
+                document[FormDataConstants.UserStatusesFields] = newArray;
+
+                MongoDbUtil.UpdateDocument(ownerID, document);
+            }
 
             FillGridView();
         }
@@ -206,128 +383,164 @@ namespace Gms.Portal.Web.Pages.User
             var controls = FormStructureUtil.InOrderFirstLevelTraversal(FormEntity);
 
             var list = (from n in controls.OfType<FieldEntity>()
-                        where n.Visible && n.DisplayOnGrid.GetValueOrDefault()
+                        where n.Visible &&
+                              n.DisplayOnGrid == "Always"
                         select n).ToList();
 
             var formFields = list.Select(n => Convert.ToString(n.ID)).Union(FormDataBase.DefaultFields);
             var fieldSet = formFields.ToHashSet();
 
-            var userID = UserID;
-            if (!UmUtil.Instance.HasAccess("Admin"))
-                userID = UserUtil.GetCurrentUserID();
-
             var collectionID = (OwnerID ?? FormID);
 
-            var collection = MongoDbUtil.GetCollection(collectionID);
+            var filters = formGridFilterControl.GetData();
 
-            var baseQuery = from doc in collection.AsQueryable()
-                            where doc[FormDataConstants.DateDeletedField] == (DateTime?)null
-                            select doc;
+            var emptys = (from n in filters
+                          where String.IsNullOrWhiteSpace(Convert.ToString(n.Value))
+                          select n.Key).ToHashSet();
+
+            foreach (var key in emptys)
+                filters.Remove(key);
+
+            filters[FormDataConstants.DateDeletedField] = null;
 
             if (ParentID != null)
+                filters[FormDataConstants.ParentIDField] = ParentID;
+
+            if (!UserUtil.IsSuperAdmin())
             {
-                baseQuery = (from doc in baseQuery
-                             where doc[FormDataConstants.ParentIDField] == ParentID
-                             select doc);
+                var userID = UserID;
+                if (!UmUtil.Instance.HasAccess("Admin") && !UmUtil.Instance.HasAccess("Org"))
+                    userID = UserUtil.GetCurrentUserID();
+
+                if (userID != null)
+                    filters[FormDataConstants.UserIDField] = userID;
             }
 
-            if (userID != null)
+            var sorts = new[] { $"{FormDataConstants.DateCreatedField} desc" };
+            var documents = MongoDbUtil.FindDocuments(collectionID, filters, sorts, true);
+
+            var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(documents);
+
+            if (!UserUtil.IsSuperAdmin() && UmUtil.Instance.HasAccess("Org"))
             {
-                baseQuery = (from doc in baseQuery
-                             where doc[FormDataConstants.UserIDField] == userID
-                             select doc);
+                var orgUserID = UserUtil.GetCurrentUserID();
+                formDataUnits = FormDataDbUtil.FilterByUserStatus(formDataUnits, orgUserID);
             }
-
-            var filterModel = formGridFilterControl.Model;
-            if (filterModel.StatusID != null)
-            {
-                baseQuery = (from doc in baseQuery
-                             where doc[FormDataConstants.StatusIDField] == filterModel.StatusID
-                             select doc);
-            }
-
-            if (filterModel.StartDate != null)
-            {
-                baseQuery = (from doc in baseQuery
-                             where doc[FormDataConstants.DateCreatedField] >= filterModel.StartDate
-                             select doc);
-            }
-
-            if (filterModel.EndDate != null)
-            {
-                baseQuery = (from doc in baseQuery
-                             where doc[FormDataConstants.DateCreatedField] <= filterModel.EndDate
-                             select doc);
-            }
-
-            baseQuery = (from doc in baseQuery
-                         orderby doc[FormDataConstants.DateCreatedField] descending
-                         select doc);
-
-            var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(baseQuery);
 
             var formDataView = new DictionaryDataView(formDataUnits, fieldSet);
 
-            var dataGridModel = new FormDataGridModel
-            {
-                Fields = list,
-                DataView = formDataView
-            };
-
-            formDataGridControl.Model = dataGridModel;
-            formDataGridControl.DataBind();
+            formDataGridControl.BindData(formDataView);
         }
 
-        protected void CheckFormUserMode()
+        protected void CheckUserMode()
         {
             if (OwnerID != null && FormID != OwnerID)
                 return;
 
-            if (!UmUtil.Instance.HasAccess("Admin"))
+            if (UmUtil.Instance.HasAccess("Admin"))
+                return;
+
+            if (DbForm == null)
+                return;
+
+            if (String.IsNullOrWhiteSpace(DbForm.UserMode))
+                return;
+
+            if (FormID != UserUtil.GetMandatoryFormID())
+                return;
+
+            if (DbForm.UserMode == "SingleRecord")
             {
-                if (DbForm == null)
-                    return;
+                var returnUrl = RequestUrl.ToEncodedUrl();
 
-                if (String.IsNullOrWhiteSpace(DbForm.UserMode))
-                    return;
+                var userID = UserUtil.GetCurrentUserID();
+                var collection = MongoDbUtil.GetCollection(DbForm.ID);
 
-                if (DbForm.UserMode == "SingleRecord")
+                var document = (from n in collection.AsQueryable()
+                                where n[FormDataConstants.UserIDField] == userID &&
+                                      n[FormDataConstants.DateDeletedField] == (DateTime?)null
+                                select n).FirstOrDefault();
+
+                var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+
+                var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
                 {
-                    var returnUrl = RequestUrl.ToEncodedUrl();
+                    ["Mode"] = Convert.ToString(FormMode.Edit),
+                    ["FormID"] = FormID,
+                    ["OwnerID"] = (OwnerID ?? FormID),
+                    ["RecordID"] = null,
+                    ["ParentID"] = ParentID,
+                    ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+                };
 
-                    var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx");
-                    urlHelper["Mode"] = "Edit";
-                    urlHelper["FormID"] = FormID;
-                    urlHelper["OwnerID"] = (OwnerID ?? FormID);
-                    urlHelper["RecordID"] = null;
-                    urlHelper["ParentID"] = ParentID;
-                    urlHelper["ReturnUrl"] = CommonUtil.ConvertToBase64(returnUrl); 
+                if (formData != null)
+                {
+                    if (formData.ID == null)
+                        throw new Exception();
 
-                    var userID = UserUtil.GetCurrentUserID();
-                    var collection = MongoDbUtil.GetCollection(DbForm.ID);
+                    urlHelper["RecordID"] = formData.ID;
 
-                    var document = (from n in collection.AsQueryable()
-                                    where n[FormDataConstants.UserIDField] == userID &&
-                                          n[FormDataConstants.DateDeletedField] == (DateTime?)null
-                                    select n).FirstOrDefault();
+                    if (formData.StatusID == DataStatusCache.Rejected.ID)
+                        urlHelper["Mode"] = Convert.ToString(FormMode.Review);
 
-                    var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
-                    if (formData != null)
-                    {
-                        if (formData.ID == null)
-                            throw new Exception();
-
-                        urlHelper["RecordID"] = formData.ID;
-                    }
-
-                    Response.Redirect(urlHelper.ToEncodedUrl());
+                    if (formData.StatusID == DataStatusCache.Submit.ID ||
+                        formData.StatusID == DataStatusCache.Accepted.ID)
+                        urlHelper["Mode"] = Convert.ToString(FormMode.View);
                 }
+
+                Response.Redirect(urlHelper.ToEncodedUrl());
             }
         }
 
-        protected void SetControlAccesibilities()
+        protected BsonArray CreateNewFormStatuses(BsonDocument document, ILookup<int?, Guid?> newUsersLp)
         {
-            dvNew.Visible = !UmUtil.Instance.HasAccess("Admin");
+            BsonValue bsonValue;
+            if (!document.TryGetValue(FormDataConstants.UserStatusesFields, out bsonValue))
+                bsonValue = new BsonArray();
+
+            var oldArray = BsonDocumentConverter.ConvertToBsonArray(bsonValue);
+            if (oldArray == null)
+                oldArray = new BsonArray();
+
+            var statusUnits = BsonDocumentConverter.ConvertToFormStatuses(oldArray).ToList();
+            var oldUsersLp = statusUnits.ToLookup(n => n.Step);
+
+            var list = new List<FormStatusUnit>();
+
+            foreach (var usersGrp in newUsersLp)
+            {
+                var newUsers = usersGrp.ToHashSet();
+                var oldUsers = oldUsersLp[usersGrp.Key];
+
+                var lookup = oldUsers.ToLookup(n => n.UserID.GetValueOrDefault());
+                var dictionary = lookup.ToDictionary(n => n.Key, n => n.First());
+
+                var insertUsers = usersGrp.Where(n => !dictionary.ContainsKey(n.GetValueOrDefault())).ToList();
+                var deleteUsers = dictionary.Keys.Where(n => !newUsers.Contains(n)).ToList();
+
+                foreach (var userID in insertUsers)
+                {
+                    var unit = new FormStatusUnit
+                    {
+                        Step = usersGrp.Key,
+                        UserID = userID,
+                    };
+
+                    dictionary.Add(userID.GetValueOrDefault(), unit);
+                }
+
+                foreach (var userID in deleteUsers)
+                {
+                    dictionary.Remove(userID);
+                }
+
+                list.AddRange(dictionary.Values);
+            }
+
+            var formStatusDocs = BsonDocumentConverter.ConvertToFormStatuses(list);
+
+            var newArray = new BsonArray(formStatusDocs);
+            return newArray;
         }
     }
 }

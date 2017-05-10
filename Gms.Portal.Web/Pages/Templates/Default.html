@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>$!{FormSchema.Name}</title>
+    <meta charset="utf-8" />
+</head>
+<style>
+    table, td, th {
+        border: 1px solid black;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th {
+        height: 50px;
+    }
+</style>
+<body>
+    <div id="wrapper" style="text-align: center">
+        <div style="display: inline-block">
+            <h2>$Util.Translate($FormSchema.Name,$LanguagePair)</h2>
+        </div>
+    </div>
+    <table>
+
+        #foreach($item in $FormData)
+        #if(!$DefaultFields.Contains($item.Key))
+
+        #set($isGrid = $Util.IsValueList($item.Value))
+        #if(!$isGrid)
+        <tr style="">
+            <td>
+                $Util.Translate($item.Key,$LanguagePair)
+            </td>
+            <td>
+                $item.Value
+            </td>       
+        </tr>
+        #end
+        #end
+        #end
+    </table>
+
+    #foreach($item in $FormData)
+    #set($isGrid = $Util.IsValueList($item.Value))
+    #if($isGrid)
+    <h4>$Util.Translate($item.Key,$LanguagePair)</h4>
+    #set($columns = $Util.GetGridColumns($Controls,$item.Key))
+    <table>
+        <tr>
+            #foreach($column in $columns)
+            <td>
+                $Util.Translate($column.Name,$LanguagePair)
+            </td>
+            #end
+        </tr>
+        #set($gridData = $Util.GetGridData($item.Value))
+        #foreach($gridRow in $gridData)
+        <tr>
+            #foreach($column in $columns)
+            <td>
+               $!{gridRow.get_Item($column.ID.ToString())}
+            </td>
+            #end
+        </tr>
+        #end
+    </table>
+    #end
+    #end
+
+</body>
+</html>

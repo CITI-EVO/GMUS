@@ -86,6 +86,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
             }
 
             user.Password = model.NewPassword;
+            user.PasswordExpirationDate = DateTime.Now.AddMonths(3);
 
             if (!String.IsNullOrWhiteSpace(model.Email))
             {
@@ -101,6 +102,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                 }
 
                 user.Email = model.Email;
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.Phone))
+            {
+                user.Phone = model.Phone;
             }
 
 

@@ -9,7 +9,7 @@ using MongoDB.Driver.Linq;
 namespace Gms.Portal.Web.Entities.DataContainer
 {
     [Serializable]
-    public class FormDataLazyList : FormDataBaseList
+    public class FormDataLazyList : FormDataListBase
     {
         public FormDataLazyList(FormDataLazyList formDataLazyList) : base(formDataLazyList)
         {

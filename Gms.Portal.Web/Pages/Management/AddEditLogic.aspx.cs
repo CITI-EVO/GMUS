@@ -57,5 +57,10 @@ namespace Gms.Portal.Web.Pages.Management
 
             Response.Redirect("~/Pages/Management/LogicsList.aspx");
         }
+
+        protected void btnCancel_OnClick(object sender, EventArgs e)
+        {
+            mpePreview.Hide();
+        }
     }
 }

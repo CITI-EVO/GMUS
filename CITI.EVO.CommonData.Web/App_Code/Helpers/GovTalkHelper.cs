@@ -132,7 +132,7 @@ namespace CITI.EVO.CommonData.Web.Helpers
 		private static void LogXml(String suffix, byte[] xmlBytes)
 		{
 			var currDate = DateTime.Now;
-			var fileName = String.Format("{0:yyyy-MM-dd_hh.mm.ss}_{1}.xml", currDate, suffix);
+			var fileName = $"{currDate:yyyy-MM-dd_hh.mm.ss}_{suffix}.xml";
 
 			var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GovTalkLogs", fileName);
 			File.WriteAllBytes(filePath, xmlBytes);

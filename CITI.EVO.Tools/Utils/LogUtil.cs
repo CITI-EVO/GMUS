@@ -32,7 +32,7 @@ namespace CITI.EVO.Tools.Utils
 			if (HttpContext.Current != null)
 			{
 				var cache = HttpContext.Current.Cache;
-				var key = String.Format("$[LogUtil_{0}]", name);
+				var key = $"$[LogUtil_{name}]";
 
 				log = cache[key] as ILog;
 

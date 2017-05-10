@@ -16,6 +16,5 @@ namespace Gms.Portal.Web.Entities.FormStructure
 
         [XmlElement("ErrorMessage")]
         public String ErrorMessage { get; set; }
-
     }
 }

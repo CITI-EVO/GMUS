@@ -31,11 +31,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             {
                 User = new UserModel
                 {
-                    ChangePassword = true,
                     Password = "resetpass",
-                    PasswordExpire = DateTime.Now
+                    PasswordExpire = DateTime.Now,
+                    ChangePassword = true,
                 }
             };
+
+            btUserOK.Visible = true;
+            pnlCreateUser.Enabled = true;
 
             createUserControl.Model = model;
             mpeUserForm.Show();
@@ -109,16 +112,23 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
                 transaction.Commit();
             }
+
+            mpeSetAttributes.Hide();
+        }
+
+        protected void btSetAttributesCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeSetAttributes.Hide();
+        }
+
+        protected void btViewAttributesCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeViewAttributes.Hide();
         }
 
         protected void btnBindData_Click(object sender, EventArgs e)
         {
             FillUserGrid();
-        }
-
-        protected void Page_LoadComplete(object sender, EventArgs e)
-        {
-
         }
 
         protected void usersControl_OnView(object sender, GenericEventArgs<Guid> e)
@@ -135,12 +145,14 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 User = userModel
             };
 
+            btUserOK.Visible = false;
             pnlCreateUser.Enabled = false;
 
             createUserControl.Model = createUserModel;
 
             mpeUserForm.Show();
         }
+
         protected void usersControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
             var user = HbSession.Query<UM_User>().FirstOrDefault(n => n.ID == e.Value);
@@ -148,13 +160,16 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return;
 
             var converter = new UserEntityModelConverter(HbSession);
+
             var userModel = converter.Convert(user);
+            userModel.Password = String.Empty;
 
             var createUserModel = new CreateUserModel
             {
                 User = userModel
             };
 
+            btUserOK.Visible = true;
             pnlCreateUser.Enabled = true;
 
             createUserControl.Model = createUserModel;
@@ -208,6 +223,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             mpeUserForm.Show();
         }
 
+        protected void btUserCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeUserForm.Hide();
+        }
+
         #endregion
 
         #region Methods
@@ -232,18 +252,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         protected bool ValidateUser(CreateUserModel model)
         {
             var userModel = model.User;
-
-            var count = (from n in HbSession.Query<UM_User>()
-                         where n.LoginName.ToLower() == userModel.LoginName.ToLower() &&
-                               n.DateDeleted == null &&
-                               n.ID != userModel.ID
-                         select n.ID).Count();
-
-            if (count > 0)
-            {
-                lblUserError.Text = "გთხოვთ შეავსეთ მომხმარებლის სახელი";
-                return false;
-            }
 
             if (String.IsNullOrWhiteSpace(userModel.LoginName))
             {
@@ -281,15 +289,27 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return false;
             }
 
-            if (String.IsNullOrWhiteSpace(userModel.Password))
+            var count = (from n in HbSession.Query<UM_User>()
+                         where n.LoginName.ToLower() == userModel.LoginName.ToLower() &&
+                               n.DateDeleted == null &&
+                               n.ID != userModel.ID
+                         select n.ID).Count();
+
+            if (count > 0)
             {
-                lblUserError.Text = "გთხოვთ შეავსეთ პაროლი";
+                lblUserError.Text = "მომხმარებელი მითითებული სახელით უკვე არსებობს";
                 return false;
             }
 
-            if (!userModel.ChangePassword.GetValueOrDefault())
+            count = (from n in HbSession.Query<UM_User>()
+                     where n.Email.ToLower() == userModel.Email.ToLower() &&
+                           n.DateDeleted == null &&
+                           n.ID != userModel.ID
+                     select n.ID).Count();
+
+            if (count > 0)
             {
-                lblUserError.Text = "გთხოვთ მონიშნეთ პაროლის შეცვლა და მიუთითეთ პაროლი";
+                lblUserError.Text = "მომხმარებელი მითითებული ელ.ფოსტის მისამართით უკვე რეგისტრირებულია";
                 return false;
             }
 
@@ -363,7 +383,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             }
 
             query = from n in query
-                    orderby n.DateCreated descending 
+                    orderby n.DateCreated descending
                     select n;
 
             var entities = query.OrderBy(n => n.LoginName).ToList();
@@ -471,6 +491,8 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         }
 
         #endregion
+
+
     }
 }
 

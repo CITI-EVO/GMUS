@@ -36,9 +36,9 @@ namespace Gms.Portal.Web.Entities.DataContainer
                     var clone = new FormDataLazyList((FormDataLazyList)pair.Value);
                     SetValue(pair.Key, clone);
                 }
-                else if (pair.Value is FormDataBaseList)
+                else if (pair.Value is FormDataListBase)
                 {
-                    var clone = new FormDataBaseList((FormDataBaseList)pair.Value);
+                    var clone = new FormDataListBase((FormDataListBase)pair.Value);
                     SetValue(pair.Key, clone);
                 }
                 else
@@ -146,6 +146,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
         }
 
+        public Guid? ContainerID
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.ContainerIDField);
+                return DataConverter.ToNullableGuid(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.ContainerIDField, value);
+            }
+        }
+
         public Guid? PreviousID
         {
             get
@@ -159,6 +172,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
         }
 
+        public String HashCode
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.HashCodeField);
+                return DataConverter.ToString(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.HashCodeField, value);
+            }
+        }
+
         public String Description
         {
             get
@@ -168,7 +194,7 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
             set
             {
-                SetValue(FormDataConstants.PreviousIDField, value);
+                SetValue(FormDataConstants.DescriptionField, value);
             }
         }
 
@@ -194,7 +220,7 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
             set
             {
-                SetValue(FormDataConstants.DateCreatedField, value);
+                SetValue(FormDataConstants.DateChangedField, value);
             }
         }
 
@@ -207,7 +233,20 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
             set
             {
-                SetValue(FormDataConstants.DateCreatedField, value);
+                SetValue(FormDataConstants.DateDeletedField, value);
+            }
+        }
+
+        public ISet<String> ReviewFields
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.ReviewFields) as ISet<String>;
+                return val;
+            }
+            set
+            {
+                SetValue(FormDataConstants.ReviewFields, value);
             }
         }
 
@@ -215,12 +254,25 @@ namespace Gms.Portal.Web.Entities.DataContainer
         {
             get
             {
-                var val = GetValue(FormDataConstants.PrivacyField) as ISet<String>;
+                var val = GetValue(FormDataConstants.PrivacyFields) as ISet<String>;
                 return val;
             }
             set
             {
-                SetValue(FormDataConstants.PrivacyField, value);
+                SetValue(FormDataConstants.PrivacyFields, value);
+            }
+        }
+
+        public IList<FormStatusUnit> UserStatuses
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.UserStatusesFields) as IList<FormStatusUnit>;
+                return val;
+            }
+            set
+            {
+                SetValue(FormDataConstants.UserStatusesFields, value);
             }
         }
     }

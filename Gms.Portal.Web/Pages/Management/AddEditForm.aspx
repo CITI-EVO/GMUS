@@ -12,6 +12,7 @@
                     <div class="form-group">
                         <div class="col-lg-12">
                             <ce:LinkButton runat="server" ID="btnSaveForm" ToolTip="Save" OnClick="btnSaveForm_OnClick" CssClass="btn btn-success fa fa-save" />
+                            <ce:LinkButton runat="server" ID="btnPreviewForm" ToolTip="Preview" OnClick="btnPreviewForm_OnClick" CssClass="btn btn-info fa fa-picture-o" />
                             <ce:LinkButton runat="server" ID="btnCancelForm" ToolTip="Close" OnClick="btnCancelForm_OnClick" CssClass="btn btn-warning fa fa-close" />
                         </div>
                     </div>

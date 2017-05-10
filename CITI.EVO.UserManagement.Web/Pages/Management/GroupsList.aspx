@@ -42,7 +42,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btGroupOK" runat="server" ToolTip="შენახვა" OnClick="btGroupOK_Click" />
-                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btGroupCancel" runat="server" ToolTip="დახურვა" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btGroupCancel" runat="server" ToolTip="დახურვა" OnClick="btGroupCancel_OnClick" />
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btAttributeOK" runat="server" ToolTip="შენახვა" OnClick="btAttributeOK_Click" />
-                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeCancel" runat="server" ToolTip="დახურვა" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btAttributeCancel" runat="server" ToolTip="დახურვა" OnClick="btAttributeCancel_OnClick" />
 
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                             <div class="col-sm-12">
                                 <asp:LinkButton CssClass="btn btn-success fa fa-floppy-o" ID="btUserOK" runat="server" ToolTip="შენახვა" OnClick="btUserOK_Click" />
 
-                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btUserCancel" runat="server" ToolTip="დახურვა" />
+                                <asp:LinkButton CssClass="btn btn-warning fa fa-close" ID="btUserCancel" runat="server" ToolTip="დახურვა" OnClick="btUserCancel_OnClick" />
                             </div>
                         </div>
                     </div>

@@ -80,6 +80,11 @@ namespace Gms.Portal.Web.Pages.Management
             mpeCategory.Hide();
         }
 
+        protected void btCategoryCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeCategory.Hide();
+        }
+
         private void FillCategoriesGrid()
         {
             var entities = (from n in HbSession.Query<GM_Category>()

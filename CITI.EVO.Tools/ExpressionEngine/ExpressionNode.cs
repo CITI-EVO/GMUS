@@ -28,19 +28,19 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case ActionTypes.Function:
 				{
 					if (Params == null || Params.Count == 0)
-						return String.Format("{0}()", Action);
+						return $"{Action}()";
 
 					var strParams = new String[Params.Count];
 					for (int i = 0; i < Params.Count; i++)
 						strParams[i] = Params[i].ToString();
 
 					var args = String.Join(", ", strParams);
-					return String.Format("{0}({1})", Action, args);
+					return $"{Action}({args})";
 				}
 				case ActionTypes.Operator:
 				{
 					if (!ExpressionHelper.IsEmptyOrSpace(Action))
-						return String.Format("{0} {1} {2}", Params[0], Action, Params[1]);
+						return $"{Params[0]} {Action} {Params[1]}";
 
 					return Convert.ToString(Value);
 				}
@@ -51,9 +51,9 @@ namespace CITI.EVO.Tools.ExpressionEngine
 				case ValueTypes.Number:
 					return Convert.ToString(Value);
 				case ValueTypes.String:
-					return String.Format("'{0}'", Value);
+					return $"'{Value}'";
 				case ValueTypes.DateTime:
-					return String.Format("[{0:dd.MM.yyyy HH:mm:ss}]", Value);
+					return $"[{Value:dd.MM.yyyy HH:mm:ss}]";
 				case ValueTypes.Variable:
 					return Action;
 			}

@@ -120,7 +120,7 @@ namespace CITI.EVO.Tools.Utils
                 String trnText;
                 if (!TranslationMode)
                 {
-                    var cacheKey = String.Format("{0}|{1}|{2}", moduleName, trnKey, languagePair);
+                    var cacheKey = $"{moduleName}|{trnKey}|{languagePair}";
 
                     trnText = GetCacheTranslation(cacheKey);
 
@@ -161,7 +161,7 @@ namespace CITI.EVO.Tools.Utils
             }
 
             var moduleName = PermissionUtil.ModuleName;
-            var cacheKey = String.Format("{0}|{1}|{2}", moduleName, trnKey, languagePair);
+            var cacheKey = $"{moduleName}|{trnKey}|{languagePair}";
 
             var trnText = GetCacheTranslation(cacheKey);
             if (!String.IsNullOrWhiteSpace(trnText))
@@ -178,7 +178,7 @@ namespace CITI.EVO.Tools.Utils
 
         private static void SetCacheTranslation(String cacheKey, String translateText)
         {
-            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObject(TrnCacheKey, () => new Dictionary<String, String>());
             SetCacheTranslation(cache, cacheKey, translateText);
         }
         private static void SetCacheTranslation(IDictionary<String, String> cache, String cacheKey, String translateText)
@@ -194,7 +194,7 @@ namespace CITI.EVO.Tools.Utils
 
         private static String GetCacheTranslation(String cacheKey)
         {
-            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObject(TrnCacheKey, () => new Dictionary<String, String>());
             return GetCacheTranslation(cache, cacheKey);
         }
         private static String GetCacheTranslation(IDictionary<String, String> cache, String cacheKey)
@@ -213,7 +213,7 @@ namespace CITI.EVO.Tools.Utils
 
         private static bool ContainsCacheTranslation(String cacheKey)
         {
-            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObject(TrnCacheKey, () => new Dictionary<String, String>());
             return ContainsCacheTranslation(cache, cacheKey);
         }
         private static bool ContainsCacheTranslation(IDictionary<String, String> cache, String cacheKey)
@@ -234,7 +234,7 @@ namespace CITI.EVO.Tools.Utils
             var languagePair = Thread.CurrentThread.CurrentCulture.Name;
 
 
-            var cache = CommonObjectCache.InitObjectCache(TrnCacheKey, () => new Dictionary<String, String>());
+            var cache = CommonObjectCache.InitObject(TrnCacheKey, () => new Dictionary<String, String>());
             var controls = UserInterfaceUtil.TraverseChildren(control);
 
             var query = from ctl in controls
@@ -243,8 +243,8 @@ namespace CITI.EVO.Tools.Utils
                               !String.IsNullOrWhiteSpace(trn.Text)
                         let defText = GetClearText(trn.TrnKey, languagePair, trn.Text)
                         let trnKey = (String.IsNullOrWhiteSpace(trn.TrnKey) ? CryptographyUtil.ComputeMD5(defText) : trn.TrnKey)
-                        let cacheKey = String.Format("{0}|{1}|{2}", moduleName, trnKey, languagePair)
-                        select new
+                        let cacheKey = $"{moduleName}|{trnKey}|{languagePair}"
+                select new
                         {
                             TrnKey = trnKey,
                             CacheKey = cacheKey,
@@ -268,7 +268,7 @@ namespace CITI.EVO.Tools.Utils
 
             foreach (var contract in contracts)
             {
-                var cacheKey = String.Format("{0}|{1}|{2}", moduleName, contract.TrnKey, languagePair);
+                var cacheKey = $"{moduleName}|{contract.TrnKey}|{languagePair}";
                 SetCacheTranslation(cache, cacheKey, contract.TranslatedText);
 
                 if (applyTranslations)

@@ -1,11 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using CITI.EVO.Tools.Comparers;
 using CITI.EVO.Tools.Utils;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
     internal static class ExpressionHelper
     {
+        private static readonly IComparer<String> defaultComparer = StringLogicalComparer.DetectFloatNumber;
+
+        public static int Compare(Object x, Object y)
+        {
+            var xs = Convert.ToString(x);
+            var ys = Convert.ToString(y);
+
+            return defaultComparer.Compare(xs, ys);
+        }
+
         public static Object GetAny(Object value)
         {
             if (IsNumber(value))
@@ -26,7 +38,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 return (double)value;
 
             var number = DataConverter.ToNullableDouble(value);
-            return number.Value;
+            return number.GetValueOrDefault();
         }
 
         public static String GetString(Object value)

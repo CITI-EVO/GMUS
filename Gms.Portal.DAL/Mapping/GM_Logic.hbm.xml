@@ -10,7 +10,10 @@
     <property name="Name" />
     <property name="Type" />
     <property name="SourceType" />
-    <property name="RawData" />
+    
+    <property name="RawData" type="System.Xml.Linq.XDocument">
+      <column name="RawData" sql-type="xml" />
+    </property>
 
     <property name="FormID" />
     <property name="LogicID" />

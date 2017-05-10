@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using Gms.Portal.DAL.Domain;
+using System.Linq;
+using CITI.EVO.Tools.Cache;
+using CITI.EVO.Tools.Helpers;
+using Gms.Portal.Web.Caches;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using CITI.EVO.Tools.Extensions;
 
 namespace Gms.Portal.Web.Utils
 {
     public static class FormDataDbUtil
     {
-        public static bool ChangeStatus(Guid ownerID, RecordStatusModel model)
+        public static bool ChangeStatus(Guid? ownerID, RecordStatusModel model)
         {
             return ChangeStatus(ownerID, model.RecordID.GetValueOrDefault(), model.StatusID.GetValueOrDefault(), model.Description);
         }
-        public static bool ChangeStatus(Guid ownerID, Guid recordID, Guid statusID, String description)
+        public static bool ChangeStatus(Guid? ownerID, Guid recordID, Guid statusID, String description)
         {
             var collection = MongoDbUtil.GetCollection(ownerID);
 
@@ -22,38 +26,51 @@ namespace Gms.Portal.Web.Utils
             update = update.Set(FormDataConstants.DescriptionField, description);
             update = update.Set(FormDataConstants.StatusChangeDateField, DateTime.Now);
 
+            if (statusID == DataStatusCache.Submit.ID)
+                update = update.Set(FormDataConstants.DateOfSubmitField, DateTime.Now);
+
+            if (statusID == DataStatusCache.Accepted.ID)
+                update = update.Set(FormDataConstants.DateOfAcceptField, DateTime.Now);
+
             var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
 
             var result = collection.UpdateMany(filter, update);
             return (result.ModifiedCount > 0);
         }
 
-        public static void UpdateFields(Guid ownerID, Guid? recordID, IDictionary<String, Object> fields)
+        public static IEnumerable<FormDataUnit> FilterByUserStatus(IEnumerable<FormDataUnit> source, Guid? userID)
         {
-            var collection = MongoDbUtil.GetCollection(ownerID);
+            var query = (from n in source
+                         where IsUserInUserStatus(n, userID)
+                         select n);
 
-            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
-            var update = (UpdateDefinition<BsonDocument>)null;
-
-            foreach (var pair in fields)
-            {
-                if (update == null)
-                    update = Builders<BsonDocument>.Update.Set(pair.Key, pair.Value);
-                else
-                    update = update.Set(pair.Key, pair.Value);
-            }
-
-            collection.UpdateMany(filter, update);
+            return query;
         }
 
-        public static void UpdateField(Guid ownerID, Guid? recordID, String fieldName, Object value)
+        public static bool IsUserInUserStatus(FormDataUnit formData, Guid? userID)
         {
-            var collection = MongoDbUtil.GetCollection(ownerID);
+            if (userID == null || formData == null || formData.UserStatuses == null)
+                return false;
 
-            var update = Builders<BsonDocument>.Update.Set(fieldName, value);
-            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
+            if (formData.ID == null)
+            {
+                var query = from m in formData.UserStatuses
+                            where m.UserID == userID
+                            select m;
 
-            collection.UpdateMany(filter, update);
+                return query.Any();
+            }
+
+            var cache = CommonObjectCache.InitObject("@UserStatuses", CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<Guid?, ILookup<Guid?, FormStatusUnit>>);
+
+            var statusesLp = cache.GetValueOrDefault(formData.ID);
+            if (statusesLp == null)
+            {
+                statusesLp = formData.UserStatuses.ToLookup(n => n.UserID);
+                cache.Add(formData.ID, statusesLp);
+            }
+
+            return statusesLp.Contains(userID);
         }
     }
 }

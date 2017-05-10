@@ -128,7 +128,8 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('.table').DataTable({
-                    "dom": 'ifrtlpb'
+                    dom: 'ifrtlpb',
+                    stateSave: true
                 });
 
                 $('.clockpicker').clockpicker();
@@ -139,7 +140,7 @@
 
                 $(".intSpinEdit").TouchSpin({
                     min: 0,
-                    max: 65535,
+                    max: 2147483647,
                     buttondown_class: 'btn btn-white',
                     buttonup_class: 'btn btn-white'
                 });

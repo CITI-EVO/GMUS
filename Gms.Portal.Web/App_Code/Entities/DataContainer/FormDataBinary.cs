@@ -36,7 +36,7 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public override string ToString()
         {
-            return String.Format("{0} ({1})", FileName, GetSize());
+            return $"{FileName} ({GetSize()})";
         }
 
         private String GetSize()
@@ -45,15 +45,15 @@ namespace Gms.Portal.Web.Entities.DataContainer
                 return null;
 
             if (FileBytes.Length > 1073741824)
-                return String.Format("{0:0.##} GB", FileBytes.Length / 1024D / 1024D / 1024D);
+                return $"{FileBytes.Length / 1024D / 1024D / 1024D:0.##} GB";
 
             if (FileBytes.Length > 1048576)
-                return String.Format("{0:0.##} MB", FileBytes.Length / 1024D / 1024D);
+                return $"{FileBytes.Length / 1024D / 1024D:0.##} MB";
 
             if (FileBytes.Length > 1024)
-                return String.Format("{0:0.##} KB", FileBytes.Length / 1024D);
+                return $"{FileBytes.Length / 1024D:0.##} KB";
 
-            return String.Format("{0:0.##} Bytes", FileBytes.Length);
+            return $"{FileBytes.Length:0.##} Bytes";
         }
     }
 }

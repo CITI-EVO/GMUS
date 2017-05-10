@@ -1,16 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.ExpressionEngine.Common;
+using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 
 namespace CITI.EVO.Tools.ExpressionEngine
 {
-	public static class ExpressionParser
-	{
+    public static class ExpressionParser
+    {
         #region internal data
 
         private const String CacheKey = "@{ExpressionNodes}";
+
+        private static readonly ISet<char> operationalSymbols = new HashSet<char>
+        {
+            '(',
+            ')',
+            '[',
+            ']',
+            ',',
+            '"',
+            '\'',
+        };
 
         private static readonly ISet<char> reservedSymbols = new HashSet<char>
         {
@@ -51,19 +64,40 @@ namespace CITI.EVO.Tools.ExpressionEngine
             {"\\", 1},
             {"<", 3},
             {">", 3},
+            {"&", 3},
         };
 
+        private static readonly ISet<char> escapeSymbols = new HashSet<char>();
+
+        private static readonly Regex escapeRx;
         #endregion
+
+        static ExpressionParser()
+        {
+            escapeSymbols.UnionWith(operationalSymbols);
+            escapeSymbols.UnionWith(reservedSymbols);
+
+            var escapeSymText = String.Join(@"\", escapeSymbols);
+            var escapePattern = $@"[{escapeSymText}]";
+
+            escapeRx = new Regex(escapePattern, RegexOptions.Compiled);
+        }
+
+        public static String Escape(String name)
+        {
+            return escapeRx.Replace(name, "_");
+        }
 
         public static ExpressionNode GetOrParse(String expression)
         {
-            var cache = CommonObjectCache.InitObjectCache(CacheKey, ConcurrencyHelper.CreateDictionary<String, ExpressionNode>);
+            var hashCode = expression.ComputeMd5();
+            var cache = CommonObjectCache.InitObject(CacheKey, ConcurrencyHelper.CreateDictionary<String, ExpressionNode>);
 
             ExpressionNode node;
-            if (!cache.TryGetValue(expression, out node))
+            if (!cache.TryGetValue(hashCode, out node))
             {
                 node = Parse(expression);
-                cache[CacheKey] = node;
+                cache[hashCode] = node;
             }
 
             return node;
@@ -161,7 +195,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
                         int priority;
                         if (!operators.TryGetValue(@operator, out priority))
-                            throw new Exception(String.Format("Unknown operator \"{0}\"", @operator));
+                            throw new Exception($"Unknown operator \"{@operator}\"");
 
                         if (currPriority < priority)
                         {
@@ -176,10 +210,10 @@ namespace CITI.EVO.Tools.ExpressionEngine
             }
 
             if (parentheses > 0)
-                throw new Exception(String.Format("Missing ) in \"{0}\"", expression));
+                throw new Exception($"Missing ) in \"{expression}\"");
 
             if (parentheses < 0)
-                throw new Exception(String.Format("Too many )s in \"{0}\"", expression));
+                throw new Exception($"Too many )s in \"{expression}\"");
 
             if (expression.StartsWith("(") && expression.EndsWith(")"))
             {

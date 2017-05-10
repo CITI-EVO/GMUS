@@ -44,6 +44,13 @@
                 <asp:TextBox ID="tbEmail" runat="server" class="form-control" Property="{UserModel.Email=Text}"></asp:TextBox>
             </div>
         </div>
+        
+         <div class="form-group">
+            <label class="col-sm-6 font-normal">ტელეფონი</label>
+            <div class="col-sm-6">
+                <asp:TextBox ID="tbxPhone" runat="server" class="form-control" Property="{UserModel.Phone=Text}"></asp:TextBox>
+            </div>
+        </div>
     </div>
 </div>
 <div class="col-sm-6">

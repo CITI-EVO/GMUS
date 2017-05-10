@@ -50,7 +50,7 @@ public partial class Controls_LangSwitcher : System.Web.UI.UserControl
             }
 
             TranslationUtil.TranslationMode = !TranslationUtil.TranslationMode;
-            item.Text = String.Format("Translation Mode -> ({0})", (TranslationUtil.TranslationMode ? "ON" : "OFF"));
+            item.Text = $"Translation Mode -> ({(TranslationUtil.TranslationMode ? "ON" : "OFF")})";
 
             return;
         }
@@ -105,7 +105,7 @@ public partial class Controls_LangSwitcher : System.Web.UI.UserControl
     }
     protected MenuItem InitTrnModeItem()
     {
-        var trnModeItemText = String.Format("Translation Mode ({0})", (TranslationUtil.TranslationMode ? "ON" : "OFF"));
+        var trnModeItemText = $"Translation Mode ({(TranslationUtil.TranslationMode ? "ON" : "OFF")})";
 
         var trnModeItem = InitNewItem(trnModeItemText, trnModeKey, false);
         trnModeItem.ItemStyle.BackColor = Color.White;

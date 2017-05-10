@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="LogicControl.ascx.cs" Inherits="Gms.Portal.Web.Controls.Management.LogicControl" %>
 
 <%@ Register Src="~/Controls/Common/ExpressionsLogicControl.ascx" TagPrefix="local" TagName="ExpressionsLogicControl" %>
+
 <div class="hr-line-dashed"></div>
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Source Type</ce:Label>

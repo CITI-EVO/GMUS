@@ -1,17 +1,213 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using CITI.EVO.Tools.Extensions;
 using Gms.Portal.Web.Entities.DataContainer;
-using Gms.Portal.Web.Helpers;
-using Gms.Portal.Web.Utils;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
+using CITI.EVO.Tools.Utils;
+using CITI.EVO.Tools.Enums;
 
 namespace Gms.Portal.Web.Utils
 {
     public static class MongoDbUtil
     {
-        public const String IDField = "_id";
+        public static void DbIndexer(Guid? collectionID, IEnumerable<String> fields)
+        {
+            DbIndexer(collectionID, fields, false);
+        }
+        public static void DbIndexer(Guid? collectionID, IEnumerable<String> fields, bool combine)
+        {
+            var collection = GetCollection(collectionID);
+            DbIndexer(collection, fields, combine);
+        }
+
+        public static void DbIndexer(IMongoCollection<BsonDocument> collection, IEnumerable<String> fields)
+        {
+            DbIndexer(collection, fields, false);
+        }
+        public static void DbIndexer(IMongoCollection<BsonDocument> collection, IEnumerable<String> fields, bool combine)
+        {
+            var list = collection.Indexes.List().ToEnumerable();
+            var @set = list.Select(n => n["name"].AsString).ToHashSet();
+
+            try
+            {
+                DbIndexer(collection, fields, @set, combine);
+            }
+            catch
+            {
+                foreach (var name in @set)
+                {
+                    if (name.StartsWith("@idx_"))
+                        collection.Indexes.DropOne(name);
+                }
+
+                DbIndexer(collection, fields, @set, combine);
+            }
+        }
+
+        private static void DbIndexer(IMongoCollection<BsonDocument> collection, IEnumerable<String> fields, ISet<String> exists, bool combine)
+        {
+            var builder = Builders<BsonDocument>.IndexKeys;
+            var @set = new SortedSet<String>(fields);
+
+            if (combine)
+            {
+                var strVal = String.Join("§", @set);
+                var hash = strVal.ComputeMd5();
+                var name = $"@idx_{hash}";
+
+                if (exists.Contains(name))
+                    return;
+
+                var index = (IndexKeysDefinition<BsonDocument>)null;
+
+                foreach (var field in @set)
+                {
+                    if (index == null)
+                        index = builder.Ascending(field);
+                    else
+                        index = index.Ascending(field);
+                }
+
+                var options = new CreateIndexOptions
+                {
+                    Name = name,
+                    Unique = false
+                };
+
+                collection.Indexes.CreateOne(index, options);
+            }
+            else
+            {
+                foreach (var field in @set)
+                {
+                    var hash = field.ComputeMd5();
+                    var name = $"@idx_{hash}";
+
+                    if (exists.Contains(name))
+                        return;
+
+                    var index = builder.Ascending(field);
+                    var options = new CreateIndexOptions
+                    {
+                        Name = name,
+                        Unique = false,
+                    };
+
+                    collection.Indexes.CreateOne(index, options);
+                }
+            }
+        }
+
+        public static SortDefinition<BsonDocument> CreateDbSort(IEnumerable<String> sortFields)
+        {
+            if (sortFields == null)
+                return null;
+
+            var builder = Builders<BsonDocument>.Sort;
+            var sorts = CreateDbSorts(sortFields);
+
+            var result = builder.Combine(sorts);
+            return result;
+        }
+        public static IEnumerable<SortDefinition<BsonDocument>> CreateDbSorts(IEnumerable<String> sortFields)
+        {
+            if (sortFields == null)
+                yield break;
+
+            var builder = Builders<BsonDocument>.Sort;
+
+            foreach (var sortField in sortFields)
+            {
+                var match = RegexUtil.SortingFieldsParserRx.Match(sortField);
+
+                var name = match.Groups["name"].Value;
+                name = (name ?? String.Empty).Trim();
+
+                var type = match.Groups["type"].Value;
+                type = (type ?? String.Empty).Trim();
+
+                var sortOrder = DataConverter.ToNullableEnum<SortOrder>(type, true);
+
+                switch (sortOrder.GetValueOrDefault())
+                {
+                    case SortOrder.Desc:
+                        yield return builder.Descending(name);
+                        break;
+                    default:
+                        yield return builder.Ascending(name);
+                        break;
+                }
+            }
+        }
+
+        public static FilterDefinition<BsonDocument> CreateDbFilter(IDictionary<String, Object> filterData)
+        {
+            var builder = Builders<BsonDocument>.Filter;
+            var filter = builder.Empty;
+
+            if (filterData == null)
+                return filter;
+
+            foreach (var pair in filterData)
+            {
+                var fieldKey = Convert.ToString(pair.Key);
+
+                if (pair.Value is Tuple<Object, Object>)
+                {
+                    var tuple = (Tuple<Object, Object>)pair.Value;
+
+                    var startVal = tuple.Item1;
+                    var endVal = tuple.Item2;
+
+                    if (!IsNullOrEmpty(startVal))
+                        filter = filter & builder.Gte(fieldKey, startVal);
+
+                    if (!IsNullOrEmpty(endVal))
+                        filter = filter & builder.Lte(fieldKey, endVal);
+                }
+                else if (pair.Value is Array)
+                {
+                    var array = (Array)pair.Value;
+                    var enumerable = array.Cast<Object>();
+
+                    filter = filter & builder.In(fieldKey, enumerable);
+                }
+                else
+                {
+                    if (pair.Value == null)
+                        filter = filter & builder.Eq(fieldKey, BsonNull.Value);
+                    else
+                    {
+                        var fieldVal = pair.Value;
+
+                        if (IsNullOrEmpty(fieldVal))
+                        {
+                            filter = filter & builder.Eq(fieldKey, BsonString.Empty);
+                        }
+                        else if (pair.Value is String)
+                        {
+                            var strVal = Convert.ToString(fieldVal);
+                            var rgxVal = Regex.Escape(strVal);
+
+                            var rgxExp = BsonRegularExpression.Create(rgxVal);
+                            filter = filter & builder.Regex(fieldKey, rgxExp);
+                        }
+                        else
+                        {
+                            filter = filter & builder.Eq(fieldKey, fieldVal);
+                        }
+                    }
+                }
+            }
+
+            return filter;
+        }
 
         public static void InsertDocument(Guid? collectionID, BsonDocument document)
         {
@@ -40,7 +236,7 @@ namespace Gms.Portal.Web.Utils
                          where n[FormDataConstants.IDField] == recordID
                          select n);
 
-            var document = query.FirstOrDefault();
+            var document = IAsyncCursorSourceExtensions.FirstOrDefault(query);
             return document;
         }
 
@@ -49,7 +245,7 @@ namespace Gms.Portal.Web.Utils
             if (collectionID == null)
                 throw new ArgumentNullException("collectionID");
 
-            var collectionName = String.Format("Collection_{0:n}", collectionID);
+            var collectionName = $"Collection_{collectionID:n}";
 
             var client = new MongoClient(ConfigUtil.MongoConnectionString);
             var database = client.GetDatabase(ConfigUtil.MongoDatabaseName);
@@ -58,13 +254,79 @@ namespace Gms.Portal.Web.Utils
             return collection;
         }
 
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, IDictionary<String, Object> filters)
+        {
+            return FindDocuments(collectionID, filters, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, IDictionary<String, Object> filters, bool optimize)
+        {
+            return FindDocuments(collectionID, filters, null, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, IDictionary<String, Object> filters, IEnumerable<String> sorts)
+        {
+            return FindDocuments(collectionID, filters, sorts, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, IDictionary<String, Object> filters, IEnumerable<String> sorts, bool optimize)
+        {
+            var collection = GetCollection(collectionID);
+            return FindDocuments(collection, filters, sorts, optimize);
+        }
+
+        public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, IDictionary<String, Object> filters)
+        {
+            return FindDocuments(collection, filters, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, IDictionary<String, Object> filters, bool optimize)
+        {
+            return FindDocuments(collection, filters, null, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, IDictionary<String, Object> filters, IEnumerable<String> sorts)
+        {
+            return FindDocuments(collection, filters, sorts, false);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, IDictionary<String, Object> filters, IEnumerable<String> sorts, bool optimize)
+        {
+            var filter = CreateDbFilter(filters);
+            var sort = CreateDbSort(sorts);
+
+            if (optimize)
+            {
+                var filterFields = filters.Keys.ToHashSet();
+                DbIndexer(collection, filterFields, true);
+
+                if (sorts != null)
+                {
+                    var sortFields = sorts.ToHashSet();
+                    DbIndexer(collection, sortFields, false);
+                }
+            }
+
+            return FindDocuments(collection, filter, sort);
+        }
+
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, FilterDefinition<BsonDocument> filter)
+        {
+            return FindDocuments(collectionID, filter, null);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(Guid? collectionID, FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort)
+        {
+            var collection = GetCollection(collectionID);
+            return FindDocuments(collection, filter, sort);
+        }
+
         public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter)
         {
-            using (var cursorTask = collection.FindAsync(filter))
-            {
-                cursorTask.Wait();
+            return FindDocuments(collection, filter, null);
+        }
+        public static IEnumerable<BsonDocument> FindDocuments(IMongoCollection<BsonDocument> collection, FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort)
+        {
+            var result = collection.Find(filter);
 
-                var cursor = cursorTask.Result;
+            if (sort != null)
+                result = result.Sort(sort);
+
+            using (var cursor = result.ToCursor())
+            {
                 while (cursor.MoveNext())
                 {
                     var batch = cursor.Current;
@@ -84,7 +346,7 @@ namespace Gms.Portal.Web.Utils
 
             foreach (var name in names)
             {
-                if (name != IDField)
+                if (name != FormDataConstants.DocIDField)
                     target[name] = source[name];
             }
         }
@@ -99,16 +361,53 @@ namespace Gms.Portal.Web.Utils
             if (collection == null)
                 return;
 
-            var filter = Builders<BsonDocument>.Filter.Eq(IDField, document[IDField]);
-            var update = Builders<BsonDocument>.Update.Set(IDField, document[IDField]);
+            var keyField = FormDataConstants.DocIDField;
+            var keyValue = (Object)null;
 
-            foreach (var name in document.Names)
+            var bsonValue = document[keyField];
+            if (bsonValue.IsObjectId)
+                keyValue = bsonValue.AsObjectId;
+            else
             {
-                if (name != IDField)
-                    update = update.Set(name, document[name]);
+                keyField = FormDataConstants.IDField;
+
+                bsonValue = document[keyField];
+                if (bsonValue.IsGuid)
+                    keyValue = bsonValue.AsGuid;
+                else
+                    throw new Exception();
             }
 
-            collection.UpdateOne(filter, update);
+            var filter = Builders<BsonDocument>.Filter.Eq(keyField, keyValue);
+
+            collection.ReplaceOne(filter, document);
+        }
+
+        public static void UpdateFields(Guid? ownerID, Guid? recordID, IDictionary<String, Object> fields)
+        {
+            var collection = MongoDbUtil.GetCollection(ownerID);
+
+            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
+            var update = (UpdateDefinition<BsonDocument>)null;
+
+            foreach (var pair in fields)
+            {
+                if (update == null)
+                    update = Builders<BsonDocument>.Update.Set(pair.Key, pair.Value);
+                else
+                    update = update.Set(pair.Key, pair.Value);
+            }
+
+            collection.UpdateMany(filter, update);
+        }
+        public static void UpdateField(Guid? ownerID, Guid? recordID, String fieldName, Object value)
+        {
+            var collection = MongoDbUtil.GetCollection(ownerID);
+
+            var update = Builders<BsonDocument>.Update.Set(fieldName, value);
+            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, recordID);
+
+            collection.UpdateMany(filter, update);
         }
 
         public static void ClearCollection(Guid? collectionID)
@@ -123,6 +422,11 @@ namespace Gms.Portal.Web.Utils
 
             var filter = Builders<BsonDocument>.Filter.Empty;
             collection.DeleteMany(filter);
+        }
+
+        private static bool IsNullOrEmpty(Object value)
+        {
+            return String.IsNullOrEmpty(Convert.ToString(value));
         }
     }
 }

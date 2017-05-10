@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CITI.EVO.Tools.Utils;
 using Gms.Portal.DAL.Domain;
+using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Entities.Others;
 using Gms.Portal.Web.Models;
@@ -10,6 +12,44 @@ namespace Gms.Portal.Web.Utils
 {
     public static class FormStructureUtil
     {
+        public static String ComputeHashCode(ContentEntity content, FormDataUnit formData)
+        {
+            var controls = PreOrderFirstLevelTraversal(content);
+            return ComputeHashCode(controls, formData);
+        }
+        public static String ComputeHashCode(IEnumerable<ControlEntity> controls, FormDataUnit formData)
+        {
+            var uniqFields = (from n in controls.OfType<FieldEntity>()
+                              where n.Unique.GetValueOrDefault()
+                              orderby n.ID
+                              select n);
+
+            return ComputeHashCode(uniqFields, formData);
+        }
+        public static String ComputeHashCode(IEnumerable<FieldEntity> fields, FormDataUnit formData)
+        {
+            var keysQuery = (from n in fields
+                             where n.Unique.GetValueOrDefault()
+                             let k = Convert.ToString(n.ID)
+                             select k);
+
+            return ComputeHashCode(keysQuery, formData);
+        }
+        public static String ComputeHashCode(IEnumerable<String> keys, FormDataUnit formData)
+        {
+            var valList = (from n in keys
+                           let v = (Convert.ToString(formData[n]) ?? String.Empty)
+                           select v.Trim()).ToList();
+
+            if (valList.Count == 0)
+                return null;
+
+            var values = String.Join("§", valList);
+
+            var hashCode = CryptographyUtil.ComputeSHA1(values);
+            return hashCode;
+        }
+
         public static IEnumerable<ElementTreeNodeEntity> CreateTree(FormEntity parent)
         {
             if (parent == null)
@@ -376,6 +416,9 @@ namespace Gms.Portal.Web.Utils
 
             if (entity is GridEntity)
                 return "Grid";
+
+            if (entity is TreeEntity)
+                return "Tree";
 
             if (entity is FieldEntity)
                 return "Field";

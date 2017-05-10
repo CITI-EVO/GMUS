@@ -22,6 +22,65 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             FillAttributesTree();
         }
 
+        protected void attributesSchemasControl_OnNew(object sender, GenericEventArgs<Guid> e)
+        {
+            var units = UmSchemasUtil.CreateListOfTree(HbSession);
+
+            var item = units.FirstOrDefault(n => n.Key == e.Value);
+            if (item == null)
+                return;
+
+            if (item.Type == "Project")
+            {
+                var entity = HbSession.Get<UM_Project>(item.ID);
+
+                var model = new AttributeSchemaModel
+                {
+                    ProjectID = entity.ID
+                };
+
+                attributeSchemaControl.Model = model;
+                mpeAttributeSchema.Show();
+            }
+            else if (item.Type == "Schema")
+            {
+                var entity = HbSession.Get<UM_AttributeSchema>(item.ID.GetValueOrDefault());
+
+                var model = new AttributeFieldModel
+                {
+                    SchemaID = entity.ID
+                };
+
+                attributeFieldControl.Model = model;
+
+                mpeAttributeSchemaNode.Show();
+            }
+        }
+
+        protected void attributesSchemasControl_OnEdit(object sender, GenericEventArgs<Guid> e)
+        {
+            var schema = HbSession.Query<UM_AttributeSchema>().FirstOrDefault(n => n.ID == e.Value);
+            if (schema != null)
+            {
+                var converter = new AttributeSchemaEntityModelConverter(HbSession);
+                var model = converter.Convert(schema);
+
+                attributeSchemaControl.Model = model;
+                mpeAttributeSchema.Show();
+            }
+
+            var field = HbSession.Query<UM_AttributeField>().FirstOrDefault(n => n.ID == e.Value);
+            if (field != null)
+            {
+                var converter = new AttributeFieldEntityModelConverter(HbSession);
+                var model = converter.Convert(field);
+
+                attributeFieldControl.Model = model;
+
+                mpeAttributeSchemaNode.Show();
+            }
+        }
+        
         protected void attributesSchemasControl_OnDelete(object sender, GenericEventArgs<Guid> e)
         {
             var units = UmSchemasUtil.CreateListOfTree(HbSession);
@@ -63,65 +122,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             FillAttributesTree();
         }
 
-        protected void attributesSchemasControl_OnEdit(object sender, GenericEventArgs<Guid> e)
-        {
-            var schema = HbSession.Query<UM_AttributeSchema>().FirstOrDefault(n => n.ID == e.Value);
-            if (schema != null)
-            {
-                var converter = new AttributeSchemaEntityModelConverter(HbSession);
-                var model = converter.Convert(schema);
-
-                attributeSchemaControl.Model = model;
-                mpeAttributeSchema.Show();
-            }
-
-            var field = HbSession.Query<UM_AttributeField>().FirstOrDefault(n => n.ID == e.Value);
-            if (field != null)
-            {
-                var converter = new AttributeFieldEntityModelConverter(HbSession);
-                var model = converter.Convert(field);
-
-                attributeFieldControl.Model = model;
-
-                mpeAttributeSchemaNode.Show();
-            }
-        }
-
-        protected void attributesSchemasControl_OnNew(object sender, GenericEventArgs<Guid> e)
-        {
-            var units = UmSchemasUtil.CreateListOfTree(HbSession);
-
-            var item = units.FirstOrDefault(n => n.Key == e.Value);
-            if (item == null)
-                return;
-
-            if (item.Type == "Project")
-            {
-                var entity = HbSession.Get<UM_Project>(item.ID);
-
-                var model = new AttributeSchemaModel
-                {
-                    ProjectID = entity.ID
-                };
-
-                attributeSchemaControl.Model = model;
-                mpeAttributeSchema.Show();
-            }
-            else if (item.Type == "Schema")
-            {
-                var entity = HbSession.Get<UM_AttributeSchema>(item.ID.GetValueOrDefault());
-
-                var model = new AttributeFieldModel
-                {
-                    SchemaID = entity.ID
-                };
-
-                attributeFieldControl.Model = model;
-
-                mpeAttributeSchemaNode.Show();
-            }
-        }
-
         protected void btAttributeSchemaOK_Click(object sender, EventArgs e)
         {
             var model = attributeSchemaControl.Model;
@@ -142,6 +142,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             HbSession.SubmitChanges(entity);
 
             FillAttributesTree();
+        }
+
+        protected void btAttributeSchemaCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeAttributeSchema.Hide();
         }
 
         protected void btAttributeSchemaNodeOK_Click(object sender, EventArgs e)
@@ -166,6 +171,19 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             FillAttributesTree();
         }
 
+        protected void btAttributeSchemaNodeCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeAttributeSchemaNode.Hide();
+        }
+
+        #region Methods
+
+        protected void ApplyPermissions()
+        {
+            if (!UmUtil.Instance.HasAccess("AttributesSchemasList"))
+                Response.Redirect("~/Pages/Management/UsersList.aspx");
+        }
+
         protected void FillAttributesTree()
         {
             using (var session = Hb8Factory.CreateSession())
@@ -184,15 +202,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 attributesSchemasControl.Model = model;
                 attributesSchemasControl.DataBind();
             }
-        }
-
-        #region Methods
-
-
-        protected void ApplyPermissions()
-        {
-            if (!UmUtil.Instance.HasAccess("AttributesSchemasList"))
-                Response.Redirect("~/Pages/Management/UsersList.aspx");
         }
 
         #endregion

@@ -67,7 +67,7 @@ namespace CITI.EVO.UserManagement.Web.Utils
 
         private static String GetTemplate(String key, UM_User user)
         {
-            var templateKey = String.Format("{0}_{1}", key, LanguageUtil.GetLanguage());
+            var templateKey = $"{key}_{LanguageUtil.GetLanguage()}";
 
             var virtPath = ConfigurationManager.AppSettings[templateKey];
             if (String.IsNullOrWhiteSpace(virtPath))

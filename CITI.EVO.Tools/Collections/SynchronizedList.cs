@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CITI.EVO.Tools.Collections
 {
+    [Serializable]
     public class SynchronizedList<TItem> : IList<TItem>
     {
         private readonly IList<TItem> _list;

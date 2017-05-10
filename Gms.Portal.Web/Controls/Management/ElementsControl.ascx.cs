@@ -15,13 +15,47 @@ namespace Gms.Portal.Web.Controls.Management
         }
 
         public event EventHandler<GenericEventArgs<Guid>> Move;
+        protected virtual void OnMove(GenericEventArgs<Guid> e)
+        {
+            if (Move != null)
+                Move(this, e);
+        }
+
+        public event EventHandler<GenericEventArgs<Guid>> Paste;
+        protected virtual void OnPaste(GenericEventArgs<Guid> e)
+        {
+            if (Paste != null)
+                Paste(this, e);
+        }
+
+        public event EventHandler<GenericEventArgs<Guid>> Copy;
+        protected virtual void OnCopy(GenericEventArgs<Guid> e)
+        {
+            if (Copy != null)
+                Copy(this, e);
+        }
+        
+
+
         protected void btnMove_OnCommand(object sender, CommandEventArgs e)
         {
-            var id = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (id != null && Move != null)
-            {
-                Move(sender, new GenericEventArgs<Guid>(id.Value));
-            }
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID != null)
+                OnMove(new GenericEventArgs<Guid>(itemID.Value));
+        }
+
+        protected void btnPaste_Command(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID != null)
+                OnPaste(new GenericEventArgs<Guid>(itemID.Value));
+        }
+
+        protected void btnCopy_Command(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID != null)
+                OnCopy(new GenericEventArgs<Guid>(itemID.Value));
         }
 
         protected String GetImageClass(object eval)
@@ -68,9 +102,23 @@ namespace Gms.Portal.Web.Controls.Management
             return true;
         }
 
+        protected bool GetCopyVisible(object eval)
+        {
+            return eval != null;
+        }
+
         protected bool GetMoveVisible(object eval)
         {
             return eval != null;
+        }
+
+        protected bool GetPasteVisible(object eval)
+        {
+            var type = Convert.ToString(eval);
+            if (type == "Field")
+                return false;
+
+            return true;
         }
 
 

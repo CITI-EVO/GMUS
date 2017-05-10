@@ -25,16 +25,20 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void logicsControl_OnView(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditLogic.aspx");
-            urlHelper["LogicID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditLogic.aspx")
+            {
+                ["LogicID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
         protected void logicsControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditLogic.aspx");
-            urlHelper["LogicID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditLogic.aspx")
+            {
+                ["LogicID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }

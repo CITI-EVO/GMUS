@@ -27,14 +27,14 @@ namespace CITI.EVO.Tools.Helpers
             return capacity;
         }
 
-        public static ConcurrentDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
+        public static IDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
         {
             var capacity = GetDefaultCapacity();
             var concurrency = GetDefaultConcurrency();
 
             return new ConcurrentDictionary<TKey, TValue>(concurrency, capacity);
         }
-        public static ConcurrentDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(IEqualityComparer<TKey> comparer)
+        public static IDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(IEqualityComparer<TKey> comparer)
         {
             var capacity = GetDefaultCapacity();
             var concurrency = GetDefaultConcurrency();

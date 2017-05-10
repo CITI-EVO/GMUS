@@ -23,3 +23,9 @@
     </label>
     <asp:TextBox runat="server" ID="tbxEmail" class="form-control" TextMode="Email" Property="{ChangePasswordModel.Email=Text}"></asp:TextBox>
 </div>
+<div class="form-group">
+    <label>
+        <ce:Label runat="server" Text="ტელეფონი" />
+    </label>
+    <asp:TextBox runat="server" ID="tbxPhone" class="form-control" Property="{ChangePasswordModel.Phone=Text}"></asp:TextBox>
+</div>

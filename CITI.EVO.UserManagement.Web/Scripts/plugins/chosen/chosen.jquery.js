@@ -564,6 +564,7 @@
             if (this.is_rtl) {
                 container_classes.push("chosen-rtl");
             }
+			
             container_props = {
                 'class': container_classes.join(' '),
                 'style': "width: " + (this.container_width()) + ";",
@@ -755,6 +756,7 @@
             this.active_field = false;
             this.results_hide();
             this.container.removeClass("chosen-container-active");
+            this.container.removeClass("chosen-with-dropup");
             this.clear_backstroke();
             this.show_search_field_default();
             return this.search_field_scale();
@@ -762,6 +764,15 @@
 
         Chosen.prototype.activate_field = function() {
             this.container.addClass("chosen-container-active");
+
+            var windowHeight = $(window).height() + $('html').scrollTop();
+            var totalHeight = this.dropdown.height() + Math.ceil(this.dropdown.offset().top);
+
+            if (totalHeight > windowHeight) {
+                this.container.addClass("chosen-with-dropup");
+                this.dropdown.addClass('chosen-dropup');
+            }
+
             this.active_field = true;
             this.search_field.val(this.search_field.val());
             return this.search_field.focus();
@@ -836,6 +847,15 @@
                 return false;
             }
             this.container.addClass("chosen-with-drop");
+
+            var windowHeight = $(window).height() + $('html').scrollTop();
+            var totalHeight = this.dropdown.height() + Math.ceil(this.dropdown.offset().top);
+
+            if (totalHeight > windowHeight) {
+                this.container.addClass("chosen-with-dropup");
+                this.dropdown.addClass('chosen-dropup');
+            }
+
             this.results_showing = true;
             this.search_field.focus();
             this.search_field.val(this.search_field.val());
@@ -853,6 +873,7 @@
             if (this.results_showing) {
                 this.result_clear_highlight();
                 this.container.removeClass("chosen-with-drop");
+                this.container.removeClass("chosen-with-dropup");
                 this.form_field_jq.trigger("chosen:hiding_dropdown", {
                     chosen: this
                 });

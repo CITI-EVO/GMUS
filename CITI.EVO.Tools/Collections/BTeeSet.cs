@@ -8,6 +8,7 @@ using CITI.EVO.Tools.Structures;
 
 namespace CITI.EVO.Tools.Collections
 {
+    [Serializable]
     public class BTeeSet<TItem> : ISet<TItem>
     {
         private readonly BTree<TItem> _btree;

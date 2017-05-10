@@ -1,15 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="DefaultTarget" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-	<PropertyGroup Label="Common">
-		<Verbosity>diagnostic</Verbosity>
-
-		<MSBuildExtensionsPath>Dependencies\MSBuild</MSBuildExtensionsPath>
-		<MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\..\..</MSBuildCommunityTasksPath>
-	</PropertyGroup>
-
-	<Import Project="$(MSBuildExtensionsPath)\MSBuild.Community.Tasks.Targets"/>
-
+<Project ToolsVersion="15.0" DefaultTargets="DefaultTarget" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup Label="Libraries">
 		<LibrariesDefaultBuildProperties>Configuration=Debug;Platform=AnyCPU;</LibrariesDefaultBuildProperties>
 
@@ -44,32 +34,32 @@
 		</Delete>
 
 		<MSBuild ContinueOnError="false" Projects="$(CitiEvoRpcProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
 		<MSBuild ContinueOnError="false" Projects="$(CitiEvoToolsProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
 		<MSBuild ContinueOnError="false" Projects="$(CitiEvoProxiesProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
     <MSBuild ContinueOnError="false" Projects="$(CitiEvoTwoWayModelProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-    <Message Text="--------------------------------------------------------" />
+    <Message Text="########################################################" />
 
     <MSBuild ContinueOnError="false" Projects="$(GmsPortalSvcProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
 		<MSBuild ContinueOnError="false" Projects="$(GmsPortalDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
 		<MSBuild ContinueOnError="false" Projects="$(CitiEvoCommonDataDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 
 		<MSBuild ContinueOnError="false" Projects="$(CitiEvoUserManagementDalProject)" Properties="$(LibrariesDefaultBuildProperties)" />
-		<Message Text="--------------------------------------------------------" />
+		<Message Text="########################################################" />
 	</Target>
 
 	<Target Name="DefaultTarget">
 		<CallTarget Targets="BuildLibraries" />
-		<Message Text="++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+		<Message Text="@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" />
 	</Target>
 </Project>

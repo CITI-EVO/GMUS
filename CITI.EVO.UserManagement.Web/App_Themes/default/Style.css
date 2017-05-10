@@ -1979,10 +1979,6 @@ table.dataTable thead .sorting_desc_disabled {
     float: left;
 }
 
-.dataTables_filter {
-    float: left;
-}
-
     .dataTables_filter label {
         margin-right: 5px;
     }

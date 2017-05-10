@@ -29,7 +29,7 @@ namespace Gms.Portal.Web.Controls.Management
             foreach (var pair in fields)
             {
                 var fieldKey = Convert.ToString(pair.Key);
-                var fieldID = String.Format("{0:n}", pair.Key);
+                var fieldID = $"{pair.Key:n}";
 
                 var property = propertyFormat.Replace("@dataKey", fieldKey);
 

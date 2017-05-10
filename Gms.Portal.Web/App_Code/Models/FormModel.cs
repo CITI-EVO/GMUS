@@ -18,6 +18,16 @@ namespace Gms.Portal.Web.Models
 
         public bool? Visible { get; set; }
 
+        public bool? RequiresApprove { get; set; }
+
+        public int? ApprovalDeadline { get; set; }
+
+        public String VisibleExpression { get; set; }
+
+        public String FillingValidationExpression { get; set; }
+
+        public String FillingValidationMessage { get; set; }
+
         public String UserMode { get; set; }
 
         public FormEntity Entity { get; set; }

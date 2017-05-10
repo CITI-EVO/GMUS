@@ -115,6 +115,13 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             HbSession.SubmitChanges(entity);
 
             FillResources();
+
+            mpeResource.Hide();
+        }
+
+        protected void btnCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeResource.Hide();
         }
 
         #region methods
@@ -214,5 +221,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
         }
 
         #endregion
+
     }
 }

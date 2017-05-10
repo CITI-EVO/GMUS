@@ -14,7 +14,7 @@ namespace CITI.EVO.UserManagement.Web.Units
         {
             get
             {
-                var key = String.Format("{0}/{1}/{2}", ID, ParentID, Type);
+                var key = $"{ID}/{ParentID}/{Type}";
                 return key.ComputeMd5Guid();
             }
         }

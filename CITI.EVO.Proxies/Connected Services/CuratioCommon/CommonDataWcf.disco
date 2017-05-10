@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?wsdl" docRef="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+</discovery>

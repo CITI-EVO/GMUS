@@ -30,13 +30,15 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            BindData();
+            FillCollectionData();
         }
 
         protected void btnNew_OnClick(object sender, EventArgs e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx");
-            urlHelper["CollectionID"] = RequestUrl["collectionID"];
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx")
+            {
+                ["CollectionID"] = RequestUrl["collectionID"]
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -46,7 +48,7 @@ namespace Gms.Portal.Web.Pages.Management
             var collectionID = DataConverter.ToNullableGuid(RequestUrl["collectionID"]);
             MongoDbUtil.ClearCollection(collectionID);
 
-            BindData();
+            FillCollectionData();
         }
 
         protected void btnImport_OnClick(object sender, EventArgs e)
@@ -80,7 +82,7 @@ namespace Gms.Portal.Web.Pages.Management
 
             var list = new List<BsonDocument>();
 
-            var tableName = String.Format("#{0}", entity.Name);
+            var tableName = $"#{entity.Name}";
             var dataTable = dataSet.Tables[tableName];
 
             foreach (var dataRow in dataTable.AsEnumerable())
@@ -91,7 +93,7 @@ namespace Gms.Portal.Web.Pages.Management
                 foreach (var field in entity.Fields)
                 {
                     var key = Convert.ToString(field.ID);
-                    var name = String.Format("#{0}", field.Name);
+                    var name = $"#{field.Name}";
 
                     var val = (Convert.ToString(dataRow[name]) ?? String.Empty);
                     val = val.Replace("\n", ", \n");
@@ -104,15 +106,30 @@ namespace Gms.Portal.Web.Pages.Management
 
             collection.InsertMany(list);
 
-            BindData();
+            FillCollectionData();
+
+            mpeImport.Hide();
+        }
+
+        protected void btnImportCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeImport.Hide();
+        }
+
+        protected void btnClose_OnClick(object sender, EventArgs e)
+        {
+            var urlHelper = new UrlHelper("~/Pages/Management/CollectionsList.aspx");
+            Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
         protected void collectionDatasControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx");
-            urlHelper["CollectionID"] = RequestUrl["collectionID"];
-            urlHelper["RecordID"] = e.Value;
-            urlHelper["Mode"] = "Edit";
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx")
+            {
+                ["CollectionID"] = RequestUrl["collectionID"],
+                ["RecordID"] = e.Value,
+                ["Mode"] = "Edit"
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -130,24 +147,26 @@ namespace Gms.Portal.Web.Pages.Management
 
             collection.DeleteOne(filter);
 
-            BindData();
+            FillCollectionData();
         }
 
         protected void collectionDatasControl_OnView(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx");
-            urlHelper["CollectionID"] = RequestUrl["collectionID"];
-            urlHelper["RecordID"] = e.Value;
-            urlHelper["Mode"] = "View";
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollectionData.aspx")
+            {
+                ["CollectionID"] = RequestUrl["collectionID"],
+                ["RecordID"] = e.Value,
+                ["Mode"] = "View"
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void BindData()
+        protected void FillCollectionData()
         {
             var collectionID = DataConverter.ToNullableGuid(RequestUrl["collectionID"]);
 
-            var dbEntity = HbSession.Get<GM_Collection>(collectionID);
+            var dbEntity = HbSession.Query<GM_Collection>().FirstOrDefault(n => n.ID == collectionID);
             if (dbEntity == null)
                 return;
 
@@ -157,6 +176,8 @@ namespace Gms.Portal.Web.Pages.Management
             var entity = model.Entity;
             if (entity == null || entity.Fields == null)
                 return;
+
+            lblTitle.Text = dbEntity.Name;
 
             var fields = entity.Fields.ToDictionary(n => (Object)n.ID, n => n.Name);
             fields.Add(FormDataConstants.IDField, FormDataConstants.IDField);
@@ -179,5 +200,6 @@ namespace Gms.Portal.Web.Pages.Management
             collectionDatasControl.Model = datasModel;
             collectionDatasControl.DataBind();
         }
+
     }
 }

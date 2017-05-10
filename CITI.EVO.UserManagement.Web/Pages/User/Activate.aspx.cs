@@ -59,7 +59,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
             lnkAuth.NavigateUrl = url.ToString();
 
-            lblUser.Text = String.Format("({0} - {1} {2})", user.LoginName, user.FirstName, user.LastName);
+            lblUser.Text = $"({user.LoginName} - {user.FirstName} {user.LastName})";
             pnlUser.Visible = true;
         }
     }

@@ -4,9 +4,11 @@ using System.Configuration;
 using System.Linq;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
+using DevExpress.XtraPrinting.Native;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Caches;
@@ -17,6 +19,7 @@ using Gms.Portal.Web.Utils;
 using MongoDB.Driver;
 using NHibernate.Linq;
 using MongoDB.Driver.Linq;
+using CITI.EVO.Tools.Extensions;
 
 namespace Gms.Portal.Web
 {
@@ -34,11 +37,13 @@ namespace Gms.Portal.Web
 
             liAdmin.Visible = false;
             liTrnMode.Visible = false;
+            liReport.Visible = false;
 
             if (UmUtil.Instance.IsLogged && UmUtil.Instance.CurrentUser.IsSuperAdmin)
             {
                 liAdmin.Visible = true;
                 liTrnMode.Visible = true;
+                liReport.Visible = true;
 
                 urlHelper[LanguageUtil.RequestLanguageKey] = LanguageUtil.GetLanguage();
 
@@ -59,57 +64,28 @@ namespace Gms.Portal.Web
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (UmUtil.Instance.IsLogged)
-            {
-                var loginToken = Convert.ToString(UmUtil.Instance.CurrentToken);
-
-                foreach (var control in UserInterfaceUtil.TraverseChildren(this))
-                {
-                    var link = control as HyperLink;
-                    if (link != null)
-                        link.NavigateUrl = link.NavigateUrl.Replace("{loginToken}", loginToken);
-                }
-            }
-            else
+            if (!UmUtil.Instance.IsLogged)
             {
                 UmUtil.Instance.GoToLogin();
+                return;
             }
-        }
 
-        private bool NeedToFillForm(Guid? mandatoryFormID)
-        {
-            if (UmUtil.Instance.HasAccess("Admin"))
-                return false;
-
-            var mandatoryFormStatus = ConfigurationManager.AppSettings["MandatoryFormStatus"];
-
-            if (mandatoryFormID == null)
-                return false;
-
-            var userID = UserUtil.GetCurrentUserID();
-            if (userID == null)
-                return false;
-
-            var collection = MongoDbUtil.GetCollection(mandatoryFormID);
-
-            var query = (from n in collection.AsQueryable()
-                         where n[FormDataConstants.UserIDField] == userID &&
-                               n[FormDataConstants.DateChangedField] == (DateTime?)null
-                         select n);
-
-            var dataStatus = DataStatusCache.GetStatus(mandatoryFormStatus);
-            if (dataStatus != null)
+            if (UmUtil.Instance.IsPasswordExpired)
             {
-                query = (from n in query
-                         where n[FormDataConstants.StatusIDField] == dataStatus.ID
-                         select n);
+                UmUtil.Instance.GoToChangePassword();
+                return;
             }
 
-            var doc = query.FirstOrDefault();
-            if (doc == null)
-                return true;
+            liDataApprove.Visible = UmUtil.Instance.HasAccess("Org");
 
-            return false;
+            var loginToken = Convert.ToString(UmUtil.Instance.CurrentToken);
+
+            foreach (var control in UserInterfaceUtil.TraverseChildren(this))
+            {
+                var link = control as HyperLink;
+                if (link != null)
+                    link.NavigateUrl = link.NavigateUrl.Replace("{loginToken}", loginToken);
+            }
         }
 
         protected void Page_PreRender(object sender, EventArgs e)
@@ -119,8 +95,7 @@ namespace Gms.Portal.Web
                               n.Visible == true
                         select n;
 
-            var mandatoryFormID = DataConverter.ToNullableGuid(ConfigurationManager.AppSettings["MandatoryUserForm"]);
-
+            var mandatoryFormID = UserUtil.GetMandatoryFormID();
             if (NeedToFillForm(mandatoryFormID))
             {
                 var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
@@ -128,9 +103,11 @@ namespace Gms.Portal.Web
 
                 if (mandatoryFormID != formID && mandatoryFormID != ownerID)
                 {
-                    var urlHelper = new UrlHelper("~/Pages/User/FormDataGrid.aspx");
-                    urlHelper["FormID"] = mandatoryFormID;
-                    urlHelper["OwnerID"] = mandatoryFormID;
+                    var urlHelper = new UrlHelper("~/Pages/User/FormDataGrid.aspx")
+                    {
+                        ["FormID"] = mandatoryFormID,
+                        ["OwnerID"] = mandatoryFormID
+                    };
 
                     Response.Redirect(urlHelper.ToEncodedUrl());
                 }
@@ -166,6 +143,7 @@ namespace Gms.Portal.Web
         protected void MakeActiveCurrentLink()
         {
             var controls = UserInterfaceUtil.TraverseControls(menuDiv);
+
             var current = (from n in controls
                            let h = n as HyperLink
                            where h != null
@@ -175,13 +153,12 @@ namespace Gms.Portal.Web
 
             if (current == null)
             {
-                var directoryUrl = GetDirectoryUrl();
-
+                var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
                 current = (from n in controls
                            let h = n as HyperLink
                            where h != null
-                           let url = GetFullUrl(h.NavigateUrl)
-                           where url.StartsWith(directoryUrl) && !url.Contains("#")
+                           let Id = GetFormID(h.NavigateUrl)
+                           where formID == Id
                            select h).FirstOrDefault();
 
             }
@@ -198,24 +175,86 @@ namespace Gms.Portal.Web
                 if (parentUl != null)
                     parentUl.Attributes["class"] += " in";
             }
-
-
         }
 
-        public string GetFullUrl(String relativeUrl)
+        protected Guid? GetFormID(String relativeUrl)
+        {
+            var helper = new UrlHelper(relativeUrl);
+            return DataConverter.ToNullableGuid(helper["FormID"]);
+        }
+
+        protected String GetFullUrl(String relativeUrl)
         {
             var root = Request.Url.GetLeftPart(UriPartial.Authority);
             var fullUrl = root + Page.ResolveUrl(relativeUrl);
             return fullUrl;
         }
 
-        public string GetDirectoryUrl()
+        protected bool NeedToFillForm(Guid? mandatoryFormID)
         {
-            var root = Request.Url.GetLeftPart(UriPartial.Authority);
-            var fullUrl = root + Page.ResolveUrl("#");
-            return fullUrl.TrimEnd('#');
+            if (mandatoryFormID == null || UmUtil.Instance.HasAccess("Admin"))
+                return false;
+
+            var mandatoryFormStatus = UserUtil.GetMandatoryFormStatus();
+            if (mandatoryFormStatus == null)
+                return false;
+
+            var userID = UserUtil.GetCurrentUserID();
+            if (userID == null)
+                return false;
+
+            var collection = MongoDbUtil.GetCollection(mandatoryFormID);
+
+            var query = (from n in collection.AsQueryable()
+                         where n[FormDataConstants.UserIDField] == userID &&
+                               n[FormDataConstants.DateDeletedField] == (DateTime?)null
+                         select n);
+
+            var dataStatus = DataStatusCache.GetStatus(mandatoryFormStatus);
+            if (dataStatus != null)
+            {
+                query = (from n in query
+                         where n[FormDataConstants.StatusIDField] == dataStatus.ID
+                         select n);
+            }
+
+            var doc = query.FirstOrDefault();
+            if (doc == null)
+                return true;
+
+            return false;
         }
 
+        protected IEnumerable<GM_Form> GetCategoryForms(GM_Category item)
+        {
+            var forms = (from n in item.Forms
+                         where n.DateDeleted == null
+                         orderby n.OrderIndex, n.Name
+                         select n);
+
+            foreach (var form in forms)
+            {
+                if (!form.Visible.GetValueOrDefault())
+                    continue;
+
+                if (!UmUtil.Instance.CurrentUser.IsSuperAdmin && !string.IsNullOrWhiteSpace(form.VisibleExpression))
+                {
+                    var expNode = ExpressionParser.GetOrParse(form.VisibleExpression);
+                    var expGlobals = new ExpressionGlobalsUtil();
+
+                    Object eval;
+                    if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))
+                        continue;
+
+                    var result = DataConverter.ToNullableBoolean(eval);
+                    if (!result.GetValueOrDefault())
+                        continue;
+                }
+
+                yield return form;
+            }
+
+        }
 
         protected CategoriesFormsModel GetCategotiesForms(IEnumerable<GM_Category> source)
         {
@@ -229,7 +268,7 @@ namespace Gms.Portal.Web
                 if (item.Forms == null)
                     continue;
 
-                var forms = item.Forms.Where(n => n.DateDeleted == null);
+                var forms = GetCategoryForms(item);
 
                 var model = new CategoryFormModel
                 {

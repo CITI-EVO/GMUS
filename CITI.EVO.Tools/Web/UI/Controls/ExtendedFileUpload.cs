@@ -288,10 +288,10 @@ namespace CITI.EVO.Tools.Web.UI.Controls
 			else
 			{
 				var currentFileHash = CryptographyUtil.ComputeMD5(Bytes);
-				var fullFileName = String.Format("{0}_{1}", currentFileHash, correctFileName);
+				var fullFileName = $"{currentFileHash}_{correctFileName}";
 
 				var tempFolderVirtualPath = "~/Temp";
-				var tempFileVirtualName = String.Format("{0}/{1}", tempFolderVirtualPath, fullFileName);
+				var tempFileVirtualName = $"{tempFolderVirtualPath}/{fullFileName}";
 
 				var tempFolderPath = server.MapPath(tempFolderVirtualPath);
 				if (!Directory.Exists(tempFolderPath))

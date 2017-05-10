@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Gms.Portal.Web.Entities.FormStructure;
+using Gms.Portal.Web.Entities.Others;
 
 namespace Gms.Portal.Web.Models
 {
@@ -10,6 +13,10 @@ namespace Gms.Portal.Web.Models
         public Guid? ParentID { get; set; }
 
         public String Name { get; set; }
+
+        public String Alias { get; set; }
+
+        public bool? Unique { get; set; }
 
         public String ParentType { get; set; }
 
@@ -23,11 +30,17 @@ namespace Gms.Portal.Web.Models
 
         public int? GroupSize { get; set; }
 
+        public String GroupBgColor { get; set; }
+
+        public String GroupTextColor { get; set; }
+
+        public String TextColor { get; set; }
+
         public String Mask { get; set; }
 
         public bool? Visible { get; set; }
 
-        public bool? Enabled { get; set; }
+        public bool? ReadOnly { get; set; }
 
         public bool? Mandatory { get; set; }
 
@@ -37,15 +50,19 @@ namespace Gms.Portal.Web.Models
 
         public int? ControlSize { get; set; }
 
+        public String GridFieldSummary { get; set; }
+
         public String Description { get; set; }
 
-        public bool? DisplayOnGrid { get; set; }
+        public String DisplayOnGrid { get; set; }
+
+        public bool? DisplayOnFilter { get; set; }
 
         public String ValidationExp { get; set; }
 
         public String ErrorMessage { get; set; }
 
-        public Guid? DataSourceID { get; set; }
+        public String DataSourceID { get; set; }
 
         public String DataSourceFilterExp { get; set; }
 
@@ -57,10 +74,22 @@ namespace Gms.Portal.Web.Models
 
         public Guid? DependentFieldID { get; set; }
 
+        public bool? FilterByUser { get; set; }
+
+        public bool? FirstTimeFill { get; set; }
+
+        public bool? RequiresApproval { get; set; }
+
+        public bool? NotPrintable { get; set; }
+
         public String DependentExp { get; set; }
 
         public String DependentFillExp { get; set; }
 
         public String Tag { get; set; }
+
+        public String FieldValueExpression { get; set; }
+
+        public List<ParameterEntity> Parameters { get; set; }
     }
 }

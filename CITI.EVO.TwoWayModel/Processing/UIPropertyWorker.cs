@@ -144,13 +144,13 @@ namespace CITI.EVO.TwoWayModel.Processing
         {
             if (modelProperty == null)
             {
-                var message = String.Format("Unable to find property '{0}' of model '{1}'", entity.ClassProperty, modelType.Name);
+                var message = $"Unable to find property '{entity.ClassProperty}' of model '{modelType.Name}'";
                 throw new Exception(message);
             }
 
             if (controlProperty == null)
             {
-                var message = String.Format("Unable to find property '{0}' of control '{1}'", entity.ControlProperty, controlType.Name);
+                var message = $"Unable to find property '{entity.ControlProperty}' of control '{controlType.Name}'";
                 throw new Exception(message);
             }
         }
@@ -174,7 +174,7 @@ namespace CITI.EVO.TwoWayModel.Processing
                 if (defaultIfNull)
                     return Activator.CreateInstance(type);
 
-                var nullValueErrorText = String.Format("Null is not assignable to type [{0}]", type);
+                var nullValueErrorText = $"Null is not assignable to type [{type}]";
                 throw new Exception(nullValueErrorText);
             }
 
@@ -203,7 +203,7 @@ namespace CITI.EVO.TwoWayModel.Processing
             if (converter.CanConvertTo(destinationType))
                 return converter.ConvertTo(value, destinationType);
 
-            var unableConvertErrorText = String.Format("Unable to convert value [{0} - {1}] to type [{2}]", value, value.GetType(), type);
+            var unableConvertErrorText = $"Unable to convert value [{value} - {value.GetType()}] to type [{type}]";
             throw new Exception(unableConvertErrorText);
         }
 

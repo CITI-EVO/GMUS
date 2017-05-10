@@ -82,25 +82,49 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\3rdparty\Web\QuickLZ.dll</HintPath>
     </Reference>
+    <Reference Include="Select.HtmlToPdf">
+      <HintPath>..\Dependencies\3rdparty\Web\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\CommonCacheStore.cs" />
     <Compile Include="Cache\CommonObjectCache.cs" />
+    <Compile Include="Cache\DefaultObjectCache.cs" />
+    <Compile Include="Cache\HttpCacheObjectCache.cs" />
+    <Compile Include="Cache\ICommonObjectCache.cs" />
+    <Compile Include="Cache\MemoryObjectCache.cs" />
+    <Compile Include="Cache\CommonCacheBase.cs" />
+    <Compile Include="Cache\RequestObjectCache.cs" />
+    <Compile Include="Cache\SessionObjectCache.cs" />
     <Compile Include="Collections\BTeeSet.cs" />
+    <Compile Include="Collections\Lookup.cs" />
     <Compile Include="Collections\HashLookup.cs" />
+    <Compile Include="Comparers\DictionaryComparer.cs" />
+    <Compile Include="Enums\SortOrder.cs" />
+    <Compile Include="eXecutableXML\XMLBreak.cs" />
+    <Compile Include="eXecutableXML\XMLContext.cs" />
+    <Compile Include="eXecutableXML\XMLEngine.cs" />
+    <Compile Include="eXecutableXML\XMLResult.cs" />
+    <Compile Include="eXecutableXML\XMLReturn.cs" />
     <Compile Include="Extensions\Hb8Extensions.cs" />
+    <Compile Include="Helpers\BigFloat.cs" />
     <Compile Include="Helpers\Hibern8\DataTableTransformer.cs" />
     <Compile Include="Helpers\Hibern8\DataTableTransformerMode.cs" />
     <Compile Include="Helpers\Hibern8\DictionaryTransformer.cs" />
@@ -193,6 +217,7 @@
     <Compile Include="Utils\Hb8Util.cs" />
     <Compile Include="Utils\HttpServerUtil.cs" />
     <Compile Include="Utils\MimeTypeUtil.cs" />
+    <Compile Include="Utils\PdfUtil.cs" />
     <Compile Include="Utils\TranslationUtil.cs" />
     <Compile Include="Utils\LanguageUtil.cs" />
     <Compile Include="Utils\CollectionUtil.cs" />
@@ -214,8 +239,18 @@
     <Compile Include="Web\Bases\PageBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Web\Handlers\CssMinimizerHandler.cs" />
     <Compile Include="Web\Handlers\ScriptCompressorHandler.cs" />
     <Compile Include="Web\Modules\ScriptCompressorModule.cs" />
+    <Compile Include="Web\Services\DynamicProxyLoaderOptions.cs" />
+    <Compile Include="Web\Services\DynamicErrorMessages.cs" />
+    <Compile Include="Web\Services\DynamicObject.cs" />
+    <Compile Include="Web\Services\DynamicProxy.cs" />
+    <Compile Include="Web\Services\DynamicProxyCodeModifier.cs" />
+    <Compile Include="Web\Services\DynamicProxyException.cs" />
+    <Compile Include="Web\Services\DynamicProxyFactory.cs" />
+    <Compile Include="Web\Services\DynamicProxyLoader.cs" />
+    <Compile Include="Web\Services\IServiceAssemblyLoader.cs" />
     <Compile Include="Web\UI\Configs\ImageLinkButton\ImageLinkButtonSection.cs" />
     <Compile Include="Web\UI\Configs\ImageLinkButton\ImageUrlElement.cs" />
     <Compile Include="Web\UI\Configs\ImageLinkButton\ImageUrlElementCollection.cs" />
@@ -232,7 +267,8 @@
     <Compile Include="Web\UI\Controls\DropDownList.cs" />
     <Compile Include="Web\UI\Controls\ExtendedFileUpload.cs" />
     <Compile Include="Web\UI\Controls\ExtendedImageUpload.cs" />
-    <Compile Include="Web\UI\Controls\GridViewFieldTemplate.cs" />
+    <Compile Include="Web\UI\Controls\GridViewBoundFieldEx.cs" />
+    <Compile Include="Web\UI\Controls\DefaultFieldTemplate.cs" />
     <Compile Include="Web\UI\Controls\GridView.cs" />
     <Compile Include="Web\UI\Controls\GridViewDataColumn.cs" />
     <Compile Include="Web\UI\Common\ICommand.cs" />

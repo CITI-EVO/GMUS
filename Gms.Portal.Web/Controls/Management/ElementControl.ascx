@@ -13,34 +13,16 @@
             </ce:DropDownList>
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlVisible" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Visible</ce:Label>
-        <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="tbxVisible" Property="{ElementModel.Visible=Checked}"></asp:CheckBox>
-        </div>
-    </asp:Panel>
     <asp:Panel runat="server" ID="pnlName" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Name</ce:Label>
         <div class="col-lg-6">
             <asp:TextBox runat="server" ID="tbxName" CssClass="form-control" Property="{ElementModel.Name=Text}"></asp:TextBox>
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlOrderIndex" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-lg-6 font-normal">Order Index</ce:Label>
+    <asp:Panel runat="server" ID="pnlAlias" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Alias</ce:Label>
         <div class="col-lg-6">
-            <asp:TextBox runat="server" ID="seOrderIndex" Property="{ElementModel.OrderIndex=Text}" CssClass="intSpinEdit" />
-        </div>
-    </asp:Panel>
-    <asp:Panel runat="server" ID="pnlMandatory" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Mandatory</ce:Label>
-        <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="chkMandatory" Property="{ElementModel.Mandatory=Checked}" />
-        </div>
-    </asp:Panel>
-    <asp:Panel runat="server" ID="pnlPrivacy" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Privacy</ce:Label>
-        <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="chkPrivacy" Property="{ElementModel.Privacy=Checked}" />
+            <asp:TextBox runat="server" ID="tbxAlias" CssClass="form-control" Property="{ElementModel.Alias=Text}"></asp:TextBox>
         </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlDescription" CssClass="form-group">
@@ -49,10 +31,28 @@
             <asp:TextBox runat="server" ID="tbxDescription" CssClass="form-control" Property="{ElementModel.Description=Text}" />
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlGroupAlign" CssClass="form-group">
+    <asp:Panel runat="server" ID="pnlOrderIndex" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-lg-6 font-normal">Order Index</ce:Label>
+        <div class="col-lg-6">
+            <asp:TextBox runat="server" ID="seOrderIndex" Property="{ElementModel.OrderIndex=Text}" CssClass="intSpinEdit" />
+        </div>
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlGroupSize" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Group Size</ce:Label>
         <div class="col-lg-6">
             <asp:TextBox runat="server" ID="tbxGroupSize" Property="{ElementModel.GroupSize=Text}" CssClass="elementSizeSpinEdit" />
+        </div>
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlGroupBgColor" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Background Color</ce:Label>
+        <div class="col-lg-6">
+            <asp:TextBox runat="server" ID="tbxGroupBgColor" Property="{ElementModel.GroupBgColor=Text}" CssClass="form-control colorpicker colorpicker-element" />
+        </div>
+    </asp:Panel>
+    <asp:Panel runat="server" ID="pnlGroupTextColor" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Title Color</ce:Label>
+        <div class="col-lg-6">
+            <asp:TextBox runat="server" ID="tbxGroupTextColor" Property="{ElementModel.GroupTextColor=Text}" CssClass="form-control colorpicker colorpicker-element" />
         </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlType" CssClass="form-group">
@@ -63,11 +63,14 @@
                     <asp:ListItem Text="Select an Option" Value="" />
                     <asp:ListItem Text="TextBox" Value="TextBox" />
                     <asp:ListItem Text="TextArea" Value="TextArea" />
+                    <asp:ListItem Text="Lookup" Value="Lookup" />
+                    <asp:ListItem Text="Label" Value="Label" />
                     <asp:ListItem Text="Date" Value="Date" />
                     <asp:ListItem Text="Time" Value="Time" />
                     <asp:ListItem Text="Number" Value="Number" />
                     <asp:ListItem Text="CheckBox" Value="CheckBox" />
                     <asp:ListItem Text="ComboBox" Value="ComboBox" />
+                    <asp:ListItem Text="CheckBoxList" Value="CheckBoxList" />
                     <asp:ListItem Text="RagioButton" Value="RagioButton" />
                     <asp:ListItem Text="FileUpload" Value="FileUpload" />
                 </Items>
@@ -80,36 +83,71 @@
             <asp:TextBox runat="server" ID="tbxCaptionSize" Property="{ElementModel.CaptionSize=Text}" CssClass="elementSizeSpinEdit" />
         </div>
     </asp:Panel>
-</div>
-<div class="col-lg-6">
     <asp:Panel runat="server" ID="pnlControlSize" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Control size</ce:Label>
         <div class="col-lg-6">
             <asp:TextBox runat="server" ID="tbxControlSize" Property="{ElementModel.ControlSize=Text}" CssClass="elementSizeSpinEdit" />
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlInversion" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Inversion</ce:Label>
+    <asp:Panel runat="server" ID="pnlFieldValueExpression" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Field Value Expression</ce:Label>
         <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="chkInversion" Property="{ElementModel.Inversion=Checked}"></asp:CheckBox>
+            <asp:TextBox runat="server" ID="tbxFieldValueExpression" Property="{ElementModel.FieldValueExpression=Text}" CssClass="form-control" />
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlMask" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Mask</ce:Label>
+    <asp:Panel runat="server" ID="pnlGridFieldSummary" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Grid Field Summary</ce:Label>
         <div class="col-lg-6">
-            <asp:TextBox runat="server" ID="tbxMask" CssClass="form-control" Property="{ElementModel.Mask=Text}"></asp:TextBox>
+            <ce:DropDownList runat="server" ID="cbxGridFieldSummary" AppendDataBoundItems="True" Property="{ElementModel.GridFieldSummary=SelectedValue}" CssClass="chosen-select">
+                <Items>
+                    <asp:ListItem Text="Select an Option" Value="" />
+                    <asp:ListItem Text="Sum" Value="Sum" />
+                    <asp:ListItem Text="Avg" Value="Avg" />
+                    <asp:ListItem Text="Max" Value="Max" />
+                    <asp:ListItem Text="Min" Value="Min" />
+                </Items>
+            </ce:DropDownList>
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlEnabled" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Enabled</ce:Label>
+    <asp:Panel runat="server" ID="pnlProperties" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Properties</ce:Label>
         <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="chkEnabled" Property="{ElementModel.Enabled=Checked}"></asp:CheckBox>
+            <ce:ListBox runat="server" ID="lstProperties" SelectionMode="Multiple" AppendDataBoundItems="True" CssClass="chosen-select">
+                <Items>
+                    <asp:ListItem Text="Unique" Value="Unique" />
+                    <asp:ListItem Text="Privacy" Value="Privacy" />
+                    <asp:ListItem Text="Visible" Value="Visible" />
+                    <asp:ListItem Text="ReadOnly" Value="ReadOnly" />
+                    <asp:ListItem Text="Mandatory" Value="Mandatory" />
+                    <asp:ListItem Text="Inversion" Value="Inversion" />
+                    <asp:ListItem Text="FilterByUser" Value="FilterByUser" />
+                    <asp:ListItem Text="NotPrintable" Value="NotPrintable" />
+                    <asp:ListItem Text="FirstTimeFill" Value="FirstTimeFill" />
+                    <asp:ListItem Text="DisplayOnFilter" Value="DisplayOnFilter" />
+                    <asp:ListItem Text="RequiresApproval" Value="RequiresApproval" />
+                </Items>
+            </ce:ListBox>
         </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlDisplayOnGrid" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Display On Grid</ce:Label>
         <div class="col-lg-6">
-            <asp:CheckBox runat="server" ID="chkDisplayOnGrid" Property="{ElementModel.DisplayOnGrid=Checked}"></asp:CheckBox>
+            <ce:DropDownList runat="server" ID="cbxDisplayOnGrid" AppendDataBoundItems="True" Property="{ElementModel.DisplayOnGrid=SelectedValue}" CssClass="chosen-select">
+                <Items>
+                    <asp:ListItem Text="Select an Option" Value="" />
+                    <asp:ListItem Text="None" Value="None" />
+                    <asp:ListItem Text="Always" Value="Always" />
+                    <asp:ListItem Text="Conditional" Value="Conditional" />
+                </Items>
+            </ce:DropDownList>
+        </div>
+    </asp:Panel>
+</div>
+<div class="col-lg-6">
+    <asp:Panel runat="server" ID="pnlMask" CssClass="form-group">
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Mask</ce:Label>
+        <div class="col-lg-6">
+            <asp:TextBox runat="server" ID="tbxMask" CssClass="form-control" Property="{ElementModel.Mask=Text}"></asp:TextBox>
         </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlValidationExp" CssClass="form-group">
@@ -133,7 +171,7 @@
     <asp:Panel runat="server" ID="pnlDataSource" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Data Source</ce:Label>
         <div class="col-lg-6">
-            <ce:DropDownList runat="server" ID="cbxDataSource" AppendDataBoundItems="True" DataTextField="Name" DataValueField="ID" Property="{ElementModel.DataSourceID=SelectedValue}" CssClass="chosen-select" AutoPostBack="True" OnSelectedIndexChanged="comboBox_OnSelectedIndexChanged">
+            <ce:DropDownList runat="server" ID="cbxDataSource" AppendDataBoundItems="True" DataTextField="Key" DataValueField="Value" Property="{ElementModel.DataSourceID=SelectedValue}" CssClass="chosen-select" AutoPostBack="True" OnSelectedIndexChanged="comboBox_OnSelectedIndexChanged">
             </ce:DropDownList>
         </div>
     </asp:Panel>
@@ -144,7 +182,7 @@
         </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlDataSourceSortExp" CssClass="form-group">
-        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Filter Expression</ce:Label>
+        <ce:Label runat="server" CssClass="col-sm-6 font-normal">Sort Fields</ce:Label>
         <div class="col-lg-6">
             <asp:TextBox runat="server" ID="tbxDataSourceSortExp" CssClass="form-control" Property="{ElementModel.DataSourceSortExp=Text}"></asp:TextBox>
         </div>
@@ -174,11 +212,54 @@
             <asp:TextBox runat="server" ID="tbxDependentExp" CssClass="form-control" Property="{ElementModel.DependentExp=Text}"></asp:TextBox>
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlDependentFillExp" CssClass="form-group" Visible="False">
+    <asp:Panel runat="server" ID="pnlDependentFillExp" CssClass="form-group">
         <ce:Label runat="server" CssClass="col-sm-6 font-normal">Dependent Fill Expression</ce:Label>
         <div class="col-lg-6">
             <asp:TextBox runat="server" ID="tbxDependentFillExp" CssClass="form-control" Property="{ElementModel.DependentFillExp=Text}"></asp:TextBox>
         </div>
     </asp:Panel>
 </div>
+<asp:Panel runat="server" ID="pnlServiceParameters" Visible="False" CssClass="form-group">
+    <div class="col-lg-12">
+        <div class="col-lg-4">
+            <ce:DropDownList runat="server" ID="cbxParameters" DataTextField="Name" DataValueField="Name" AppendDataBoundItems="True" CssClass="chosen-select">
+            </ce:DropDownList>
+        </div>
+        <div class="col-lg-6">
+            <asp:TextBox runat="server" ID="tbxParameterExp" CssClass="form-control"></asp:TextBox>
+        </div>
+        <div class="col-lg-2">
+            <ce:LinkButton runat="server" ID="btnSaveParam" ToolTip="Save" OnClick="btnSaveParam_OnClick" CssClass="btn btn-primary fa fa-plus" />
+        </div>
+        <div class="col-lg-12">
+            <ce:GridView runat="server" ID="gvParameters" UseAccessibleHeader="True" TableSectionHeader="True" TableSectionFooter="True" ShowHeaderWhenEmpty="True" AutoGenerateColumns="False" EnableViewState="False"
+                CssClass="table table-bordered" data-page-size="8">
+                <Columns>
+                    <asp:TemplateField>
+                        <ItemTemplate>
+                            <ce:LinkButton runat="server" ID="btnDeleteParam" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDeleteParam_OnCommand" CssClass="btn btn-danger btn-sm fa fa-trash-o" OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField>
+                        <HeaderTemplate>
+                            <ce:Label runat="server" Text="Name" />
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" Text='<%# Eval("Name") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField>
+                        <HeaderTemplate>
+                            <ce:Label runat="server" Text="Expression" />
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" Text='<%# Eval("Expression") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </ce:GridView>
+        </div>
+    </div>
+</asp:Panel>
+
 

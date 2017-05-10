@@ -99,11 +99,20 @@ namespace Gms.Portal.Web.Controls.Management
             {
                 var entity = (GroupEntity)childControl;
                 entity.Size = model.GroupSize.GetValueOrDefault(12);
+                entity.BgColor = model.GroupBgColor;
+                entity.TextColor = model.GroupTextColor;
             }
 
             if (model.ElementType == "Grid")
             {
                 var entity = (GridEntity)childControl;
+                entity.ValidationExp = model.ValidationExp;
+                entity.ErrorMessage = model.ErrorMessage;
+            }
+
+            if (model.ElementType == "Tree")
+            {
+                var entity = (TreeEntity)childControl;
                 entity.ValidationExp = model.ValidationExp;
                 entity.ErrorMessage = model.ErrorMessage;
             }
@@ -115,30 +124,43 @@ namespace Gms.Portal.Web.Controls.Management
                 entity.Tag = model.Tag;
                 entity.Type = model.ControlType;
                 entity.Mask = model.Mask;
-                entity.Enabled = model.Enabled;
+                entity.Unique = model.Unique;
                 entity.Privacy = model.Privacy;
+                entity.ReadOnly = model.ReadOnly;
                 entity.Inversion = model.Inversion;
                 entity.Mandatory = model.Mandatory;
+                entity.Parameters = model.Parameters;
                 entity.Description = model.Description;
                 entity.CaptionSize = model.CaptionSize;
                 entity.ControlSize = model.ControlSize;
                 entity.ErrorMessage = model.ErrorMessage;
+                entity.FilterByUser = model.FilterByUser;
                 entity.DependentExp = model.DependentExp;
                 entity.DataSourceID = model.DataSourceID;
                 entity.ValidationExp = model.ValidationExp;
                 entity.DisplayOnGrid = model.DisplayOnGrid;
                 entity.TextExpression = model.TextExpression;
+                entity.DisplayOnFilter = model.DisplayOnFilter;
                 entity.ValueExpression = model.ValueExpression;
+                entity.RequiresApproval = model.RequiresApproval;
+                entity.DependentFillExp = model.DependentFillExp;
+                entity.GridFieldSummary = model.GridFieldSummary;
                 entity.DependentFieldID = model.DependentFieldID;
                 entity.DataSourceSortExp = model.DataSourceSortExp;
                 entity.DataSourceFilterExp = model.DataSourceFilterExp;
+                entity.FieldValueExpression = model.FieldValueExpression;
             }
 
             childControl.Name = model.Name;
+            childControl.Alias = model.Alias;
             childControl.Visible = model.Visible.GetValueOrDefault();
             childControl.OrderIndex = model.OrderIndex.GetValueOrDefault();
             childControl.DependentExp = model.DependentExp;
+            childControl.NotPrintable = childControl.NotPrintable;
+            childControl.FirstTimeFill = model.FirstTimeFill.GetValueOrDefault();
             childControl.DependentFieldID = model.DependentFieldID;
+
+            mpeElement.Hide();
         }
 
         protected void elementsControl_OnNew(object sender, GenericEventArgs<Guid> e)
@@ -151,7 +173,7 @@ namespace Gms.Portal.Web.Controls.Management
             if (parentChildNodes == null)
                 return;
 
-            var child = parentChildNodes[1];
+            var child = parentChildNodes.Child;
 
             var orderIndex = (from n in elementsControl.Model.List
                               where n.ParentID == child.ID
@@ -171,6 +193,120 @@ namespace Gms.Portal.Web.Controls.Management
             mpeElement.Show();
         }
 
+        protected void elementsControl_Copy(object sender, GenericEventArgs<Guid> e)
+        {
+            var tree = FormStructureUtil.CreateTree(FormEntity);
+
+            var collection = FormStructureUtil.PreOrderTraversal(FormEntity);
+            var dictionary = collection.ToDictionary(n => n.ID);
+
+            var sourceControl = tree.FirstOrDefault(n => n.ID == e.Value);
+
+            var childControl = dictionary.GetValueOrDefault(e.Value) as ControlEntity;
+            var xmlData = XmlUtil.Serialize(childControl);
+
+            var newControl = XmlUtil.Deserialize<ControlEntity>(xmlData);
+            newControl.Name = $"{childControl.Name} - Copy {DateTime.Now:dd.MM.yyyy HH:mm:ss}";
+            newControl.OrderIndex = childControl.OrderIndex + 10;
+
+            if (newControl is ContentEntity)
+            {
+                var controls = FormStructureUtil.PreOrderTraversal(newControl);
+                foreach (var control in controls)
+                    control.ID = Guid.NewGuid();
+            }
+            else
+            {
+                newControl.ID = Guid.NewGuid();
+            }
+            var parentControl = (ContentEntity)FormEntity;
+            if (sourceControl.ParentID != null)
+                parentControl = (ContentEntity)dictionary.GetValueOrDefault(sourceControl.ParentID.GetValueOrDefault());
+
+            parentControl.Controls = (parentControl.Controls ?? new List<ControlEntity>());
+            parentControl.Controls.Add(newControl);
+        }
+
+        protected void elementsControl_Paste(object sender, GenericEventArgs<Guid> e)
+        {
+            var model = new ElementPasteModel();
+            model.DestinationId = e.Value;
+            var forms = (from n in HbSession.Query<GM_Form>()
+                         where n.DateDeleted == null
+                         orderby n.OrderIndex
+                         select n).ToList();
+
+            model.Forms = forms;
+            elementPasteControl.Model = model;
+            mpeElementPaste.Show();
+        }
+        protected void elementPasteControl_OnDataChanged(object sender, EventArgs e)
+        {
+            var model = elementPasteControl.Model;
+            model.FormTree = GetPossibleMovingElements(model.FormId).ToList();
+            elementPasteControl.Model = model;
+
+            mpeElementPaste.Show();
+        }
+        protected void btnElementPasteOK_Click(object sender, EventArgs e)
+        {
+            var model = elementPasteControl.Model;
+
+            var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == model.FormId);
+            if (entity == null)
+                return;
+
+            if (model.ElementId == null)
+                return;
+
+            if (model.DestinationId == null)
+                return;
+
+            var elementId = model.ElementId.Value;
+            var destinationId = model.DestinationId.Value;
+
+            var converter = new FormEntityModelConverter(HbSession);
+            var formModel = converter.Convert(entity);
+
+            var sourceCollection = FormStructureUtil.PreOrderTraversal(formModel.Entity).ToList();
+            var sourceDictionary = sourceCollection.ToDictionary(n => n.ID);
+
+            var destinationCollection = FormStructureUtil.PreOrderTraversal(FormEntity).ToList();
+            var destinationDictionary = destinationCollection.ToDictionary(n => n.ID);
+
+            var childControl = sourceDictionary.GetValueOrDefault(elementId) as ControlEntity;
+            var xmlData = XmlUtil.Serialize(childControl);
+
+            var newControl = XmlUtil.Deserialize<ControlEntity>(xmlData);
+            newControl.Name = $"{childControl.Name} - Copy {DateTime.Now:dd.MM.yyyy HH:mm:ss}";
+
+            if (newControl is ContentEntity)
+            {
+                var controls = FormStructureUtil.PreOrderTraversal(newControl);
+                foreach (var control in controls)
+                    control.ID = Guid.NewGuid();
+            }
+            else
+            {
+                newControl.ID = Guid.NewGuid();
+            }
+
+            var parentControl = (ContentEntity)destinationDictionary.GetValueOrDefault(destinationId);
+
+            var result = CanMoveElement(parentControl, newControl);
+            if (result)
+            {
+                parentControl.Controls = (parentControl.Controls ?? new List<ControlEntity>());
+                parentControl.Controls.Add(newControl);
+            }
+
+            mpeElementMove.Hide();
+        }
+        protected void btnElementPasteCancel_Click(object sender, EventArgs e)
+        {
+            mpeElementPaste.Hide();
+        }
+
         protected void elementsControl_OnMove(object sender, GenericEventArgs<Guid> e)
         {
             var formTree = GetPossibleMovingElements(FormEntity).ToList();
@@ -184,7 +320,6 @@ namespace Gms.Portal.Web.Controls.Management
             elementMoveControl.Model = model;
             mpeElementMove.Show();
         }
-
         protected void btnElementMoveOK_OnClick(object sender, EventArgs e)
         {
             var model = elementMoveControl.Model;
@@ -207,11 +342,17 @@ namespace Gms.Portal.Web.Controls.Management
             var result = CanMoveElement(destinationControl, child);
             if (result)
             {
+                destinationControl.Controls = destinationControl.Controls ?? new List<ControlEntity>();
                 destinationControl.Controls.Add(child);
                 oldParent.Controls.RemoveAll(n => n.ID == child.ID);
             }
-        }
 
+            mpeElementMove.Hide();
+        }
+        protected void btnElementMoveCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeElementMove.Hide();
+        }
         private bool CanMoveElement(ContentEntity parent, ControlEntity child)
         {
             if (child is TabPageEntity)
@@ -220,13 +361,16 @@ namespace Gms.Portal.Web.Controls.Management
                     return false;
             }
 
-            if (parent is TabContainerEntity && child is TabContainerEntity)
+            if (parent is TabContainerEntity && !(child is TabPageEntity))
                 return false;
-
 
             return true;
         }
 
+        protected void btElementCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeElement.Hide();
+        }
         protected void elementsControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
             var entity = FormEntity;
@@ -237,22 +381,25 @@ namespace Gms.Portal.Web.Controls.Management
             if (parentChildNodes == null)
                 return;
 
-            var parentNode = parentChildNodes[0];
-            var childNode = parentChildNodes[1];
+            var parentNode = parentChildNodes.Parent;
+            var childNode = parentChildNodes.Child;
 
             var parentChildControls = GetParentChildControl(e.Value, childNode);
 
-            var parentControl = parentChildControls[0];
-            var childControl = parentChildControls[1];
+            var parentControl = parentChildControls.Parent;
+            var childControl = parentChildControls.Child;
 
             var model = new ElementModel
             {
                 ID = childNode.ID,
                 Name = childNode.Name,
-                Visible = childNode.Visible,
-                OrderIndex = childNode.OrderIndex,
+                Alias = childControl.Alias,
+                Visible = childControl.Visible,
+                OrderIndex = childControl.OrderIndex,
                 ElementType = childNode.ElementType,
+                NotPrintable = childControl.NotPrintable,
                 DependentExp = childControl.DependentExp,
+                FirstTimeFill = childControl.FirstTimeFill,
                 DependentFieldID = childControl.DependentFieldID,
             };
 
@@ -274,11 +421,23 @@ namespace Gms.Portal.Web.Controls.Management
                     return;
 
                 model.GroupSize = groupEntity.Size;
+                model.GroupBgColor = groupEntity.BgColor;
+                model.GroupTextColor = groupEntity.TextColor;
             }
 
             if (childNode.ElementType == "Grid")
             {
                 var groupEntity = childControl as GridEntity;
+                if (groupEntity == null)
+                    return;
+
+                model.ValidationExp = groupEntity.ValidationExp;
+                model.ErrorMessage = groupEntity.ErrorMessage;
+            }
+
+            if (childNode.ElementType == "Tree")
+            {
+                var groupEntity = childControl as TreeEntity;
                 if (groupEntity == null)
                     return;
 
@@ -294,23 +453,30 @@ namespace Gms.Portal.Web.Controls.Management
 
                 model.Tag = fieldEntity.Tag;
                 model.Mask = fieldEntity.Mask;
-                model.Enabled = fieldEntity.Enabled;
+                model.Unique = fieldEntity.Unique;
+                model.ReadOnly = fieldEntity.ReadOnly.GetValueOrDefault();
                 model.Privacy = fieldEntity.Privacy.GetValueOrDefault();
                 model.Mandatory = fieldEntity.Mandatory.GetValueOrDefault();
                 model.Inversion = fieldEntity.Inversion.GetValueOrDefault();
+                model.Parameters = fieldEntity.Parameters;
                 model.CaptionSize = fieldEntity.CaptionSize;
                 model.ControlSize = fieldEntity.ControlSize;
                 model.ControlType = fieldEntity.Type;
                 model.Description = fieldEntity.Description;
+                model.FilterByUser = fieldEntity.FilterByUser;
                 model.ErrorMessage = fieldEntity.ErrorMessage;
                 model.DataSourceID = fieldEntity.DataSourceID;
                 model.ValidationExp = fieldEntity.ValidationExp;
                 model.DisplayOnGrid = fieldEntity.DisplayOnGrid;
+                model.DisplayOnFilter = fieldEntity.DisplayOnFilter;
                 model.TextExpression = fieldEntity.TextExpression;
                 model.ValueExpression = fieldEntity.ValueExpression;
                 model.DependentFillExp = fieldEntity.DependentFillExp;
+                model.RequiresApproval = fieldEntity.RequiresApproval;
+                model.GridFieldSummary = fieldEntity.GridFieldSummary;
                 model.DataSourceSortExp = fieldEntity.DataSourceSortExp;
                 model.DataSourceFilterExp = fieldEntity.DataSourceFilterExp;
+                model.FieldValueExpression = fieldEntity.FieldValueExpression;
             }
 
             elementControl.FillDependentFields(entity);
@@ -318,7 +484,6 @@ namespace Gms.Portal.Web.Controls.Management
 
             mpeElement.Show();
         }
-
         protected void elementsControl_OnDelete(object sender, GenericEventArgs<Guid> e)
         {
             var entity = FormEntity;
@@ -329,7 +494,7 @@ namespace Gms.Portal.Web.Controls.Management
             if (parentChildNodes == null)
                 return;
 
-            var child = parentChildNodes[1];
+            var child = parentChildNodes.Child;
 
             var items = FormStructureUtil.PreOrderTraversal(FormEntity);
 
@@ -350,7 +515,6 @@ namespace Gms.Portal.Web.Controls.Management
             if (!parentControl.Controls.Remove(childControl))
                 return;
         }
-
         protected void elementControl_OnDataChanged(object sender, EventArgs e)
         {
             mpeElement.Show();
@@ -366,6 +530,7 @@ namespace Gms.Portal.Web.Controls.Management
             {
                 entity.Name = model.Name;
                 entity.Visible = model.Visible.GetValueOrDefault();
+                entity.VisibleExpression = model.VisibleExpression;
                 entity.OrderIndex = model.OrderIndex.GetValueOrDefault();
             }
 
@@ -407,6 +572,14 @@ namespace Gms.Portal.Web.Controls.Management
             if (elementType == "Grid")
             {
                 return new GridEntity
+                {
+                    ID = Guid.NewGuid(),
+                };
+            }
+
+            if (elementType == "Tree")
+            {
+                return new TreeEntity
                 {
                     ID = Guid.NewGuid(),
                 };
@@ -460,21 +633,52 @@ namespace Gms.Portal.Web.Controls.Management
             return collection;
         }
 
-        protected ElementTreeNodeEntity[] GetParentChildNode(Guid? itemID, ElementNodesModel model)
+        private IEnumerable<ListItem> GetPossibleMovingElements(Guid? formId)
         {
-            var list = model.List;
-            if (list == null)
-                return null;
+            var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formId);
+            if (entity != null)
+            {
+                var converter = new FormEntityModelConverter(HbSession);
+                var model = converter.Convert(entity);
+                return GetPossibleMovingElements(model.Entity);
+            }
+            return Enumerable.Empty<ListItem>();
+        }
+        private IEnumerable<ListItem> GetPossibleMovingElements(ControlEntity control)
+        {
+            return GetPossibleMovingElements(control, 0);
+        }
+        private IEnumerable<ListItem> GetPossibleMovingElements(ControlEntity control, int level)
+        {
+            if (!(control is FieldEntity))
+            {
+                var name = string.Empty;
+                name += new string('-', level);
+                name = $"{name} {control.Name}";
+                yield return new ListItem(name, DataConverter.ToString(control.ID));
+            }
 
-            var child = list.FirstOrDefault(n => n.ID == itemID);
-            if (child == null)
-                return null;
-
-            var parent = list.FirstOrDefault(n => n.ID == child.ParentID);
-            return new[] { parent, child };
+            if (control is ContentEntity)
+            {
+                ++level;
+                var content = control as ContentEntity;
+                if (content.Controls != null)
+                {
+                    foreach (var item in content.Controls)
+                    {
+                        foreach (var listItem in GetPossibleMovingElements(item, level))
+                        {
+                            yield return listItem;
+                        }
+                    }
+                }
+            }
         }
 
-        protected ControlEntity[] GetParentChildControl(Guid? itemID, ElementTreeNodeEntity node)
+
+
+
+        protected ParentChildEntity<ControlEntity> GetParentChildControl(Guid? itemID, ElementTreeNodeEntity node)
         {
             if (FormEntity == null || node == null)
                 return null;
@@ -489,36 +693,28 @@ namespace Gms.Portal.Web.Controls.Management
             var child = parentChild.GetValueOrDefault(node.ID);
 
             if (node.ParentID == null)
-                return new[] { null, child };
+                return new ParentChildEntity<ControlEntity>(null, child);
 
             var parent = parentChild.GetValueOrDefault(node.ParentID);
 
-            return new[] { parent, child };
+            return new ParentChildEntity<ControlEntity>(parent, child);
         }
-
-        private IEnumerable<ListItem> GetPossibleMovingElements(ControlEntity control, int level = 0)
+        protected ParentChildEntity<ElementTreeNodeEntity> GetParentChildNode(Guid? itemID, ElementNodesModel model)
         {
-            if (!(control is FieldEntity))
-            {
-                var name = string.Empty;
-                name += new string('-', level);
-                name += control.Name;
-                yield return new ListItem(name, DataConverter.ToString(control.ID));
-            }
+            var list = model.List;
+            if (list == null)
+                return null;
 
-            if (control is ContentEntity)
-            {
-                ++level;
-                var content = control as ContentEntity;
-                foreach (var item in content.Controls)
-                {
-                    foreach (var listItem in GetPossibleMovingElements(item, level))
-                    {
-                        yield return listItem;
-                    }
-                }
-            }
+            var child = list.FirstOrDefault(n => n.ID == itemID);
+            if (child == null)
+                return null;
+
+            var parent = list.FirstOrDefault(n => n.ID == child.ParentID);
+            return new ParentChildEntity<ElementTreeNodeEntity>(parent, child);
         }
+
+
+
 
     }
 }

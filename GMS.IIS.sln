@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}"
 EndProject
@@ -123,14 +123,14 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Gms.Portal.Web", "http://lo
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.FixedNames = "true"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/Gms.Portal.Web"
 		Release.AspNetCompiler.PhysicalPath = "Gms.Portal.Web\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.FixedNames = "true"
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "Gms.Portal.Web\"
 	EndProjectSection

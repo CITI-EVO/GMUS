@@ -50,6 +50,13 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             HbSession.SubmitChanges(project);
 
             FillProjectsGrid();
+
+            mpeProject.Hide();
+        }
+
+        protected void btnCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeProject.Hide();
         }
 
         protected void btNewProject_Click(object sender, EventArgs e)
@@ -104,7 +111,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             //ucMessage.Update();
         }
 
-        private void ApplyPermissions()
+        protected void ApplyPermissions()
         {
             //if (!UmUtil.Instance.HasAccess("ProjectsList"))
             //{

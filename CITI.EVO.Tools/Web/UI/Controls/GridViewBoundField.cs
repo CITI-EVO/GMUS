@@ -1,9 +1,6 @@
 using System;
-using System.ComponentModel;
-using System.Data;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using CITI.EVO.Tools.Web.UI.Helpers;
 
 namespace CITI.EVO.Tools.Web.UI.Controls
 {
@@ -13,8 +10,8 @@ namespace CITI.EVO.Tools.Web.UI.Controls
 
         public override bool Initialize(bool sortingEnabled, Control control)
         {
-            HeaderTemplate = new GridViewFieldTemplate(GetHeaderControl);
-            ItemTemplate = new GridViewFieldTemplate(GetItemControl);
+            HeaderTemplate = new DefaultFieldTemplate(GetHeaderControl);
+            ItemTemplate = new DefaultFieldTemplate(GetItemControl);
 
             return base.Initialize(sortingEnabled, control);
         }

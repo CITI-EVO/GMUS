@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CommonDataWcf" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/MIS.Common.Svc.Enums" />
+      <xsd:import schemaLocation="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/MIS.Common.Svc.Contracts" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ICommonDataWcf_DoWork_InputMessage">
+    <wsdl:part name="parameters" element="tns:DoWork" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_DoWork_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DoWorkResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreas_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreas" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreas_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetChildAreas_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetChildAreas" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetChildAreas_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetChildAreasResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreaByID_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreaByID" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreaByID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreaByIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreaByCode_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreaByCode" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAreaByCode_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAreaByCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAllMobileIndexes_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllMobileIndexes" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetAllMobileIndexes_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllMobileIndexesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetMobileIndexByID_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMobileIndexByID" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetMobileIndexByID_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMobileIndexByIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetLanguages_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguages" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetLanguages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetTranslatedText_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslatedText" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_GetTranslatedText_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslatedTextResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_SetTranslatedText_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetTranslatedText" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_SetTranslatedText_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetTranslatedTextResponse" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_SendSmsm_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendSmsm" />
+  </wsdl:message>
+  <wsdl:message name="ICommonDataWcf_SendSmsm_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendSmsmResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ICommonDataWcf">
+    <wsdl:operation name="DoWork">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/DoWork" message="tns:ICommonDataWcf_DoWork_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/DoWorkResponse" message="tns:ICommonDataWcf_DoWork_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAreas">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreas" message="tns:ICommonDataWcf_GetAreas_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreasResponse" message="tns:ICommonDataWcf_GetAreas_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetChildAreas">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetChildAreas" message="tns:ICommonDataWcf_GetChildAreas_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetChildAreasResponse" message="tns:ICommonDataWcf_GetChildAreas_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAreaByID">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreaByID" message="tns:ICommonDataWcf_GetAreaByID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreaByIDResponse" message="tns:ICommonDataWcf_GetAreaByID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAreaByCode">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreaByCode" message="tns:ICommonDataWcf_GetAreaByCode_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAreaByCodeResponse" message="tns:ICommonDataWcf_GetAreaByCode_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMobileIndexes">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAllMobileIndexes" message="tns:ICommonDataWcf_GetAllMobileIndexes_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetAllMobileIndexesResponse" message="tns:ICommonDataWcf_GetAllMobileIndexes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMobileIndexByID">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetMobileIndexByID" message="tns:ICommonDataWcf_GetMobileIndexByID_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetMobileIndexByIDResponse" message="tns:ICommonDataWcf_GetMobileIndexByID_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguages">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetLanguages" message="tns:ICommonDataWcf_GetLanguages_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetLanguagesResponse" message="tns:ICommonDataWcf_GetLanguages_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTranslatedText">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/GetTranslatedText" message="tns:ICommonDataWcf_GetTranslatedText_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/GetTranslatedTextResponse" message="tns:ICommonDataWcf_GetTranslatedText_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetTranslatedText">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/SetTranslatedText" message="tns:ICommonDataWcf_SetTranslatedText_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/SetTranslatedTextResponse" message="tns:ICommonDataWcf_SetTranslatedText_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendSmsm">
+      <wsdl:input wsaw:Action="http://tempuri.org/ICommonDataWcf/SendSmsm" message="tns:ICommonDataWcf_SendSmsm_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ICommonDataWcf/SendSmsmResponse" message="tns:ICommonDataWcf_SendSmsm_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ICommonDataWcf" type="tns:ICommonDataWcf">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DoWork">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/DoWork" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAreas">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetAreas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildAreas">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetChildAreas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAreaByID">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetAreaByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAreaByCode">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetAreaByCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllMobileIndexes">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetAllMobileIndexes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMobileIndexByID">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetMobileIndexByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguages">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetLanguages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTranslatedText">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/GetTranslatedText" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetTranslatedText">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/SetTranslatedText" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendSmsm">
+      <soap:operation soapAction="http://tempuri.org/ICommonDataWcf/SendSmsm" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CommonDataWcf">
+    <wsdl:port name="BasicHttpBinding_ICommonDataWcf" binding="tns:BasicHttpBinding_ICommonDataWcf">
+      <soap:address location="http://212.72.135.243:5432/MIS/MIS.Common.Web/Services/CommonDataWcf.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

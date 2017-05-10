@@ -28,6 +28,8 @@
                 <ce:LinkButton runat="server" ID="btnEdit" ToolTip="Edit" Visible='<%# GetEditVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnEdit_OnCommand" CssClass="btn btn-info btn-xs fa fa-edit" />
                 <ce:LinkButton runat="server" ID="btnDelete" ToolTip="Delete" Visible='<%# GetDeleteVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnDelete_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash-o"  OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')" />
                 <ce:LinkButton runat="server" ID="btnMove" ToolTip="Move" Visible='<%# GetMoveVisible(Eval("ParentID")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnMove_OnCommand" CssClass="btn btn-info btn-xs fa fa-cut" />
+                <ce:LinkButton runat="server" ID="btnPaste" ToolTip="Paste" Visible='<%# GetPasteVisible(Eval("ParentID")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnPaste_Command" CssClass="btn btn-info btn-xs fa fa-paste" />
+                <ce:LinkButton runat="server" ID="btnCopy" ToolTip="Copy" Visible='<%# GetCopyVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnCopy_Command" CssClass="btn btn-info btn-xs fa fa-copy"  OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')" />
                 <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" Visible='<%# GetNewVisible(Eval("ElementType")) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnNew_OnCommand" CssClass="btn btn-info btn-xs fa fa-plus" />
             </DataCellTemplate>
         </dx:TreeListTextColumn>

@@ -17,8 +17,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 {
     public partial class PermissionList : BasePage
     {
-
-
         #region Properties
 
         protected String PermissionInfo { get; private set; }
@@ -37,79 +35,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             FillGroups();
             FillResources();
-        }
-
-        private void FillGroups()
-        {
-            var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value);
-            if (projectID == null)
-                return;
-
-            var query = from n in HbSession.Query<UM_Group>()
-                        where n.DateDeleted == null &&
-                              n.ProjectID == projectID
-                        select n;
-
-            var groups = from n in FullHierarchyTraversal(query)
-                         orderby n.Name
-                         select n;
-
-            tlGroups.DataSource = groups.ToHashSet();
-            tlGroups.DataBind();
-        }
-
-        protected void FillResources()
-        {
-            var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value);
-            if (projectID == null)
-                return;
-
-            var resources = (from n in HbSession.Query<UM_Resource>()
-                             where n.DateDeleted == null && n.ProjectID == projectID
-                             select n).ToList();
-
-            var keyword = (tbxKeyword.Text ?? String.Empty).Trim();
-            if (!String.IsNullOrWhiteSpace(keyword))
-            {
-                var list = (from n in resources
-                            where n.Name.Contains(keyword) ||
-                                  n.Value.Contains(keyword)
-                            select n).ToList();
-
-
-                var @set = FullHierarchyTraversal(list, resources).ToHashSet();
-                resources = @set.ToList();
-            }
-
-            tlResources.DataSource = resources;
-            tlResources.DataBind();
-        }
-
-
-        protected void cmbProject_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DisplayRelatedRule();
-        }
-
-        protected void btnRemove_Click(object sender, EventArgs e)
-        {
-            var permissionKey = GetPermissionKey();
-            if (permissionKey.GroupID == Guid.Empty ||
-                permissionKey.ResourseID == Guid.Empty ||
-                permissionKey.ProjectID == Guid.Empty)
-            {
-                return;
-            }
-
-            var permission = GetRelatedPermission(true);
-            if (permission == null)
-                return;
-
-            permission.DateDeleted = DateTime.Now;
-
-            HbSession.SubmitChanges(permission);
-
-            DisplayRelatedRule();
         }
 
         protected void btnSet_Click(object sender, EventArgs e)
@@ -143,12 +68,62 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             DisplayRelatedRule();
         }
 
-        protected void tlResources_FocusedNodeChanged(object sender, EventArgs e)
+        protected void btnRemove_Click(object sender, EventArgs e)
+        {
+            var permissionKey = GetPermissionKey();
+            if (permissionKey.GroupID == Guid.Empty ||
+                permissionKey.ResourseID == Guid.Empty ||
+                permissionKey.ProjectID == Guid.Empty)
+            {
+                return;
+            }
+
+            var permission = GetRelatedPermission(true);
+            if (permission == null)
+                return;
+
+            permission.DateDeleted = DateTime.Now;
+
+            HbSession.SubmitChanges(permission);
+
+            DisplayRelatedRule();
+        }
+
+        protected void lnkDelete_Click(object sender, EventArgs e)
+        {
+            var lnkBtn = sender as ImageLinkButton;
+            if (lnkBtn == null || String.IsNullOrWhiteSpace(lnkBtn.CommandArgument))
+                return;
+
+            var entityID = DataConverter.ToNullableGuid(lnkBtn.CommandArgument);
+
+            var permissionParameter = (from n in HbSession.Query<UM_PermissionParameter>()
+                                       where n.ID == entityID &&
+                                             n.DateDeleted == null
+                                       select n).FirstOrDefault();
+
+            if (permissionParameter == null)
+                return;
+
+            permissionParameter.DateDeleted = DateTime.Now;
+
+            HbSession.SubmitChanges(permissionParameter);
+
+            btPermissionParameter_Click(this, EventArgs.Empty);
+
+        }
+
+        protected void btProjectCancel_OnClick(object sender, EventArgs e)
+        {
+            mpePermissionParametersForm.Hide();
+        }
+
+        protected void tlGroups_FocusedNodeChanged(object sender, EventArgs e)
         {
             DisplayRelatedRule();
         }
 
-        protected void tlGroups_FocusedNodeChanged(object sender, EventArgs e)
+        protected void tlResources_FocusedNodeChanged(object sender, EventArgs e)
         {
             DisplayRelatedRule();
         }
@@ -194,33 +169,80 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             btPermissionParameter_Click(this, EventArgs.Empty);
         }
 
-        protected void lnkDelete_Click(object sender, EventArgs e)
+        protected void cmbProject_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var lnkBtn = sender as ImageLinkButton;
-            if (lnkBtn == null || String.IsNullOrWhiteSpace(lnkBtn.CommandArgument))
-                return;
-
-            var entityID = DataConverter.ToNullableGuid(lnkBtn.CommandArgument);
-
-            var permissionParameter = (from n in HbSession.Query<UM_PermissionParameter>()
-                                       where n.ID == entityID &&
-                                             n.DateDeleted == null
-                                       select n).FirstOrDefault();
-
-            if (permissionParameter == null)
-                return;
-
-            permissionParameter.DateDeleted = DateTime.Now;
-
-            HbSession.SubmitChanges(permissionParameter);
-
-            btPermissionParameter_Click(this, EventArgs.Empty);
-
+            DisplayRelatedRule();
         }
 
         #endregion
 
         #region Methods
+
+        protected int GetDecValue()
+        {
+            var sb = new StringBuilder();
+
+            foreach (ListItem listItem in chklRules.Items)
+            {
+                var @char = (listItem.Selected ? '1' : '0');
+                sb.Append(@char);
+            }
+
+            var retValue = Convert.ToInt32(sb.ToString(), 2);
+
+            if (Enum.IsDefined(typeof(RulePermissionsEnum), retValue))
+            {
+                return retValue;
+            }
+
+            return retValue;
+        }
+
+        protected void FillGroups()
+        {
+            var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value);
+            if (projectID == null)
+                return;
+
+            var query = from n in HbSession.Query<UM_Group>()
+                        where n.DateDeleted == null &&
+                              n.ProjectID == projectID
+                        select n;
+
+            var groups = from n in FullHierarchyTraversal(query)
+                         orderby n.Name
+                         select n;
+
+            tlGroups.DataSource = groups.ToHashSet();
+            tlGroups.DataBind();
+        }
+
+        protected void FillResources()
+        {
+            var projectID = DataConverter.ToNullableGuid(cmbProject.SelectedItem.Value);
+            if (projectID == null)
+                return;
+
+            var resources = (from n in HbSession.Query<UM_Resource>()
+                             where n.DateDeleted == null && n.ProjectID == projectID
+                             select n).ToList();
+
+            var keyword = (tbxKeyword.Text ?? String.Empty).Trim();
+            if (!String.IsNullOrWhiteSpace(keyword))
+            {
+                var list = (from n in resources
+                            where n.Name.Contains(keyword) ||
+                                  n.Value.Contains(keyword)
+                            select n).ToList();
+
+
+                var @set = FullHierarchyTraversal(list, resources).ToHashSet();
+                resources = @set.ToList();
+            }
+
+            tlResources.DataSource = resources;
+            tlResources.DataBind();
+        }
 
         protected void FillProjects()
         {
@@ -238,6 +260,20 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 if (first != null)
                     cmbProject.TrySetSelectedValue(first.ID);
             }
+        }
+
+        protected void ClearChklRules()
+        {
+            foreach (ListItem listItem in chklRules.Items)
+            {
+                listItem.Selected = false;
+            }
+        }
+
+        protected void ApplyPermissions()
+        {
+            if (!UmUtil.Instance.HasAccess("PermissionList"))
+                Response.Redirect("~/Pages/Management/UsersList.aspx");
         }
 
         protected void DisplayRelatedRule()
@@ -271,14 +307,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             }
         }
 
-        protected void ClearChklRules()
-        {
-            foreach (ListItem listItem in chklRules.Items)
-            {
-                listItem.Selected = false;
-            }
-        }
-
         protected bool CheckSelectedCheckboxes()
         {
             int count = 0;
@@ -299,24 +327,28 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             return false;
         }
 
-        protected int GetDecValue()
+        protected PermissionKeyContainer GetPermissionKey()
         {
-            var sb = new StringBuilder();
+            var permissionKey = new PermissionKeyContainer();
 
-            foreach (ListItem listItem in chklRules.Items)
+            var projectID = cmbProject.TryGetGuidValue();
+            permissionKey.ProjectID = projectID.Value;
+
+            if (tlGroups.FocusedNode != null)
             {
-                var @char = (listItem.Selected ? '1' : '0');
-                sb.Append(@char);
+                var groupID = DataConverter.ToNullableGuid(tlGroups.FocusedNode.Key);
+                if (groupID != null)
+                    permissionKey.GroupID = groupID.Value;
             }
 
-            var retValue = Convert.ToInt32(sb.ToString(), 2);
-
-            if (Enum.IsDefined(typeof(RulePermissionsEnum), retValue))
+            if (tlResources.FocusedNode != null)
             {
-                return retValue;
+                var resourceID = DataConverter.ToNullableGuid(tlResources.FocusedNode.Key);
+                if (resourceID != null)
+                    permissionKey.ResourseID = resourceID.Value;
             }
 
-            return retValue;
+            return permissionKey;
         }
 
         protected UM_Permission GetRelatedPermission(bool operation)
@@ -454,36 +486,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             }
         }
 
-        protected PermissionKeyContainer GetPermissionKey()
-        {
-            var permissionKey = new PermissionKeyContainer();
-
-            var projectID = cmbProject.TryGetGuidValue();
-            permissionKey.ProjectID = projectID.Value;
-
-            if (tlGroups.FocusedNode != null)
-            {
-                var groupID = DataConverter.ToNullableGuid(tlGroups.FocusedNode.Key);
-                if (groupID != null)
-                    permissionKey.GroupID = groupID.Value;
-            }
-
-            if (tlResources.FocusedNode != null)
-            {
-                var resourceID = DataConverter.ToNullableGuid(tlResources.FocusedNode.Key);
-                if (resourceID != null)
-                    permissionKey.ResourseID = resourceID.Value;
-            }
-
-            return permissionKey;
-        }
-
-        protected void ApplyPermissions()
-        {
-            if (!UmUtil.Instance.HasAccess("PermissionList"))
-                Response.Redirect("~/Pages/Management/UsersList.aspx");
-        }
-
         #endregion
+
     }
 }

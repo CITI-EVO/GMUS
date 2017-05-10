@@ -21,7 +21,7 @@ namespace CITI.EVO.Tools.Web.UI.Helpers
         }
 
         public IEnumerable<DictionaryBinderItem> GetItems()
-        {
+        {   
             foreach (var item in _collection)
             {
                 var text = ExpressionEvaluator.Eval(_textExpression, n => item[n]);

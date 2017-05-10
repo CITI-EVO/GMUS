@@ -149,13 +149,13 @@ namespace CITI.EVO.Tools.Extensions
                 var propertyInfo = type.GetProperty(pair.Key);
                 if (propertyInfo == null)
                 {
-                    throw new Exception(String.Format("{0}", pair.Key));
+                    throw new Exception($"{pair.Key}");
                 }
 
                 var dataColumn = dataRow.Table.Columns[pair.Value];
                 if (dataColumn == null)
                 {
-                    throw new Exception(String.Format("{0}", pair.Value));
+                    throw new Exception($"{pair.Value}");
                 }
 
                 var value = dataRow.Field<Object>(dataColumn);

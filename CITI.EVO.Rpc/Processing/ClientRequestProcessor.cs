@@ -65,21 +65,21 @@ namespace CITI.EVO.Rpc.Processing
 			var classType = ReflectionUtil.FindType(className);
 			if (classType == null)
 			{
-				throw new ClassNotFoundException(String.Format("Unable to find class '{0}'", className));
+				throw new ClassNotFoundException($"Unable to find class '{className}'");
 			}
 
 			var methodInfo = ReflectionUtil.FindMethod(className, methodName, genericTypes, paramsTypes);
 			if (methodInfo == null)
 			{
 				var paramsCount = (paramsTypes == null ? 0 : paramsTypes.Length);
-				var errorMessage = String.Format("Unable to find method '{0}({1})' in class '{2}'", methodName, paramsCount, classType.FullName);
+				var errorMessage = $"Unable to find method '{methodName}({paramsCount})' in class '{classType.FullName}'";
 				throw new MethodNotFoundException(errorMessage);
 			}
 
 			if (!Attribute.IsDefined(methodInfo, typeof(RpcAllowRemoteCallAttribute)))
 			{
 				var paramsCount = (paramsTypes == null ? 0 : paramsTypes.Length);
-				var errorMessage = String.Format("Remote call is not allowed for method {0}({1})", methodName, paramsCount);
+				var errorMessage = $"Remote call is not allowed for method {methodName}({paramsCount})";
 				throw new RemoteCallNotAllowedException(errorMessage);
 			}
 
@@ -125,7 +125,7 @@ namespace CITI.EVO.Rpc.Processing
 					var genericType = ReflectionUtil.FindType(genericTypeName);
 					if (genericType == null)
 					{
-						throw new GenericTypeNotFoundException(String.Format("Unable find generic type '{0}'", genericTypeName));
+						throw new GenericTypeNotFoundException($"Unable find generic type '{genericTypeName}'");
 					}
 
 					genericTypesArr[i] = genericType;

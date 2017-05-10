@@ -9,6 +9,7 @@ namespace Gms.Portal.Web.Entities.FormStructure
     public class ContentEntity : ControlEntity
     {
         [XmlElement("Grid", typeof(GridEntity))]
+        [XmlElement("Tree", typeof(TreeEntity))]
         [XmlElement("Field", typeof(FieldEntity))]
         [XmlElement("Group", typeof(GroupEntity))]
         [XmlElement("TabPage", typeof(TabPageEntity))]

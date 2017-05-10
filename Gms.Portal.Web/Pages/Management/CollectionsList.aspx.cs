@@ -25,8 +25,10 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void collectionsControl_OnEdit(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollection.aspx");
-            urlHelper["CollectionID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/AddEditCollection.aspx")
+            {
+                ["CollectionID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }
@@ -44,8 +46,10 @@ namespace Gms.Portal.Web.Pages.Management
 
         protected void collectionsControl_OnView(object sender, GenericEventArgs<Guid> e)
         {
-            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx");
-            urlHelper["CollectionID"] = e.Value;
+            var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx")
+            {
+                ["CollectionID"] = e.Value
+            };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
         }

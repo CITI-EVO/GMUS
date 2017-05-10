@@ -10,16 +10,21 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>
-                        <asp:Label runat="server"></asp:Label>
+                        <asp:Label runat="server" ID="lblTitle"></asp:Label>
                     </h5>
                     <div class="ibox-tools">
-                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
-                        <ce:LinkButton runat="server" ID="btnClear" ToolTip="Clear" OnClick="btnClear_OnClick" CssClass="btn btn-danger fa fa-trash-o" />
-                        <ce:LinkButton runat="server" ID="btnImport" ToolTip="Cancel" OnClick="btnImport_OnClick" CssClass="btn btn-warning fa fa-close" />
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <local:CollectionDatasControl runat="server" ID="collectionDatasControl" OnEdit="collectionDatasControl_OnEdit" OnDelete="collectionDatasControl_OnDelete" OnView="collectionDatasControl_OnView" />
+                    <div class="form-group">
+                        <ce:LinkButton runat="server" ID="btnNew" ToolTip="New" OnClick="btnNew_OnClick" CssClass="btn btn-primary fa fa-plus" />
+                        <ce:LinkButton runat="server" ID="btnClear" ToolTip="Clear" OnClick="btnClear_OnClick" CssClass="btn btn-danger fa fa-trash-o" />
+                        <ce:LinkButton runat="server" ID="btnImport" ToolTip="Import" OnClick="btnImport_OnClick" CssClass="btn btn-info fa fa-upload" />
+                        <ce:LinkButton runat="server" ID="btnClose" ToolTip="Cancel" OnClick="btnClose_OnClick" CssClass="btn btn-warning fa fa-close" />
+                    </div>
+                    <div class="form-group">
+                        <local:CollectionDatasControl runat="server" ID="collectionDatasControl" OnEdit="collectionDatasControl_OnEdit" OnDelete="collectionDatasControl_OnDelete" OnView="collectionDatasControl_OnView" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +50,7 @@
                                     </div>
                                     <div class="form-group">
                                         <ce:LinkButton runat="server" ID="btnImportOK" ToolTip="Save" OnClick="btnImportOK_Click" CssClass="btn btn-success fa fa-save" />
-                                        <ce:LinkButton runat="server" ID="btnImportCancel" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
+                                        <ce:LinkButton runat="server" ID="btnImportCancel" ToolTip="Close" OnClick="btnImportCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                                     </div>
                                 </div>
                             </div>
