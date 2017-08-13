@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CITI.EVO.Tools.Comparers;
-using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Extensions;
-using CITI.EVO.Tools.Utils;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
 
@@ -16,6 +14,27 @@ namespace Gms.Portal.Web.Utils
         private static readonly IComparer<byte[]> _bytesComparer = new ByteArrayComparer();
         private static readonly IComparer<String> _ordinalComparer = StringComparer.OrdinalIgnoreCase;
 
+        public static bool IsNullOrEmpty(Object fieldValue)
+        {
+            if (ReferenceEquals(fieldValue, DBNull.Value))
+                return true;
+
+            var str = Convert.ToString(fieldValue);
+            return String.IsNullOrWhiteSpace(str);
+        }
+
+        public static FormDataUnit Transform(FormDataUnit source, IDictionary<String, String> names)
+        {
+            var target = new FormDataUnit();
+
+            foreach (var pair in source)
+            {
+                var key = names.GetValueOrDefault(pair.Key) ?? pair.Key;
+                target[key] = pair.Value;
+            }
+
+            return target;
+        }
         public static IDictionary<String, Object> Transform(IDictionary<String, Object> source, IDictionary<String, String> names)
         {
             var target = new Dictionary<String, Object>(source.Count);
@@ -206,8 +225,8 @@ namespace Gms.Portal.Web.Utils
                 var xVal = x[key];
                 var yVal = y[key];
 
-                xVal = (ReferenceEquals(xVal, FormNoData.Value) ? null : xVal);
-                yVal = (ReferenceEquals(yVal, FormNoData.Value) ? null : yVal);
+                xVal = (ReferenceEquals(xVal, DBNull.Value) ? null : xVal);
+                yVal = (ReferenceEquals(yVal, DBNull.Value) ? null : yVal);
 
                 if (xVal is FormDataListRef || yVal is FormDataListRef)
                 {
@@ -259,14 +278,161 @@ namespace Gms.Portal.Web.Utils
             foreach (var field in fields)
             {
                 var newValue = target[field];
-                if (!ReferenceEquals(newValue, FormNoData.Value))
+                if (!ReferenceEquals(newValue, DBNull.Value))
                     continue;
 
                 var oldValue = source[field];
-                if (ReferenceEquals(oldValue, FormNoData.Value))
+                if (ReferenceEquals(oldValue, DBNull.Value))
                     oldValue = null;
 
                 target[field] = oldValue;
+            }
+        }
+
+        public static bool IsGridOrTreeMissing(FormDataUnit formData, FormEntity formEntity)
+        {
+            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(formEntity);
+
+            var query = (from n in controls
+                         where n is GridEntity || n is TreeEntity
+                         let key = Convert.ToString(n.ID)
+                         where !formData.ContainsKey(key)
+                         select n);
+
+            var missing = query.Any();
+            return missing;
+        }
+
+        public static int CompareFormStatusDates(FormStatusUnit x, FormStatusUnit y)
+        {
+            if (x == null && y != null)
+                return 1;
+
+            if (x != null && y == null)
+                return -1;
+
+            if (x == null && y == null)
+                return 0;
+
+            if (x.DateOfStatus == null && y.DateOfStatus != null)
+                return 1;
+
+            if (x.DateOfStatus != null && y.DateOfStatus == null)
+                return -1;
+
+            if (x.DateOfStatus == null && y.DateOfStatus == null)
+                return 0;
+
+            var xDate = x.DateOfStatus.Value;
+            var yDate = y.DateOfStatus.Value;
+
+            return xDate.CompareTo(yDate);
+        }
+
+        public static IEnumerable<FormDataBase> MegreFormDatasFields
+        (
+            ContentEntity entity,
+            ISet<String> treeAndGrids,
+            ISet<String> subListsFields,
+            FormDataUnit formData
+        )
+        {
+            var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(entity);
+
+            var treesAndGridsQuery = from n in allControls
+                                     where treeAndGrids.Contains(n.Name) ||
+                                           treeAndGrids.Contains(n.Alias)
+                                     from m in FormStructureUtil.PreOrderTraversal(n)
+                                     select m;
+
+            var queryForms = (from n in treesAndGridsQuery
+                              let k = Convert.ToString(n.ID)
+                              let d = formData[k]
+                              select d);
+
+            var list = new List<FormDataListBase>();
+
+            foreach (var queryForm in queryForms)
+            {
+                var formDataList = queryForm as FormDataListBase;
+                if (formDataList != null)
+                    list.Add(formDataList);
+
+                var listRef = queryForm as FormDataListRef;
+                if (listRef != null)
+                {
+                    var lazyList = new FormDataLazyList(listRef);
+                    list.Add(lazyList);
+                }
+            }
+
+            return MegreFormDatasFields(entity, treeAndGrids, subListsFields, list);
+        }
+
+        public static IEnumerable<FormDataBase> MegreFormDatasFields
+        (
+            ContentEntity entity,
+            ISet<String> treeAndGrids,
+            ISet<String> subListsFields,
+            IEnumerable<FormDataListBase> formDatas
+        )
+        {
+            var collections = formDatas.Cast<IEnumerable<FormDataBase>>();
+            return MegreFormDatasFields(entity, treeAndGrids, subListsFields, collections);
+        }
+
+        public static IEnumerable<FormDataBase> MegreFormDatasFields
+        (
+            ContentEntity entity,
+            ISet<String> treeAndGrids,
+            ISet<String> subListsFields,
+            IEnumerable<IEnumerable<FormDataBase>> allFormDatas
+        )
+        {
+            var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(entity);
+
+            var treesAndGridsQuery = from n in allControls
+                                     where treeAndGrids.Contains(n.Name) ||
+                                           treeAndGrids.Contains(n.Alias)
+                                     from m in FormStructureUtil.PreOrderTraversal(n)
+                                     select m;
+
+            var treesAndGridsNamesQuery = from n in treesAndGridsQuery
+                                          select new
+                                          {
+                                              Key = n.Name,
+                                              Field = n
+                                          };
+
+            var treesAndGridsAliasQuery = from n in treesAndGridsQuery
+                                          select new
+                                          {
+                                              Key = n.Alias,
+                                              Field = n
+                                          };
+
+            var allFields = treesAndGridsNamesQuery.Union(treesAndGridsAliasQuery);
+
+            var controlLp = allFields.ToLookup(n => n.Key, n => n.Field);
+
+            foreach (var formDatas in allFormDatas)
+            {
+                foreach (var formData in formDatas)
+                {
+                    var result = new FormDataBase();
+
+                    foreach (var fieldName in subListsFields)
+                    {
+                        var valQuery = (from n in controlLp[fieldName]
+                                        let k = Convert.ToString(n.ID)
+                                        where formData.ContainsKey(k)
+                                        select formData[k]);
+
+                        result[fieldName] = valQuery.FirstOrDefault();
+                    }
+
+                    yield return result;
+                }
             }
         }
     }

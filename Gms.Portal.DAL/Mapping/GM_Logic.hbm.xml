@@ -15,8 +15,7 @@
       <column name="RawData" sql-type="xml" />
     </property>
 
-    <property name="FormID" />
-    <property name="LogicID" />
+    <property name="SourceID" />
     
     <property name="DateCreated" />
     <property name="DateChanged" />

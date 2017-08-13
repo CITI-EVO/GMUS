@@ -9,6 +9,7 @@ using DevExpress.Web;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Caches;
+using Gms.Portal.Web.Entities.Others;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 using NHibernate.Linq;
@@ -108,10 +109,10 @@ namespace Gms.Portal.Web.Controls.Management
 
                 var users = (from n in recipients
                              let u = UmUsersCache.GetUser(n.UserID)
-                             select new 
+                             select new IDNameEntity
                              {
-                                 Value = Convert.ToString(u.ID),
-                                 Text = $"{u.LastName} {u.FirstName}, {u.Email}, {u.Phone}"
+                                 ID = u.ID,
+                                 Name = $"{u.LastName} {u.FirstName}, {u.Email}, {u.Phone}"
                              }).ToList();
 
                 cblRecipients.DataSource = users;

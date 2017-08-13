@@ -76,7 +76,7 @@ namespace Gms.Portal.Web.Pages.Management
             var mailText = engine.Process(context, model.Body);
 
             if (model.ContactType == "All" || model.ContactType == "Sms")
-                CommonProxy.SendSmsUsingCuratio(user.Phone, model.Body);
+                CommonProxy.SendSms(user.Phone, model.Body);
 
             if (model.ContactType == "All" || model.ContactType == "Email")
                 EmailUtil.SendEmail(user.Email, model.Subject, mailText);

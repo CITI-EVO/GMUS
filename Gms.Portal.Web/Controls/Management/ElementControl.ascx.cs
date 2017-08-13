@@ -82,9 +82,12 @@ namespace Gms.Portal.Web.Controls.Management
             model.Privacy = properties.Contains("Privacy");
             model.ReadOnly = properties.Contains("ReadOnly");
             model.Inversion = properties.Contains("Inversion");
+            model.Mandatory = properties.Contains("Mandatory");
             model.FilterByUser = properties.Contains("FilterByUser");
             model.NotPrintable = properties.Contains("NotPrintable");
             model.FirstTimeFill = properties.Contains("FirstTimeFill");
+            model.AllowBulkFill = properties.Contains("AllowBulkFill");
+            model.ResetDataOnHide = properties.Contains("ResetDataOnHide");
             model.DisplayOnFilter = properties.Contains("DisplayOnFilter");
             model.RequiresApproval = properties.Contains("RequiresApproval");
 
@@ -121,6 +124,9 @@ namespace Gms.Portal.Web.Controls.Management
             if (model.Inversion.GetValueOrDefault())
                 properties.Add("Inversion");
 
+            if (model.Mandatory.GetValueOrDefault())
+                properties.Add("Mandatory");
+
             if (model.FilterByUser.GetValueOrDefault())
                 properties.Add("FilterByUser");
 
@@ -130,8 +136,14 @@ namespace Gms.Portal.Web.Controls.Management
             if (model.FirstTimeFill.GetValueOrDefault())
                 properties.Add("FirstTimeFill");
 
+            if (model.AllowBulkFill.GetValueOrDefault())
+                properties.Add("AllowBulkFill");
+
             if (model.DisplayOnFilter.GetValueOrDefault())
                 properties.Add("DisplayOnFilter");
+
+            if (model.ResetDataOnHide.GetValueOrDefault())
+                properties.Add("ResetDataOnHide");
 
             if (model.RequiresApproval.GetValueOrDefault())
                 properties.Add("RequiresApproval");
@@ -180,8 +192,8 @@ namespace Gms.Portal.Web.Controls.Management
             pnlCaptionSize.Visible = false;
             pnlControlSize.Visible = false;
             pnlErrorMessage.Visible = false;
-            pnlDependentExp.Visible = false;
             pnlGroupBgColor.Visible = false;
+            pnlTreeMaxLevel.Visible = false;
             pnlValidationExp.Visible = false;
             pnlTextExpression.Visible = false;
             pnlGroupTextColor.Visible = false;
@@ -204,12 +216,15 @@ namespace Gms.Portal.Web.Controls.Management
             {
                 pnlValidationExp.Visible = true;
                 pnlErrorMessage.Visible = true;
+                pnlDependentFillExp.Visible = true;
             }
 
             if (model.ElementType == "Tree")
             {
                 pnlValidationExp.Visible = true;
                 pnlErrorMessage.Visible = true;
+                pnlTreeMaxLevel.Visible = true;
+                pnlDependentFillExp.Visible = true;
             }
 
             if (model.ElementType == "Field")
@@ -220,7 +235,6 @@ namespace Gms.Portal.Web.Controls.Management
                 pnlOrderIndex.Visible = true;
                 pnlCaptionSize.Visible = true;
                 pnlControlSize.Visible = true;
-                pnlDependentExp.Visible = true;
                 pnlErrorMessage.Visible = true;
                 pnlValidationExp.Visible = true;
                 pnlDependentFillExp.Visible = true;
@@ -325,7 +339,7 @@ namespace Gms.Portal.Web.Controls.Management
                     {
                         var subEntity = new KeyValueEntity
                         {
-                            Key = $"{item.Name}/{control.Name}",
+                            Key = $"{item.Name}/{control.Name} - {control.Alias}",
                             Value = $"{item.ID}/{control.ID}"
                         };
 
@@ -379,11 +393,11 @@ namespace Gms.Portal.Web.Controls.Management
             }
         }
 
-        protected void CorrectNamesByLevel(IEnumerable<ElementTreeNodeEntity> entites, ILookup<Guid?, ElementTreeNodeEntity> elementsLp, int level)
+        protected void CorrectNamesByLevel(IEnumerable<ElementTreeNodeEntity> parents, ILookup<Guid?, ElementTreeNodeEntity> elementsLp, int level)
         {
-            foreach (var entity in entites)
+            foreach (var entity in parents)
             {
-                entity.Name = $"{entity.Name}({entity.ControlType})";
+                entity.Name = $"{entity.Name} - {entity.Alias} ({entity.ControlType})";
 
                 var children = elementsLp[entity.ID];
                 CorrectNamesByLevel(children, elementsLp, level + 1);

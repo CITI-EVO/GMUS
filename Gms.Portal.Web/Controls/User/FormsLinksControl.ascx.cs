@@ -29,5 +29,29 @@ namespace Gms.Portal.Web.Controls.User
 
             return urlHelper.ToEncodedUrl();
         }
+
+        protected String GetName(object eval)
+        {
+            var text = Convert.ToString(eval);
+            var index = text.IndexOf("@", StringComparison.Ordinal);
+
+            if (index < 0)
+                return text;
+
+            var name = text.Substring(0, index);
+            return name;
+        }
+
+        protected String GetTitle(object eval)
+        {
+            var text = Convert.ToString(eval);
+            var index = text.IndexOf("@", StringComparison.Ordinal);
+
+            if (index < 0)
+                return text;
+
+            var name = text.Substring(index + 1);
+            return name;
+        }
     }
 }

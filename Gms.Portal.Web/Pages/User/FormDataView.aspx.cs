@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.Collections;
@@ -39,10 +41,10 @@ namespace Gms.Portal.Web.Pages.User
         {
             get
             {
-                if (FormData == null)
-                    return null;
+                if (FormData != null)
+                    return FormData.UserID;
 
-                return FormData.UserID;
+                return DataConverter.ToNullableGuid(RequestUrl["UserID"]);
             }
         }
 
@@ -120,6 +122,21 @@ namespace Gms.Portal.Web.Pages.User
             }
         }
 
+        private FormDataUnit _parentFormData;
+        protected FormDataUnit ParentFormData
+        {
+            get
+            {
+                if (ParentID == null || FormID == null)
+                    return null;
+
+                if (_parentFormData == null)
+                    _parentFormData = LoadFormData(FormID, ParentID);
+
+                return _parentFormData;
+            }
+        }
+
         private FormEntityModelConverter _modelConverter;
         protected FormEntityModelConverter ModelConverter
         {
@@ -143,6 +160,13 @@ namespace Gms.Portal.Web.Pages.User
 
             var userID = (UserID ?? UserUtil.GetCurrentUserID());
 
+            btnEdit.Visible = false;
+            btnSave.Visible = false;
+            btnPrint.Visible = false;
+            btnSubmit.Visible = false;
+            btnNewHistory.Visible = false;
+
+            formDataControl.Enabled = false;
             formDataControl.FormID = FormID;
             formDataControl.UserID = userID;
             formDataControl.OwnerID = OwnerID;
@@ -151,26 +175,67 @@ namespace Gms.Portal.Web.Pages.User
             formDataControl.StatusID = StatusID;
             formDataControl.ContainerID = ContainerID;
 
-            if (Mode == FormMode.Edit || Mode == FormMode.Review || Mode == FormMode.Inspect)
+            if (UmUtil.Instance.HasAccess("Admin") && RecordID != null && ParentID == null)
+                btnNewHistory.Visible = true;
+
+            if (FormData == null)
             {
                 formDataControl.Enabled = true;
-                btnSave.Enabled = true;
-            }
-            else if (FormData != null)
-            {
-                var statusID = FormData.StatusID;
-                if (ParentID != null && StatusID != null)
-                    statusID = StatusID;
+                btnSave.Visible = true;
 
-                if (statusID == DataStatusCache.Rejected.ID && FormData.ReviewFields != null && FormData.ReviewFields.Count > 0)
+                if (ParentID == null)
+                    btnSubmit.Visible = true;
+            }
+            else
+            {
+                if (ParentID != null)
                 {
-                    formDataControl.Enabled = true;
-                    btnSave.Enabled = true;
+                    if (RecordID == null || Mode == FormMode.Edit)
+                    {
+                        formDataControl.Enabled = true;
+                        btnSave.Visible = true;
+                    }
                 }
                 else
                 {
-                    formDataControl.Enabled = false;
-                    btnSave.Enabled = false;
+                    btnPrint.Visible = true;
+
+                    if (FormData.StatusID != DataStatusCache.Submit.ID &&
+                        FormData.StatusID != DataStatusCache.Accepted.ID)
+                    {
+                        if (Mode != FormMode.View)
+                        {
+                            formDataControl.Enabled = true;
+                            btnSubmit.Visible = true;
+                            btnSave.Visible = true;
+                        }
+                    }
+
+                    if (FormData.StatusID == DataStatusCache.Accepted.ID)
+                    {
+                        if (Mode == FormMode.Edit)
+                        {
+                            formDataControl.Enabled = true;
+                            btnSave.Visible = true;
+                        }
+                        else if (Mode != FormMode.View)
+                        {
+                            btnEdit.Visible = true;
+                        }
+                    }
+
+                    if (FormData.StatusID == DataStatusCache.Rejected.ID && !FormData.ReviewFields.IsNullOrEmpty())
+                    {
+                        formDataControl.Enabled = true;
+                        btnSubmit.Visible = true;
+                        btnSave.Visible = true;
+                    }
+
+                    if (Mode == FormMode.Inspect)
+                    {
+                        formDataControl.Enabled = true;
+                        btnSave.Visible = true;
+                    }
                 }
             }
 
@@ -201,8 +266,8 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ApplyViewMode();
             FillFormData();
+            FillTemplates();
 
             if (!IsPostBack)
             {
@@ -219,24 +284,25 @@ namespace Gms.Portal.Web.Pages.User
                     formDataControl.SetActiveTabs(@set);
                 }
 
-                var canAccessForm = IsFillingAvailable();
-                if (!canAccessForm)
-                {
-                    lblStatusDesc.Text = FormModel.FillingValidationMessage;
-                    lblStatusDesc.Visible = !String.IsNullOrWhiteSpace(lblStatusDesc.Text);
-
-                    btnSave.Visible = false;
-                    btnSubmit.Visible = false;
-                    btnEdit.Visible = false;
-                    btnFiles.Visible = false;
-
-                    formDataControl.Visible = false;
-                }
+                CheckFormAccesibility();
             }
+        }
+
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            //var query = (from n in DiagUtil.Current.Elapseds
+            //             let m = $"[{n.Key}, {n.Value}, {DiagUtil.Current.Occurrence[n.Key]}]"
+            //             select m);
+
+            //lblTimes.Text = String.Join("; ", query);
         }
 
         protected void btnSave_OnClick(object sender, EventArgs e)
         {
+            var canAccess = GetSaveSubmitAccesibility();
+            if (!canAccess)
+                return;
+
             var newFormData = formDataControl.GetFormData();
 
             var newRecordID = SaveFormData(newFormData, FormData);
@@ -267,16 +333,15 @@ namespace Gms.Portal.Web.Pages.User
             }
         }
 
-        protected void btnCancel_OnClick(object sender, EventArgs e)
+        protected void btnPrint_OnClick(object sender, EventArgs e)
         {
-            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
-            if (!String.IsNullOrWhiteSpace(returnUrl))
+            var model = new ChooseTemplateModel
             {
-                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
+                RecordID = RecordID,
+            };
 
-                var returnUrlHelper = new UrlHelper(cleanUrl);
-                Response.Redirect(returnUrlHelper.ToEncodedUrl());
-            }
+            chooseTemplateControl.Model = model;
+            mpeChooseTemplate.Show();
         }
 
         protected void btnEdit_OnClick(object sender, EventArgs e)
@@ -291,21 +356,37 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void btnSubmit_OnClick(object sender, EventArgs e)
         {
-            if (RecordID == null)
+            var recordID = RecordID;
+            if (recordID == null)
                 return;
 
-            var formDataUnit = LoadFormData(OwnerID, RecordID);
-            if (!ValidateFormData(formDataUnit))
+            var canAccess = GetSaveSubmitAccesibility();
+            if (!canAccess)
+                return;
+
+            var newFormData = formDataControl.GetFormData();
+
+            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
+            var fields = controls.Select(n => Convert.ToString(n.ID)).ToHashSet();
+
+            if (!FormDataUtil.MergeAndEquals(newFormData, FormData, fields))
+            {
+                recordID = SaveFormData(newFormData, FormData);
+                if (recordID == null)
+                    return;
+            }
+
+            if (!ValidateFormData(newFormData))
                 return;
 
             var ownerID = OwnerID.GetValueOrDefault();
-            var recordID = RecordID.GetValueOrDefault();
             var submitStatus = DataStatusCache.Submit;
 
-            FormDataDbUtil.ChangeStatus(ownerID, recordID, submitStatus.ID, String.Empty);
+            FormDataDbUtil.ChangeStatus(ownerID, recordID.Value, submitStatus.ID, String.Empty);
 
             var redirectUrl = new UrlHelper(RequestUrl)
             {
+                ["RecordID"] = recordID,
                 ["Mode"] = Convert.ToString(FormMode.View)
             };
 
@@ -328,6 +409,65 @@ namespace Gms.Portal.Web.Pages.User
             };
 
             Response.Redirect(urlHelper.ToEncodedUrl());
+        }
+
+        protected void btnCancel_OnClick(object sender, EventArgs e)
+        {
+            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
+            if (!String.IsNullOrWhiteSpace(returnUrl))
+            {
+                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
+
+                var returnUrlHelper = new UrlHelper(cleanUrl);
+                Response.Redirect(returnUrlHelper.ToEncodedUrl());
+            }
+        }
+
+        protected void btnValidate_OnClick(object sender, EventArgs e)
+        {
+            var oldFormData = FormData;
+            var newFormData = formDataControl.GetFormData();
+
+            FormDataUtil.MergeFormDatas(newFormData, oldFormData);
+
+            ValidateFormData(newFormData);
+        }
+
+        protected void btnNewHistory_OnClick(object sender, EventArgs e)
+        {
+            var url = new UrlHelper("~/Handlers/PrintFormData.ashx")
+            {
+                ["FormID"] = FormID,
+                ["OwnerID"] = OwnerID,
+                ["RecordID"] = RecordID,
+                ["LoginToken"] = UmUtil.Instance.CurrentToken
+            };
+
+            using (var client = new WebClient())
+            {
+                var encUrl = url.ToEncodedUrl();
+                var absUrl = HttpServerUtil.ResolveAbsoluteUrl(encUrl);
+
+                var bytes = client.DownloadData(absUrl);
+
+                var dict = new Dictionary<String, Object>
+                {
+                    ["ID"] = Guid.NewGuid(),
+                    ["UserID"] = UserUtil.GetCurrentUserID(),
+                    ["ParentID"] = RecordID,
+                    ["DateCreated"] = DateTime.Now,
+                    ["DateDeleted"] = null,
+                    ["RawData"] = bytes
+                };
+
+                var bsonDoc = BsonDocumentConverter.ConvertToBsonDocument(dict);
+
+                var historyCollection = MongoDbUtil.GetCollection(MongoDbUtil.HistoryCollectionName);
+                historyCollection.InsertOne(bsonDoc);
+            }
+
+            lblNotifyMessage.Text = "History saved!";
+            mpeNotifyMessage.Show();
         }
 
         protected void btnCloneDataGridOK_Click(object sender, EventArgs e)
@@ -406,7 +546,29 @@ namespace Gms.Portal.Web.Pages.User
             mpeCloneDataGrid.Hide();
         }
 
-        protected void btnChangesWarningOK_Click(object sender, EventArgs e)
+        protected void btnChooseTemplateOK_OnClick(object sender, EventArgs e)
+        {
+            var model = chooseTemplateControl.Model;
+            if (model.TemplateID == null)
+                return;
+
+            var url = new UrlHelper("~/Handlers/PrintFormData.ashx")
+            {
+                ["FormID"] = FormID,
+                ["RecordID"] = model.RecordID,
+                ["TemplateID"] = model.TemplateID,
+                ["LoginToken"] = UmUtil.Instance.CurrentToken
+            };
+
+            Response.Redirect(url.ToEncodedUrl());
+        }
+
+        protected void btnChooseTemplateCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeChooseTemplate.Hide();
+        }
+
+        protected void btnRequiresSaveOK_Click(object sender, EventArgs e)
         {
             var newFormData = formDataControl.GetFormData();
 
@@ -433,12 +595,12 @@ namespace Gms.Portal.Web.Pages.User
                 }
             }
 
-            mpeChangesWarning.Hide();
+            mpeRequiresSave.Hide();
         }
 
-        protected void btnChangesWarningCancel_Click(object sender, EventArgs e)
+        protected void btnRequiresSaveCancel_Click(object sender, EventArgs e)
         {
-            mpeChangesWarning.Hide();
+            mpeRequiresSave.Hide();
         }
 
         protected void btnNotifyMessageOK_Click(object sender, EventArgs e)
@@ -448,14 +610,14 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void btnNotifyMessageCancel_OnClick(object sender, EventArgs e)
         {
-            var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
-            if (!String.IsNullOrWhiteSpace(returnUrl))
-            {
-                var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
+            //var returnUrl = Convert.ToString(RequestUrl["ReturnUrl"]);
+            //if (!String.IsNullOrWhiteSpace(returnUrl))
+            //{
+            //    var cleanUrl = GmsCommonUtil.ConvertFromBase64(returnUrl);
 
-                var returnUrlHelper = new UrlHelper(cleanUrl);
-                Response.Redirect(returnUrlHelper.ToEncodedUrl());
-            }
+            //    var returnUrlHelper = new UrlHelper(cleanUrl);
+            //    Response.Redirect(returnUrlHelper.ToEncodedUrl());
+            //}
 
             mpeNotifyMessage.Hide();
         }
@@ -537,6 +699,7 @@ namespace Gms.Portal.Web.Pages.User
             {
                 ["Mode"] = commandName,
                 ["FormID"] = FormID,
+                ["UserID"] = UserID,
                 ["OwnerID"] = ownerID,
                 ["ParentID"] = RecordID,
                 ["RecordID"] = recordID,
@@ -545,24 +708,34 @@ namespace Gms.Portal.Web.Pages.User
                 ["ContainerID"] = containerID,
             };
 
-            if (FormData != null)
+            if (FormData == null)
             {
-                var controls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
-                var fields = controls.Select(n => Convert.ToString(n.ID)).ToHashSet();
+                urlHelper.Remove("ReturnUrl");
 
-                var newFormData = formDataControl.GetFormData();
+                hdReturnUrl.Value = returnUrl.ToEncodedUrl();
+                hdRedirectUrl.Value = urlHelper.ToEncodedUrl();
 
-                if (!FormDataUtil.MergeAndEquals(newFormData, FormData, fields))
-                {
-                    urlHelper.Remove("ReturnUrl");
+                mpeRequiresSave.Show();
 
-                    hdReturnUrl.Value = returnUrl.ToEncodedUrl();
-                    hdRedirectUrl.Value = urlHelper.ToEncodedUrl();
+                return;
+            }
 
-                    mpeChangesWarning.Show();
+            var controls = FormStructureUtil.PreOrderFirstLevelTraversal(FormEntity);
+            var fields = controls.Select(n => Convert.ToString(n.ID)).ToHashSet();
 
-                    return;
-                }
+            var newFormData = formDataControl.GetFormData();
+
+            if (!FormDataUtil.MergeAndEquals(newFormData, FormData, fields) ||
+                FormDataUtil.IsGridOrTreeMissing(FormData, FormEntity))
+            {
+                urlHelper.Remove("ReturnUrl");
+
+                hdReturnUrl.Value = returnUrl.ToEncodedUrl();
+                hdRedirectUrl.Value = urlHelper.ToEncodedUrl();
+
+                mpeRequiresSave.Show();
+
+                return;
             }
 
             Response.Redirect(urlHelper.ToEncodedUrl());
@@ -577,10 +750,15 @@ namespace Gms.Portal.Web.Pages.User
             BindErrors(genericEventArgs.Value);
         }
 
-        protected void ApplyViewMode()
+        protected String GenIDNumber()
         {
-            btnSubmit.Visible = (UmUtil.Instance.HasAccess("Submit") && RecordID != null && ParentID == null);
-            btnEdit.Visible = (UmUtil.Instance.HasAccess("Submit") && RecordID != null && ParentID == null);
+            if (String.IsNullOrWhiteSpace(FormModel.Abbreviation) || String.IsNullOrWhiteSpace(FormModel.Year))
+                return null;
+
+            var count = MongoDbUtil.GetCount(OwnerID);
+
+            var number = $"{FormModel.Abbreviation}-{FormModel.Year}-{count}";
+            return number;
         }
 
         protected void FillFormData()
@@ -592,6 +770,11 @@ namespace Gms.Portal.Web.Pages.User
 
             DetectChanges(FormData);
             SetStatusMode(FormData);
+        }
+
+        protected void FillTemplates()
+        {
+            chooseTemplateControl.BindTemplates(FormEntity);
         }
 
         protected bool IsFillingAvailable()
@@ -661,6 +844,7 @@ namespace Gms.Portal.Web.Pages.User
             }
 
             var container = (ContentEntity)entity;
+            var formContainer = (ContentEntity)FormEntity;
 
             var errorMessages = new List<String>();
 
@@ -668,10 +852,13 @@ namespace Gms.Portal.Web.Pages.User
                             where n is FieldEntity || n is GridEntity || n is TreeEntity
                             select n).ToList();
 
-            var expGlobals = new ExpressionGlobalsUtil(UserID, container, formData);
+            var expGlobals = new ExpressionGlobalsUtil(UserID, formContainer, formData, ParentFormData);
 
             foreach (var control in entities)
             {
+                if (control.ID == container.ID)
+                    continue;
+
                 var fieldKey = Convert.ToString(control.ID);
 
                 expGlobals.SetAssociation("@", fieldKey);
@@ -718,8 +905,10 @@ namespace Gms.Portal.Web.Pages.User
                 if (String.IsNullOrWhiteSpace(expression))
                     continue;
 
+                var expNode = ExpressionParser.GetOrParse(expression);
+
                 Object result;
-                if (!ExpressionEvaluator.TryEval(expression, expGlobals.Eval, out result))
+                if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
                 {
                     var message = $"[{control.Name}] - Incorrect Validation Expression";
                     errorMessages.Add(message);
@@ -761,21 +950,32 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void SetStatusMode(FormDataUnit formDataUnit)
         {
-            btnSave.Visible = false;
-            btnSubmit.Visible = false;
-            btnEdit.Visible = false;
+            //btnSave.Visible = false;
+            //btnSubmit.Visible = false;
+            //btnEdit.Visible = false;
 
-            if (Mode == FormMode.Edit || Mode == FormMode.Review || Mode == FormMode.Inspect)
-                btnSave.Visible = true;
+            //if (Mode == FormMode.Edit ||
+            //    Mode == FormMode.Review ||
+            //    Mode == FormMode.Inspect)
+            //{
+            //    btnSave.Visible = true;
+            //}
 
-            if (formDataUnit == null)
-                return;
+            //if (formDataUnit == null)
+            //    return;
 
-            if (formDataUnit.StatusID != DataStatusCache.Submit.ID && formDataUnit.StatusID != DataStatusCache.Accepted.ID)
-                btnSubmit.Visible = true;
+            //if (ParentID == null &&
+            //    formDataUnit.StatusID != DataStatusCache.Submit.ID &&
+            //    formDataUnit.StatusID != DataStatusCache.Accepted.ID)
+            //{
+            //    btnSubmit.Visible = true;
+            //}
 
-            if (formDataUnit.StatusID == DataStatusCache.Accepted.ID && Mode != FormMode.Edit)
-                btnEdit.Visible = true;
+            //if (Mode != FormMode.Edit &&
+            //    formDataUnit.StatusID == DataStatusCache.Accepted.ID)
+            //{
+            //    btnEdit.Visible = true;
+            //}
 
             lblStatusDesc.Text = String.Empty;
 
@@ -883,16 +1083,19 @@ namespace Gms.Portal.Web.Pages.User
             if (ownerID == null || recordID == null)
                 return null;
 
-            var collection = MongoDbUtil.GetCollection(ownerID);
+            var filter = new Dictionary<String, Object>
+            {
+                {FormDataConstants.IDField, recordID }
+            };
 
-            //var commonFilter = Builders<BsonDocument>.Filter.Eq("ID", recordID);
-            //var document = documents.FirstOrDefault();
+            var documents = MongoDbUtil.FindDocuments(ownerID, filter).ToList();
 
-            var document = collection.AsQueryable().FirstOrDefault(n => n[FormDataConstants.IDField] == recordID);
+            var document = documents.SingleOrDefault();
             if (document == null)
                 return null;
 
-            return BsonDocumentConverter.ConvertToFormDataUnit(document);
+            var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+            return formData;
         }
 
         protected Guid? SaveFormData(FormDataUnit newFormData, FormDataUnit oldFormData)
@@ -910,23 +1113,25 @@ namespace Gms.Portal.Web.Pages.User
 
             var controls = FormStructureUtil.PreOrderFirstLevelTraversal(container).ToList();
 
-            if (ParentID != null)
-            {
-                if (!ValidateFormData(newFormData))
-                    return null;
-            }
-
             newFormData.ID = newRecordID;
             newFormData.FormID = FormID;
             newFormData.OwnerID = OwnerID;
             newFormData.ParentID = ParentID;
+            newFormData.IDNumber = GenIDNumber();
             newFormData.ContainerID = ContainerID;
             newFormData.DateCreated = currentDate;
             newFormData.UserID = UserUtil.GetCurrentUserID();
             newFormData.StatusID = DataStatusCache.None.ID;
             newFormData.HashCode = FormStructureUtil.ComputeHashCode(controls, newFormData);
 
+            if (ParentID != null)
+            {
+                if (!ValidateFormData(newFormData))
+                    return null;
+            }
+
             FormDataUtil.MergeFormDatas(newFormData, oldFormData);
+            newFormData.DateDeleted = null;
 
             var treeAndGrids = (from n in controls
                                 where n is GridEntity || n is TreeEntity
@@ -950,7 +1155,8 @@ namespace Gms.Portal.Web.Pages.User
                 return null;
             }
 
-            var collection = MongoDbUtil.GetCollection(OwnerID);
+            var mainCollection = MongoDbUtil.GetCollection(OwnerID);
+            var historyCollection = MongoDbUtil.GetCollection(OwnerID);
 
             if (oldFormData != null)
             {
@@ -958,15 +1164,23 @@ namespace Gms.Portal.Web.Pages.User
                 newFormData.StatusID = oldFormData.StatusID.GetValueOrDefault(DataStatusCache.None.ID);
                 newFormData.HashCode = FormStructureUtil.ComputeHashCode(controls, newFormData);
 
+                if (!String.IsNullOrWhiteSpace(oldFormData.IDNumber))
+                    newFormData.IDNumber = oldFormData.IDNumber;
+
                 if (UserUtil.IsSuperAdmin())
                     newFormData.UserID = oldFormData.UserID;
                 else if (oldFormData.StatusID == DataStatusCache.Accepted.ID)
                     newFormData.StatusID = DataStatusCache.None.ID;
 
-                var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, currentDate);
-                var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, oldRecordID);
+                var mainUpdate = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, currentDate);
+                var mainFilter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, oldRecordID);
 
-                collection.UpdateMany(filter, update);
+                mainCollection.UpdateMany(mainFilter, mainUpdate);
+
+                var historyUpdate = Builders<BsonDocument>.Update.Set(FormDataConstants.ParentIDField, newRecordID);
+                var historyFilter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.ParentIDField, oldRecordID);
+
+                historyCollection.UpdateMany(historyFilter, historyUpdate);
 
                 var listRefs = newFormData.Values.OfType<FormDataListRef>();
                 foreach (var listRef in listRefs)
@@ -982,7 +1196,7 @@ namespace Gms.Portal.Web.Pages.User
 
             var document = BsonDocumentConverter.ConvertToBsonDocument(newFormData);
 
-            collection.InsertOne(document);
+            mainCollection.InsertOne(document);
 
             return newRecordID;
         }
@@ -1003,5 +1217,56 @@ namespace Gms.Portal.Web.Pages.User
                     yield return otherGrid;
             }
         }
+
+        private void CheckFormAccesibility()
+        {
+            //var canAccessForm = IsFillingAvailable();
+            //if (!canAccessForm)
+            //{
+            //    lblStatusDesc.Text = FormModel.FillingValidationMessage;
+            //    lblStatusDesc.Visible = !String.IsNullOrWhiteSpace(lblStatusDesc.Text);
+
+            //    btnSave.Visible = false;
+            //    btnSubmit.Visible = false;
+            //    btnEdit.Visible = false;
+            //    btnFiles.Visible = false;
+
+            //    formDataControl.Visible = false;
+            //}
+        }
+
+        private bool GetSaveSubmitAccesibility()
+        {
+            if (!UmUtil.Instance.CurrentUser.IsSuperAdmin && !string.IsNullOrWhiteSpace(FormEntity.VisibleExpression))
+            {
+                var expNode = ExpressionParser.GetOrParse(FormEntity.VisibleExpression);
+                var expGlobals = new ExpressionGlobalsUtil(UserID, FormEntity, FormData);
+
+                Object eval;
+                if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))
+                    return false;
+
+                var result = DataConverter.ToNullableBoolean(eval).GetValueOrDefault();
+                if (result)
+                    return true;
+
+                if (RecordID == null)
+                    return false;
+
+                if (FormData.StatusID != DataStatusCache.None.ID)
+                    return true;
+
+                if (FormData.PreviousID == null)
+                    return false;
+
+                foreach (var formData in FormDataDbUtil.GetPreviousFormDatas(FormData))
+                {
+                    if (formData.StatusID != DataStatusCache.None.ID)
+                        return true;
+                }
+            }
+            return true;
+        }
+
     }
 }

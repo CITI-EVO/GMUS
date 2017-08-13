@@ -6,7 +6,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="Server">
-      <div class="row">
+    <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
@@ -22,31 +22,29 @@
         </div>
     </div>
     <div>
-        <asp:Panel ID="pnlFile" runat="server" Style="display: none" DefaultButton="btnFileOK">
-            <asp:Button ID="btnFileFake" runat="server" Style="display: none;" />
-            <act:ModalPopupExtender ID="mpeFile" runat="server" PopupControlID="pnlFile" BackgroundCssClass="modalBackground" TargetControlID="btnFileFake" CancelControlID="btnFileCancel" />
+        <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpeFile" runat="server" Style="display: none" DefaultButton="btnFileOK">
             <div class="modal-dialog">
                 <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5>
+                            <ce:Label runat="server" Text="File" />
+                        </h5>
+                    </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <h5>
-                                <ce:Label runat="server" Text="File" />
-                            </h5>
-                            <div class="ibox-content">
-                                <div class="form-group">
-                                    <ce:Label ID="lblFile" runat="server" ForeColor="Red"></ce:Label>
-                                </div>
-                                <ce:FileControl runat="server" ID="fileControl" />
-                                <div class="form-group">
-                                    <ce:LinkButton runat="server" ID="btnFileOK" OnClick="btnFileOK_OnClick" ToolTip="Save" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btnFileCancel" OnClick="btnFileCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <ce:Label ID="lblFile" runat="server" ForeColor="Red"></ce:Label>
                         </div>
+                        <ce:FileControl runat="server" ID="fileControl" />
+                    </div>
+                    <div class="modal-footer">
+                        <ce:LinkButton runat="server" ID="btnFileOK" OnClick="btnFileOK_OnClick" ToolTip="Save" CssClass="btn btn-success fa fa-save" />
+                        <ce:LinkButton runat="server" ID="btnFileCancel" OnClick="btnFileCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                     </div>
                 </div>
             </div>
-        </asp:Panel>
+        </ce:ModalPopup>
     </div>
 
 </asp:Content>

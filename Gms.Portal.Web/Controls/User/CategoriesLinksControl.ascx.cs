@@ -17,5 +17,14 @@ namespace Gms.Portal.Web.Controls.User
             rptForms.DataSource = model.List;
             rptForms.DataBind();
         }
+
+        protected string GetFormatedName(object eval)
+        {
+            var name = Convert.ToString(eval);
+            if (string.IsNullOrWhiteSpace(name) || name.Length <= 40)
+                return name;
+
+            return $"{name.Substring(0, 37)}...";
+        }
     }
 }

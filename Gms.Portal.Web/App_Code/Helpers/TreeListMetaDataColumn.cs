@@ -19,6 +19,8 @@ namespace Gms.Portal.Web.Helpers
 {
     public class TreeListMetaDataColumn : TreeListDataColumn
     {
+        private readonly ExpressionGlobalsUtil _expGlobals;
+
         public TreeListMetaDataColumn(String dataField)
         {
             DataField = dataField;
@@ -42,6 +44,8 @@ namespace Gms.Portal.Web.Helpers
 
             if (FieldEntity != null && !String.IsNullOrWhiteSpace(fieldEntity.GridFieldSummary))
                 FooterCellTemplate = new DefaultFieldTemplate(GetFooterControl);
+
+            _expGlobals = new ExpressionGlobalsUtil(UserID, ContentEntity);
         }
 
         public Guid? UserID { get; private set; }
@@ -90,11 +94,7 @@ namespace Gms.Portal.Web.Helpers
             if (label == null)
                 return;
 
-            var dataItemContainer = label.DataItemContainer as IDataItemContainer;
-            if (dataItemContainer == null)
-                return;
-
-            var descriptor = dataItemContainer.DataItem as DictionaryItemDescriptor;
+            var descriptor = DataBoundHelper.GetDescriptor(label);
             if (descriptor == null)
                 return;
 
@@ -210,13 +210,15 @@ namespace Gms.Portal.Web.Helpers
 
             foreach (var dataRecord in dataRecords)
             {
-                var expGlobals = new ExpressionGlobalsUtil(UserID, ContentEntity, dataRecord);
+                _expGlobals.AddSource(dataRecord);
 
                 Object result;
-                if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+                if (!ExpressionEvaluator.TryEval(expNode, _expGlobals.Eval, out result))
                     yield return "[TextExpression error]";
 
                 yield return Convert.ToString(result);
+
+                _expGlobals.RemoveSource(dataRecord);
             }
         }
 

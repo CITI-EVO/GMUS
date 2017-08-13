@@ -18,6 +18,8 @@ namespace Gms.Portal.Web.Helpers
 {
     public class GridViewMetaBoundField : TemplateField
     {
+        private readonly ExpressionGlobalsUtil _expGlobals;
+
         public GridViewMetaBoundField(String dataField)
         {
             DataField = dataField;
@@ -35,6 +37,8 @@ namespace Gms.Portal.Web.Helpers
             ContentEntity = contentEntity;
             HeaderText = fieldEntity.Name;
             DataField = Convert.ToString(FieldEntity.ID);
+
+            _expGlobals = new ExpressionGlobalsUtil(UserID, ContentEntity);
         }
 
         public Guid? UserID { get; private set; }
@@ -94,11 +98,7 @@ namespace Gms.Portal.Web.Helpers
             if (label == null)
                 return;
 
-            var dataItemContainer = label.DataItemContainer as IDataItemContainer;
-            if (dataItemContainer == null)
-                return;
-
-            var descriptor = dataItemContainer.DataItem as DictionaryItemDescriptor;
+            var descriptor = DataBoundHelper.GetDescriptor(label);
             if (descriptor == null)
                 return;
 
@@ -125,17 +125,9 @@ namespace Gms.Portal.Web.Helpers
 
             hyperLink.Visible = false;
 
-            var dataItemContainer = hyperLink.DataItemContainer as IDataItemContainer;
-            if (dataItemContainer == null)
-                return;
-
-            var descriptor = dataItemContainer.DataItem as DictionaryItemDescriptor;
+            var descriptor = DataBoundHelper.GetDescriptor(hyperLink);
             if (descriptor == null)
                 return;
-
-            //var parentGridRow = hyperLink.NamingContainer as GridViewRow;
-            //if (parentGridRow == null)
-            //    return;
 
             var binary = descriptor.GetValue(DataField) as FormDataBinary;
             if (binary == null || binary.FileBytes == null || binary.FileBytes.Length == 0 || String.IsNullOrWhiteSpace(binary.FileName))
@@ -147,9 +139,9 @@ namespace Gms.Portal.Web.Helpers
 
             var downloadUrl = new UrlHelper("~/Handlers/Download.ashx")
             {
-                ["FieldID"] = FieldEntity.ID,
-                [FormDataConstants.IDField] = recordID,
                 [FormDataConstants.OwnerIDField] = OwnerID,
+                [FormDataConstants.IDField] = recordID,
+                ["FieldID"] = FieldEntity.ID
             };
 
             hyperLink.Text = binary.ToString();
@@ -228,13 +220,15 @@ namespace Gms.Portal.Web.Helpers
 
             foreach (var dataRecord in dataRecords)
             {
-                var expGlobals = new ExpressionGlobalsUtil(UserID, ContentEntity, dataRecord);
+                _expGlobals.AddSource(dataRecord);
 
                 Object result;
-                if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+                if (!ExpressionEvaluator.TryEval(expNode, _expGlobals.Eval, out result))
                     yield return "[TextExpression error]";
 
                 yield return Convert.ToString(result);
+
+                _expGlobals.RemoveSource(dataRecord);
             }
         }
 

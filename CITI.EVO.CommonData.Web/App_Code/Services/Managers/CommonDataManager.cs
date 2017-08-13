@@ -6,6 +6,7 @@ using CITI.EVO.CommonData.Svc.Contracts;
 using CITI.EVO.CommonData.Svc.Enums;
 using CITI.EVO.CommonData.Web.Caches;
 using CITI.EVO.CommonData.Web.Extensions;
+using CITI.EVO.CommonData.Web.Helpers.GovTalk;
 using CITI.EVO.Tools.Utils;
 using NHibernate.Linq;
 using CITI.EVO.Tools.Extensions;
@@ -14,6 +15,11 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 {
     public static class CommonDataManager
     {
+        public static PersonInfoContract GetPerson(String personalID, String birthYear)
+        {
+            return PersonApi.GetPerson(personalID, birthYear);
+        }
+
         public static List<AreaContract> GetAreas(AreaTypesEnum type, RecordTypesEnum recordType)
         {
 

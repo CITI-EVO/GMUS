@@ -11,8 +11,8 @@
                 <div class="ibox-content">
                     <div class="form-group">
                         <div class="col-lg-12">
-                            <ce:LinkButton runat="server" ToolTip="Save" ID="btnSaveCollection" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
-                            <ce:LinkButton runat="server" ToolTip="Close" ID="btnCancelCollection" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
+                            <ce:LinkButton runat="server" ToolTip="Save" ID="btnSave" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
+                            <ce:LinkButton runat="server" ToolTip="Close" ID="btnCancel" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                         </div>
                     </div>
                     <local:RegEventControl runat="server" ID="regEventControl" />

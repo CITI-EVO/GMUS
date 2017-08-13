@@ -14,7 +14,7 @@ namespace Gms.Portal.Web.Models
 
         public String Query { get; set; }
 
-        public Guid? SourceID { get; set; }
+        public String SourceID { get; set; }
 
         public String SourceType { get; set; }
 

@@ -13,7 +13,7 @@ namespace Gms.Portal.Web.Utils
 {
     public static class GmsCommonUtil
     {
-        private static readonly IComparer<String> _comparer = StringLogicalComparer.DetectFloatNumber;
+        private static readonly IComparer<String> _comparer = StringLogicalComparer.FloatingNumberSensitive;
 
         public static int Compare(Object x, Object y)
         {
@@ -71,6 +71,35 @@ namespace Gms.Portal.Web.Utils
 
             var result = new DateTime(dateVal.Year, dateVal.Month, dateVal.Day, timeVal.Hour, timeVal.Minute, timeVal.Second);
             return result;
+        }
+
+        public static IDictionary<String, Object> Merge(IDictionary<String, Object> x, IDictionary<String, Object> y)
+        {
+            if (x == null && y == null)
+                return null;
+
+            if (x == null && y != null)
+                return y;
+
+            if (x != null && y == null)
+                return x;
+
+            var @set = new HashSet<String>();
+            @set.UnionWith(x.Keys);
+            @set.UnionWith(y.Keys);
+
+            var dict = new Dictionary<String, Object>();
+
+            foreach (var key in @set)
+            {
+                Object val;
+                if (!x.TryGetValue(key, out val))
+                    val = y[key];
+
+                dict[key] = val;
+            }
+
+            return dict;
         }
     }
 }

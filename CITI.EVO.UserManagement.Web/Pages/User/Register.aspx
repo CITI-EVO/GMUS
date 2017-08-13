@@ -33,6 +33,9 @@
                     <ce:LinkButton ID="btOK" CssClass="btn btn-success block full-width m-b" runat="server" OnClick="btOK_Click">
                         <ce:label runat="server" Text="გაგზავნა"/>
                     </ce:LinkButton>
+                    <ce:LinkButton CssClass="btn btn-success block full-width m-b" runat="server" ID="btCancel" OnClick="btCancel_Click">
+                        <ce:label runat="server" Text="უკან დაბრუნება"/>
+                    </ce:LinkButton>
                 </div>
                 <p class="m-t"><small>Consulting & IT Innovations  &copy; 2017</small> </p>
             </asp:Panel>

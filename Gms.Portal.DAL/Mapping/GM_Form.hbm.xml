@@ -9,6 +9,8 @@
     </id>
     <property name="Name" />
     <property name="Number" />
+    <property name="Abbreviation" />
+    <property name="Year" />
     <property name="OrderIndex" />
     <property name="Visible" />
     <property name="RequiresApprove" />
@@ -17,6 +19,7 @@
     <property name="FillingValidationExpression" />
     <property name="FillingValidationMessage" />
     <property name="UserMode" />
+    <property name="FormType" />
     <property name="XmlData" type="System.Xml.Linq.XDocument">
       <column name="XmlData" sql-type="xml" />
     </property>

@@ -21,6 +21,12 @@ body {
     font-size: 12px;
 }
 
+.modalBackground {
+    background-color: Gray;
+    filter: alpha(opacity=70);
+    opacity: 0.7;
+}
+
 h1,
 h2,
 h3,
@@ -926,8 +932,8 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
         }
 
 .btn-info {
-    background-color: #6c82ab;
-    border-color: #6c82ab;
+    background-color: #23c6c8;
+    border-color: #23c6c8;
     color: #FFFFFF;
 }
 
@@ -940,8 +946,8 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     .btn-info:active:hover,
     .btn-info.active:hover,
     .btn-info.active:focus {
-        background-color: #83a0d7;
-        border-color: #83a0d7;
+        background-color: #23c6c8;
+        border-color: #23c6c8;
         color: #FFFFFF;
     }
 
@@ -10325,3 +10331,22 @@ body.md-skin {
     border-color: #ddd;
 }
 /*end gridview */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 16777271;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}

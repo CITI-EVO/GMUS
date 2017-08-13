@@ -483,8 +483,10 @@ namespace CITI.EVO.Tools.eXecutableXML
             if (String.IsNullOrEmpty(expression))
                 return null;
 
+            var advResolver = new AdvancedDataResolver(context.GetValue);
             var expNode = ExpressionParser.GetOrParse(expression);
-            var result = ExpressionEvaluator.Eval(expNode, context.GetValue);
+
+            var result = ExpressionEvaluator.Eval(expNode, advResolver);
 
             return result;
         }

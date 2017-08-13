@@ -34,12 +34,7 @@ namespace Gms.Portal.Web.Converters.EntityToModel
             target.Name = source.Name;
             target.Type = source.Type;
             target.SourceType = source.SourceType;
-
-            if (source.SourceType == "Table")
-                target.SourceID = source.FormID;
-
-            if (source.SourceType == "Logic")
-                target.SourceID = source.LogicID;
+            target.SourceID = source.SourceID;
 
             var logicXElem = source.RawData;
             if (logicXElem == null)

@@ -27,7 +27,7 @@
         <dx:TreeListDataColumn VisibleIndex="0" Width="3px">
             <DataCellTemplate>
                 <asp:LinkButton ID="lnkEdit" runat="server" ToolTip="რედაქტირება"   CssClass="btn btn-primary fa fa-edit" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetEditVisible(Eval("Type")) %>' OnCommand="btnEdit_OnCommand" />
-                <asp:LinkButton  ID="lnkDelete" runat="server" ToolTip="წაშლა"  CssClass="btn btn-danger fa fa-trash" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetDeleteVisible(Eval("Type")) %>' OnCommand="btnDelete_OnCommand" />
+                <asp:LinkButton  ID="lnkDelete" runat="server" ToolTip="წაშლა"  CssClass="btn btn-danger fa fa-trash" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetDeleteVisible(Eval("Type")) %>' OnCommand="btnDelete_OnCommand" OnClientClick="return confirm('დარწმუნებული ხართ?/Are you sure?')" />
                 <asp:LinkButton  ID="lnkNew" runat="server" ToolTip="დამატება"  CssClass="btn btn-primary fa fa-plus" CommandArgument='<% #Eval("Key")%>' Visible='<%# GetNewVisible(Eval("Type")) %>' OnCommand="btnNew_OnCommand" />
             </DataCellTemplate>
         </dx:TreeListDataColumn>

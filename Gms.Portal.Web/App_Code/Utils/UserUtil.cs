@@ -2,11 +2,32 @@
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
+using CITI.EVO.UserManagement.Svc.Contracts;
+using Gms.Portal.Web.Caches;
 
 namespace Gms.Portal.Web.Utils
 {
     public static class UserUtil
     {
+        public static String GetUserStatus(Guid? userID)
+        {
+            var umUser = UmUsersCache.GetUser(userID);
+            return GetUserStatus(umUser);
+        }
+        public static String GetUserStatus(UserContract userContract)
+        {
+            if (userContract == null)
+                return "Not Found";
+
+            if (!userContract.IsActive)
+                return "Passive";
+
+            if (userContract.DateDeleted != null)
+                return "Deleted";
+
+            return "Active";
+        }
+
         public static Guid? GetMandatoryFormID()
         {
             var instance = UmUtil.Instance;

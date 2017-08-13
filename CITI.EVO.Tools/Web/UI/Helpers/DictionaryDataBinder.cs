@@ -21,11 +21,13 @@ namespace CITI.EVO.Tools.Web.UI.Helpers
         }
 
         public IEnumerable<DictionaryBinderItem> GetItems()
-        {   
+        {
             foreach (var item in _collection)
             {
-                var text = ExpressionEvaluator.Eval(_textExpression, n => item[n]);
-                var value = ExpressionEvaluator.Eval(_valueExpression, n => item[n]);
+                var advResolver = new AdvancedDataResolver(n => item[n]);
+
+                var text = ExpressionEvaluator.Eval(_textExpression, advResolver);
+                var value = ExpressionEvaluator.Eval(_valueExpression, advResolver);
 
                 var binder = new DictionaryBinderItem(text, value);
                 yield return binder;

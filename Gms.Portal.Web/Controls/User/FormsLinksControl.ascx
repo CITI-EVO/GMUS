@@ -4,7 +4,7 @@
         <ItemTemplate>
             <li runat="server">
                 <asp:HyperLink NavigateUrl='<%# GetLinkUrl(Eval("ID")) %>' runat="server">
-                    <ce:HtmlLabel runat="server" Text='<%# Eval("Name") %>'/>
+                    <ce:HtmlLabel runat="server" Text='<%# GetName(Eval("Name")) %>' ToolTip='<%# GetTitle(Eval("Name")) %>' />
                 </asp:HyperLink>
             </li>
         </ItemTemplate>

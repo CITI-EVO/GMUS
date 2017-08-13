@@ -6,7 +6,6 @@
     <ce:CheckBox CssClass="checkbox-inline" ID="cbPassword" runat="server" Text="პაროლი" Property="{UsersFilterModel.Password=Checked}" />
     <ce:CheckBox CssClass="checkbox-inline" ID="cbFirstName" runat="server" Text="სახელი" Property="{UsersFilterModel.FirstName=Checked}" />
     <ce:CheckBox CssClass="checkbox-inline" ID="cbLastName" runat="server" Text="გვარი" Property="{UsersFilterModel.LastName=Checked}" />
-    <ce:CheckBox CssClass="checkbox-inline" ID="cbEmail" runat="server" Text="ელ-ფოსტა" Property="{UsersFilterModel.Email=Checked}" />
     <ce:CheckBox CssClass="checkbox-inline" ID="cbAddress" runat="server" Text="მისამართი" Property="{UsersFilterModel.Address=Checked}" />
 </div>
 <div class="">

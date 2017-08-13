@@ -2,7 +2,9 @@
 
 <%@ Register TagPrefix="local" TagName="HiddenFieldValueControl" Src="~/Controls/Common/HiddenFieldValueControl.ascx" %>
 
+<local:HiddenFieldValueControl runat="server" ID="hdFormID" Property="{RecordStatusModel.FormID=Value}" />
 <local:HiddenFieldValueControl runat="server" ID="hdRecordID" Property="{RecordStatusModel.RecordID=Value}" />
+<local:HiddenFieldValueControl runat="server" ID="hdSourceField" Property="{RecordStatusModel.SourceField=Value}" />
 
 <asp:Panel runat="server" CssClass="form-group">
     <ce:Label runat="server" CssClass="col-sm-2 control-label">Status</ce:Label>

@@ -17,7 +17,7 @@
         <div style="overflow-y: auto; height: 100px; border: 1px solid #aaaaaa">
             <div class="form-control">
                 <ce:CheckBox runat="server" ID="cbCheckAll" Text="Select all" AutoPostBack="True" OnCheckedChanged="cbCheckAll_OnCheckedChanged" />
-                <ce:CheckBoxList runat="server" ID="cblRecipients" DataTextField="Text" DataValueField="Value">
+                <ce:CheckBoxList runat="server" ID="cblRecipients" DataTextField="Name" DataValueField="ID">
                 </ce:CheckBoxList>
             </div>
         </div>
@@ -83,28 +83,25 @@
 </div>
 
 <div>
-    <asp:Panel ID="pnlDataChangeLinkGen" runat="server" Style="display: none" DefaultButton="btnDataChangeLinkGenCancel">
-        <asp:Button ID="btnDataChangeLinkGenFake" runat="server" Style="display: none;" />
-        <act:ModalPopupExtender ID="mpeDataChangeLinkGen" runat="server" PopupControlID="pnlDataChangeLinkGen" BackgroundCssClass="modalBackground" TargetControlID="btnDataChangeLinkGenFake" CancelControlID="btnDataChangeLinkGenCancel" />
+    <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpeDataChangeLinkGen" runat="server" Style="display: none" DefaultButton="btnDataChangeLinkGenCancel">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>
+                        <ce:Label runat="server" Text="Link Generator" />
+                    </h5>
+                </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <h5>
-                            <ce:Label runat="server" Text="Link Generator" />
-                        </h5>
-                        <div class="ibox-content">
-                            <div class="form-group">
-                                <ce:Label ID="lblDataChangeLinkGen" runat="server" ForeColor="Red"></ce:Label>
-                            </div>
-                            <local:DataChangeLinkGenControl runat="server" ID="dataChangeLinkGenControl" />
-                            <div class="form-group">
-                                <ce:LinkButton runat="server" ID="btnDataChangeLinkGenCancel" OnClick="btnDataChangeLinkGenCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <ce:Label ID="lblDataChangeLinkGen" runat="server" ForeColor="Red"></ce:Label>
                     </div>
+                    <local:DataChangeLinkGenControl runat="server" ID="dataChangeLinkGenControl" />
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btnDataChangeLinkGenCancel" OnClick="btnDataChangeLinkGenCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                 </div>
             </div>
         </div>
-    </asp:Panel>
+    </ce:ModalPopup>
 </div>

@@ -21,55 +21,108 @@
 <body>
     <div id="wrapper" style="text-align: center">
         <div style="display: inline-block">
-            <h2>$Util.Translate($FormSchema.Name,$LanguagePair)</h2>
+            <h2>$!{nvUtil.Translate($entity.Name, $langPair)}</h2>
         </div>
     </div>
-    <table>
-
-        #foreach($item in $FormData)
-        #if(!$DefaultFields.Contains($item.Key))
-
-        #set($isGrid = $Util.IsValueList($item.Value))
-        #if(!$isGrid)
-        <tr style="">
-            <td>
-                $Util.Translate($item.Key,$LanguagePair)
-            </td>
-            <td>
-                $item.Value
-            </td>       
-        </tr>
+    
+    #macro(renderField $child)
+        #if($nvUtil.IsCheckable($child))
+            <input type="$!{nvUtil.GetCheckType($child)}" disabled="disabled" $!{nvUtil.GetCheckValue($child)} />
+        #else
+            $!{nvUtil.GetFieldData($child)}
         #end
-        #end
-        #end
-    </table>
-
-    #foreach($item in $FormData)
-    #set($isGrid = $Util.IsValueList($item.Value))
-    #if($isGrid)
-    <h4>$Util.Translate($item.Key,$LanguagePair)</h4>
-    #set($columns = $Util.GetGridColumns($Controls,$item.Key))
-    <table>
-        <tr>
-            #foreach($column in $columns)
-            <td>
-                $Util.Translate($column.Name,$LanguagePair)
-            </td>
-            #end
-        </tr>
-        #set($gridData = $Util.GetGridData($item.Value))
-        #foreach($gridRow in $gridData)
-        <tr>
-            #foreach($column in $columns)
-            <td>
-               $!{gridRow.get_Item($column.ID.ToString())}
-            </td>
-            #end
-        </tr>
-        #end
-    </table>
     #end
+    
+    #macro(renderGridField $gridItem $child)
+        #if($nvUtil.IsCheckable($child))
+            <input type="$!{nvUtil.GetCheckType($child)}" disabled="disabled" $!{nvUtil.GetCheckValue($gridItem, $child)} />
+        #else
+            $!{nvUtil.GetFieldData($gridItem, $child)}
+        #end
     #end
 
+    #macro(renderChildren $parent)
+        #set($children = $nvUtil.GetChildren($parent))
+        #if(!$nvUtil.IsEmpty($children))
+            #foreach ($child in $children)
+                #if($nvUtil.IsField($child))
+                    <div style="width: 100%;">
+                        #if($nvUtil.IsInversed($child))
+                            <div style="position: relative; float: left; width: 33.33333333%;">#renderField($child)</div>
+                            <div style="position: relative; float: left; width: 66.66666667%;">$!{nvUtil.Translate($child.Name, $langPair)}</div>
+                        #else
+                            <div style="position: relative; float: left; width: 33.33333333%;">$!{nvUtil.Translate($child.Name, $langPair)}</div>
+                            <div style="position: relative; float: left; width: 66.66666667%;">#renderField($child)</div>
+                        #end
+                    </div>
+                #end
+                #if($nvUtil.IsGroup($child))
+                    #if(!$nvUtil.IsEmpty($child))
+                        <fieldset>
+                            <legend>$!{nvUtil.Translate($child.Name, $langPair)}</legend>
+                            #renderChildren($child)
+                        </fieldset>
+                    #end
+                #end    
+                #if($nvUtil.IsGrid($child))
+                    #set($gridFields = $nvUtil.GetChildren($child))
+                    #set($gridData = $nvUtil.GetGridData($child))
+                    #if(!$nvUtil.IsEmpty($child))
+                        <div>
+                            <h4>$!{nvUtil.Translate($child.Name, $langPair)}</h4>
+                            <table>
+                                <thead>
+                                <tr>
+                                    #foreach($gridField in $gridFields)
+                                        <td style="padding: 5px;"><b>$!{nvUtil.Translate($gridField.Name, $langPair)}</b></td>
+                                    #end 
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($gridItem in $gridData)
+                                        <tr>
+                                            #foreach($gridField in $gridFields)
+                                                <td style="padding: 5px;">#renderGridField($gridItem $gridField)</td>
+                                            #end 
+                                        </tr>
+                                    #end                   
+                                </tbody>
+                            </table>
+                        </div>
+                    #end
+                #end     
+                #if($nvUtil.IsTree($child))
+                    #set($treeFields = $nvUtil.GetChildren($child))
+                    #set($treeData = $nvUtil.GetGridData($child))
+                    #if(!$nvUtil.IsEmpty($child))
+                        <div>
+                            <h4>$!{nvUtil.Translate($child.Name, $langPair)}</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        #foreach($treeField in $treeFields)
+                                            <td style="padding: 5px;"><b>$!{nvUtil.Translate($treeField.Name, $langPair)}</b></td>
+                                        #end 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($treeItem in $treeData)
+                                        <tr>
+                                            #foreach($treeField in $treeFields)
+                                                <td style="padding: 5px;">#renderGridField($treeItem $treeField)</td>
+                                            #end 
+                                        </tr>
+                                    #end                   
+                                </tbody>
+                            </table>
+                        </div>
+                    #end      
+                #end      
+            #end
+        #end
+    #end
+    <div>
+        #renderChildren($entity)
+    </div>
 </body>
 </html>

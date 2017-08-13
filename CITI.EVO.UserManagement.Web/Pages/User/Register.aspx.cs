@@ -97,6 +97,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                     IsActive = false,
                     LoginName = model.LoginName,
                     Email = model.Email,
+                    Phone = model.Phone,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     //BirthDate = deBirthDate.Date
@@ -146,6 +147,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                 lblMessage.Text = "რეგისტრაცია წარმატებით დასრულდა, აკტივაციისთვის მიმართეთ ადმინისტრატორს";
                 lblAdminEmail.Text = ConfigurationManager.AppSettings["AdminEmail"];
             }
+        }
+
+        protected void btCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Pages/User/Login.aspx");
         }
     }
 }

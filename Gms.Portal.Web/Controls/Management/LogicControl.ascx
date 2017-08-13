@@ -8,7 +8,7 @@
     <div class="col-lg-10">
         <asp:DropDownList runat="server" ID="lstSourceType" Property="{LogicModel.SourceType=SelectedValue}" AutoPostBack="True" CssClass="chosen-select">
             <Items>
-                <asp:ListItem Text="Form" Value="Form" Selected="True" />
+                <asp:ListItem Text="Form" Value="Database" Selected="True" />
                 <asp:ListItem Text="Logic" Value="Logic" />
             </Items>
         </asp:DropDownList>
@@ -18,7 +18,7 @@
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Source</ce:Label>
     <div class="col-lg-10">
-        <asp:DropDownList runat="server" ID="cbxSource" DataTextField="Name" DataValueField="ID" ValueType="System.Guid" Property="{LogicModel.SourceID=SelectedValue}" CssClass="chosen-select">
+        <asp:DropDownList runat="server" ID="cbxSource" DataTextField="Value" DataValueField="Key" ValueType="System.Guid" Property="{LogicModel.SourceID=SelectedValue}" CssClass="chosen-select">
         </asp:DropDownList>
     </div>
 </div>

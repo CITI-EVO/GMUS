@@ -11,7 +11,11 @@
 <asp:HiddenField runat="server" ID="hdEnabled" />
 <asp:HiddenField runat="server" ID="hdDateCreated" />
 
-<asp:Panel runat="server" ID="pnlMain" CssClass="row">
+<asp:Panel runat="server">
+    <asp:Label runat="server" ID="lblErrors" ForeColor="Red" EnableViewState="False"></asp:Label>
+</asp:Panel>
+<asp:Panel runat="server" ID="pnlMain" CssClass="row" DefaultButton="btnDefFake">
+    <asp:Button runat="server" ID="btnDefFake" Style="display: none;" />
 </asp:Panel>
 
 <script type="text/javascript">

@@ -35,12 +35,12 @@ namespace Gms.Portal.Web.Pages.Management
             }
         }
 
-        protected void btnCancelCollection_OnClick(object sender, EventArgs e)
+        protected void btnCancel_OnClick(object sender, EventArgs e)
         {
             Response.Redirect("~/Pages/Management/CollectionsList.aspx");
         }
 
-        protected void btnSaveCollection_OnClick(object sender, EventArgs e)
+        protected void btnSave_OnClick(object sender, EventArgs e)
         {
             var collectionID = DataConverter.ToNullableGuid(RequestUrl["CollectionID"]);
 

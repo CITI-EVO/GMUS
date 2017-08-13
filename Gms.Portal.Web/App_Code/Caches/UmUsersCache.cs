@@ -29,7 +29,31 @@ namespace Gms.Portal.Web.Caches
 
             UserContract contract;
             if (!dictionary.TryGetValue(userID.Value, out contract))
-                return null;
+            {
+                //lock (dictionary)
+                //{
+                //    contract = LoadUser(userID.Value);
+                //    dictionary[userID.Value] = contract;
+                //}
+
+                lock (dictionary)
+                {
+                    var users = LoadUsersList();
+
+                    foreach (var user in users)
+                    {
+                        if (user == null)
+                            continue;
+
+                        if (user.ID == userID)
+                            contract = user;
+                        else
+                            dictionary[user.ID] = user;
+                    }
+
+                    dictionary[userID.Value] = contract;
+                }
+            }
 
             return contract;
         }
@@ -52,6 +76,15 @@ namespace Gms.Portal.Web.Caches
                 return null;
 
             return UserManagementProxy.GetAllUsers(token.Value, true);
+        }
+
+        private static UserContract LoadUser(Guid userID)
+        {
+            var token = UmUtil.Instance.CurrentToken;
+            if (token == null)
+                return null;
+
+            return UserManagementProxy.GetUser(token.Value, userID);
         }
     }
 }

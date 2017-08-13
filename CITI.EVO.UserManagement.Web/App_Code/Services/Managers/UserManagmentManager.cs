@@ -235,6 +235,30 @@ namespace CITI.EVO.UserManagement.Web.Services.Managers
             return items.ToContracts();
         }
 
+        public static UserContract GetUser(Guid token, Guid userID)
+        {
+            if (!AccessController.ValidateToken(token))
+                return null;
+
+            var currentUser = GetCurrentUser(token);
+            if (currentUser == null)
+                return null;
+
+            var session = Hb8Factory.InitSession();
+
+            var query = from n in session.Query<UM_User>()
+                        where n.ID == userID
+                        select n;
+
+            var user = query.FirstOrDefault();
+            if (user == null)
+                return null;
+
+            if (!currentUser.IsSuperAdmin)
+                user.Password = null;
+
+            return user.ToContract();
+        }
 
         public static List<UserContract> GetAllUsers(Guid token, bool deleteds)
         {

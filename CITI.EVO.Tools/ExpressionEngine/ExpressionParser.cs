@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.ExpressionEngine.Common;
@@ -16,64 +17,34 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
         private static readonly ISet<char> operationalSymbols = new HashSet<char>
         {
-            '(',
-            ')',
-            '[',
-            ']',
-            ',',
-            '"',
-            '\'',
+            '(', ')', '[', ']', ',', '"', '\'',
         };
 
         private static readonly ISet<char> reservedSymbols = new HashSet<char>
         {
-            '%',
-            '^',
-            '&',
-            '*',
-            '-',
-            '=',
-            '+',
-            '/',
-            '\\',
-            '!',
-            '<',
-            '>',
-            '|'
+            '%', '^', '&', '*', '-', '=', '+', '/', '\\', '!', '<', '>', '|'
         };
 
         private static readonly IDictionary<String, int> operators = new Dictionary<String, int>
         {
-            {"!", 3},
-            {"+", 3},
-            {"++", 3},
-            {"-", 3},
-            {"--", 3},
-            {"=", 3},
-            {"==", 3},
-            {"!=", 3},
-            {"<>", 3},
-            {"<=", 3},
-            {">=", 3},
+            {"%" , 0}, {"^" , 0},
+            {"*" , 1}, {"/" , 1}, {"\\", 1},
+            {"!" , 3}, {"+" , 3}, {"-" , 3}, {"<" , 3}, {">" , 3}, {"&" , 3}, {"=" , 3},
+            {"++", 3}, {"--", 3}, {"==", 3}, {"!=", 3}, {"<>", 3}, {"<=", 3}, {">=", 3},
             {"&&", 4},
             {"||", 5},
-            {"^", 0},
-            {"%", 0},
-            {"*", 1},
-            {"/", 1},
-            {"\\", 1},
-            {"<", 3},
-            {">", 3},
-            {"&", 3},
         };
-
-        private static readonly ISet<char> escapeSymbols = new HashSet<char>();
 
         private static readonly Regex escapeRx;
         #endregion
 
         static ExpressionParser()
         {
+            var escapeSymbols = new HashSet<char>
+            {
+                '.'
+            };
+
             escapeSymbols.UnionWith(operationalSymbols);
             escapeSymbols.UnionWith(reservedSymbols);
 
@@ -85,6 +56,9 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
         public static String Escape(String name)
         {
+            if (String.IsNullOrEmpty(name))
+                return null;
+
             return escapeRx.Replace(name, "_");
         }
 
@@ -104,6 +78,21 @@ namespace CITI.EVO.Tools.ExpressionEngine
         }
 
         public static ExpressionNode Parse(String expression)
+        {
+            var rootNode = new ExpressionNode { Container = true };
+
+            var expTokens = ExpressionTokenizer(expression);
+
+            foreach (var exp in expTokens)
+            {
+                var node = InternalParse(exp);
+                rootNode.Params.Add(node);
+            }
+
+            return rootNode;
+        }
+
+        private static ExpressionNode InternalParse(String expression)
         {
             if (String.IsNullOrEmpty(expression))
                 return new OperatorNode { Value = double.NaN };
@@ -152,34 +141,25 @@ namespace CITI.EVO.Tools.ExpressionEngine
             var currOperator = String.Empty;
             var currPriority = -1;
 
-            bool singleQuoteOpen = false;
-            bool doubleQuoteOpen = false;
+            var singleQuoteOpen = false;
+            var doubleQuoteOpen = false;
+
             for (int i = 0; i < expression.Length; i++)
             {
                 var @char = expression[i];
                 if (@char == '\'' && !doubleQuoteOpen)
-                {
                     singleQuoteOpen = !singleQuoteOpen;
-                }
 
                 if (@char == '"' && !singleQuoteOpen)
-                {
                     doubleQuoteOpen = !doubleQuoteOpen;
-                }
 
                 if (singleQuoteOpen || doubleQuoteOpen)
-                {
                     continue;
-                }
 
                 if (@char == '(')
-                {
                     parentheses++;
-                }
                 else if (@char == ')')
-                {
                     parentheses--;
-                }
                 else if (parentheses == 0)
                 {
                     if (reservedSymbols.Contains(@char) && i != 0)
@@ -215,15 +195,20 @@ namespace CITI.EVO.Tools.ExpressionEngine
             if (parentheses < 0)
                 throw new Exception($"Too many )s in \"{expression}\"");
 
-            if (expression.StartsWith("(") && expression.EndsWith(")"))
+            if (String.IsNullOrWhiteSpace(leftExp) &&
+                String.IsNullOrWhiteSpace(currOperator) &&
+                String.IsNullOrWhiteSpace(rightExp))
             {
-                var firstClosingBracketIndex = expression.IndexOf(")", StringComparison.OrdinalIgnoreCase);
-                var nextOpeningBracketIndex = expression.IndexOf("(", 1, StringComparison.OrdinalIgnoreCase);
-
-                if (nextOpeningBracketIndex < firstClosingBracketIndex)
+                if (expression.StartsWith("(") && expression.EndsWith(")"))
                 {
-                    var subNode = Parse(expression.Substring(1, expression.Length - 2));
-                    return subNode;
+                    var firstClosingBracketIndex = expression.IndexOf(")", StringComparison.OrdinalIgnoreCase);
+                    var nextOpeningBracketIndex = expression.IndexOf("(", 1, StringComparison.OrdinalIgnoreCase);
+
+                    if (nextOpeningBracketIndex < firstClosingBracketIndex)
+                    {
+                        var subNode = InternalParse(expression.Substring(1, expression.Length - 2));
+                        return subNode;
+                    }
                 }
             }
 
@@ -263,7 +248,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                             Action = actionName,
                             ActionType = ActionTypes.Operator,
 
-                            Right = Parse(innerExp)
+                            Right = InternalParse(innerExp)
                         };
 
                         return subNode;
@@ -290,7 +275,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                             }
                             else
                             {
-                                var node = Parse(paramExp);
+                                var node = InternalParse(paramExp);
                                 funcNode.Params.Add(node);
                             }
                         }
@@ -323,54 +308,101 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 Action = currOperator,
                 ActionType = ActionTypes.Operator,
 
-                Left = Parse(leftExp),
-                Right = Parse(rightExp)
+                Left = InternalParse(leftExp),
+                Right = InternalParse(rightExp)
             };
 
             return operNode;
         }
 
-        public static String[] SplitParams(String exp)
+        private static IEnumerable<String> SplitParams(String expression)
         {
-            var list = new List<String>();
-
-            var startIndex = 0;
             var parentheses = 0;
+            var buffer = new StringBuilder();
 
-            for (int i = 0; i < exp.Length; i++)
+            var singleQuoteOpen = false;
+            var doubleQuoteOpen = false;
+
+            foreach (var @char in expression)
             {
-                var @char = exp[i];
+                if (@char == '\'' && !doubleQuoteOpen)
+                    singleQuoteOpen = !singleQuoteOpen;
 
-                switch (@char)
+                if (@char == '"' && !singleQuoteOpen)
+                    doubleQuoteOpen = !doubleQuoteOpen;
+
+                if (!singleQuoteOpen && !doubleQuoteOpen)
                 {
-                    case '(':
-                        {
-                            parentheses++;
-                            break;
-                        }
-                    case ')':
-                        {
-                            parentheses--;
-                            break;
-                        }
-                    case ',':
-                        {
-                            if (parentheses == 0)
+                    switch (@char)
+                    {
+                        case '(':
                             {
-                                var paramExp = exp.Substring(startIndex, i - startIndex);
-                                list.Add(paramExp.Trim());
-
-                                startIndex = i + 1;
+                                parentheses++;
+                                break;
                             }
-                            break;
-                        }
+                        case ')':
+                            {
+                                parentheses--;
+                                break;
+                            }
+                        case ',':
+                            {
+                                if (parentheses == 0)
+                                {
+                                    var item = buffer.ToString();
+                                    yield return item.Trim();
+
+                                    buffer.Clear();
+                                    continue;
+                                }
+
+                                break;
+                            }
+                    }
                 }
+
+                buffer.Append(@char);
             }
 
-            var lastParamExp = exp.Substring(startIndex);
-            list.Add(lastParamExp.Trim());
+            if (buffer.Length > 0)
+            {
+                var item = buffer.ToString();
+                yield return item.Trim();
+            }
+        }
 
-            return list.ToArray();
+        private static IEnumerable<String> ExpressionTokenizer(String expression)
+        {
+            var buffer = new StringBuilder();
+
+            var singleQuoteOpen = false;
+            var doubleQuoteOpen = false;
+
+            foreach (var @char in expression)
+            {
+                if (@char == '\'' && !doubleQuoteOpen)
+                    singleQuoteOpen = !singleQuoteOpen;
+
+                if (@char == '"' && !singleQuoteOpen)
+                    doubleQuoteOpen = !doubleQuoteOpen;
+
+                if (@char == ';' && !singleQuoteOpen && !doubleQuoteOpen)
+                {
+                    var item = buffer.ToString();
+                    yield return item.Trim();
+
+                    buffer.Clear();
+                    continue;
+                }
+
+                buffer.Append(@char);
+            }
+
+            if (buffer.Length > 0)
+            {
+                var item = buffer.ToString();
+                yield return item.Trim();
+            }
         }
     }
 }

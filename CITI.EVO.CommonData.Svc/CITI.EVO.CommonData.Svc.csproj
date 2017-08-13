@@ -49,7 +49,7 @@
     <Compile Include="Contracts\LegalFormContract.cs" />
     <Compile Include="Contracts\MessageContract.cs" />
     <Compile Include="Contracts\MobileIndexesContract.cs" />
-    <Compile Include="Contracts\PersonScoreContract.cs" />
+    <Compile Include="Contracts\PersonInfoContract.cs" />
     <Compile Include="Contracts\PhoneIndexContract.cs" />
     <Compile Include="Contracts\PhoneIndexTypeContract.cs" />
     <Compile Include="Contracts\TranslationContract.cs" />

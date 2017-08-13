@@ -20,31 +20,24 @@
     <local:FieldsControl runat="server" ID="fieldsControl" OnEdit="fieldsControl_OnEdit" OnDelete="fieldsControl_OnDelete" />
 </div>
 <div>
-    <asp:Panel ID="pnlField" runat="server" Style="display: none" DefaultButton="btFieldOK">
-        <asp:Button ID="btnFieldFake" runat="server" Style="display: none;" />
-        <act:ModalPopupExtender ID="mpeField" runat="server" PopupControlID="pnlField" BackgroundCssClass="modalBackground" TargetControlID="btnFieldFake" />
+    <ce:ModalPopup runat="server" ID="mpeField" CssClass="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>Field</h5>
+                </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>Field</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="form-group">
-                                    <asp:Label ID="lblFormField" runat="server" ForeColor="Red"></asp:Label>
-                                </div>
-                                <local:NamedControl runat="server" ID="namedControl" OnDataChanged="namedControl_OnDataChanged" />
-                                <div class="form-group">
-                                    <ce:LinkButton runat="server" ID="btFieldOK" ToolTip="Save" OnClick="btnFieldOK_Click" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" OnClick="btFieldCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <asp:Label ID="lblFormField" runat="server" ForeColor="Red"></asp:Label>
                     </div>
+                    <local:NamedControl runat="server" ID="namedControl" OnDataChanged="namedControl_OnDataChanged" />
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btFieldOK" ToolTip="Save" OnClick="btnFieldOK_Click" CssClass="btn btn-success fa fa-save" />
+                    <ce:LinkButton runat="server" ID="btFieldCancel" ToolTip="Close" OnClick="btFieldCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                 </div>
             </div>
         </div>
-    </asp:Panel>
+    </ce:ModalPopup>
 </div>

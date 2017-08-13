@@ -27,7 +27,13 @@ namespace CITI.EVO.Proxies
 			return RpcInvoker.InvokeMethod<List<UserContract>>(token, deleteds);
 		}
 
-		[RpcRemoteMethod("UserManagement.CITI.EVO.UserManagement.Web.Services.CommonServiceWrapper.ChangePassword")]
+	    [RpcRemoteMethod("UserManagement.CITI.EVO.UserManagement.Web.Services.CommonServiceWrapper.GetUser")]
+	    public static UserContract GetUser(Guid token, Guid userID)
+	    {
+	        return RpcInvoker.InvokeMethod<UserContract>(token, userID);
+	    }
+
+        [RpcRemoteMethod("UserManagement.CITI.EVO.UserManagement.Web.Services.CommonServiceWrapper.ChangePassword")]
 		public static PasswordChangeResultEnum ChangePassword(Guid token, String newPassword, String oldPassword)
 		{
 			return RpcInvoker.InvokeMethod<PasswordChangeResultEnum>(token, newPassword, oldPassword);

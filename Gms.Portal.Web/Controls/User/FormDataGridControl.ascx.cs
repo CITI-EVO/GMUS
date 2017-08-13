@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Extensions;
+using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
-using CITI.EVO.Tools.Web.UI.Controls;
 using CITI.EVO.Tools.Web.UI.Helpers;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
@@ -18,7 +15,7 @@ using Gms.Portal.Web.Caches;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
-using Gms.Portal.Web.Models;
+using Gms.Portal.Web.Enums;
 using Gms.Portal.Web.Helpers;
 using Gms.Portal.Web.Utils;
 using Label = System.Web.UI.WebControls.Label;
@@ -141,7 +138,6 @@ namespace Gms.Portal.Web.Controls.User
             var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
             if (itemID != null)
                 OnPrint(new GenericEventArgs<Guid>(itemID.Value));
-
         }
 
         protected void gridView_OnRowDataBound(object sender, GridViewRowEventArgs e)
@@ -171,9 +167,9 @@ namespace Gms.Portal.Web.Controls.User
             var converter = new FormEntityModelConverter(HbSession);
             var model = converter.Convert(dbForm);
 
-            var formEntity = model.Entity;
+            var entity = model.Entity;
 
-            var controls = FormStructureUtil.InOrderFirstLevelTraversal(formEntity);
+            var controls = FormStructureUtil.InOrderFirstLevelTraversal(entity);
 
             var list = (from n in controls.OfType<FieldEntity>()
                         where n.Visible && n.DisplayOnGrid == "Always"
@@ -189,15 +185,28 @@ namespace Gms.Portal.Web.Controls.User
                 if (existFields.Contains(dataField))
                     continue;
 
-                var column = new GridViewMetaBoundField(null, dbForm.ID, field, formEntity);
+                var column = new GridViewMetaBoundField(null, dbForm.ID, field, entity);
                 gvData.Columns.Add(column);
             }
 
-            if (!dbForm.RequiresApprove.GetValueOrDefault() || dbForm.ApprovalDeadline.GetValueOrDefault() < 1)
+            var columnsLp = gvData.Columns.OfType<DataControlField>().ToLookup(n => n.HeaderText);
+
+            if (!dbForm.RequiresApprove.GetValueOrDefault())
             {
-                gvData.Columns[1].Visible = false;
-                gvData.Columns[2].Visible = false;
-                gvData.Columns[3].Visible = false;
+                var statusNameColumn = columnsLp["Status Name"].First();
+                statusNameColumn.Visible = false;
+
+                var submitDateColumn = columnsLp["Submit Date"].First();
+                submitDateColumn.Visible = false;
+
+                var statusChangeDateColumn = columnsLp["Status Change Date"].First();
+                statusChangeDateColumn.Visible = false;
+            }
+
+            if (dbForm.ApprovalDeadline.GetValueOrDefault() < 1)
+            {
+                var daysLeftColumn = columnsLp["Days Left"].First();
+                daysLeftColumn.Visible = false;
             }
         }
 
@@ -251,37 +260,8 @@ namespace Gms.Portal.Web.Controls.User
             if (descriptor == null)
                 return false;
 
-            if (UserUtil.IsSuperAdmin() || UmUtil.Instance.HasAccess("Admin"))
+            if (UmUtil.Instance.HasAccess("Admin"))
                 return true;
-
-            if (UmUtil.Instance.HasAccess("Org"))
-            {
-                var userStatuses = descriptor.GetValue(FormDataConstants.UserStatusesFields) as IEnumerable<FormStatusUnit>;
-                if (userStatuses == null)
-                    return false;
-
-                var statusLp = userStatuses.ToLookup(n => n.Step);
-
-                var steps = (from n in statusLp
-                             let e = (from m in n
-                                      where m.UserID == UmUtil.Instance.CurrentUser.ID
-                                      select m).Any()
-                             where e
-                             select n.Key).ToSortedSet();
-
-                var min = steps.Min;
-
-                var query = (from n in statusLp
-                             where n.Key < min
-                             let e = n.Any(m => m.StatusID == null || m.StatusID == DataStatusCache.None.ID)
-                             where e
-                             select n.Key);
-
-                if (query.Any())
-                    return false;
-
-                return true;
-            }
 
             return false;
         }
@@ -386,6 +366,16 @@ namespace Gms.Portal.Web.Controls.User
             return UserUtil.IsSuperAdmin();
         }
 
+        protected bool GetHistoryVisible(object dataItem)
+        {
+            return UmUtil.Instance.HasAccess("Admin");
+        }
+
+        protected bool GetMonitoringVisible(object dataItem)
+        {
+            return UmUtil.Instance.HasAccess("Monitoring");
+        }
+
         protected String GetStatusName(object eval)
         {
             var statusID = DataConverter.ToNullableGuid(eval);
@@ -411,13 +401,34 @@ namespace Gms.Portal.Web.Controls.User
             return name;
         }
 
+        protected String GetUserStatus(object eval)
+        {
+            var userID = DataConverter.ToNullableGuid(eval);
+
+            var userStatus = UserUtil.GetUserStatus(userID);
+            return userStatus;
+        }
+
+        protected String GetSubmitDate(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.DateOfSubmitField));
+            if (statusDate == null)
+                return null;
+
+            return $"{statusDate:dd.MM.yyyy hh:mm}";
+        }
+
         protected String GetStatusDate(object dataItem)
         {
             var descriptor = dataItem as DictionaryItemDescriptor;
             if (descriptor == null)
                 return null;
 
-            var statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.StatusChangeDateField));
+            var statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.DateOfStatusField));
             if (statusDate == null)
                 return null;
 
@@ -437,7 +448,7 @@ namespace Gms.Portal.Web.Controls.User
             var statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.DateOfSubmitField));
             if (statusDate == null)
             {
-                statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.StatusChangeDateField));
+                statusDate = DataConverter.ToNullableDateTime(descriptor.GetValue(FormDataConstants.DateOfStatusField));
                 if (statusDate == null)
                     return null;
             }
@@ -458,7 +469,102 @@ namespace Gms.Portal.Web.Controls.User
             return (int)(deadline - diff.TotalDays);
         }
 
+        protected String GetViewUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
 
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var parentID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.ParentIDField));
 
+            var ownerID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.OwnerIDField));
+            if (ownerID == null)
+                ownerID = formID;
+
+            if (formID == null || recordID == null)
+                return null;
+
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.View),
+                ["FormID"] = formID,
+                ["OwnerID"] = ownerID,
+                ["RecordID"] = recordID,
+                ["ParentID"] = parentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
+        protected String GetEditUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var parentID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.ParentIDField));
+
+            var ownerID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.OwnerIDField));
+            if (ownerID == null)
+                ownerID = formID;
+
+            if (formID == null || recordID == null)
+                return null;
+
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Edit),
+                ["FormID"] = formID,
+                ["OwnerID"] = ownerID,
+                ["RecordID"] = recordID,
+                ["ParentID"] = parentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
+        protected String GetHistoryUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+
+            var urlHelper = new UrlHelper("~/Pages/User/RecordHistory.aspx")
+            {
+                ["RecordID"] = recordID,
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
+        protected String GetMonitoringUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+
+            var urlHelper = new UrlHelper("~/Pages/User/RecordMonitoring.aspx")
+            {
+                ["RecordID"] = recordID,
+                ["FormID"] = formID,
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
     }
 }

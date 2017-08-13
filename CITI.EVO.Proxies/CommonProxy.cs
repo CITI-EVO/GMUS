@@ -12,6 +12,12 @@ namespace CITI.EVO.Proxies
 {
     public static class CommonProxy
     {
+        [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetPerson")]
+        public static PersonInfoContract GetPerson(String personalID, String birthYear)
+        {
+            return RpcInvoker.InvokeMethod<PersonInfoContract>(personalID, birthYear);
+        }
+
         [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetAreas")]
         public static List<AreaContract> GetAreas(AreaTypesEnum type, RecordTypesEnum recordType)
         {

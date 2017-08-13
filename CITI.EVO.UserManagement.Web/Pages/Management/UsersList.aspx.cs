@@ -54,6 +54,9 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return;
             }
 
+            if (String.IsNullOrWhiteSpace(model.User.Password))
+                model.User.Password = "123456";
+
             var user = HbSession.Query<UM_User>().FirstOrDefault(n => n.ID == model.User.ID);
             if (user == null)
             {
@@ -90,6 +93,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
 
             FillUserGrid();
 
+        }
+
+        protected void btUserCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeUserForm.Hide();
         }
 
         protected void btSetAttributesOK_Click(object sender, EventArgs eventArgs)
@@ -223,11 +231,6 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             mpeUserForm.Show();
         }
 
-        protected void btUserCancel_OnClick(object sender, EventArgs e)
-        {
-            mpeUserForm.Hide();
-        }
-
         #endregion
 
         #region Methods
@@ -259,17 +262,17 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return false;
             }
 
-            if (String.IsNullOrWhiteSpace(userModel.FirstName))
-            {
-                lblUserError.Text = "გთხოვთ შეავსეთ სახელი";
-                return false;
-            }
+            //if (String.IsNullOrWhiteSpace(userModel.FirstName))
+            //{
+            //    lblUserError.Text = "გთხოვთ შეავსეთ სახელი";
+            //    return false;
+            //}
 
-            if (String.IsNullOrWhiteSpace(userModel.LastName))
-            {
-                lblUserError.Text = "გთხოვთ შეავსეთ გვარი";
-                return false;
-            }
+            //if (String.IsNullOrWhiteSpace(userModel.LastName))
+            //{
+            //    lblUserError.Text = "გთხოვთ შეავსეთ გვარი";
+            //    return false;
+            //}
 
             if (String.IsNullOrWhiteSpace(userModel.Email))
             {
@@ -283,11 +286,11 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                 return false;
             }
 
-            if (String.IsNullOrWhiteSpace(userModel.Address))
-            {
-                lblUserError.Text = "გთხოვთ შეავსეთ მისამართი";
-                return false;
-            }
+            //if (String.IsNullOrWhiteSpace(userModel.Address))
+            //{
+            //    lblUserError.Text = "გთხოვთ შეავსეთ მისამართი";
+            //    return false;
+            //}
 
             var count = (from n in HbSession.Query<UM_User>()
                          where n.LoginName.ToLower() == userModel.LoginName.ToLower() &&
@@ -326,42 +329,35 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
                         where n.DateDeleted == null
                         select n;
 
-            if (filterModel.LoginName != null && !String.IsNullOrWhiteSpace(keyword))
+            if (filterModel.LoginName.GetValueOrDefault() && !String.IsNullOrWhiteSpace(keyword))
             {
                 query = from n in query
-                        where n.LoginName.Contains(keyword)
+                        where n.LoginName.Contains(keyword) || n.Email.Contains(keyword)
                         select n;
             }
 
-            if (filterModel.FirstName != null && !String.IsNullOrWhiteSpace(keyword))
+            if (filterModel.FirstName.GetValueOrDefault() && !String.IsNullOrWhiteSpace(keyword))
             {
                 query = from n in query
                         where n.FirstName.Contains(keyword)
                         select n;
             }
 
-            if (filterModel.LastName != null && !String.IsNullOrWhiteSpace(keyword))
+            if (filterModel.LastName.GetValueOrDefault() && !String.IsNullOrWhiteSpace(keyword))
             {
                 query = from n in query
                         where n.LastName.Contains(keyword)
                         select n;
             }
 
-            if (filterModel.Email != null && !String.IsNullOrWhiteSpace(keyword))
-            {
-                query = from n in query
-                        where n.Email.Contains(keyword)
-                        select n;
-            }
-
-            if (filterModel.Address != null && !String.IsNullOrWhiteSpace(keyword))
+            if (filterModel.Address.GetValueOrDefault() && !String.IsNullOrWhiteSpace(keyword))
             {
                 query = from n in query
                         where n.Address.Contains(keyword)
                         select n;
             }
 
-            if (filterModel.Password != null && !String.IsNullOrWhiteSpace(keyword))
+            if (filterModel.Password.GetValueOrDefault() && !String.IsNullOrWhiteSpace(keyword))
             {
                 query = from n in query
                         where n.Password.Contains(keyword)
@@ -484,7 +480,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.Management
             return null;
         }
 
-        private void ApplyPermissions()
+        protected void ApplyPermissions()
         {
             if (!UmUtil.Instance.HasAccess("UsersList"))
                 UmUtil.Instance.GoToLogin();

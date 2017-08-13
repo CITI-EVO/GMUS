@@ -9,35 +9,33 @@ namespace CITI.EVO.Tools.ExpressionEngine
 {
     internal static class OperatorEvaluator
     {
-        public static Object Eval(ExpressionNode node, Func<String, Object> varResolver)
+        public static Object Eval(ExpressionNode node, IDataResolver dataResolver)
         {
             var operatorNode = (OperatorNode)node;
 
             if (String.Equals(node.Action, "||"))
             {
-                var leftFlag = Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Left, varResolver));
+                var leftFlag = Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Left, dataResolver));
                 if (leftFlag)
                     return true;
 
-                return Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Right, varResolver));
+                return Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Right, dataResolver));
             }
 
             if (String.Equals(node.Action, "&&"))
             {
-                var leftFlag = Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Left, varResolver));
+                var leftFlag = Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Left, dataResolver));
                 if (!leftFlag)
-                {
                     return false;
-                }
 
-                return Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Right, varResolver));
+                return Convert.ToBoolean(ExpressionEvaluator.Eval(operatorNode.Right, dataResolver));
             }
 
             var leftNode = operatorNode.Left;
             var rightNode = operatorNode.Right;
 
-            var leftValue = ExpressionEvaluator.Eval(leftNode, varResolver);
-            var rightValue = ExpressionEvaluator.Eval(rightNode, varResolver);
+            var leftValue = ExpressionEvaluator.Eval(leftNode, dataResolver);
+            var rightValue = ExpressionEvaluator.Eval(rightNode, dataResolver);
 
             switch (node.Action.ToLower())
             {
@@ -48,7 +46,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                         if (leftNode == null)
                             return +ExpressionHelper.GetNumber(rightValue);
 
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
+                        if (ExpressionHelper.IsDateTimeNode(leftNode, leftValue) || ExpressionHelper.IsDateTimeNode(rightNode, rightValue))
                         {
                             var leftDate = ExpressionHelper.GetDateTime(leftValue);
                             var rightDate = ExpressionHelper.GetDateTime(rightValue);
@@ -65,7 +63,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
                         if (leftNode == null)
                             return -ExpressionHelper.GetNumber(rightValue);
 
-                        if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
+                        if (ExpressionHelper.IsDateTimeNode(leftNode, leftValue) || ExpressionHelper.IsDateTimeNode(rightNode, rightValue))
                         {
                             var leftDate = ExpressionHelper.GetDateTime(leftValue);
                             var rightDate = ExpressionHelper.GetDateTime(rightValue);
@@ -79,16 +77,21 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 case "--":
                     return ExpressionHelper.GetNumber(rightValue) - 1D;
                 case "=":
-                    break;
+                    {
+                        var name = leftNode.Action;
+                        dataResolver.SetValue(name, rightValue);
+
+                        return rightValue;
+                    }
                 case "==":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) == 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) == 0;
                 case "!=":
                 case "<>":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) != 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) != 0;
                 case "<=":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) <= 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) <= 0;
                 case ">=":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) >= 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) >= 0;
                 case "&&":
                     return Convert.ToBoolean(leftValue) && Convert.ToBoolean(rightValue);
                 case "||":
@@ -112,41 +115,13 @@ namespace CITI.EVO.Tools.ExpressionEngine
                 case "\\":
                     return ExpressionHelper.GetNumber(leftValue) / ExpressionHelper.GetNumber(rightValue);
                 case "<":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) < 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) < 0;
                 case ">":
-                    return Compare(leftNode, leftValue, rightNode, rightValue) > 0;
+                    return ExpressionHelper.Compare(leftNode, leftValue, rightNode, rightValue) > 0;
             }
 
-            throw new Exception("Unknown operation");
-        }
-
-        private static bool IsDateTimeNode(ExpressionNode node, Object value)
-        {
-            if ((node.ValueType == ValueTypes.DateTime) ||
-                (node.ValueType == ValueTypes.Variable && value is DateTime) ||
-                (node.ActionType == ActionTypes.Function && value is DateTime))
-                return true;
-
-            return false;
-        }
-
-        private static int Compare(ExpressionNode leftNode, Object leftValue, ExpressionNode rightNode, Object rightValue)
-        {
-            if (IsDateTimeNode(leftNode, leftValue) || IsDateTimeNode(rightNode, rightValue))
-            {
-                var leftDate = ExpressionHelper.GetDateTime(leftValue);
-                var rightDate = ExpressionHelper.GetDateTime(rightValue);
-
-                return leftDate.CompareTo(rightDate);
-            }
-
-            var leftDbl = DataConverter.ToNullableDouble(leftValue);
-            var rightDbl = DataConverter.ToNullableDouble(rightValue);
-
-            if (leftDbl != null && rightDbl != null)
-                return leftDbl.Value.CompareTo(rightDbl.Value);
-
-            return ExpressionHelper.Compare(leftValue, rightValue);
+            var message = $"Unknown operator '{node.Action}'";
+            throw new Exception(message);
         }
     }
 }

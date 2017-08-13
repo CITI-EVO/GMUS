@@ -6,10 +6,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
     {
         public const String IDField = "ID";
         public const String DocIDField = "_id";
-        public const String StepField = "Step";
+        public const String ParamsField = "Params";
         public const String FormIDField = "FormID";
         public const String UserIDField = "UserID";
+        public const String FieldIDField = "FieldID";
         public const String OwnerIDField = "OwnerID";
+        public const String IDNumberField = "IDNumber";
         public const String StatusIDField = "StatusID";
         public const String ParentIDField = "ParentID";
         public const String PreviousIDField = "PreviousID";
@@ -18,14 +20,14 @@ namespace Gms.Portal.Web.Entities.DataContainer
         public const String ReviewFields = "ReviewFields";
         public const String PrivacyFields = "PrivaryFields";
         public const String DescriptionField = "Description";
-        public const String UserStatusesFields = "UserStatusesFields";
 
         public const String DateCreatedField = "DateCreated";
         public const String DateChangedField = "DateChanged";
         public const String DateDeletedField = "DateDeleted";
         public const String DateOfAcceptField = "DateOfAccept";
         public const String DateOfSubmitField = "DateOfSubmit";
-        public const String StatusChangeDateField = "StatusChangeDate";
+        public const String DateOfStatusField = "StatusChangeDate";
+        public const String DateOfAssigneField = "DateOfAssigne";
 
         public const String HashCodeField = "HashCode";
 
@@ -36,5 +38,17 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public const String BinaryDocType = "Binary";
         public const String ReferenceDocType = "Reference";
+
+        public const String FieldParams = "Fields";
+        public const String ScoringEmail = "ScoringEmail";
+        public const String ScoringParams = "Scoring";
+        public const String StatusComment = "StatusComment";
+        public const String UserStatusesFields = "UserStatusesFields";
+
+        public const String UserStatusStepField = "UserStatusesFields.Step";
+        public const String UserStatusParamsField = "UserStatusesFields.Params";
+        public const String UserStatusUserIDField = "UserStatusesFields.UserID";
+        public const String UserStatusStatusIDField = "UserStatusesFields.StatusID";
+        public const String UserStatusDateOfStatusField = "UserStatusesFields.DateOfStatus";
     }
 }

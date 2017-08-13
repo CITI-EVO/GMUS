@@ -1,14 +1,18 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using SelectPdf;
 
 namespace CITI.EVO.Tools.Utils
 {
     public static class PdfUtil
     {
-        public static void HtmlToPdf(HttpResponse responce, string html, string title)
+        public static void HtmlToPdf(HttpResponse responce, String html, String title, String layout)
         {
             var pageSize = PdfPageSize.A4;
             var pdfOrientation = PdfPageOrientation.Portrait;
+
+            if (StringComparer.OrdinalIgnoreCase.Equals(layout, "Landscape"))
+                pdfOrientation = PdfPageOrientation.Landscape;
 
             var webPageWidth = 1024;
             var webPageHeight = 0;
@@ -21,10 +25,9 @@ namespace CITI.EVO.Tools.Utils
             converter.Options.WebPageHeight = webPageHeight;
 
             var doc = converter.ConvertHtmlString(html);
-
             var name = $"{title}.pdf";
-            doc.Save(responce, true, name);
 
+            doc.Save(responce, true, name);
             doc.Close();
         }
     }

@@ -6,7 +6,7 @@
     <ItemTemplate>
         <li class="landing_link" runat="server">
             <asp:HyperLink NavigateUrl="#" runat="server" ><i class="fa fa-th-large"></i>
-                <ce:Label runat="server" CssClass="nav-label" Text='<%# Eval("Name") %>' />
+                <ce:Label runat="server" CssClass="nav-label" Text='<%# GetFormatedName(Eval("Name")) %>' ToolTip='<%# Eval("Name") %>' />
             </asp:HyperLink>
             <local:FormsLinksControl runat="server" Model='<%# Eval("Children") %>' />
         </li>

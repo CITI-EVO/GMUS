@@ -45,7 +45,7 @@
             </div>
         </div>
         
-         <div class="form-group">
+         <div class="form-group" runat="server">
             <label class="col-sm-6 font-normal">ტელეფონი</label>
             <div class="col-sm-6">
                 <asp:TextBox ID="tbxPhone" runat="server" class="form-control" Property="{UserModel.Phone=Text}"></asp:TextBox>
@@ -55,7 +55,7 @@
 </div>
 <div class="col-sm-6">
     <div class="ibox-content form-horizontal">
-        <div class="form-group">
+        <div class="form-group" runat="server" Visible="False">
             <label class="col-sm-6 font-normal">მისამართი</label>
             <div class="col-sm-6">
                 <asp:TextBox ID="tbAddress" runat="server" class="form-control" Property="{UserModel.Address=Text}" />
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div class="form-group" id="data_1">
+        <div class="form-group">
             <label class="col-sm-6 font-normal" style="padding-right: 0;">ვალიდურობის თარიღი</label>
             <div class="col-sm-6 input-group date" style="padding-left:15px;">
                 <span class="input-group-addon">

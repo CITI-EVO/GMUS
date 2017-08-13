@@ -13,6 +13,10 @@ namespace Gms.Portal.DAL.Domain
 
         public virtual String Number { get; set; }
 
+        public virtual String Abbreviation { get; set; }
+
+        public virtual String Year { get; set; }
+
         public virtual int? OrderIndex { get; set; }
 
         public virtual bool? Visible { get; set; }
@@ -28,6 +32,8 @@ namespace Gms.Portal.DAL.Domain
         public virtual String FillingValidationMessage { get; set; }
 
         public virtual String UserMode { get; set; }
+
+        public virtual String FormType { get; set; }
 
         public virtual Guid? CategoryID { get; set; }
 

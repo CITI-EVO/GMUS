@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CITI.EVO.Tools.ExpressionEngine;
+using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Utils;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Entities.DataContainer;
@@ -50,7 +52,26 @@ namespace Gms.Portal.Web.Utils
             return hashCode;
         }
 
-        public static IEnumerable<ElementTreeNodeEntity> CreateTree(FormEntity parent)
+        public static IDictionary<String, String> CreateCompitabilityMap(ContentEntity entity)
+        {
+            var result = new Dictionary<String, String>();
+
+            var controls = PreOrderTraversal(entity);
+            foreach (var control in controls)
+            {
+                var name = control.Alias;
+                if (String.IsNullOrWhiteSpace(name))
+                    name = control.Name;
+
+                var key = Convert.ToString(control.ID);
+
+                result.Add(key, ExpressionParser.Escape(name));
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<ElementTreeNodeEntity> CreateTree(ContentEntity parent)
         {
             if (parent == null)
                 yield break;
@@ -87,7 +108,6 @@ namespace Gms.Portal.Web.Utils
                 }
             }
         }
-
         public static IEnumerable<ElementTreeNodeEntity> CreateTree(IEnumerable<ControlEntity> parents)
         {
             if (parents == null)
@@ -117,6 +137,7 @@ namespace Gms.Portal.Web.Utils
                     ID = entity.ID,
                     ParentID = item.ParentID,
                     Name = entity.Name,
+                    Alias = entity.Alias,
                     Visible = entity.Visible,
                     OrderIndex = entity.OrderIndex,
                     ElementType = GetElementTypeName(entity),
@@ -134,6 +155,20 @@ namespace Gms.Portal.Web.Utils
                             stack.Push(new ControlTreeEntity(child, entity.ID));
                     }
                 }
+            }
+        }
+
+        public static IEnumerable<ElementTreeNodeEntity> ParentsTraversal(IDictionary<Guid?, ElementTreeNodeEntity> dict, Guid? controlID)
+        {
+            var node = dict.GetValueOrDefault(controlID);
+
+            while (node != null)
+            {
+                var parent = dict.GetValueOrDefault(node.ParentID.GetValueOrDefault());
+                if (parent != null)
+                    yield return parent;
+
+                node = parent;
             }
         }
 
@@ -178,28 +213,40 @@ namespace Gms.Portal.Web.Utils
             }
         }
 
-        public static IEnumerable<ControlEntity> PreOrderSortedTraversal(FormEntity entity)
+        public static IEnumerable<ControlEntity> PreOrderIndexedTraversal(ContentEntity entity)
         {
             if (entity == null || entity.Controls == null)
                 return Enumerable.Empty<ControlEntity>();
 
             var array = new ControlEntity[] { entity };
-            return PreOrderSortedTraversal(array);
+            return PreOrderIndexedTraversal(array);
         }
-        private static IEnumerable<ControlEntity> PreOrderSortedTraversal(IEnumerable<ControlEntity> source)
+        private static IEnumerable<ControlEntity> PreOrderIndexedTraversal(IEnumerable<ControlEntity> source)
         {
-            var ordered = source.OrderBy(n => n.OrderIndex).ThenBy(n => n.Name);
+            var sorted = (from n in source
+                          orderby n.OrderIndex, n.Name
+                          select n);
 
-            foreach (var entity in ordered)
+            var stack = new Stack<ControlEntity>(sorted);
+
+            while (stack.Count > 0)
             {
-                yield return entity;
+                var item = stack.Pop();
 
-                var container = entity as ContentEntity;
+                yield return item;
+
+                var container = item as ContentEntity;
                 if (container != null && container.Controls != null)
                 {
-                    var children = PreOrderSortedTraversal(container.Controls);
+                    var children = (from n in container.Controls
+                                    orderby n.OrderIndex, n.Name
+                                    select n);
+
                     foreach (var child in children)
-                        yield return child;
+                    {
+                        if (child != null)
+                            stack.Push(child);
+                    }
                 }
             }
         }
@@ -232,7 +279,7 @@ namespace Gms.Portal.Web.Utils
 
                     yield return item;
 
-                    if (item is GridEntity && !ReferenceEquals(item, parent))
+                    if ((item is GridEntity || item is TreeEntity) && !ReferenceEquals(item, parent))
                         continue;
 
                     var childContainer = item as ContentEntity;
@@ -278,33 +325,33 @@ namespace Gms.Portal.Web.Utils
             }
         }
 
-        public static IEnumerable<ControlEntity> InOrderTraversal(FormEntity entity)
+        public static IEnumerable<ControlEntity> InOrderIndexedTraversal(ContentEntity entity)
         {
             if (entity == null || entity.Controls == null)
                 return Enumerable.Empty<ControlEntity>();
 
             var array = new ControlEntity[] { entity };
-            return InOrderTraversal(array);
+            return InOrderIndexedTraversal(array);
         }
-        private static IEnumerable<ControlEntity> InOrderTraversal(IEnumerable<ControlEntity> source)
+        private static IEnumerable<ControlEntity> InOrderIndexedTraversal(IEnumerable<ControlEntity> source)
         {
-            var ordered = source.OrderBy(n => n.OrderIndex).ThenBy(n => n.Name);
+            var sorted = source.OrderBy(n => n.OrderIndex).ThenBy(n => n.Name);
 
-            foreach (var entity in ordered)
+            foreach (var entity in sorted)
             {
                 yield return entity;
 
                 var container = entity as ContentEntity;
                 if (container != null && container.Controls != null)
                 {
-                    var children = InOrderTraversal(container.Controls);
+                    var children = InOrderIndexedTraversal(container.Controls);
                     foreach (var child in children)
                         yield return child;
                 }
             }
         }
 
-        public static IEnumerable<ControlEntity> InOrderFirstLevelTraversal(FormEntity entity)
+        public static IEnumerable<ControlEntity> InOrderFirstLevelTraversal(ContentEntity entity)
         {
             if (entity == null || entity.Controls == null)
                 return Enumerable.Empty<ControlEntity>();
@@ -314,11 +361,11 @@ namespace Gms.Portal.Web.Utils
         }
         private static IEnumerable<ControlEntity> InOrderFirstLevelTraversal(IEnumerable<ControlEntity> source)
         {
-            var ordered = source.OrderBy(n => n.OrderIndex).ThenBy(n => n.Name);
+            var sorted = source.OrderBy(n => n.OrderIndex).ThenBy(n => n.Name);
 
-            foreach (var entity in ordered)
+            foreach (var entity in sorted)
             {
-                if (entity is GridEntity)
+                if (entity is GridEntity || entity is TreeEntity)
                     continue;
 
                 yield return entity;
@@ -333,7 +380,7 @@ namespace Gms.Portal.Web.Utils
             }
         }
 
-        public static IEnumerable<ControlEntity> TraversalAndCorrectOrderIndexes(FormEntity entity)
+        public static IEnumerable<ControlEntity> TraversalAndCorrectOrderIndexes(ContentEntity entity)
         {
             if (entity == null || entity.Controls == null)
                 return Enumerable.Empty<ControlEntity>();
@@ -358,7 +405,7 @@ namespace Gms.Portal.Web.Utils
             }
         }
 
-        public static IEnumerable<ControlEntity> FirstLevelTraversalAndCorrectOrderIndexes(FormEntity entity)
+        public static IEnumerable<ControlEntity> FirstLevelTraversalAndCorrectOrderIndexes(ContentEntity entity)
         {
             if (entity == null || entity.Controls == null)
                 return Enumerable.Empty<ControlEntity>();
@@ -370,7 +417,7 @@ namespace Gms.Portal.Web.Utils
         {
             foreach (var entity in source)
             {
-                if (entity is GridEntity)
+                if (entity is GridEntity || entity is TreeEntity)
                     continue;
 
                 entity.OrderIndex += parentIndex;

@@ -34,12 +34,12 @@ namespace Gms.Portal.Web.Pages.Management
             }
         }
 
-        protected void btnCancelLogic_OnClick(object sender, EventArgs e)
+        protected void btnCancel_OnClick(object sender, EventArgs e)
         {
             Response.Redirect("~/Pages/Management/LogicsList.aspx");
         }
 
-        protected void btnSaveLogic_OnClick(object sender, EventArgs e)
+        protected void btnSave_OnClick(object sender, EventArgs e)
         {
             var logicID = DataConverter.ToNullableGuid(RequestUrl["LogicID"]);
 
@@ -58,7 +58,7 @@ namespace Gms.Portal.Web.Pages.Management
             Response.Redirect("~/Pages/Management/LogicsList.aspx");
         }
 
-        protected void btnCancel_OnClick(object sender, EventArgs e)
+        protected void btnClose_OnClick(object sender, EventArgs e)
         {
             mpePreview.Hide();
         }

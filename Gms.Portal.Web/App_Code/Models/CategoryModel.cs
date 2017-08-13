@@ -5,7 +5,7 @@ namespace Gms.Portal.Web.Models
     [Serializable]
     public class CategoryModel
     {
-        public Guid ID { get; set; }
+        public Guid? ID { get; set; }
 
         public Guid? ParentID { get; set; }
 

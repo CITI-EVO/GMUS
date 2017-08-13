@@ -25,6 +25,8 @@ namespace Gms.Portal.Web.Converters.ModelToEntity
             //target.ID = source.ID;
             target.Name = source.Name;
             target.Number = source.Number;
+            target.Abbreviation = source.Abbreviation;
+            target.Year = source.Year;
             target.Visible = source.Visible;
             target.VisibleExpression = source.VisibleExpression;
             target.FillingValidationExpression = source.FillingValidationExpression;
@@ -32,6 +34,7 @@ namespace Gms.Portal.Web.Converters.ModelToEntity
             target.OrderIndex = source.OrderIndex;
             target.CategoryID = source.CategoryID;
             target.UserMode = source.UserMode;
+            target.FormType = source.FormType;
             target.RequiresApprove = source.RequiresApprove;
             target.ApprovalDeadline = source.ApprovalDeadline;
 

@@ -42,7 +42,6 @@ namespace Gms.Portal.Web.Utils
                 if (group.FormID == null)
                     return null;
 
-
                 var dbForm = session.Query<GM_Form>().FirstOrDefault(n => n.ID == group.FormID);
                 if (dbForm == null)
                     return null;

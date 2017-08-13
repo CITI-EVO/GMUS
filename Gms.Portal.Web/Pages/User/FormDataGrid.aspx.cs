@@ -20,6 +20,7 @@ using MongoDB.Driver;
 using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace Gms.Portal.Web.Pages.User
@@ -94,6 +95,7 @@ namespace Gms.Portal.Web.Pages.User
 
             CheckUserMode();
             FillGridView();
+            FillTemplates();
         }
 
         protected void btnNew_OnClick(object sender, EventArgs e)
@@ -118,38 +120,15 @@ namespace Gms.Portal.Web.Pages.User
 
         }
 
-        protected void formDataGridControl_OnEdit(object sender, GenericEventArgs<Guid> e)
+        protected void formDataGridControl_OnPrint(object sender, GenericEventArgs<Guid> e)
         {
-            var returnUrl = RequestUrl.ToEncodedUrl();
-
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            var model = new ChooseTemplateModel
             {
-                ["Mode"] = Convert.ToString(FormMode.Edit),
-                ["FormID"] = FormID,
-                ["OwnerID"] = (OwnerID ?? FormID),
-                ["RecordID"] = e.Value,
-                ["ParentID"] = ParentID,
-                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+                RecordID = e.Value,
             };
 
-            Response.Redirect(urlHelper.ToEncodedUrl());
-        }
-
-        protected void formDataGridControl_OnView(object sender, GenericEventArgs<Guid> e)
-        {
-            var returnUrl = RequestUrl.ToEncodedUrl();
-
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
-            {
-                ["Mode"] = Convert.ToString(FormMode.View),
-                ["FormID"] = FormID,
-                ["OwnerID"] = (OwnerID ?? FormID),
-                ["RecordID"] = e.Value,
-                ["ParentID"] = ParentID,
-                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
-            };
-
-            Response.Redirect(urlHelper.ToEncodedUrl());
+            chooseTemplateControl.Model = model;
+            mpeChooseTemplate.Show();
         }
 
         protected void formDataGridControl_OnDelete(object sender, GenericEventArgs<Guid> e)
@@ -220,45 +199,26 @@ namespace Gms.Portal.Web.Pages.User
 
         protected void formDataGridControl_OnAssigne(object sender, GenericEventArgs<Guid> e)
         {
-            var model = new AssigneUsersModel
-            {
-                RecordID = e.Value,
-            };
-
-            var recordID = model.RecordID;
+            var recordID = e.Value;
             var ownerID = (OwnerID ?? FormID);
 
-            var document = MongoDbUtil.GetDocument(ownerID, recordID);
-
-            BsonValue bsonValue;
-            if (document.TryGetValue(FormDataConstants.UserStatusesFields, out bsonValue))
+            var userID = UserID;
+            if (UserID == null)
             {
-                var bsonArray = BsonDocumentConverter.ConvertToBsonArray(bsonValue);
-                var statusUsers = BsonDocumentConverter.ConvertToFormStatuses(bsonArray);
+                var document = MongoDbUtil.GetDocument(ownerID, recordID);
+                if (document == null)
+                    return;
 
-                var lookup = new HashLookup<int?, Guid?>();
-
-                foreach (var item in statusUsers)
-                    lookup.Add(item.Step, item.UserID);
-
-                model.Users = lookup;
+                var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+                userID = formData.UserID;
             }
 
-            assigneUsersControl.Model = model;
+            var url = new UrlHelper("~/Pages/User/AssigneExperts.aspx");
+            url["FormID"] = FormID;
+            url["RecordID"] = recordID;
+            url["UserID"] = userID;
 
-            mpeAssigneUser.Show();
-        }
-
-        protected void formDataGridControl_OnPrint(object sender, GenericEventArgs<Guid> e)
-        {
-            var urlHelper = new UrlHelper("~/Handlers/PrintFormData.ashx")
-            {
-                ["FormID"] = FormID,
-                ["RecordID"] = e.Value,
-                ["LoginToken"] = UmUtil.Instance.CurrentToken,
-            };
-
-            Response.Redirect(urlHelper.ToEncodedUrl());
+            Response.Redirect(url.ToEncodedUrl());
         }
 
         protected void recordStatusControl_OnDataChanged(object sender, EventArgs e)
@@ -266,32 +226,12 @@ namespace Gms.Portal.Web.Pages.User
             mpeRecordStatus.Show();
         }
 
-        protected void btnAssigneUserOK_Click(object sender, EventArgs e)
-        {
-            var model = assigneUsersControl.Model;
-
-            var users = model.Users;
-            var recordID = model.RecordID;
-            var ownerID = (OwnerID ?? FormID);
-
-            var document = MongoDbUtil.GetDocument(ownerID, recordID);
-            document[FormDataConstants.UserStatusesFields] = CreateNewFormStatuses(document, users);
-
-            MongoDbUtil.UpdateDocument(ownerID, document);
-
-            mpeAssigneUser.Hide();
-        }
-
-        protected void btnAssigneUserCancel_OnClick(object sender, EventArgs e)
-        {
-            mpeAssigneUser.Hide();
-        }
-
-        protected void btnRecordStatusOK_Click(object sender, EventArgs e)
+        protected void btnRecordStatusOK_OnClick(object sender, EventArgs e)
         {
             var model = recordStatusControl.Model;
             if (model.StatusID == DataStatusCache.Accepted.ID)
             {
+                mpeRecordStatus.Hide();
                 mpeConfirmAccept.Show();
                 return;
             }
@@ -302,12 +242,32 @@ namespace Gms.Portal.Web.Pages.User
             mpeRecordStatus.Hide();
         }
 
-        protected void btnConfirmAcceptOK_Click(object sender, EventArgs e)
+        protected void btnConfirmAcceptOK_OnClick(object sender, EventArgs e)
         {
             ChangeStatus();
 
             mpeConfirmAccept.Hide();
             mpeRecordStatus.Hide();
+        }
+
+        protected void btnChooseTemplateOK_OnClick(object sender, EventArgs e)
+        {
+            var model = chooseTemplateControl.Model;
+            if (model.TemplateID == null)
+                return;
+
+            var url = new UrlHelper("~/Handlers/PrintFormData.ashx");
+            url["FormID"] = FormID;
+            url["RecordID"] = model.RecordID;
+            url["TemplateID"] = model.TemplateID;
+            url["LoginToken"] = UmUtil.Instance.CurrentToken;
+
+            Response.Redirect(url.ToEncodedUrl());
+        }
+
+        protected void btnChooseTemplateCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeChooseTemplate.Hide();
         }
 
         protected void btnRecordStatusCancel_OnClick(object sender, EventArgs e)
@@ -320,9 +280,9 @@ namespace Gms.Portal.Web.Pages.User
             mpeConfirmAccept.Hide();
         }
 
-        protected void assigneUsersControl_OnDataChanged(object sender, EventArgs e)
+        protected void FillTemplates()
         {
-            mpeAssigneUser.Show();
+            chooseTemplateControl.BindTemplates(FormEntity);
         }
 
         protected void ChangeStatus()
@@ -446,22 +406,9 @@ namespace Gms.Portal.Web.Pages.User
             if (String.IsNullOrWhiteSpace(DbForm.UserMode))
                 return;
 
-            if (FormID != UserUtil.GetMandatoryFormID())
-                return;
-
             if (DbForm.UserMode == "SingleRecord")
             {
                 var returnUrl = RequestUrl.ToEncodedUrl();
-
-                var userID = UserUtil.GetCurrentUserID();
-                var collection = MongoDbUtil.GetCollection(DbForm.ID);
-
-                var document = (from n in collection.AsQueryable()
-                                where n[FormDataConstants.UserIDField] == userID &&
-                                      n[FormDataConstants.DateDeletedField] == (DateTime?)null
-                                select n).FirstOrDefault();
-
-                var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
 
                 var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
                 {
@@ -473,6 +420,7 @@ namespace Gms.Portal.Web.Pages.User
                     ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
                 };
 
+                var formData = GetLastFormData(DbForm.ID);
                 if (formData != null)
                 {
                     if (formData.ID == null)
@@ -485,14 +433,49 @@ namespace Gms.Portal.Web.Pages.User
 
                     if (formData.StatusID == DataStatusCache.Submit.ID ||
                         formData.StatusID == DataStatusCache.Accepted.ID)
-                        urlHelper["Mode"] = Convert.ToString(FormMode.View);
+                        urlHelper["Mode"] = Convert.ToString(FormMode.None);
                 }
 
                 Response.Redirect(urlHelper.ToEncodedUrl());
             }
         }
 
-        protected BsonArray CreateNewFormStatuses(BsonDocument document, ILookup<int?, Guid?> newUsersLp)
+        protected FormDataUnit GetLastFormData(Guid formID)
+        {
+            var userID = UserUtil.GetCurrentUserID();
+
+            var filter = new Dictionary<String, Object>
+            {
+                [FormDataConstants.UserIDField] = userID,
+                [FormDataConstants.DateDeletedField] = null
+            };
+
+            var sort = new[]
+            {
+                $"{FormDataConstants.DateCreatedField} desc"
+            };
+
+            var documents = MongoDbUtil.FindDocuments(formID, filter, sort).ToList();
+
+            var document = documents.FirstOrDefault();
+            if (documents.Count > 1)
+            {
+                foreach (var bsonDoc in documents)
+                {
+                    if (ReferenceEquals(bsonDoc, document))
+                        continue;
+
+                    bsonDoc[FormDataConstants.DateDeletedField] = DateTime.Now;
+                    MongoDbUtil.UpdateDocument(formID, bsonDoc);
+                }
+            }
+
+            var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+            return formData;
+
+        }
+
+        protected BsonArray CreateNewFormStatuses(BsonDocument document, ISet<Guid?> newUsers)
         {
             BsonValue bsonValue;
             if (!document.TryGetValue(FormDataConstants.UserStatusesFields, out bsonValue))
@@ -502,42 +485,29 @@ namespace Gms.Portal.Web.Pages.User
             if (oldArray == null)
                 oldArray = new BsonArray();
 
-            var statusUnits = BsonDocumentConverter.ConvertToFormStatuses(oldArray).ToList();
-            var oldUsersLp = statusUnits.ToLookup(n => n.Step);
+            var statusUnits = BsonDocumentConverter.ConvertToFormStatuses(oldArray).ToHashSet();
+            var oldUsersDict = statusUnits.ToDictionary(n => n.UserID.GetValueOrDefault());
 
-            var list = new List<FormStatusUnit>();
+            var insertUsers = newUsers.Where(n => !oldUsersDict.ContainsKey(n.GetValueOrDefault())).ToList();
+            var deleteUsers = oldUsersDict.Keys.Where(n => !newUsers.Contains(n)).ToList();
 
-            foreach (var usersGrp in newUsersLp)
+            foreach (var userID in insertUsers)
             {
-                var newUsers = usersGrp.ToHashSet();
-                var oldUsers = oldUsersLp[usersGrp.Key];
-
-                var lookup = oldUsers.ToLookup(n => n.UserID.GetValueOrDefault());
-                var dictionary = lookup.ToDictionary(n => n.Key, n => n.First());
-
-                var insertUsers = usersGrp.Where(n => !dictionary.ContainsKey(n.GetValueOrDefault())).ToList();
-                var deleteUsers = dictionary.Keys.Where(n => !newUsers.Contains(n)).ToList();
-
-                foreach (var userID in insertUsers)
+                var unit = new FormStatusUnit
                 {
-                    var unit = new FormStatusUnit
-                    {
-                        Step = usersGrp.Key,
-                        UserID = userID,
-                    };
+                    UserID = userID,
+                    DateOfAssigne = DateTime.Now,
+                };
 
-                    dictionary.Add(userID.GetValueOrDefault(), unit);
-                }
-
-                foreach (var userID in deleteUsers)
-                {
-                    dictionary.Remove(userID);
-                }
-
-                list.AddRange(dictionary.Values);
+                oldUsersDict.Add(userID.GetValueOrDefault(), unit);
             }
 
-            var formStatusDocs = BsonDocumentConverter.ConvertToFormStatuses(list);
+            foreach (var userID in deleteUsers)
+            {
+                oldUsersDict.Remove(userID);
+            }
+
+            var formStatusDocs = BsonDocumentConverter.ConvertToFormStatuses(oldUsersDict.Values);
 
             var newArray = new BsonArray(formStatusDocs);
             return newArray;

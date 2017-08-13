@@ -5,7 +5,7 @@ using CITI.EVO.Tools.Extensions;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Entities.Others;
-using Gms.Portal.Web.Entities.ServiseStructure;
+using Gms.Portal.Web.Entities.ServiceStructure;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 

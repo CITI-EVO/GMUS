@@ -4,7 +4,7 @@
 
 <div>
     <div>
-        <ce:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus"/>
+        <ce:LinkButton runat="server" ID="btnNew" OnClick="btnAdd_OnClick" ToolTip="New" CssClass="btn btn-primary fa fa-plus" />
     </div>
     <div>
         <asp:GridView ID="gvExpressions" runat="server" AutoGenerateColumns="False" Width="100%" CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter">
@@ -44,32 +44,23 @@
     </div>
 </div>
 <div>
-    <asp:Panel runat="server" ID="pnlExpression">
-        <asp:Button runat="server" ID="btnExpressionFake" Style="display: none" />
-        <act:ModalPopupExtender runat="server" ID="mpeExpression" TargetControlID="btnExpressionFake"
-            Enabled="true" BackgroundCssClass="modalBackground" PopupControlID="pnlExpression"
-            CancelControlID="btnCancel" />
+    <ce:ModalPopup runat="server" ID="mpeExpression" CssClass="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>
+                        <ce:Label runat="server">Expression</ce:Label>
+                    </h5>
+                </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>
-                                    <ce:Label runat="server">Expression</ce:Label>
-                                </h5>
-                            </div>
-                            <div class="ibox-content">
-                                <local:NamedExpressionControl runat="server" ID="namedExpressionControl" />
-                                <div class="form-group">
-                                    <ce:LinkButton runat="server" ID="btnSave" ToolTip="Save" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btnCancel" ToolTip="Close" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <local:NamedExpressionControl runat="server" ID="namedExpressionControl" />
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btnSave" ToolTip="Save" OnClick="btnSave_OnClick" CssClass="btn btn-success fa fa-save" />
+                    <ce:LinkButton runat="server" ID="btnCancel" ToolTip="Close" OnClick="btnCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                 </div>
             </div>
         </div>
-    </asp:Panel>
+    </ce:ModalPopup>
 </div>

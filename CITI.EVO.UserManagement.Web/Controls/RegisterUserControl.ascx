@@ -35,6 +35,13 @@
     </label>
     <asp:TextBox runat="server" ID="tbxLoginName" Property="{RegisterUserModel.LoginName=Text}{RegisterUserModel.Email=Text}" CssClass="form-control"></asp:TextBox>
 </asp:Panel>
+<asp:Panel CssClass="form-group" runat="server" ID="pnlPhoneNumber">
+    <label>
+        <span style="color: Red;">*</span>
+        <ce:Label runat="server" ID="lblPhoneNumber">ტელეფონი</ce:Label>
+    </label>
+    <asp:TextBox runat="server" ID="tbxPhoneNumber" Property="{RegisterUserModel.Phone=Text}" CssClass="form-control"></asp:TextBox>
+</asp:Panel>
 <asp:Panel CssClass="form-group" runat="server" ID="pnlPassword">
     <label>
         <span style="color: Red;">*</span>

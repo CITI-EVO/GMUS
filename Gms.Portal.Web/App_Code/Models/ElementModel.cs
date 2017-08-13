@@ -50,11 +50,15 @@ namespace Gms.Portal.Web.Models
 
         public int? ControlSize { get; set; }
 
+        public int? TreeMaxLevel { get; set; }
+
         public String GridFieldSummary { get; set; }
 
         public String Description { get; set; }
 
         public String DisplayOnGrid { get; set; }
+
+        public bool? ResetDataOnHide { get; set; }
 
         public bool? DisplayOnFilter { get; set; }
 
@@ -78,6 +82,8 @@ namespace Gms.Portal.Web.Models
 
         public bool? FirstTimeFill { get; set; }
 
+        public bool? AllowBulkFill { get; set; }
+
         public bool? RequiresApproval { get; set; }
 
         public bool? NotPrintable { get; set; }
@@ -89,6 +95,8 @@ namespace Gms.Portal.Web.Models
         public String Tag { get; set; }
 
         public String FieldValueExpression { get; set; }
+
+        public String VisibleExpression { get; set; }
 
         public List<ParameterEntity> Parameters { get; set; }
     }

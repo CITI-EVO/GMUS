@@ -81,6 +81,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
         }
 
+        public String IDNumber
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.IDNumberField);
+                return DataConverter.ToString(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.IDNumberField, value);
+            }
+        }
+
         public Guid? FormID
         {
             get
@@ -234,6 +247,19 @@ namespace Gms.Portal.Web.Entities.DataContainer
             set
             {
                 SetValue(FormDataConstants.DateDeletedField, value);
+            }
+        }
+
+        public DateTime? DateOfSubmit
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.DateOfSubmitField);
+                return DataConverter.ToNullableDateTime(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.DateOfSubmitField, value);
             }
         }
 

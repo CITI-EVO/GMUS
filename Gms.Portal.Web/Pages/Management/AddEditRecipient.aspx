@@ -40,35 +40,29 @@
         </div>
     </div>
 
-
     <div>
-        <asp:Panel ID="pnlRecipient" runat="server" Style="display: none" DefaultButton="btnRecipientOK">
-            <asp:Button ID="btnRecipientFake" runat="server" Style="display: none;" />
-            <act:ModalPopupExtender ID="mpeRecipient" runat="server" PopupControlID="pnlRecipient" BackgroundCssClass="modalBackground" TargetControlID="btnRecipientFake" CancelControlID="btnRecipientCancel" />
+        <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpeRecipient" runat="server" Style="display: none" DefaultButton="btnRecipientOK">
             <div class="modal-dialog">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5>
+                            <ce:Label runat="server" Text="Recipient" />
+                        </h5>
+                    </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <h5>
-                                <ce:Label runat="server" Text="Recipient" />
-                            </h5>
-                            <div class="ibox-content">
-                                <div class="form-group">
-                                    <ce:Label ID="lblRecipient" runat="server" ForeColor="Red"></ce:Label>
-                                </div>
-                                <ce:RecipientControl runat="server" ID="recipientControl" />
-                                <div class="form-group">
-                                    <ce:LinkButton runat="server" ID="btnRecipientOK" OnClick="btnRecipientOK_OnClick" ToolTip="Save" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btnRecipientCancel" OnClick="btnRecipientCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <ce:Label ID="lblRecipient" runat="server" ForeColor="Red"></ce:Label>
                         </div>
+                        <ce:RecipientControl runat="server" ID="recipientControl" />
+                    </div>
+                    <div class="modal-footer">
+                        <ce:LinkButton runat="server" ID="btnRecipientOK" OnClick="btnRecipientOK_OnClick" ToolTip="Save" CssClass="btn btn-success fa fa-save" />
+                        <ce:LinkButton runat="server" ID="btnRecipientCancel" OnClick="btnRecipientCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                     </div>
                 </div>
             </div>
-        </asp:Panel>
+        </ce:ModalPopup>
     </div>
-
-
 </asp:Content>
 

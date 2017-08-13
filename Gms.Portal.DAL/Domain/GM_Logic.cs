@@ -13,8 +13,7 @@ namespace Gms.Portal.DAL.Domain
         public virtual String Type { get; set; }
         public virtual String SourceType { get; set; }
         public virtual XDocument RawData { get; set; }
-        public virtual Guid? FormID { get; set; }
-        public virtual Guid? LogicID { get; set; }
+        public virtual String SourceID { get; set; }
         public virtual DateTime DateCreated { get; set; }
         public virtual DateTime? DateChanged { get; set; }
         public virtual DateTime? DateDeleted { get; set; }

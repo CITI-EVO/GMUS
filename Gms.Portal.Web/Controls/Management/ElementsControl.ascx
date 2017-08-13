@@ -46,13 +46,21 @@
         </dx:TreeListTextColumn>
         <dx:TreeListTextColumn VisibleIndex="4">
             <HeaderCaptionTemplate>
+                <ce:Label runat="server" Text="Alias" />
+            </HeaderCaptionTemplate>
+            <DataCellTemplate>
+                <ce:Label runat="server" Text='<%#Eval("Alias") %>' />
+            </DataCellTemplate>
+        </dx:TreeListTextColumn>
+        <dx:TreeListTextColumn VisibleIndex="5">
+            <HeaderCaptionTemplate>
                 <ce:Label runat="server" Text="Element Type" />
             </HeaderCaptionTemplate>
             <DataCellTemplate>
                 <ce:Label runat="server" Text='<%#Eval("ElementType") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
-        <dx:TreeListTextColumn VisibleIndex="5">
+        <dx:TreeListTextColumn VisibleIndex="6">
             <HeaderCaptionTemplate>
                 <ce:Label runat="server" Text="Control Type" />
             </HeaderCaptionTemplate>
@@ -60,7 +68,7 @@
                 <ce:Label runat="server" Text='<%#Eval("ControlType") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
-        <dx:TreeListTextColumn VisibleIndex="6">
+        <dx:TreeListTextColumn VisibleIndex="7">
             <HeaderCaptionTemplate>
                 <ce:Label runat="server" Text="Order Index" />
             </HeaderCaptionTemplate>
@@ -68,7 +76,7 @@
                 <asp:Label runat="server" Text='<%#Eval("OrderIndex") %>' />
             </DataCellTemplate>
         </dx:TreeListTextColumn>
-        <dx:TreeListTextColumn VisibleIndex="7">
+        <dx:TreeListTextColumn VisibleIndex="8">
             <HeaderCaptionTemplate>
                 <ce:Label runat="server" Text="Visible" />
             </HeaderCaptionTemplate>

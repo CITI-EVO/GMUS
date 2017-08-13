@@ -1,20 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI.WebControls;
-using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Utils;
+using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Caches;
+using Gms.Portal.Web.Entities.Others;
 using Gms.Portal.Web.Models;
+using Gms.Portal.Web.Utils;
+using NHibernate.Linq;
 
 namespace Gms.Portal.Web.Controls.User
 {
     public partial class AssigneUsersControl : BaseUserControlExtend<AssigneUsersModel>
     {
-        protected HashLookup<int?, Guid?> Users
+        protected ISet<Guid?> Users
         {
-            get { return ViewState["Users"] as HashLookup<int?, Guid?>; }
+            get { return ViewState["Users"] as ISet<Guid?>; }
             set { ViewState["Users"] = value; }
         }
 
@@ -22,13 +26,23 @@ namespace Gms.Portal.Web.Controls.User
         {
             var users = (from n in UmUsersCache.Users
                          where n.DateDeleted == null
-                         select new
+                         select new IDNameEntity
                          {
-                             n.ID,
+                             ID = n.ID,
                              Name = $"{n.LoginName} - {n.Email}"
                          });
 
             cbxUsers.BindData(users);
+
+            var recipientsGroups = (from n in HbSession.Query<GM_RecipientGroup>()
+                                    where n.DateDeleted == null
+                                    select new IDNameEntity
+                                    {
+                                        ID = n.ID,
+                                        Name = n.Name
+                                    });
+
+            cbxRecipientsGroup.BindData(recipientsGroups);
         }
 
         protected void Page_PreRender(object sender, EventArgs e)
@@ -37,11 +51,9 @@ namespace Gms.Portal.Web.Controls.User
                 return;
 
             var users = (from n in Users
-                         from m in n
                          select new
                          {
-                             Step = n.Key,
-                             UserID = m
+                             UserID = n
                          });
 
             gvData.DataSource = users;
@@ -52,33 +64,29 @@ namespace Gms.Portal.Web.Controls.User
         {
             base.SetModel(model);
 
-            Users = model.Users as HashLookup<int?, Guid?>;
+            Users = model.Users as HashSet<Guid?>;
         }
 
         protected void btnSave_OnClick(object sender, EventArgs e)
         {
-            var lookup = Users;
-            if (lookup == null)
-                lookup = new HashLookup<int?, Guid?>();
+            var @set = (Users ?? new HashSet<Guid?>());
 
-            var step = DataConverter.ToNullableInt(seStep.Text);
             var userID = cbxUsers.TryGetGuidValue();
-
-            if (step == null || userID == null)
+            if (userID == null)
                 return;
 
-            if (lookup.Contains(step, userID))
+            if (@set.Contains(userID))
                 return;
 
-            lookup.Add(step, userID);
+            @set.Add(userID);
 
-            Users = lookup;
+            Users = @set;
         }
 
         protected void btnDeleteUser_OnCommand(object sender, CommandEventArgs e)
         {
-            var lookup = Users;
-            if (lookup == null)
+            var @set = Users;
+            if (@set == null)
                 return;
 
             var commandArg = Convert.ToString(e.CommandArgument);
@@ -93,9 +101,9 @@ namespace Gms.Portal.Web.Controls.User
             if (step == null || userID == null)
                 return;
 
-            lookup.Remove(step, userID);
+            @set.Remove(userID);
 
-            Users = lookup;
+            Users = @set;
 
             OnDataChanged(e);
         }
@@ -147,9 +155,26 @@ namespace Gms.Portal.Web.Controls.User
             return $"{user.FirstName} {user.LastName}";
         }
 
-        protected String GetCommandArg(Object step, Object userID)
+        protected void cbxRecipientsGroup_OnSelectedIndexChanged(object sender, EventArgs e)
         {
-            return $"{step}@{userID}";
+            var groupID = cbxRecipientsGroup.TryGetGuidValue();
+            if (groupID == null)
+                return;
+
+            var group = HbSession.Query<GM_RecipientGroup>().FirstOrDefault(n => n.ID == groupID);
+            if (group == null)
+                return;
+
+            var newUsers = RecipientsGroupUtil.GetRecipients(@group).Select(n => n.UserID);
+
+            var users = Users;
+            if (users == null)
+                users = new HashSet<Guid?>();
+
+            users.Clear();
+            users.UnionWith(newUsers);
+
+            Users = users;
         }
     }
 }

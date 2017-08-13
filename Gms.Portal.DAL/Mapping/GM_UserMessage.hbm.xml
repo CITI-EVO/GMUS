@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Gms.Portal.DAL"
+                   namespace="Gms.Portal.DAL.Domain">
+
+  <class name="GM_UserMessage" table="GM_UserMessages">
+    <id name="ID">
+      <generator class="assigned" />
+    </id>
+    <property name="Subject" />
+    
+    <property name="ParentID" />
+    
+    <property name="FormID" />
+    <property name="RecordID" />
+
+    <property name="FromUserID" />
+    <property name="ToUserID" />
+    
+    <property name="StatusUserID" />
+    
+    <property name="StatusID" />
+    
+    <property name="Readed" />
+
+    <property name="Text" />
+    <property name="Description" />
+
+    <property name="DateCreated" />
+    <property name="DateChanged" />
+    <property name="DateDeleted" />
+  </class>
+</hibernate-mapping>

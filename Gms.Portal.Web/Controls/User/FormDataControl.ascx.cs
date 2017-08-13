@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Extensions;
@@ -26,6 +27,7 @@ using Gms.Portal.Web.Entities.Others;
 using Gms.Portal.Web.Enums;
 using Gms.Portal.Web.Helpers;
 using Gms.Portal.Web.Utils;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Label = CITI.EVO.Tools.Web.UI.Controls.Label;
 using Panel = CITI.EVO.Tools.Web.UI.Controls.Panel;
@@ -45,6 +47,9 @@ namespace Gms.Portal.Web.Controls.User
     public partial class FormDataControl : BaseUserControl
     {
         private const String FileIDFormat = "file_{0:n}";
+        private const String FileClearIDFormat = "file_clear_{0:n}";
+        private const String FileStatusIDFormat = "file_status_{0:n}";
+
         private const String FieldIDFormat = "field_{0:n}";
         private const String ButtonIDFormat = "btn_{0:n}";
         private const String CheckIDFormat = "chk_{0:n}";
@@ -80,6 +85,13 @@ namespace Gms.Portal.Web.Controls.User
         private FormDataUnit _lastFormData;
         private ContentEntity _contentEntity;
         private ContentEntity _parentContentEntity;
+
+        private IList<String> _errorMessages;
+
+        public FormDataControl()
+        {
+            _errorMessages = new List<String>();
+        }
 
         public event EventHandler<CommandEventArgs> Command;
         protected virtual void OnCommand(CommandEventArgs e)
@@ -209,14 +221,14 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
-        private ILookup<Guid?, FieldEntity> _dependentFields;
-        protected ILookup<Guid?, FieldEntity> DependentFields
+        private ILookup<Guid?, ControlEntity> _dependentFields;
+        protected ILookup<Guid?, ControlEntity> DependentFields
         {
             get
             {
                 if (_dependentFields == null)
                 {
-                    var query = DataFields.Values.Where(n => n.DependentFieldID != null);
+                    var query = Children.Values.Where(n => n.DependentFieldID != null);
                     _dependentFields = query.ToLookup(n => n.DependentFieldID);
                 }
 
@@ -230,7 +242,10 @@ namespace Gms.Portal.Web.Controls.User
             get
             {
                 if (_dataFields == null)
-                    _dataFields = Children.Values.OfType<FieldEntity>().ToDictionary(n => n.ID);
+                {
+                    var query = Children.Values.OfType<FieldEntity>();
+                    _dataFields = query.ToDictionary(n => n.ID);
+                }
 
                 return _dataFields;
             }
@@ -267,8 +282,11 @@ namespace Gms.Portal.Web.Controls.User
             {
                 if (_children == null)
                 {
-                    var children = FormStructureUtil.PreOrderTraversal(_contentEntity);
-                    _children = children.ToDictionary(n => n.ID);
+                    var query = (from n in FormStructureUtil.PreOrderTraversal(_contentEntity)
+                                 where n.ID != _contentEntity.ID
+                                 select n);
+
+                    _children = query.ToDictionary(n => n.ID);
                 }
 
                 return _children;
@@ -282,8 +300,11 @@ namespace Gms.Portal.Web.Controls.User
             {
                 if (_firstLevelChildren == null)
                 {
-                    var firstLevelChildren = FormStructureUtil.PreOrderFirstLevelTraversal(_contentEntity);
-                    _firstLevelChildren = firstLevelChildren.ToDictionary(n => n.ID);
+                    var query = (from n in FormStructureUtil.PreOrderFirstLevelTraversal(_contentEntity)
+                                 where n.ID != _contentEntity.ID
+                                 select n);
+
+                    _firstLevelChildren = query.ToDictionary(n => n.ID);
                 }
 
                 return _firstLevelChildren;
@@ -305,6 +326,11 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            lblErrors.Text = String.Empty;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -313,6 +339,12 @@ namespace Gms.Portal.Web.Controls.User
         {
             var formData = (_lastFormData ?? FormData);
             ApplyViewMode(formData);
+
+            if (_errorMessages.Count > 0)
+            {
+                var messages = String.Join("<br/>", _errorMessages);
+                lblErrors.Text = messages;
+            }
         }
 
         protected void command_OnClick(object sender, EventArgs eventArgs)
@@ -345,6 +377,60 @@ namespace Gms.Portal.Web.Controls.User
             var containerID = descriptor.GetValue(FormDataConstants.ContainerIDField);
 
             linkButton.CommandArgument = String.Format(childRecordCommandArgFormat, ownerID, recordID, containerID);
+        }
+
+        protected void treeList_HtmlRowPrepared(object sender, TreeListHtmlRowEventArgs e)
+        {
+            var treeList = (ASPxTreeList)sender;
+            if (treeList == null)
+                return;
+
+            var match = RegexUtil.FormValueParserRx.Match(treeList.ID);
+
+            var elemID = match.Groups["elemID"].Value;
+
+            var fieldID = DataConverter.ToNullableGuid(elemID);
+            if (fieldID == null)
+                return;
+
+            var treeEntity = FirstLevelChildren.GetValueOrDefault(fieldID.Value) as TreeEntity;
+            if (treeEntity == null || treeEntity.MaxLevel == null || e.Level < treeEntity.MaxLevel)
+                return;
+
+            var controlID = String.Format(newCommandIDFormat, fieldID);
+
+            var buttons = UserInterfaceUtil.TraverseControls(e.Row).OfType<LinkButton>();
+
+            var btnNew = buttons.FirstOrDefault(n => n.ID == controlID);
+            if (btnNew != null)
+            {
+                btnNew.Visible = false;
+                //btnNew.Enabled = false;
+            }
+        }
+
+        protected void btnClearFileUpload_OnClick(object sender, EventArgs eventArgs)
+        {
+            var button = sender as LinkButton;
+            if (button == null)
+                return;
+
+            if (!RegexUtil.FormValueParserRx.IsMatch(button.ID))
+                return;
+
+            var match = RegexUtil.FormValueParserRx.Match(button.ID);
+
+            var type = match.Groups["type"].Value;
+            var elemID = match.Groups["elemID"].Value;
+
+            var statisElemID = String.Format(FileStatusIDFormat, elemID);
+            var statusControl = AllControlsLp[statisElemID].FirstOrDefault();
+
+            var hdnStatus = statusControl as HiddenField;
+            if (hdnStatus == null)
+                return;
+
+            hdnStatus.Value = "clear";
         }
 
         public ISet<Guid> GetActiveTabs()
@@ -493,7 +579,10 @@ namespace Gms.Portal.Web.Controls.User
                 return null;
 
             var comparer = StringComparer.OrdinalIgnoreCase;
-            var formData = new FormDataUnit(FormID, OwnerID, RecordID, ParentID, DateCreated);
+            var formData = new FormDataUnit(FormID, OwnerID, RecordID, ParentID, DateCreated)
+            {
+                ContainerID = ContainerID
+            };
 
             var fieldsValues = GetAllFieldValues();
 
@@ -504,7 +593,7 @@ namespace Gms.Portal.Web.Controls.User
             {
                 var key = Convert.ToString(item.Key);
 
-                if (ReferenceEquals(item.Value, FormNoData.Value))
+                if (ReferenceEquals(item.Value, DBNull.Value))
                     formData[key] = item.Value;
                 else
                 {
@@ -531,7 +620,7 @@ namespace Gms.Portal.Web.Controls.User
                 var key = Convert.ToString(item.Key);
                 var value = item.Value;
 
-                if (!ReferenceEquals(value, FormNoData.Value))
+                if (!ReferenceEquals(value, DBNull.Value))
                     formData[key] = comparer.Equals(item.Value, "on");
                 else
                     formData[key] = value;
@@ -543,7 +632,7 @@ namespace Gms.Portal.Web.Controls.User
                 var key = Convert.ToString(item.Key);
                 var value = item.Value;
 
-                if (!ReferenceEquals(value, FormNoData.Value))
+                if (!ReferenceEquals(value, DBNull.Value))
                     formData[key] = comparer.Equals(item.Value, "on");
                 else
                     formData[key] = false;
@@ -564,7 +653,25 @@ namespace Gms.Portal.Web.Controls.User
                     binary.FileBytes = file.InputStream.ReadToEnd();
                 }
 
-                formData[key] = binary;
+                var binaryLen = binary.GetLength();
+                if (binaryLen > 0 && !String.IsNullOrWhiteSpace(binary.FileName))
+                {
+                    formData[key] = binary;
+                }
+                else
+                {
+                    var statusQuery = (from n in valuesLp["file_status"]
+                                       where key == Convert.ToString(n.Key)
+                                       select n.Value);
+
+                    var fileStatus = statusQuery.FirstOrDefault();
+
+                    var statusVal = Convert.ToString(fileStatus);
+                    if (statusVal == "clear")
+                        formData[key] = null;
+                    else
+                        formData[key] = DBNull.Value;
+                }
             }
 
             foreach (var dataGrid in DataGrids.Values)
@@ -584,7 +691,7 @@ namespace Gms.Portal.Web.Controls.User
             }
 
             var privates = formData[FormDataConstants.PrivacyFields];
-            if (!ReferenceEquals(privates, FormNoData.Value))
+            if (!ReferenceEquals(privates, DBNull.Value))
             {
                 var privateFields = privates as ISet<String>;
                 if (privateFields == null)
@@ -604,7 +711,7 @@ namespace Gms.Portal.Web.Controls.User
             }
 
             var reviews = formData[FormDataConstants.ReviewFields];
-            if (!ReferenceEquals(reviews, FormNoData.Value))
+            if (!ReferenceEquals(reviews, DBNull.Value))
             {
                 var reviewFields = reviews as ISet<String>;
                 if (reviewFields == null)
@@ -624,20 +731,46 @@ namespace Gms.Portal.Web.Controls.User
             }
 
             var dataFields = FirstLevelChildren.Values.OfType<FieldEntity>();
-            var expGlobals = new ExpressionGlobalsUtil(UserID, _contentEntity, formData);
+
+            var contentEntity = _parentContentEntity ?? _contentEntity;
+            var expGlobals = new ExpressionGlobalsUtil(UserID, contentEntity, formData, ParentFormData);
 
             foreach (var entity in dataFields)
             {
                 var fieldKey = Convert.ToString(entity.ID);
 
+                //if (entity.Type == "PersonLookup")
+                //{
+                //    var fieldID = GetFieldID(entity);
+
+                //    var customControl = MetaControls.GetValueOrDefault(fieldID) as ICustomMetaControl;
+                //    if (customControl != null)
+                //        formData[fieldKey] = customControl.Value;
+
+                //    continue;
+                //}
+
                 if (String.IsNullOrWhiteSpace(entity.FieldValueExpression))
                     continue;
+
+
+                if (RecordID != null && entity.FirstTimeFill)
+                {
+                    var fieldVal = formData[fieldKey];
+                    if (!FormDataUtil.IsNullOrEmpty(fieldVal))
+                        continue;
+                }
 
                 var expNode = ExpressionParser.GetOrParse(entity.FieldValueExpression);
 
                 Object result;
                 if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+                {
+                    var message = $"[{entity.Name}] - Incorrect Field Value Expression";
+                    _errorMessages.Add(message);
+
                     continue;
+                }
 
                 formData[fieldKey] = result;
             }
@@ -688,7 +821,7 @@ namespace Gms.Portal.Web.Controls.User
 
                 var fieldValue = formData[fieldKey];
 
-                if (ReferenceEquals(fieldValue, FormNoData.Value))
+                if (ReferenceEquals(fieldValue, DBNull.Value))
                     fieldValue = null;
 
                 if (Mode == FormMode.Inspect)
@@ -726,7 +859,6 @@ namespace Gms.Portal.Web.Controls.User
 
                 if (fieldValue is FormDataListBase || fieldValue is FormDataListRef)
                 {
-
                     var gridControlID = String.Format(GridIDFormat, fieldID);
                     var treeControlID = String.Format(TreeIDFormat, fieldID);
 
@@ -779,7 +911,12 @@ namespace Gms.Portal.Web.Controls.User
                 if (fieldControl == null)
                     fieldControl = MetaControls.GetValueOrDefault(fileControlID);
 
-                if (fieldControl is TextBox)
+                if (fieldControl is ICustomMetaControl)
+                {
+                    var customControl = (ICustomMetaControl)fieldControl;
+                    customControl.Value = fieldValue;
+                }
+                else if (fieldControl is TextBox)
                 {
                     var textBox = (TextBox)fieldControl;
                     textBox.Text = Convert.ToString(fieldValue);
@@ -851,7 +988,7 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
-        protected FormDataUnit LoadFormData(Guid? ownerID, Guid? recordID)
+        private FormDataUnit LoadFormData(Guid? ownerID, Guid? recordID)
         {
             if (ownerID == null || recordID == null)
                 return null;
@@ -1093,50 +1230,39 @@ namespace Gms.Portal.Web.Controls.User
                 dataGrid.DataBind();
             }
 
-            if (RecordID == null)
+            var newButton = new LinkButton
             {
-                var label = new Label
-                {
-                    ForeColor = Color.Red,
-                    Text = "Please save master data to add new record in grid or copy from an other grid"
-                };
+                ID = String.Format(newCommandIDFormat, entity.ID),
+                Enabled = Enabled,
+                CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-plus" : "btn btn-default btn-sm fa fa-plus"),
+                ClientIDMode = ClientIDMode.Static,
+                CommandName = "Edit",
+                CommandArgument = String.Format(childRecordCommandArgFormat, entity.ID, "@", "@")
+            };
 
-                toolsPanel.Controls.Add(label);
-            }
-            else
+            newButton.Click += command_OnClick;
+
+            toolsPanel.Controls.Add(newButton);
+
+            var allowBulkFill = entity.AllowBulkFill;
+
+            if (RecordID != null &&
+                allowBulkFill.GetValueOrDefault() &&
+                IsGridCloneExists(entity))
             {
-                var newButton = new LinkButton
+                var cloneButton = new LinkButton
                 {
-                    ID = String.Format(newCommandIDFormat, entity.ID),
+                    ID = String.Format(cloneCommandIDFormat, entity.ID),
                     Enabled = Enabled,
-                    Visible = (RecordID != null),
-                    CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-plus" : "btn btn-default btn-sm fa fa-plus"),
+                    CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-copy" : "btn btn-default btn-sm fa fa-copy"),
                     ClientIDMode = ClientIDMode.Static,
-                    CommandName = "Edit",
+                    CommandName = "Clone",
                     CommandArgument = String.Format(childRecordCommandArgFormat, entity.ID, "@", "@")
                 };
 
-                newButton.Click += command_OnClick;
+                cloneButton.Click += command_OnClick;
 
-                toolsPanel.Controls.Add(newButton);
-
-                if (IsGridCloneExists(entity))
-                {
-                    var cloneButton = new LinkButton
-                    {
-                        ID = String.Format(cloneCommandIDFormat, entity.ID),
-                        Enabled = Enabled,
-                        Visible = (RecordID != null),
-                        CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-copy" : "btn btn-default btn-sm fa fa-copy"),
-                        ClientIDMode = ClientIDMode.Static,
-                        CommandName = "Clone",
-                        CommandArgument = String.Format(childRecordCommandArgFormat, entity.ID, "@", "@")
-                    };
-
-                    cloneButton.Click += command_OnClick;
-
-                    toolsPanel.Controls.Add(cloneButton);
-                }
+                toolsPanel.Controls.Add(cloneButton);
             }
 
             tablePanel.Controls.Add(dataGrid);
@@ -1163,13 +1289,12 @@ namespace Gms.Portal.Web.Controls.User
             var toolsPanel = new Panel { CssClass = "ibox-tools" };
             var contentPanel = new Panel { CssClass = "ibox-content" };
 
-            var treeList = new ASPxTreeList
-            {
-                ID = String.Format(TreeIDFormat, entity.ID),
-                KeyFieldName = "ID",
-                ParentFieldName = "ContainerID",
-                AutoGenerateColumns = false,
-            };
+            var treeList = new ASPxTreeList();
+            treeList.ID = String.Format(TreeIDFormat, entity.ID);
+            treeList.KeyFieldName = "ID";
+            treeList.ParentFieldName = "ContainerID";
+            treeList.AutoGenerateColumns = false;
+            treeList.HtmlRowPrepared += treeList_HtmlRowPrepared;
 
             SetCommands(treeList, entity);
 
@@ -1207,61 +1332,35 @@ namespace Gms.Portal.Web.Controls.User
                     treeList.Columns.Add(column);
                 }
 
-                //var footerFields = (from n in orderedVisibleFields
-                //                    where !string.IsNullOrWhiteSpace(n.GridFieldSummary)
-                //                    select n);
-
-                //treeList.ShowFooter = !footerFields.IsNullOrEmpty();
-
                 treeList.DataSource = dataTable;
                 treeList.DataBind();
             }
 
-            if (RecordID == null)
+            //if (RecordID == null)
+            //{
+            //    var label = new Label
+            //    {
+            //        ForeColor = Color.Red,
+            //        Text = "Please save master data to add new record in grid or copy from an other grid"
+            //    };
+
+            //    toolsPanel.Controls.Add(label);
+            //}
+            //else
+            //{
+            var newButton = new LinkButton
             {
-                var label = new Label
-                {
-                    ForeColor = Color.Red,
-                    Text = "Please save master data to add new record in grid or copy from an other grid"
-                };
+                ID = String.Format(newCommandIDFormat, entity.ID),
+                Enabled = Enabled,
+                CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-plus" : "btn btn-default btn-sm fa fa-plus"),
+                ClientIDMode = ClientIDMode.Static,
+                CommandName = "Edit",
+                CommandArgument = String.Format(childRecordCommandArgFormat, entity.ID, "@", "@")
+            };
 
-                toolsPanel.Controls.Add(label);
-            }
-            else
-            {
-                var newButton = new LinkButton
-                {
-                    ID = String.Format(newCommandIDFormat, entity.ID),
-                    Enabled = Enabled,
-                    Visible = (RecordID != null),
-                    CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-plus" : "btn btn-default btn-sm fa fa-plus"),
-                    ClientIDMode = ClientIDMode.Static,
-                    CommandName = "Edit",
-                    CommandArgument = String.Format(childRecordCommandArgFormat, entity.ID, "@", "@")
-                };
+            newButton.Click += command_OnClick;
 
-                newButton.Click += command_OnClick;
-
-                toolsPanel.Controls.Add(newButton);
-
-                //if (IsGridCloneExists(entity))
-                //{
-                //    var cloneButton = new LinkButton
-                //    {
-                //        ID = String.Format(cloneCommandIDFormat, entity.ID),
-                //        Enabled = Enabled,
-                //        Visible = (RecordID != null),
-                //        CssClass = (Enabled ? "btn btn-primary btn-sm fa fa-copy" : "btn btn-default btn-sm fa fa-copy"),
-                //        ClientIDMode = ClientIDMode.Static,
-                //        CommandName = "Clone",
-                //        CommandArgument = $"{entity.ID:n}/@"
-                //    };
-
-                //    cloneButton.Click += command_OnClick;
-
-                //    toolsPanel.Controls.Add(cloneButton);
-                //}
-            }
+            toolsPanel.Controls.Add(newButton);
 
             titlePanel.Controls.Add(toolsPanel);
             contentPanel.Controls.Add(treeList);
@@ -1274,7 +1373,6 @@ namespace Gms.Portal.Web.Controls.User
 
             parent.Controls.Add(rowPanel);
         }
-
         private void SetTabContainer(Control parent, TabContainerEntity entity)
         {
             if (entity == null || !entity.Visible)
@@ -1383,7 +1481,7 @@ namespace Gms.Portal.Web.Controls.User
         {
             var commandsColumn = new TemplateField
             {
-                ItemTemplate = new DefaultFieldTemplate(() => CreateCommands(entity))
+                ItemTemplate = new DefaultFieldTemplate(() => CreateCommands(entity, true))
             };
 
             dataGrid.Columns.Add(commandsColumn);
@@ -1392,7 +1490,7 @@ namespace Gms.Portal.Web.Controls.User
         {
             var commandsColumn = new TreeListDataColumn
             {
-                DataCellTemplate = new DefaultFieldTemplate(() => CreateCommands(entity))
+                DataCellTemplate = new DefaultFieldTemplate(() => CreateCommands(entity, false))
             };
 
             treeList.Columns.Add(commandsColumn);
@@ -1404,35 +1502,41 @@ namespace Gms.Portal.Web.Controls.User
 
             ProcessDependencyFields(formData);
             ProcessDefaultFieldValues(formData);
+            ProcessVisibleExpressions(formData);
 
             ProcessEnabledStatuses(formData);
         }
 
         private void ProcessEnabledStatuses(FormDataUnit formData)
         {
-
-            var dataFields = FirstLevelChildren.Values.OfType<FieldEntity>();
-            foreach (var entity in dataFields)
+            var dataFields = FirstLevelChildren.Values;
+            foreach (var controlEntity in dataFields)
             {
+                if (!(controlEntity is FieldEntity || controlEntity is GridEntity || controlEntity is TreeEntity))
+                    continue;
+
                 var enabled = Enabled;
 
-                if (enabled)
-                    enabled = !entity.ReadOnly.GetValueOrDefault();
-
-                if (enabled)
+                var fieldEntity = controlEntity as FieldEntity;
+                if (fieldEntity != null)
                 {
-                    if (formData != null && formData.StatusID != DataStatusCache.None.ID)
-                        enabled = !entity.FirstTimeFill;
+                    if (enabled)
+                        enabled = !fieldEntity.ReadOnly.GetValueOrDefault();
+
+                    if (enabled)
+                    {
+                        if (formData != null && formData.StatusID != DataStatusCache.None.ID)
+                            enabled = !fieldEntity.FirstTimeFill;
+                    }
                 }
 
                 if (enabled)
                 {
-
                     if (formData != null && formData.ReviewFields != null && formData.ReviewFields.Count > 0)
                     {
                         if (Mode == FormMode.Review && StatusID == DataStatusCache.Rejected.ID)
                         {
-                            var fieldKey = Convert.ToString(entity.ID);
+                            var fieldKey = Convert.ToString(controlEntity.ID);
 
                             if (!formData.ReviewFields.Contains(fieldKey))
                                 enabled = false;
@@ -1442,30 +1546,28 @@ namespace Gms.Portal.Web.Controls.User
 
                 if (!enabled)
                 {
-                    var fieldID = GetFieldID(entity);
-                    var elementsID = GetElementID(entity);
-
-                    var control = MetaControls.GetValueOrDefault(fieldID);
-                    if (control == null)
-                        continue;
-
-                    //MetaControls.Remove(fieldID);
-
-                    var container = new HiddenField
+                    if (fieldEntity != null)
                     {
-                        ID = control.ID,
-                        Value = GetControlValue(control),
-                        ClientIDMode = ClientIDMode.Static,
-                        EnableViewState = false,
-                    };
+                        var fieldID = GetFieldID(fieldEntity);
 
-                    control.ID = $"{control.ID}_disabled";
+                        var control = MetaControls.GetValueOrDefault(fieldID);
+                        if (control == null)
+                            continue;
 
-                    //MetaControls.Add(control.ID, control);
-                    //MetaControls.Add(container.ID, container);
+                        var container = new HiddenField
+                        {
+                            ID = control.ID,
+                            Value = GetControlValue(control),
+                            ClientIDMode = ClientIDMode.Static,
+                            EnableViewState = false,
+                        };
 
-                    control.Parent.Controls.Add(container);
+                        control.ID = $"{control.ID}_disabled";
 
+                        control.Parent.Controls.Add(container);
+                    }
+
+                    var elementsID = GetElementID(controlEntity);
 
                     var elements = (from n in elementsID
                                     from m in AllControlsLp[n]
@@ -1513,18 +1615,43 @@ namespace Gms.Portal.Web.Controls.User
 
         private void ProcessDependencyFields(ControlEntity parent, ExpressionGlobalsUtil expGlobals)
         {
-            var sourceField = parent as FieldEntity;
-            if (sourceField == null)
+            if (parent == null)
                 return;
 
-            var sourceKey = Convert.ToString(sourceField.ID);
-            var dependents = DependentFields[sourceField.ID];
+            var sourceKey = Convert.ToString(parent.ID);
+            var dependents = DependentFields[parent.ID].ToList();
+
+            var sourceData = new Dictionary<String, Object>();
+            expGlobals.AddSource(sourceData);
+
+            var sourceField = parent as FieldEntity;
+            if (sourceField != null && dependents.Any())
+            {
+                var sourceVal = expGlobals.Eval(sourceKey);
+                if (!String.IsNullOrEmpty(Convert.ToString(sourceField)))
+                {
+                    var dsHelper = new DataSourceHelper(sourceField);
+
+                    var sourceRec = dsHelper.FindDataRecord(sourceVal);
+                    if (sourceRec != null)
+                    {
+                        var prefix = sourceField.Alias;
+                        if (String.IsNullOrWhiteSpace(prefix))
+                            prefix = sourceField.Name;
+
+                        prefix = ExpressionParser.Escape(prefix);
+
+                        foreach (var pair in sourceRec)
+                            sourceData.Add($"{prefix}.{pair.Key}", pair.Value);
+                    }
+                }
+            }
+
+            var resetGridsAndTrees = new HashLookup<Guid?, Guid?>();
 
             foreach (var targetEntity in dependents)
             {
-                var dependentExp = targetEntity.DependentExp;
-                if (String.IsNullOrWhiteSpace(dependentExp))
-                    dependentExp = @"!IsEmpty(@)";
+                var fieldEntity = targetEntity as FieldEntity;
 
                 expGlobals.SetAssociation("@", sourceKey);
                 expGlobals.SetAssociation("@val", sourceKey);
@@ -1538,8 +1665,7 @@ namespace Gms.Portal.Web.Controls.User
                     var parentGrid = parentControl as GridEntity;
                     if (parentGrid != null)
                     {
-                        var fieldEntity = targetEntity;
-                        if (fieldEntity.DisplayOnGrid == "Conditional")
+                        if (fieldEntity != null && fieldEntity.DisplayOnGrid == "Conditional")
                         {
                             var dataGridID = String.Format(GridIDFormat, parentGrid.ID);
 
@@ -1550,7 +1676,12 @@ namespace Gms.Portal.Web.Controls.User
 
                                 var column = columns.FirstOrDefault(n => n.FieldEntity != null && n.FieldEntity.ID == targetEntity.ID);
                                 if (column != null)
-                                    SetTargetVisibilities(column, expGlobals, dependentExp);
+                                {
+                                    SetTargetVisibilities(column, expGlobals, fieldEntity);
+
+                                    if (!column.Visible && fieldEntity.ResetDataOnHide.GetValueOrDefault())
+                                        resetGridsAndTrees.Add(parentGrid.ID, fieldEntity.ID);
+                                }
 
                                 continue;
                             }
@@ -1560,8 +1691,7 @@ namespace Gms.Portal.Web.Controls.User
                     var parentTree = parentControl as TreeEntity;
                     if (parentTree != null)
                     {
-                        var fieldEntity = targetEntity;
-                        if (fieldEntity.DisplayOnGrid == "Conditional")
+                        if (fieldEntity != null && fieldEntity.DisplayOnGrid == "Conditional")
                         {
                             var treeListID = String.Format(TreeIDFormat, parentTree.ID);
 
@@ -1572,7 +1702,12 @@ namespace Gms.Portal.Web.Controls.User
 
                                 var column = columns.FirstOrDefault(n => n.FieldEntity != null && n.FieldEntity.ID == targetEntity.ID);
                                 if (column != null)
-                                    SetTargetVisibilities(column, expGlobals, dependentExp);
+                                {
+                                    SetTargetVisibilities(column, expGlobals, fieldEntity);
+
+                                    if (!column.Visible && fieldEntity.ResetDataOnHide.GetValueOrDefault())
+                                        resetGridsAndTrees.Add(parentTree.ID, fieldEntity.ID);
+                                }
 
                                 continue;
                             }
@@ -1588,32 +1723,62 @@ namespace Gms.Portal.Web.Controls.User
 
                 if (elements.Any())
                 {
-                    SetTargetVisibilities(elements, expGlobals, dependentExp);
+                    SetTargetVisibilities(elements, expGlobals, targetEntity);
                     FillFieldData(targetEntity, sourceField, expGlobals);
                 }
 
+                expGlobals.RemoveSource(sourceData);
+
                 ProcessDependencyFields(targetEntity, expGlobals);
+            }
+
+            if (resetGridsAndTrees.Count > 0)
+            {
+                foreach (var fieldsGrp in resetGridsAndTrees)
+                    ResetGridOrTreeFieldData(RecordID, fieldsGrp.Key, fieldsGrp);
             }
         }
 
         private void ProcessDefaultFieldValues(FormDataUnit formData)
         {
-            if (formData == null)
-                return;
+            formData = (formData ?? new FormDataUnit());
 
-            var dataFields = FirstLevelChildren.Values.OfType<FieldEntity>();
-            var expGlobals = new ExpressionGlobalsUtil(UserID, _contentEntity, formData);
+            var dataFields = (from n in FirstLevelChildren.Values.OfType<FieldEntity>()
+                              orderby n.OrderIndex, n.Name
+                              select n);
+
+            var contentEntity = _parentContentEntity ?? _contentEntity;
+
+            var expGlobals = new ExpressionGlobalsUtil(UserID, contentEntity, formData, ParentFormData);
 
             foreach (var entity in dataFields)
             {
                 if (String.IsNullOrWhiteSpace(entity.FieldValueExpression))
                     continue;
 
+                var fieldKey = Convert.ToString(entity.ID);
+                var fieldValue = formData[fieldKey];
+
+                if (entity.FirstTimeFill)
+                {
+                    if (!FormDataUtil.IsNullOrEmpty(fieldValue))
+                        continue;
+                }
+
+                expGlobals.SetAssociation("@", fieldKey);
+                expGlobals.SetAssociation("@val", fieldKey);
+                expGlobals.SetAssociation("@value", fieldKey);
+
                 var expNode = ExpressionParser.GetOrParse(entity.FieldValueExpression);
 
                 Object result;
                 if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+                {
+                    var message = $"[{entity.Name}] - Incorrect Field Value Expression";
+                    _errorMessages.Add(message);
+
                     continue;
+                }
 
                 var controlID = GetFieldID(entity);
                 var control = MetaControls.GetValueOrDefault(controlID);
@@ -1635,6 +1800,52 @@ namespace Gms.Portal.Web.Controls.User
                     var radioButton = control as RadioButton;
                     radioButton.Checked = DataConverter.ToNullableBoolean(result).GetValueOrDefault();
                 }
+            }
+        }
+
+        private void ProcessVisibleExpressions(FormDataUnit formData)
+        {
+            formData = (formData ?? new FormDataUnit());
+
+            var dataFields = FirstLevelChildren.Values.OfType<FieldEntity>();
+            var contentEntity = _parentContentEntity ?? _contentEntity;
+
+            var expGlobals = new ExpressionGlobalsUtil(UserID, contentEntity, formData, ParentFormData);
+
+            foreach (var entity in dataFields)
+            {
+                if (String.IsNullOrWhiteSpace(entity.VisibleExpression))
+                    continue;
+
+                var query = (from n in GetElementID(entity)
+                             from m in AllControlsLp[n]
+                             select m).OfType<Panel>();
+
+                var elements = query.ToList();
+
+                if (!elements.Any() || elements.All(n => !n.Visible))
+                    continue;
+
+                var fieldKey = Convert.ToString(entity.ID);
+
+                expGlobals.SetAssociation("@", fieldKey);
+                expGlobals.SetAssociation("@val", fieldKey);
+                expGlobals.SetAssociation("@value", fieldKey);
+
+                var expNode = ExpressionParser.GetOrParse(entity.VisibleExpression);
+
+                Object result;
+                if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+                {
+                    var message = $"[{entity.Name}] - Incorrect Visible Expression";
+                    _errorMessages.Add(message);
+
+                    continue;
+                }
+
+                var visible = DataConverter.ToNullableBoolean(result).GetValueOrDefault();
+                foreach (var element in elements)
+                    element.Visible = visible;
             }
         }
 
@@ -1688,10 +1899,14 @@ namespace Gms.Portal.Web.Controls.User
             if (textBox != null)
                 return textBox.Text;
 
+            var customControl = control as ICustomMetaControl;
+            if (customControl != null)
+                return Convert.ToString(customControl.Value);
+
             throw new Exception("Unable to get value of control because control is unknown");
         }
 
-        private Control CreateCommands(ControlEntity entity)
+        private Control CreateCommands(ControlEntity entity, bool grouped)
         {
             var editMode = (Mode == FormMode.Review ? Mode : FormMode.Edit);
 
@@ -1740,18 +1955,31 @@ namespace Gms.Portal.Web.Controls.User
                 list.Insert(0, newButton);
             }
 
-            var panel = new Panel();
+            var containerPanel = new Panel();
+            var contentPanel = containerPanel;
+
+            if (grouped)
+            {
+                var dropdownSpan = new Label { CssClass = "btn btn-info btn-circle fa fa-window-restore" };
+
+                containerPanel.CssClass = "dropdown";
+
+                contentPanel = new Panel { CssClass = "dropdown-content" };
+
+                containerPanel.Controls.Add(dropdownSpan);
+                containerPanel.Controls.Add(contentPanel);
+            }
 
             foreach (var button in list)
             {
                 button.Command += command_OnCommand;
                 button.DataBinding += command_OnDataBinding;
 
-                panel.Controls.Add(button);
-                panel.Controls.Add(new LiteralControl("&nbsp;"));
+                contentPanel.Controls.Add(button);
+                contentPanel.Controls.Add(new LiteralControl("&nbsp;"));
             }
 
-            return panel;
+            return containerPanel;
         }
 
         private FormDataListBase GetFormDataList(Object value)
@@ -1802,23 +2030,6 @@ namespace Gms.Portal.Web.Controls.User
             return false;
         }
 
-        private bool IsTreeCloneExists(TreeEntity primaryTree)
-        {
-            var primaryTreeFields = primaryTree.Controls.Select(n => n.Name).ToHashSet();
-
-            foreach (var otherTree in TreeLists.Values)
-            {
-                if (otherTree.ID == primaryTree.ID)
-                    continue;
-
-                var otherTreeFields = otherTree.Controls.Select(n => n.Name).ToHashSet();
-                if (primaryTreeFields.SetEquals(otherTreeFields))
-                    return true;
-            }
-
-            return false;
-        }
-
         private IEnumerable<HtmlFormValue> GetAllFieldValues()
         {
             var dict = new Dictionary<String, ISet<Guid?>>();
@@ -1847,7 +2058,7 @@ namespace Gms.Portal.Web.Controls.User
                 FormDataConstants.DateDeletedField,
                 FormDataConstants.DateOfAcceptField,
                 FormDataConstants.DateOfSubmitField,
-                FormDataConstants.StatusChangeDateField
+                FormDataConstants.DateOfStatusField
             };
 
             if (Mode != FormMode.Inspect)
@@ -1859,7 +2070,7 @@ namespace Gms.Portal.Web.Controls.User
                 {
                     Type = "sys",
                     Key = field,
-                    Value = FormNoData.Value,
+                    Value = DBNull.Value,
                 };
 
                 yield return entity;
@@ -1968,7 +2179,7 @@ namespace Gms.Portal.Web.Controls.User
                 if (fieldID == null || !@set.Add(fieldID))
                     continue;
 
-                var value = (Object)FormNoData.Value;
+                var value = (Object)DBNull.Value;
 
                 var checkable = pair.Value as System.Web.UI.WebControls.CheckBox;
                 if (checkable != null && !IsDisabled(checkable))
@@ -1982,6 +2193,40 @@ namespace Gms.Portal.Web.Controls.User
                 };
 
                 yield return entity;
+            }
+        }
+
+        private void ResetGridOrTreeFieldData(Guid? parentID, Guid? ownerID, IEnumerable<Guid?> fieldsID)
+        {
+            if (parentID == null || ownerID == null || fieldsID == null)
+                return;
+
+            var fieldKeys = fieldsID.Select(n => Convert.ToString(n)).ToHashSet();
+            if (fieldKeys.Count == 0)
+                return;
+
+            var filter = new Dictionary<String, Object>
+            {
+                [FormDataConstants.DateDeletedField] = null,
+                [FormDataConstants.ParentIDField] = parentID,
+            };
+
+            var documents = MongoDbUtil.FindDocuments(ownerID, filter).ToList();
+            foreach (var document in documents)
+            {
+                var updated = false;
+
+                foreach (var fieldKey in fieldKeys)
+                {
+                    if (document.Contains(fieldKey))
+                    {
+                        document[fieldKey] = BsonNull.Value;
+                        updated = true;
+                    }
+                }
+
+                if (updated)
+                    MongoDbUtil.UpdateDocument(ownerID, document);
             }
         }
 
@@ -2043,7 +2288,7 @@ namespace Gms.Portal.Web.Controls.User
             return fieldSet;
         }
 
-        private DictionaryDataBinder CreateDataBinder(FieldEntity entity)
+        private MetaFormDataBinder CreateDataBinder(FieldEntity entity)
         {
             var textExp = entity.TextExpression;
             var valueExp = entity.ValueExpression;
@@ -2055,10 +2300,13 @@ namespace Gms.Portal.Web.Controls.User
             var formData = (FormData ?? _lastFormData);
 
             var dataSourceHelper = new DataSourceHelper(userID, entity, formData, Children);
-            var dataRecords = dataSourceHelper.LoadDataRecords();
 
-            var dictionaryBinder = new DictionaryDataBinder(dataRecords, textExp, valueExp);
-            return dictionaryBinder;
+            var dataRecords = dataSourceHelper.LoadDataRecords();
+            if (dataRecords == null)
+                return null;
+
+            var formDataBinder = new MetaFormDataBinder(dataRecords, textExp, valueExp);
+            return formDataBinder;
         }
 
         private Control CreateControl(Control parent, FieldEntity entity, bool autoPostBack)
@@ -2100,19 +2348,37 @@ namespace Gms.Portal.Web.Controls.User
                 return control;
             }
 
+            //if (entity.Type == "PersonLookup")
+            //{
+            //    var control = LoadControl("~/Controls/User/PersonControl.ascx");
+            //    control.ID = String.Format(FieldIDFormat, entity.ID);
+
+            //    parent.Controls.Add(control);
+            //    return control;
+            //}
+
             if (entity.Type == "Lookup")
             {
-                var groupPanel = new Panel
-                {
-                    CssClass = "input-group"
-                };
-
                 var control = new TextBox
                 {
                     ID = String.Format(FieldIDFormat, entity.ID),
                     ClientIDMode = ClientIDMode.Static,
                     CssClass = "form-control",
                     EnableViewState = false,
+                };
+
+                var button = new ImageLinkButton
+                {
+                    ID = String.Format(ButtonIDFormat, entity.ID),
+                    ClientIDMode = ClientIDMode.Static,
+                    CssClass = "btn btn-primary",
+                    Text = "OK"
+                };
+
+                var groupPanel = new Panel
+                {
+                    CssClass = "input-group",
+                    DefaultButton = button.ID
                 };
 
                 if (!String.IsNullOrWhiteSpace(entity.Mask))
@@ -2125,13 +2391,7 @@ namespace Gms.Portal.Web.Controls.User
                     CssClass = "input-group-btn"
                 };
 
-                var button = new ImageLinkButton
-                {
-                    ID = String.Format(ButtonIDFormat, entity.ID),
-                    ClientIDMode = ClientIDMode.Static,
-                    CssClass = "btn btn-primary",
-                    Text = "OK"
-                };
+
 
                 buttonPanel.Controls.Add(button);
 
@@ -2155,6 +2415,7 @@ namespace Gms.Portal.Web.Controls.User
                 parent.Controls.Add(control);
                 return control;
             }
+
 
             if (entity.Type == "Number")
             {
@@ -2233,7 +2494,10 @@ namespace Gms.Portal.Web.Controls.User
                     EnableViewState = false,
                 };
 
-                parent.Controls.Add(control);
+                var panel = new Panel { CssClass = "i-checks" };
+                panel.Controls.Add(control);
+
+                parent.Controls.Add(panel);
                 return control;
             }
 
@@ -2249,7 +2513,10 @@ namespace Gms.Portal.Web.Controls.User
                     EnableViewState = false,
                 };
 
-                parent.Controls.Add(control);
+                var panel = new Panel { CssClass = "i-checks" };
+                panel.Controls.Add(control);
+
+                parent.Controls.Add(panel);
                 return control;
             }
 
@@ -2264,28 +2531,7 @@ namespace Gms.Portal.Web.Controls.User
                     EnableViewState = false,
                 };
 
-                if (!String.IsNullOrWhiteSpace(entity.DataSourceID))
-                {
-                    var dataBinder = CreateDataBinder(entity);
-                    if (dataBinder != null)
-                    {
-                        control.Items.Clear();
-
-                        var collection = dataBinder.GetItems();
-
-                        var emptyItem = new ListItem("-Select an Option-", "");
-                        control.Items.Add(emptyItem);
-
-                        foreach (var item in collection)
-                        {
-                            var text = Convert.ToString(item.Text);
-                            var value = Convert.ToString(item.Value);
-
-                            var listItem = new ListItem(text, value);
-                            control.Items.Add(listItem);
-                        }
-                    }
-                }
+                FillListControl(control, entity);
 
                 parent.Controls.Add(control);
                 return control;
@@ -2303,25 +2549,7 @@ namespace Gms.Portal.Web.Controls.User
                     EnableViewState = false,
                 };
 
-                if (!String.IsNullOrWhiteSpace(entity.DataSourceID))
-                {
-                    var dataBinder = CreateDataBinder(entity);
-                    if (dataBinder != null)
-                    {
-                        control.Items.Clear();
-
-                        var collection = dataBinder.GetItems();
-
-                        foreach (var item in collection)
-                        {
-                            var text = Convert.ToString(item.Text);
-                            var value = Convert.ToString(item.Value);
-
-                            var listItem = new ListItem(text, value);
-                            control.Items.Add(listItem);
-                        }
-                    }
-                }
+                FillListControl(control, entity);
 
                 parent.Controls.Add(control);
                 return control;
@@ -2329,6 +2557,10 @@ namespace Gms.Portal.Web.Controls.User
 
             if (entity.Type == "FileUpload")
             {
+                var fileUploadID = String.Format(FileIDFormat, entity.ID);
+                var uploadClearID = String.Format(FileClearIDFormat, entity.ID);
+                var uploadStatusID = String.Format(FileStatusIDFormat, entity.ID);
+
                 var fileOutputPanel = new Panel
                 {
                     ID = String.Format(FileOuputPanelFormat, entity.ID),
@@ -2348,7 +2580,16 @@ namespace Gms.Portal.Web.Controls.User
                 donwloadLink.Attributes["target"] = "_blank";
                 donwloadLink.Controls.Add(new Label { Text = "Download" });
 
+                var spaceControl = new LiteralControl("&nbsp;&nbsp;");
+
+                var clearLink = new LinkButton();
+                clearLink.ID = uploadClearID;
+                clearLink.Click += btnClearFileUpload_OnClick;
+                clearLink.Controls.Add(new Label { Text = "Clear" });
+
                 fileOutputPanel.Controls.Add(donwloadLink);
+                fileOutputPanel.Controls.Add(spaceControl);
+                fileOutputPanel.Controls.Add(clearLink);
 
                 var fileInputPanel = new Panel { CssClass = "fileinput fileinput-new input-group" };
                 fileInputPanel.ID = String.Format(FileInputPanelFormat, entity.ID);
@@ -2367,7 +2608,7 @@ namespace Gms.Portal.Web.Controls.User
 
                 var fileUpload = new FileUpload
                 {
-                    ID = String.Format(FileIDFormat, entity.ID),
+                    ID = fileUploadID,
                     ClientIDMode = ClientIDMode.Static,
                 };
 
@@ -2389,10 +2630,14 @@ namespace Gms.Portal.Web.Controls.User
                 fileInputPanel.Controls.Add(inputLabel);
                 fileInputPanel.Controls.Add(removeLink);
 
+                var hdnStatus = new HiddenField();
+                hdnStatus.ID = uploadStatusID;
+
                 var fileDataPanel = new Panel();
                 fileDataPanel.ID = String.Format(FileDataPanelFormat, entity.ID);
                 fileDataPanel.Controls.Add(fileOutputPanel);
                 fileDataPanel.Controls.Add(fileInputPanel);
+                fileDataPanel.Controls.Add(hdnStatus);
 
                 parent.Controls.Add(fileDataPanel);
                 return fileUpload;
@@ -2404,6 +2649,32 @@ namespace Gms.Portal.Web.Controls.User
             return null;
         }
 
+        private void FillListControl(ListControl control, FieldEntity entity)
+        {
+            if (String.IsNullOrWhiteSpace(entity.DataSourceID))
+                return;
+
+            var dataBinder = CreateDataBinder(entity);
+            if (dataBinder == null)
+                return;
+
+            control.Items.Clear();
+
+            var collection = dataBinder.GetItems();
+
+            var emptyItem = new ListItem("-Select an Option-", "");
+            control.Items.Add(emptyItem);
+
+            foreach (var item in collection)
+            {
+                var text = Convert.ToString(item.Text);
+                var value = Convert.ToString(item.Value);
+
+                var listItem = new ListItem(text, value);
+                control.Items.Add(listItem);
+            }
+        }
+
         private bool FillFieldData(FieldEntity sourceField, ExpressionGlobalsUtil expGlobals)
         {
             var fiedlID = GetFieldID(sourceField);
@@ -2413,7 +2684,16 @@ namespace Gms.Portal.Web.Controls.User
 
             Object result;
             if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+            {
+                var message = $"[{sourceField.Name}] - Incorrect Dependent Fill Expression";
+                _errorMessages.Add(message);
+
                 return false;
+            }
+
+            var customControl = control as ICustomMetaControl;
+            if (customControl != null)
+                customControl.Value = result;
 
             var textBox = control as TextBox;
             if (textBox != null)
@@ -2447,46 +2727,95 @@ namespace Gms.Portal.Web.Controls.User
             if (fieldEntity == null || String.IsNullOrWhiteSpace(fieldEntity.DependentFillExp))
                 return false;
 
-            if ((sourceField.Type == "ComboBox" || sourceField.Type == "Lookup") &&
-                !String.IsNullOrWhiteSpace(sourceField.DataSourceID) &&
-                !String.IsNullOrWhiteSpace(sourceField.ValueExpression))
+            if (sourceField != null)
             {
-                var userID = (Guid?)null;
-                var formData = (FormData ?? _lastFormData);
-
-                if (formData != null)
-                    userID = formData.UserID;
-
-                if (!UserUtil.IsSuperAdmin())
-                    userID = UserUtil.GetCurrentUserID();
-
-                var result = false;
-
-                var dataSourceHelper = new DataSourceHelper(userID, sourceField);
-
-                var dataRecord = dataSourceHelper.FindDataRecord(sourceValue);
-                if (dataRecord != null)
+                if ((sourceField.Type == "ComboBox" || sourceField.Type == "Lookup") &&
+                    !String.IsNullOrWhiteSpace(sourceField.DataSourceID) &&
+                    !String.IsNullOrWhiteSpace(sourceField.ValueExpression))
                 {
-                    expGlobals.AddSource(dataRecord);
+                    var userID = (Guid?)null;
+                    var formData = (FormData ?? _lastFormData);
 
-                    result = FillFieldData(fieldEntity, expGlobals);
+                    if (formData != null)
+                        userID = formData.UserID;
 
-                    expGlobals.RemoveSource(dataRecord);
+                    if (!UserUtil.IsSuperAdmin())
+                        userID = UserUtil.GetCurrentUserID();
+
+                    var result = false;
+
+                    var dataSourceHelper = new DataSourceHelper(userID, sourceField);
+
+                    var dataRecord = dataSourceHelper.FindDataRecord(sourceValue);
+                    if (dataRecord != null)
+                    {
+                        expGlobals.AddSource(dataRecord);
+                        result = FillFieldData(fieldEntity, expGlobals);
+                        expGlobals.RemoveSource(dataRecord);
+                    }
+                    else
+                    {
+                        FillFieldData(fieldEntity, expGlobals);
+                    }
+
+                    return result;
                 }
 
-                return result;
+                //if (sourceField.Type == "PersonLookup")
+                //{
+                //    var fieldID = GetFieldID(sourceField);
+                //    var control = MetaControls.GetValueOrDefault(fieldID) as ICustomMetaControl;
+
+                //    if (control != null)
+                //    {
+                //        var data = control.GetFullContent();
+
+                //        var result = false;
+                //        if (data != null)
+                //        {
+                //            var parentKey = sourceField.Name;
+                //            if (!String.IsNullOrWhiteSpace(sourceField.Alias))
+                //                parentKey = sourceField.Alias;
+
+                //            var expData = new Dictionary<String, Object>();
+                //            foreach (var pair in data)
+                //            {
+                //                var key = $"{parentKey}@{pair.Key}";
+                //                expData[key] = pair.Value;
+                //            }
+
+                //            expGlobals.AddSource(expData);
+
+                //            result = FillFieldData(fieldEntity, expGlobals);
+
+                //            expGlobals.RemoveSource(expData);
+
+                //        }
+
+                //        return result;
+                //    }
+                //}
             }
 
             return FillFieldData(fieldEntity, expGlobals);
         }
 
-        private void SetTargetVisibilities(IEnumerable<Control> elements, ExpressionGlobalsUtil expGlobals, String expression)
+        private void SetTargetVisibilities(IEnumerable<Control> elements, ExpressionGlobalsUtil expGlobals, ControlEntity entity)
         {
+            var expression = entity.DependentExp;
+            if (String.IsNullOrWhiteSpace(expression))
+                expression = @"!IsEmpty(@)";
+
             var expNode = ExpressionParser.GetOrParse(expression);
 
             Object result;
             if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+            {
+                var message = $"[{entity.Name}] - Incorrect Dependent Expression";
+                _errorMessages.Add(message);
+
                 return;
+            }
 
             var visible = DataConverter.ToNullableBoolean(result);
 
@@ -2494,25 +2823,43 @@ namespace Gms.Portal.Web.Controls.User
                 element.Visible = visible.GetValueOrDefault();
         }
 
-        private void SetTargetVisibilities(TreeListMetaDataColumn treeColumn, ExpressionGlobalsUtil expGlobals, String expression)
+        private void SetTargetVisibilities(TreeListMetaDataColumn treeColumn, ExpressionGlobalsUtil expGlobals, ControlEntity entity)
         {
+            var expression = entity.DependentExp;
+            if (String.IsNullOrWhiteSpace(expression))
+                expression = @"!IsEmpty(@)";
+
             var expNode = ExpressionParser.GetOrParse(expression);
 
             Object result;
             if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+            {
+                var message = $"[{entity.Name}] - Incorrect Dependent Expression";
+                _errorMessages.Add(message);
+
                 return;
+            }
 
             var visible = DataConverter.ToNullableBoolean(result);
             treeColumn.Visible = visible.GetValueOrDefault();
         }
 
-        private void SetTargetVisibilities(GridViewMetaBoundField boundField, ExpressionGlobalsUtil expGlobals, String expression)
+        private void SetTargetVisibilities(GridViewMetaBoundField boundField, ExpressionGlobalsUtil expGlobals, ControlEntity entity)
         {
+            var expression = entity.DependentExp;
+            if (String.IsNullOrWhiteSpace(expression))
+                expression = @"!IsEmpty(@)";
+
             var expNode = ExpressionParser.GetOrParse(expression);
 
             Object result;
             if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out result))
+            {
+                var message = $"[{entity.Name}] - Incorrect Dependent Expression";
+                _errorMessages.Add(message);
+
                 return;
+            }
 
             var visible = DataConverter.ToNullableBoolean(result);
             boundField.Visible = visible.GetValueOrDefault();

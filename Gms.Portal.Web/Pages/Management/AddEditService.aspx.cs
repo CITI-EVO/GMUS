@@ -11,7 +11,7 @@ using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Converters.ModelToEntity;
-using Gms.Portal.Web.Entities.ServiseStructure;
+using Gms.Portal.Web.Entities.ServiceStructure;
 using NHibernate.Linq;
 
 namespace Gms.Portal.Web.Pages.Management

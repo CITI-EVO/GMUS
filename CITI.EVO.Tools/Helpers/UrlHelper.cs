@@ -85,6 +85,12 @@ namespace CITI.EVO.Tools.Helpers
             return _urlParams.Remove(key);
         }
 
+        public void Clear()
+        {
+            _urlParams.Clear();
+        }
+
+
         public IEnumerator<KeyValuePair<String, Object>> GetEnumerator()
         {
             foreach (var pair in _urlParams)

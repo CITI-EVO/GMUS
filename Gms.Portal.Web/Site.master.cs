@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
@@ -8,18 +7,15 @@ using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
-using DevExpress.XtraPrinting.Native;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Caches;
 using Gms.Portal.Web.Entities.DataContainer;
-using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Models.Helpers;
 using Gms.Portal.Web.Utils;
 using MongoDB.Driver;
 using NHibernate.Linq;
 using MongoDB.Driver.Linq;
-using CITI.EVO.Tools.Extensions;
 
 namespace Gms.Portal.Web
 {
@@ -76,6 +72,7 @@ namespace Gms.Portal.Web
                 return;
             }
 
+            liCurrData.Visible = UmUtil.Instance.HasAccess("Org");
             liDataApprove.Visible = UmUtil.Instance.HasAccess("Org");
 
             var loginToken = Convert.ToString(UmUtil.Instance.CurrentToken);
@@ -86,9 +83,66 @@ namespace Gms.Portal.Web
                 if (link != null)
                     link.NavigateUrl = link.NavigateUrl.Replace("{loginToken}", loginToken);
             }
+
+            SetAccesibilities();
         }
 
+
+
         protected void Page_PreRender(object sender, EventArgs e)
+        {
+            FillCategoris();
+            CheckMessages();
+
+            MakeActiveCurrentLink();
+        }
+
+        protected void btLogout_OnClick(object sender, EventArgs e)
+        {
+            var returnUrl = HttpServerUtil.ResolveAbsoluteUrl("~/Default.aspx");
+            UmUtil.Instance.GoToLogout(returnUrl);
+        }
+
+        protected void btChangePassword_Click(object sender, EventArgs e)
+        {
+            UmUtil.Instance.GoToChangePassword();
+        }
+
+        protected void CheckMessages()
+        {
+            var query = from n in HbSession.Query<GM_UserMessage>()
+                        where n.DateDeleted == null
+                        select n;
+
+            var trn = new DefaultTranslatable("შეტყობინებები");
+
+            if (!UmUtil.Instance.HasAccess("Admin"))
+            {
+                var userID = UserUtil.GetCurrentUserID();
+
+                query = from n in query
+                        where n.ToUserID == userID &&
+                              n.StatusID == DataStatusCache.Accepted.ID &&
+                              (n.Readed == null || n.Readed == false)
+                        select n;
+
+                var count = query.Count();
+
+                lblMessages.Text = $"{trn.Text} ({count})";
+            }
+            else
+            {
+                query = from n in query
+                        where n.StatusID == null
+                        select n;
+
+                var count = query.Count();
+
+                lblMessages.Text = $"{trn.Text} ({count})";
+            }
+        }
+
+        protected void FillCategoris()
         {
             var query = from n in HbSession.Query<GM_Category>()
                         where n.DateDeleted == null &&
@@ -126,18 +180,26 @@ namespace Gms.Portal.Web
 
             categoriesLinksControl.Model = GetCategotiesForms(list);
             categoriesLinksControl.DataBind();
-
-            MakeActiveCurrentLink();
         }
 
-        protected void btLogout_OnClick(object sender, EventArgs e)
+        private void SetAccesibilities()
         {
-            UmUtil.Instance.GoToLogout();
-        }
-
-        protected void btChangePassword_Click(object sender, EventArgs e)
-        {
-            UmUtil.Instance.GoToChangePassword();
+            liForms.Visible = UmUtil.Instance.HasAccess("Forms");
+            liAdmin.Visible = UmUtil.Instance.HasAccess("Admin");
+            liLogics.Visible = UmUtil.Instance.HasAccess("Logics");
+            liEvents.Visible = UmUtil.Instance.HasAccess("Events");
+            liExpert.Visible = UmUtil.Instance.HasAccess("Expert");
+            liReport.Visible = UmUtil.Instance.HasAccess("Report");
+            liContact.Visible = UmUtil.Instance.HasAccess("Contact");
+            liCurrData.Visible = UmUtil.Instance.HasAccess("CurrData");
+            liCategories.Visible = UmUtil.Instance.HasAccess("Categories");
+            liCollections.Visible = UmUtil.Instance.HasAccess("Collections");
+            liDataApprove.Visible = UmUtil.Instance.HasAccess("DataApprove");
+            liUserMessages.Visible = UmUtil.Instance.HasAccess("UserMessages");
+            liUserManagement.Visible = UmUtil.Instance.HasAccess("UserManagement");
+            liRecipientGroups.Visible = UmUtil.Instance.HasAccess("RecipientGroups");
+            liFormDataArchive.Visible = UmUtil.Instance.HasAccess("FormDataArchive");
+            liAssessedProjects.Visible = UmUtil.Instance.HasAccess("AssessedProjects");
         }
 
         protected void MakeActiveCurrentLink()
@@ -154,6 +216,7 @@ namespace Gms.Portal.Web
             if (current == null)
             {
                 var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
+
                 current = (from n in controls
                            let h = n as HyperLink
                            where h != null
@@ -225,8 +288,12 @@ namespace Gms.Portal.Web
             return false;
         }
 
+
+
         protected IEnumerable<GM_Form> GetCategoryForms(GM_Category item)
         {
+            var expGlobals = new ExpressionGlobalsUtil();
+
             var forms = (from n in item.Forms
                          where n.DateDeleted == null
                          orderby n.OrderIndex, n.Name
@@ -240,7 +307,6 @@ namespace Gms.Portal.Web
                 if (!UmUtil.Instance.CurrentUser.IsSuperAdmin && !string.IsNullOrWhiteSpace(form.VisibleExpression))
                 {
                     var expNode = ExpressionParser.GetOrParse(form.VisibleExpression);
-                    var expGlobals = new ExpressionGlobalsUtil();
 
                     Object eval;
                     if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))

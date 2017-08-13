@@ -1,6 +1,6 @@
 ﻿using CITI.EVO.Core.Common;
 using Gms.Portal.DAL.Domain;
-using Gms.Portal.Web.Entities.ServiseStructure;
+using Gms.Portal.Web.Entities.ServiceStructure;
 using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 using NHibernate;

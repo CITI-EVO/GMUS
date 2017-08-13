@@ -61,6 +61,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
             }
 
             user.Password = model.NewPassword;
+            user.PasswordExpirationDate = DateTime.Now.AddMonths(1);
             user.UserCode = null;
 
             pnlCompleted.Visible = true;

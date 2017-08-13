@@ -10,7 +10,6 @@ using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.CollectionStructure;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
-using Gms.Portal.Web.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using NHibernate.Linq;
@@ -43,7 +42,7 @@ namespace Gms.Portal.Web.Helpers
 
         private readonly FieldEntity _fieldEntity;
         private readonly FormDataBase _formDataBase;
-        private readonly IDictionary<String, String> _fields;
+        private readonly ILookup<String, String> _fields;
         private readonly IDictionary<Guid, ControlEntity> _controls;
 
         public DataSourceHelper(FieldEntity fieldEntity) : this(null, fieldEntity)
@@ -55,9 +54,9 @@ namespace Gms.Portal.Web.Helpers
         public DataSourceHelper(Guid? userID, FieldEntity fieldEntity, FormDataBase formDataBase, IDictionary<Guid, ControlEntity> controls)
         {
             _userID = userID;
+            _controls = controls;
             _fieldEntity = fieldEntity;
             _formDataBase = formDataBase;
-            _controls = controls;
 
             _filterByUser = fieldEntity.FilterByUser;
             _dataSourceID = fieldEntity.DataSourceID;
@@ -136,11 +135,17 @@ namespace Gms.Portal.Web.Helpers
             if (_fields == null)
                 return null;
 
+            DiagUtil.Current.StartOrStop("TransferDataRecords");
             var dictionaries = TransferDataRecords();
+            DiagUtil.Current.StartOrStop("TransferDataRecords");
 
+            DiagUtil.Current.StartOrStop("FilterDataRecords");
             dictionaries = FilterDataRecords(dictionaries);
+            DiagUtil.Current.StartOrStop("FilterDataRecords");
 
+            DiagUtil.Current.StartOrStop("SortDataRecords");
             dictionaries = SortDataRecords(dictionaries);
+            DiagUtil.Current.StartOrStop("SortDataRecords");
 
             return dictionaries;
         }
@@ -186,7 +191,10 @@ namespace Gms.Portal.Web.Helpers
                 return formDataBases;
 
             if (_fieldEntity.DependentFieldID == null)
-                return ApplyFilter(formDataBases, filterExp);
+            {
+                var filteredData = ApplyFilter(formDataBases, filterExp);
+                return filteredData;
+            }
 
             if (_formDataBase == null || _controls == null)
                 return formDataBases;
@@ -203,14 +211,28 @@ namespace Gms.Portal.Web.Helpers
                 !String.IsNullOrWhiteSpace(sourceField.ValueExpression))
             {
                 var sourceHelper = new DataSourceHelper(sourceField);
+                //var sourceData = new Dictionary<String, Object>();
+
+                //var sourceRecord = sourceHelper.FindDataRecord(sourceValue);
+                //if (sourceRecord != null)
+                //{
+                //    var prefix = sourceField.Alias;
+                //    if (String.IsNullOrWhiteSpace(prefix))
+                //        prefix = sourceField.Name;
+
+                //    prefix = ExpressionParser.Escape(prefix);
+
+                //    foreach (var pair in sourceRecord)
+                //        sourceData.Add($"{prefix}.{pair.Key}", pair.Value);
+                //}
 
                 var dataRecord = sourceHelper.FindDataRecord(sourceValue);
                 if (dataRecord != null)
-                    formDataBases = ApplyFilter(formDataBases, dataRecord, filterExp);
+                    formDataBases = ApplyFilter(formDataBases, dataRecord, filterExp).ToList();
             }
             else
             {
-                formDataBases = ApplyFilter(formDataBases, sourceValue, filterExp);
+                formDataBases = ApplyFilter(formDataBases, sourceValue, filterExp).ToList();
             }
 
             return formDataBases;
@@ -218,56 +240,21 @@ namespace Gms.Portal.Web.Helpers
 
         public IEnumerable<FormDataBase> TransferDataRecords()
         {
-            var dbCollectionID = _collectionID.GetValueOrDefault();
-
-            var cache = CommonObjectCache.InitObject(TransferDataCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<Guid?, FormDataBaseList>);
+            var cache = CommonObjectCache.InitObject(TransferDataCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<String, IEnumerable<FormDataBase>>);
             lock (cache)
             {
-                FormDataBaseList records;
-                if (cache.TryGetValue(dbCollectionID, out records))
+                IEnumerable<FormDataBase> records;
+                if (cache.TryGetValue(_dataSourceID, out records))
                     return records;
 
-                var collection = MongoDbUtil.GetCollection(dbCollectionID);
-                if (collection == null)
+                var results = GetSourceData().ToList();
+                if (results.Count == 0)
                 {
-                    cache[dbCollectionID] = null;
+                    cache[_dataSourceID] = null;
                     return null;
                 }
 
-                var documents = (IEnumerable<BsonDocument>)collection.AsQueryable();
-
-                if (_fields.ContainsKey(FormDataConstants.DateDeletedField))
-                {
-                    var filter = new Dictionary<String, Object>
-                    {
-                        [FormDataConstants.DateDeletedField] = (DateTime?)null
-                    };
-
-                    if (_userID != null && _filterByUser.GetValueOrDefault() && _fields.ContainsKey(FormDataConstants.UserIDField))
-                    {
-                        filter[FormDataConstants.UserIDField] = _userID;
-                    }
-
-                    documents = MongoDbUtil.FindDocuments(collection, filter);
-                }
-
-                var dicts = BsonDocumentConverter.ConvertToDictionary(documents);
-
-                var results = new FormDataBaseList();
-
-                foreach (var dict in dicts)
-                {
-                    var result = new FormDataBase();
-                    foreach (var pair in _fields)
-                    {
-                        var val = dict.GetValueOrDefault(pair.Key);
-                        result[pair.Value] = val;
-                    }
-
-                    results.Add(result);
-                }
-
-                cache[dbCollectionID] = results;
+                cache[_dataSourceID] = results;
                 return results;
             }
         }
@@ -286,6 +273,7 @@ namespace Gms.Portal.Web.Helpers
             };
 
             var filterNode = ExpressionParser.GetOrParse(filterExp);
+            var expGlobals = new ExpressionGlobalsUtil(_userID, sourceValDict);
 
             foreach (var targetRecord in target)
             {
@@ -293,15 +281,17 @@ namespace Gms.Portal.Web.Helpers
                 foreach (var pair in targetRecord)
                     adpTargetRecord[$"${pair.Key}"] = pair.Value;
 
-                var expGlobals = new ExpressionGlobalsUtil(_userID, adpTargetRecord, sourceValDict);
+                expGlobals.AddSource(adpTargetRecord);
 
                 Object result;
-                if (!ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result))
-                    continue;
+                if (ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result))
+                {
+                    var @bool = DataConverter.ToNullableBool(result);
+                    if (@bool.GetValueOrDefault())
+                        yield return targetRecord;
+                }
 
-                var @bool = DataConverter.ToNullableBool(result);
-                if (@bool.GetValueOrDefault())
-                    yield return targetRecord;
+                expGlobals.RemoveSource(adpTargetRecord);
             }
         }
         public IEnumerable<FormDataBase> ApplyFilter(IEnumerable<FormDataBase> target, FormDataBase sourceRecord, String filterExp)
@@ -321,7 +311,8 @@ namespace Gms.Portal.Web.Helpers
                 var expGlobals = new ExpressionGlobalsUtil(_userID, adpSourceRecord, adpTargetRecord);
 
                 Object result;
-                if (!ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result))
+                var flag = ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result);
+                if (!flag)
                     continue;
 
                 var @bool = DataConverter.ToNullableBool(result);
@@ -359,14 +350,14 @@ namespace Gms.Portal.Web.Helpers
             return entity;
         }
 
-        public IDictionary<String, String> GetCollectionFields()
+        public ILookup<String, String> GetCollectionFields()
         {
             var dataSourceKey = $"{_parentID}_{_childID}";
 
-            var cache = CommonObjectCache.InitObject(CollectionFieldsCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<String, IDictionary<String, String>>);
+            var cache = CommonObjectCache.InitObject(CollectionFieldsCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<String, ILookup<String, String>>);
             lock (cache)
             {
-                IDictionary<String, String> fields;
+                ILookup<String, String> fields;
                 if (cache.TryGetValue(dataSourceKey, out fields))
                     return fields;
 
@@ -374,7 +365,7 @@ namespace Gms.Portal.Web.Helpers
                 {
                     var collEntity = GetCollectionEntity();
                     if (collEntity != null)
-                        fields = collEntity.Fields.ToDictionary(n => Convert.ToString(n.ID), n => n.Name);
+                        fields = GetAllFields(collEntity).ToLookup(n => n.Key, n => n.Value);
                 }
 
                 if (fields == null)
@@ -382,30 +373,107 @@ namespace Gms.Portal.Web.Helpers
                     var contentEntity = (ContentEntity)GetFormEntity();
                     if (contentEntity != null)
                     {
-                        var controls = FormStructureUtil.PreOrderFirstLevelTraversal(contentEntity);
-
+                        var contentControls = FormStructureUtil.PreOrderFirstLevelTraversal(contentEntity);
                         if (_childID != null)
-                        {
-                            contentEntity = controls.OfType<ContentEntity>().FirstOrDefault(n => n.ID == _childID);
-                            controls = FormStructureUtil.PreOrderFirstLevelTraversal(contentEntity);
-                        }
+                            contentEntity = contentControls.OfType<ContentEntity>().FirstOrDefault(n => n.ID == _childID);
 
-                        var defaultFields = FormDataBase.DefaultFields.Select(n => new KeyValuePair<String, String>(n, n));
-                        var controlFields = controls.Select(n => new KeyValuePair<String, String>(Convert.ToString(n.ID), n.Name));
-
-                        var allFields = defaultFields.Union(controlFields);
-
-                        fields = allFields.ToDictionary();
+                        var formFields = GetAllFields(contentEntity);
+                        fields = formFields.ToLookup(n => n.Key, n => n.Value);
                     }
                 }
 
                 if (fields != null)
-                {
-                    fields[FormDataConstants.IDField] = FormDataConstants.IDField;
                     cache[dataSourceKey] = fields;
-                }
 
                 return fields;
+            }
+        }
+
+        private IEnumerable<FormDataBase> GetSourceData()
+        {
+            var dbCollectionID = _collectionID.GetValueOrDefault();
+
+            return GetCollectionData(dbCollectionID);
+        }
+
+        private IEnumerable<FormDataBase> GetCollectionData(Guid dbCollectionID)
+        {
+            var collection = MongoDbUtil.GetCollection(dbCollectionID);
+            if (collection == null)
+                yield break;
+
+            var documents = (IEnumerable<BsonDocument>)collection.AsQueryable();
+
+            if (_fields.Contains(FormDataConstants.DateDeletedField))
+            {
+                var filter = new Dictionary<String, Object>
+                {
+                    [FormDataConstants.DateDeletedField] = null
+                };
+
+                if (_userID != null && _filterByUser.GetValueOrDefault() && _fields.Contains(FormDataConstants.UserIDField))
+                {
+                    filter[FormDataConstants.UserIDField] = _userID;
+                }
+
+                documents = MongoDbUtil.FindDocuments(collection, filter);
+            }
+
+            var dicts = BsonDocumentConverter.ConvertToDictionary(documents);
+
+            foreach (var dict in dicts)
+            {
+                var result = new FormDataBase();
+                foreach (var fieldsGrp in _fields)
+                {
+                    var val = dict.GetValueOrDefault(fieldsGrp.Key);
+
+                    foreach (var name in fieldsGrp)
+                        result[name] = val;
+                }
+
+                yield return result;
+            }
+        }
+
+        private IEnumerable<KeyValuePair<String, String>> GetAllFields(ContentEntity contentEntity)
+        {
+            var contentControls = FormStructureUtil.PreOrderFirstLevelTraversal(contentEntity);
+
+            foreach (var field in FormDataBase.DefaultFields)
+                yield return new KeyValuePair<String, String>(field, field);
+
+            foreach (var entity in contentControls)
+            {
+                var key = Convert.ToString(entity.ID);
+
+                if (!String.IsNullOrWhiteSpace(entity.Name))
+                {
+                    var value = ExpressionParser.Escape(entity.Name);
+                    yield return new KeyValuePair<String, String>(key, value);
+                }
+
+                if (!String.IsNullOrWhiteSpace(entity.Alias))
+                {
+                    var value = ExpressionParser.Escape(entity.Alias);
+                    yield return new KeyValuePair<String, String>(key, value);
+                }
+            }
+        }
+
+        private IEnumerable<KeyValuePair<String, String>> GetAllFields(CollectionEntity contentEntity)
+        {
+            yield return new KeyValuePair<String, String>("ID", "ID");
+
+            foreach (var entity in contentEntity.Fields)
+            {
+                var key = Convert.ToString(entity.ID);
+
+                if (!String.IsNullOrWhiteSpace(entity.Name))
+                {
+                    var value = ExpressionParser.Escape(entity.Name);
+                    yield return new KeyValuePair<String, String>(key, value);
+                }
             }
         }
 

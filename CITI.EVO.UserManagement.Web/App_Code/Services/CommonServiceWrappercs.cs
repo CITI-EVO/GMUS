@@ -21,7 +21,13 @@ namespace CITI.EVO.UserManagement.Web.Services
 			return UserManagementManager.IsTokenActual(token);
 		}
 
-		[RpcAllowRemoteCall]
+	    [RpcAllowRemoteCall]
+	    public static UserContract GetUser(Guid token, Guid userID)
+	    {
+	        return UserManagementManager.GetUser(token, userID);
+	    }
+
+        [RpcAllowRemoteCall]
 		public static List<UserContract> GetAllUsers(Guid token, bool deleteds)
 		{
 			return UserManagementManager.GetAllUsers(token, deleteds);

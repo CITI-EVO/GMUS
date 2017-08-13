@@ -21,31 +21,24 @@
     <local:PhasesControl runat="server" ID="phasesControl" OnEdit="phasesControl_OnEdit" OnDelete="phasesControl_OnDelete" />
 </div>
 <div>
-    <asp:Panel ID="pnlPhase" runat="server" Style="display: none" DefaultButton="btPhaseOK">
-        <asp:Button ID="btnPhaseFake" runat="server" Style="display: none;" />
-        <act:ModalPopupExtender ID="mpePhase" runat="server" PopupControlID="pnlPhase" BackgroundCssClass="modalBackground" TargetControlID="btnPhaseFake" />
+    <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpePhase" runat="server" Style="display: none" DefaultButton="btPhaseOK">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>Phase</h5>
+                </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>Phase</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <div class="form-group">
-                                    <asp:Label ID="lblFormPhase" runat="server" ForeColor="Red"></asp:Label>
-                                </div>
-                                <local:PhaseControl runat="server" ID="phaseControl" OnDataChanged="phaseControl_OnDataChanged" />
-                                <div class="form-group">
-                                    <ce:LinkButton runat="server" ID="btPhaseOK" ToolTip="Save" OnClick="btnPhaseOK_Click" CssClass="btn btn-success fa fa-save" />
-                                    <ce:LinkButton runat="server" ID="btPhaseCancel" ToolTip="Close" OnClick="btPhaseCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <asp:Label ID="lblFormPhase" runat="server" ForeColor="Red"></asp:Label>
                     </div>
+                    <local:PhaseControl runat="server" ID="phaseControl" OnDataChanged="phaseControl_OnDataChanged" />
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btPhaseOK" ToolTip="Save" OnClick="btnPhaseOK_Click" CssClass="btn btn-success fa fa-save" />
+                    <ce:LinkButton runat="server" ID="btPhaseCancel" ToolTip="Close" OnClick="btPhaseCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                 </div>
             </div>
         </div>
-    </asp:Panel>
+    </ce:ModalPopup>
 </div>

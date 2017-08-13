@@ -34,7 +34,15 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         public byte[] FileBytes { get; set; }
 
-        public override string ToString()
+        public int GetLength()
+        {
+            if (FileBytes == null)
+                return 0;
+
+            return FileBytes.Length;
+        }
+
+        public override String ToString()
         {
             return $"{FileName} ({GetSize()})";
         }
@@ -55,5 +63,6 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
             return $"{FileBytes.Length:0.##} Bytes";
         }
+
     }
 }

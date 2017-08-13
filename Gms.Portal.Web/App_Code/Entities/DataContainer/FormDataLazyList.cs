@@ -33,6 +33,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
 
         protected override int InitializeCount()
         {
+            if (FormID == null && OwnerID == null)
+                throw new Exception();
+
+            if (OwnerID != null && OwnerID != FormID && ParentID == null)
+                return 0;
+
             var collID = (OwnerID ?? FormID);
 
             var collection = MongoDbUtil.GetCollection(collID);
@@ -60,71 +66,31 @@ namespace Gms.Portal.Web.Entities.DataContainer
             var collID = (OwnerID ?? FormID);
 
             var results = new List<FormDataUnit>();
-
-            var collection = MongoDbUtil.GetCollection(collID);
-            if (collection == null)
+            if (OwnerID != null && OwnerID != FormID && ParentID == null)
                 return results;
 
-            var builder = Builders<BsonDocument>.Filter;
-            var filter = builder.Eq(FormDataConstants.DateDeletedField, (DateTime?)null);
+            var filter = new Dictionary<String, Object>
+            {
+                [FormDataConstants.DateDeletedField] = null
+            };
 
             if (ParentID != null)
-                filter = filter & builder.Eq(FormDataConstants.ParentIDField, ParentID);
+                filter[FormDataConstants.ParentIDField] = ParentID;
 
             if (UserID != null)
-                filter = filter & builder.Eq(FormDataConstants.UserIDField, UserID);
+                filter[FormDataConstants.UserIDField] = UserID;
 
-            //var sort = Builders<BsonDocument>.Sort.Descending(FormDataConstants.DateCreatedField);
-
-            var cursor = collection.FindSync(filter);
-            while (cursor.MoveNext())
+            var documents = MongoDbUtil.FindDocuments(collID, filter);
+            foreach (var document in documents)
             {
-                var bsonDocuments = cursor.Current;
+                var formDataUnit = BsonDocumentConverter.ConvertToFormDataUnit(document);
+                formDataUnit.FormID = FormID;
+                formDataUnit.OwnerID = OwnerID;
 
-                var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(bsonDocuments);
-                foreach (var formDataUnit in formDataUnits)
-                {
-                    formDataUnit.FormID = FormID;
-                    formDataUnit.OwnerID = OwnerID;
-
-                    results.Add(formDataUnit);
-                }
+                results.Add(formDataUnit);
             }
 
             return results;
-
-            //var query = from doc in collection.AsQueryable()
-            //            where doc[FormDataConstants.DateDeletedField] == (DateTime?)null
-            //            select doc;
-
-            //if (ParentID != null)
-            //{
-            //    query = (from doc in query
-            //             where doc[FormDataConstants.ParentIDField] == ParentID
-            //             select doc);
-            //}
-
-            //if (UserID != null)
-            //{
-            //    query = (from doc in query
-            //             where doc[FormDataConstants.UserIDField] == UserID
-            //             select doc);
-            //}
-
-            //query = (from doc in query
-            //         orderby doc[FormDataConstants.DateCreatedField] descending
-            //         select doc);
-
-            //var formDataUnits = BsonDocumentConverter.ConvertToFormDataUnit(query);
-            //foreach (var formDataUnit in formDataUnits)
-            //{
-            //    formDataUnit.FormID = FormID;
-            //    formDataUnit.OwnerID = OwnerID;
-
-            //    results.Add(formDataUnit);
-            //}
-
-            //return results;
         }
     }
 }

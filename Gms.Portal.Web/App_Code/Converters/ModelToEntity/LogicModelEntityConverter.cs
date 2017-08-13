@@ -39,12 +39,7 @@ namespace Gms.Portal.Web.Converters.ModelToEntity
             target.Name = source.Name;
             target.Type = source.Type;
             target.SourceType = source.SourceType;
-
-            if (source.SourceType == "Table")
-                target.FormID = source.SourceID;
-
-            if (source.SourceType == "Logic")
-                target.LogicID = source.SourceID;
+            target.SourceID = source.SourceID;
 
             var entity = LogicUtil.ConvertToEntity(source);
             if (entity != null)

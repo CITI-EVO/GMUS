@@ -55,10 +55,10 @@
     <Compile Include="Domain\GM_Logic.cs" />
     <Compile Include="Domain\GM_ReportLogic.cs" />
     <Compile Include="Domain\GM_Service.cs" />
+    <Compile Include="Domain\GM_UserMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Domain\ClassDiagram1.cd" />
     <None Include="Schemas\nhibernate-configuration.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -117,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mapping\GM_Service.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\GM_UserMessage.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

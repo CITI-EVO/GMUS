@@ -10,6 +10,8 @@ namespace CITI.EVO.UserManagement.Web.Models
 
         public String Email { get; set; }
 
+        public String Phone { get; set; }
+
         public String PersonalID { get; set; }
 
         public String FirstName { get; set; }

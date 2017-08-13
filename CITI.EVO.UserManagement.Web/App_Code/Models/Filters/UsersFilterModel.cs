@@ -10,8 +10,6 @@ namespace CITI.EVO.UserManagement.Web.Models.Filters
 
         public bool? LastName { get; set; }
 
-        public bool? Email { get; set; }
-
         public bool? Address { get; set; }
 
         public bool? Password { get; set; }

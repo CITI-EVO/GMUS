@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gms.Portal.Web.Models
@@ -8,6 +9,6 @@ namespace Gms.Portal.Web.Models
     {
         public Guid? RecordID { get; set; }
 
-        public ILookup<int?, Guid?> Users { get; set; }
+        public ISet<Guid?> Users { get; set; }
     }
 }

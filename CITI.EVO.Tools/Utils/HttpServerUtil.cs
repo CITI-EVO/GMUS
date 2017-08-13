@@ -26,5 +26,26 @@ namespace CITI.EVO.Tools.Utils
                 return urlHelper;
             }
         }
+
+        public static String ResolveAbsoluteUrl(String relativeUrl)
+        {
+            var context = HttpContext.Current;
+            if (context == null)
+                return null;
+
+            var requestUrl = context.Request.Url;
+            var absoluteUrl = VirtualPathUtility.ToAbsolute(relativeUrl);
+
+            if (requestUrl.IsDefaultPort)
+            {
+                var result = $"{requestUrl.Scheme}://{requestUrl.Host}{absoluteUrl}";
+                return result;
+            }
+            else
+            {
+                var result = $"{requestUrl.Scheme}://{requestUrl.Host}:{requestUrl.Port}{absoluteUrl}";
+                return result;
+            }
+        }
     }
 }

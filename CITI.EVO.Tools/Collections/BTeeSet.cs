@@ -11,14 +11,14 @@ namespace CITI.EVO.Tools.Collections
     [Serializable]
     public class BTeeSet<TItem> : ISet<TItem>
     {
-        private readonly BTree<TItem> _btree;
+        private readonly BPlusTree<TItem> _btree;
 
         public BTeeSet() : this(Comparer<TItem>.Default)
         {
         }
         public BTeeSet(IComparer<TItem> comparer)
         {
-            _btree = new BTree<TItem>(comparer);
+            _btree = new BPlusTree<TItem>(comparer);
         }
 
         public int Count

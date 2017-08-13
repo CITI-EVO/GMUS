@@ -15,6 +15,15 @@ namespace Gms.Portal.Web.Pages.Management
 {
     public partial class AddEditForm : BasePage
     {
+        public Guid? FormID
+        {
+            get
+            {
+                var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
+                return formID;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -24,10 +33,9 @@ namespace Gms.Portal.Web.Pages.Management
                     Number = Convert.ToString((uint)Guid.NewGuid().GetHashCode()),
                 };
 
-                var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
-                if (formID != null)
+                if (FormID != null)
                 {
-                    var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formID);
+                    var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == FormID);
                     if (entity != null)
                     {
                         var converter = new FormEntityModelConverter(HbSession);
@@ -37,22 +45,23 @@ namespace Gms.Portal.Web.Pages.Management
 
                 formControl.Model = model;
             }
+
+            btnPreview.Visible = (FormID != null);
         }
 
-        protected void btnCancelForm_OnClick(object sender, EventArgs e)
+        protected void btnCancel_OnClick(object sender, EventArgs e)
         {
             var returnUrl = DataConverter.ToString(RequestUrl["ReturnUrl"]);
+
             if (string.IsNullOrWhiteSpace(returnUrl))
                 returnUrl = "~/Pages/Management/FormsList.aspx";
 
             Response.Redirect(returnUrl);
         }
 
-        protected void btnSaveForm_OnClick(object sender, EventArgs e)
+        protected void btnSave_OnClick(object sender, EventArgs e)
         {
-            var formID = DataConverter.ToNullableGuid(RequestUrl["FormID"]);
-
-            var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == formID);
+            var entity = HbSession.Query<GM_Form>().FirstOrDefault(n => n.ID == FormID);
 
             var converter = new FormModelEntityConverter(HbSession);
 
@@ -64,10 +73,12 @@ namespace Gms.Portal.Web.Pages.Management
 
             HbSession.SubmitChanges(entity);
 
-            //Response.Redirect("~/Pages/Management/FormsList.aspx");
+            var url = new UrlHelper(RequestUrl) { ["FormID"] = entity.ID };
+
+            Response.Redirect(url.ToEncodedUrl());
         }
 
-        protected void btnPreviewForm_OnClick(object sender, EventArgs e)
+        protected void btnPreview_OnClick(object sender, EventArgs e)
         {
             var returnUrl = RequestUrl.ToEncodedUrl();
 

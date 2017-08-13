@@ -3,13 +3,15 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using AjaxControlToolkit;
 using CITI.EVO.Tools.Collections;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
+using CITI.EVO.Tools.Web.UI.Controls;
+using Button = System.Web.UI.WebControls.Button;
+using Panel = System.Web.UI.WebControls.Panel;
 
 namespace CITI.EVO.Tools.Web.Bases
 {
@@ -159,10 +161,18 @@ namespace CITI.EVO.Tools.Web.Bases
             if (target == null)
                 return;
 
+            var parents = UserInterfaceUtil.TraverseParents(target).OfType<Panel>();
+
+            var parentPopup = parents.OfType<ModalPopup>().FirstOrDefault();
+            if (parentPopup != null)
+            {
+                parentPopup.Show();
+                return;
+            }
+
             var root = ((Control)base.Master ?? this);
 
             var popups = UserInterfaceUtil.TraverseChildren(root).OfType<ModalPopupExtender>();
-            var parents = UserInterfaceUtil.TraverseParents(target).OfType<Panel>();
 
             var @set = parents.Select(n => n.ID).ToHashSet();
             var pops = popups.Where(n => @set.Contains(n.PopupControlID));

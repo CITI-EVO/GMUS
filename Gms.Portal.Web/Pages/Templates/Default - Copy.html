@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>$!{FormSchema.Name}</title>
+    <meta charset="utf-8" />
+</head>
+<style>
+    table, td, th {
+        border: 1px solid black;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th {
+        height: 50px;
+    }
+</style>
+<body>
+    <div id="wrapper" style="text-align: center">
+        <div style="display: inline-block">
+            <h2>$!{nvUtil.Translate($entity.Name, $langPair)}</h2>
+        </div>
+    </div>
+    
+    #macro(renderField $child)
+        #if($nvUtil.IsCheckable($child))
+            <input type="$!{nvUtil.GetCheckType($child)}" disabled="disabled" $!{nvUtil.GetCheckValue($child)} />
+        #else
+            $!{nvUtil.GetFieldData($child)}
+        #end
+    #end
+    
+    #macro(renderGridField $gridItem $child)
+        #if($nvUtil.IsCheckable($child))
+            <input type="$!{nvUtil.GetCheckType($child)}" disabled="disabled" $!{nvUtil.GetCheckValue($gridItem, $child)} />
+        #else
+            $!{nvUtil.GetFieldData($gridItem, $child)}
+        #end
+    #end
+
+    #macro(renderChildren $parent)
+        #set($grid = $nvUtil.GetControl("ბიუჟეტი"))
+		#set($data = $nvUtil.GetGridData($grid))
+		
+		##set($fields = [$nvUtil.GetControl($grid, "ველი 1"), $nvUtil.GetControl($grid, "ველი 2"), $nvUtil.GetControl($grid, "ველი 3"), $nvUtil.GetControl($grid, "ველი 4")])
+		##set($field1 = $nvUtil.GetControl($grid, ""))
+		
+		#set($fields = $nvUtil.GetChildren($grid))
+		
+		<div>
+			$!{nvUtil.GetFieldData("IDNumber")}
+		</div>
+		
+		<table>
+			<thead>
+				<tr>
+					#foreach($field in $fields)
+						<td>$!field.Name</td>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+				#foreach($item in $data)
+					<tr>
+						#foreach($field in $fields)
+							<td>
+								#renderGridField($item $field)
+							</td>
+						#end
+					</tr>
+				#end
+			</tbody>
+		</table>
+		
+    #end
+	
+    <div>
+        #renderChildren($entity)
+    </div>
+</body>
+</html>

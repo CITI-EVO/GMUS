@@ -15,6 +15,7 @@ using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Helpers;
+using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 using NHibernate.Linq;
 using NVelocityTemplateEngine;
@@ -50,6 +51,9 @@ public class PrintFormData : IHttpHandler, IRequiresSessionState
 
         var formID = DataConverter.ToNullableGuid(requestUrl["FormID"]);
         var recordID = DataConverter.ToNullableGuid(requestUrl["RecordID"]);
+        var templateID = DataConverter.ToNullableGuid(requestUrl["TemplateID"]);
+        var templateType = DataConverter.ToString(requestUrl["TemplateType"]);
+        var responseType = DataConverter.ToString(requestUrl["ResponseType"]);
 
         var session = Hb8Factory.InitSession();
 
@@ -66,66 +70,99 @@ public class PrintFormData : IHttpHandler, IRequiresSessionState
         if (formData == null)
             throw new Exception("Unable to find record");
 
-        var templateName = ConfigurationManager.AppSettings["FormPrintTemplate"];
-        if (String.IsNullOrWhiteSpace(templateName))
-            throw new Exception("Invalid template file name");
-
-        var allControls = FormStructureUtil.PreOrderTraversal(model.Entity).ToDictionary(n => n.ID);
-
-        var privateFields = formData.PrivateFields;
-        privateFields.UnionWith(FormDataBase.DefaultFields);
-        privateFields.Add(FormDataConstants.DateOfAcceptField);
-        privateFields.Add(FormDataConstants.DateOfSubmitField);
-        privateFields.Add(FormDataConstants.StatusChangeDateField);
-
-        foreach (var fieldKey in privateFields)
-            formData.Remove(fieldKey);
-
-        var notPrintables = (from n in allControls.Values
-                             where n.NotPrintable.GetValueOrDefault()
-                             select n);
-
-        foreach (var control in notPrintables)
+        var templateText = GetTemplateText(model, templateID, templateType);
+        if (templateText == null)
         {
-            if (control is ContentEntity)
-            {
-                var subControls = FormStructureUtil.PreOrderTraversal((ContentEntity)control);
-                foreach (var subControl in subControls)
-                {
-                    var fieldKey = Convert.ToString(subControl.ID);
-                    formData.Remove(fieldKey);
-                }
-            }
-            else
-            {
-                var fieldKey = Convert.ToString(control.ID);
-                formData.Remove(fieldKey);
-            }
+            var templateName = ConfigurationManager.AppSettings["FormPrintTemplate"];
+            if (String.IsNullOrWhiteSpace(templateName))
+                throw new Exception("Invalid template file name");
+
+            var templatePath = context.Server.MapPath(templateName);
+
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException("Unable to finde template file", templatePath);
+
+            templateText = File.ReadAllText(templatePath);
         }
 
-        var compitabilityDict = allControls.Values.ToDictionary(n => Convert.ToString(n.ID), n => n.Name);
-        var adpFormData = FormDataUtil.Transform(formData, compitabilityDict);
-
-        var templatePath = context.Server.MapPath(templateName);
-
-        if (!File.Exists(templatePath))
-            throw new FileNotFoundException("Unable to finde template file", templatePath);
-
-        var templateText = File.ReadAllText(templatePath);
-
-        var velocityContext = new Dictionary<String, Object>(formData);
-        velocityContext["FormSchema"] = model.Entity;
-        velocityContext["Controls"] = allControls;
-        velocityContext["FormData"] = adpFormData;
-        velocityContext["DefaultFields"] = FormDataBase.DefaultFields;
-        velocityContext["LanguagePair"] = requestUrl["languagePair"];
-        velocityContext["Util"] = new NVelocityUtil();
+        var velocityContext = new Dictionary<String, Object>
+        {
+            ["nvUtil"] = new NVelocityUtil(formData, model.Entity),
+            ["entity"] = model.Entity,
+            ["langPair"] = LanguageUtil.GetLanguage(),
+            ["defaultFields"] = FormDataBase.DefaultFields
+        };
 
         var velocityEngine = NVelocityEngineFactory.CreateNVelocityMemoryEngine();
-
         var processedText = velocityEngine.Process(velocityContext, templateText);
 
-        var name = $"{model.Entity.Name} - {DateTime.Now:dd.MM.yyyy HH.mm}";
-        PdfUtil.HtmlToPdf(response, processedText, name);
+        if (String.IsNullOrWhiteSpace(responseType))
+            responseType = GetTypeName(model, templateID);
+
+        if (StringComparer.OrdinalIgnoreCase.Equals(responseType, "Html"))
+            response.Write(processedText);
+        else
+        {
+            var name = $"{model.Entity.Name} - {DateTime.Now:dd.MM.yyyy HH.mm}";
+            var layout = GetLayoutName(model, templateID);
+
+            PdfUtil.HtmlToPdf(response, processedText, name, layout);
+        }
+    }
+
+    private String GetTypeName(FormModel model, Guid? templateID)
+    {
+        if (model == null || model.Entity == null || templateID == null)
+            return null;
+
+        var entity = model.Entity;
+        if (entity.Templates != null)
+        {
+            var template = entity.Templates.FirstOrDefault(n => n.ID == templateID);
+            if (template != null)
+                return template.Type;
+        }
+
+        return null;
+    }
+
+    private String GetLayoutName(FormModel model, Guid? templateID)
+    {
+        if (model == null || model.Entity == null || templateID == null)
+            return null;
+
+        var entity = model.Entity;
+        if (entity.Templates != null)
+        {
+            var template = entity.Templates.FirstOrDefault(n => n.ID == templateID);
+            if (template != null)
+                return template.Layout;
+        }
+
+        return null;
+    }
+
+    private String GetTemplateText(FormModel model, Guid? templateID, String type)
+    {
+        if (model == null || model.Entity == null || templateID == null)
+            return null;
+
+        var entity = model.Entity;
+        if (entity.Rating != null && entity.Rating.ID == templateID)
+        {
+            if (StringComparer.OrdinalIgnoreCase.Equals(type, "Mail"))
+                return entity.Rating.MailTemplate;
+
+            return entity.Rating.PrintTemplate;
+        }
+
+        if (entity.Templates != null)
+        {
+            var template = entity.Templates.FirstOrDefault(n => n.ID == templateID);
+            if (template != null)
+                return template.Template;
+        }
+
+        return null;
     }
 }

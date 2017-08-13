@@ -9,6 +9,7 @@ using Gms.Portal.Web.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using CITI.EVO.Tools.Extensions;
+using Gms.Portal.Web.Helpers;
 
 namespace Gms.Portal.Web.Utils
 {
@@ -24,7 +25,7 @@ namespace Gms.Portal.Web.Utils
 
             var update = Builders<BsonDocument>.Update.Set(FormDataConstants.StatusIDField, statusID);
             update = update.Set(FormDataConstants.DescriptionField, description);
-            update = update.Set(FormDataConstants.StatusChangeDateField, DateTime.Now);
+            update = update.Set(FormDataConstants.DateOfStatusField, DateTime.Now);
 
             if (statusID == DataStatusCache.Submit.ID)
                 update = update.Set(FormDataConstants.DateOfSubmitField, DateTime.Now);
@@ -71,6 +72,44 @@ namespace Gms.Portal.Web.Utils
             }
 
             return statusesLp.Contains(userID);
+        }
+
+        public static IEnumerable<FormDataUnit> GetPreviousFormDatas(FormDataUnit formData)
+        {
+            if (formData == null)
+                yield break;
+
+            if (formData.PreviousID == null)
+                yield return formData;
+
+            var previousFormData = GetFormData(formData.OwnerID, formData.PreviousID);
+            if (previousFormData == null)
+                yield return formData;
+
+            foreach (var data in GetPreviousFormDatas(previousFormData))
+            {
+                yield return data;
+            }
+        }
+
+        public static FormDataUnit GetFormData(Guid? ownerID, Guid? recordID)
+        {
+            if (ownerID == null || recordID == null)
+                return null;
+
+            var filter = new Dictionary<String, Object>
+            {
+                {FormDataConstants.IDField, recordID }
+            };
+
+            var documents = MongoDbUtil.FindDocuments(ownerID, filter).ToList();
+
+            var document = documents.FirstOrDefault();
+            if (document == null)
+                return null;
+
+            var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+            return formData;
         }
     }
 }

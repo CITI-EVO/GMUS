@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.ExpressionEngine;
+using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
 using Gms.Portal.DAL.Domain;
@@ -22,12 +23,14 @@ namespace Gms.Portal.Web.Utils
         private const String formFieldsCache = "@{formFieldsCache}";
 
         private readonly Guid? _userID;
+        private readonly ContentEntity _entity;
 
         private readonly IEnumerable<ControlEntity> _fields;
         private readonly ILookup<String, ControlEntity> _fieldsLp;
+        private readonly IDictionary<Guid?, ControlEntity> _fieldsMap;
 
         private readonly IDictionary<String, String> _associations;
-        private readonly IList<IDictionary<String, Object>> _sources;
+        private readonly ISet<IDictionary<String, Object>> _sources;
 
         private readonly IDictionary<String, Guid?> _formsIDCache;
         private readonly IDictionary<String, FormModel> _formModelsCache;
@@ -78,18 +81,28 @@ namespace Gms.Portal.Web.Utils
             : this(userID, (ContentEntity)null, sources)
         {
         }
+
         public ExpressionGlobalsUtil(Guid? userID, ContentEntity entity, IEnumerable<IDictionary<String, Object>> sources)
-            : this(userID, FormStructureUtil.PreOrderTraversal(entity), sources)
+            : this(userID, entity, FormStructureUtil.PreOrderTraversal(entity), sources)
         {
         }
 
         public ExpressionGlobalsUtil(Guid? userID, IEnumerable<ControlEntity> fields, IEnumerable<IDictionary<String, Object>> sources)
+            : this(userID, null, fields, sources)
+        {
+        }
+
+        private ExpressionGlobalsUtil(Guid? userID, ContentEntity entity, IEnumerable<ControlEntity> fields, IEnumerable<IDictionary<String, Object>> sources)
         {
             _userID = userID;
             _fields = fields;
-            _sources = sources.ToList();
+            _entity = entity;
 
-            _fieldsLp = _fields.ToLookup(n => ExpressionParser.Escape(n.Name));
+            _sources = sources.ToHashSet();
+
+            _fieldsLp = GetControlsLp(_fields);
+            _fieldsMap = _fields.ToDictionary(n => (Guid?)n.ID);
+
             _associations = new Dictionary<String, String>();
 
             _formsIDCache = CommonObjectCache.InitObject(formsIDCache, CommonCacheStore.Request, () => new Dictionary<String, Guid?>());
@@ -108,25 +121,29 @@ namespace Gms.Portal.Web.Utils
             if (TryGetValue(_sources, fieldKey, out value))
                 return value;
 
-            if (RegexUtil.DataGridFuncParserRx.IsMatch(fieldKey))
+            if (RegexUtil.DataCollFuncParserRx.IsMatch(fieldKey))
             {
-                var match = RegexUtil.DataGridFuncParserRx.Match(fieldKey);
+                var match = RegexUtil.DataCollFuncParserRx.Match(fieldKey);
 
                 var form = match.Groups["form"].Value;
-                var grid = match.Groups["grid"].Value;
-                var column = match.Groups["col"].Value;
+                var coll = match.Groups["coll"].Value;
+                var field = match.Groups["field"].Value;
 
-                if (String.IsNullOrWhiteSpace(column))
-                    return GetValue(form, grid);
+                if (String.IsNullOrWhiteSpace(field))
+                    value = GetValue(form, coll);
+                else
+                    value = GetValue(form, coll, field);
 
-                return GetValue(form, grid, column);
+                return value;
             }
 
             var escapeKey = ExpressionParser.Escape(fieldKey);
 
             if (!FormDataBase.DefaultFields.Contains(escapeKey))
             {
-                var fieldEntity = _fieldsLp[escapeKey].FirstOrDefault();
+                var fields = _fieldsLp[escapeKey];
+
+                var fieldEntity = GetCorrectControl(escapeKey, fields);
                 if (fieldEntity != null)
                     fieldKey = Convert.ToString(fieldEntity.ID);
             }
@@ -168,7 +185,7 @@ namespace Gms.Portal.Web.Utils
         }
         public bool ContainsAssociation(String source)
         {
-            return _associations.ContainsKey(source); ;
+            return _associations.ContainsKey(source);
         }
         public void ClearAssociations()
         {
@@ -198,6 +215,12 @@ namespace Gms.Portal.Web.Utils
                     return true;
                 case "@is{org}":
                     value = UmUtil.Instance.HasAccess("Org");
+                    return true;
+                case "@is{geocitizen}":
+                    value = UmUtil.Instance.HasAccess("Geocitizen");
+                    return true;
+                case "@is{foreinger}":
+                    value = UmUtil.Instance.HasAccess("Foreinger");
                     return true;
                 case "@is{sa}":
                     value = UmUtil.Instance.CurrentUser.IsSuperAdmin;
@@ -234,13 +257,24 @@ namespace Gms.Portal.Web.Utils
             var escapeFieldName = ExpressionParser.Escape(fieldName);
 
             var sources = _sources;
-            if (escapeFormName != "@")
+            if (IsCurrentEntityField(formName))
+            {
+                if (!FormDataBase.DefaultFields.Contains(escapeFieldName))
+                {
+                    var fields = _fieldsLp[escapeFieldName];
+
+                    var fieldEntity = GetCorrectControl(escapeFieldName, fields);
+                    if (fieldEntity != null)
+                        escapeFieldName = Convert.ToString(fieldEntity.ID);
+                }
+            }
+            else
             {
                 var formModel = GetFormModel(escapeFormName);
                 if (formModel == null)
                     return null;
 
-                sources = GetOtherFormDatas(formModel).ToList();
+                sources = GetOtherFormDatas(formModel).ToHashSet();
 
                 if (!FormDataBase.DefaultFields.Contains(escapeFieldName))
                 {
@@ -255,10 +289,10 @@ namespace Gms.Portal.Web.Utils
             var value = GetValue(sources, escapeFieldName);
             return value;
         }
-        private Object GetValue(String formName, String gridName, String fieldName)
+        private Object GetValue(String formName, String collName, String fieldName)
         {
             var escapeFormName = ExpressionParser.Escape(formName);
-            var escapeGridName = ExpressionParser.Escape(gridName);
+            var escapeCollName = ExpressionParser.Escape(collName);
             var escapeFieldName = ExpressionParser.Escape(fieldName);
 
             var fields = _fieldsLp;
@@ -270,38 +304,65 @@ namespace Gms.Portal.Web.Utils
                 if (formModel == null)
                     return null;
 
-                sources = GetOtherFormDatas(formModel).ToList();
+                sources = GetOtherFormDatas(formModel).ToHashSet();
                 fields = GetOtherFormFields(formModel);
             }
 
-            var contentEntity = fields[escapeGridName].OfType<ContentEntity>().FirstOrDefault();
-            if (contentEntity == null)
-                return null;
+            var collections = fields[escapeCollName];
 
-            var formGridData = GetValue(sources, Convert.ToString(contentEntity.ID));
-            if (formGridData is FormDataListRef || formGridData is FormDataListBase)
+            var collEntity = GetCorrectControl(escapeCollName, collections);
+            if (collEntity == null)
+                throw new Exception($"Unable to find collection '{escapeCollName}'");
+
+            var formGridData = GetValue(sources, Convert.ToString(collEntity.ID));
+            if (formGridData is IEnumerable<FormDataBase>)
             {
-                FormDataListBase formDataList;
+                var formDataList = (IEnumerable<FormDataBase>)formGridData;
 
-                if (formGridData is FormDataListRef)
-                    formDataList = new FormDataLazyList((FormDataListRef)formGridData);
-                else
-                    formDataList = (FormDataListBase)formGridData;
+                var subControls = FormStructureUtil.PreOrderTraversal(collEntity);
+
+                var fieldQuery = (from n in subControls
+                                  where ExpressionParser.Escape(n.Name) == escapeFieldName ||
+                                        ExpressionParser.Escape(n.Alias) == escapeFieldName
+                                  select n);
 
                 var fieldKey = escapeFieldName;
-
-
-                var fieldEntity = contentEntity.Controls.FirstOrDefault(n => ExpressionParser.Escape(n.Name) == escapeFieldName);
+                var fieldAlias = escapeFieldName;
+                var fieldEntity = GetCorrectControl(escapeFieldName, fieldQuery);
 
                 if (fieldEntity != null)
+                {
                     fieldKey = Convert.ToString(fieldEntity.ID);
+                    fieldAlias = ExpressionParser.Escape(fieldEntity.Alias);
+                }
                 else if (!FormDataBase.DefaultFields.Contains(fieldKey))
-                    return null;
+                {
+                    throw new Exception($"Unable to find field '{escapeFieldName}' of collection {escapeCollName}");
+                }
 
-                var valuesQuery = formDataList.Select(n => n[fieldKey]);
+                var valuesQuery = (from n in formDataList
+                                   let v = GetValue(n, fieldKey, escapeFieldName, fieldAlias)
+                                   select v);
 
                 var values = valuesQuery.ToArray();
                 return values;
+            }
+
+            return null;
+        }
+
+        private Object GetValue(IDictionary<String, Object> source, params String[] keys)
+        {
+            var @set = new HashSet<String>();
+
+            foreach (var key in keys)
+            {
+                if (!@set.Add(key))
+                    continue;
+
+                Object val;
+                if (source.TryGetValue(key, out val))
+                    return val;
             }
 
             return null;
@@ -327,10 +388,28 @@ namespace Gms.Portal.Web.Utils
             foreach (var source in sources)
             {
                 if (source != null && source.TryGetValue(fieldKey, out value))
+                {
+                    var listRef = value as FormDataListRef;
+                    if (listRef != null)
+                        value = Transform(listRef);
+
+                    var binary = value as FormDataBinary;
+                    if (binary != null)
+                        value = $"{binary.FileName}${GetBinarySize(binary)}";
+
                     return true;
+                }
             }
 
             return false;
+        }
+
+        private int GetBinarySize(FormDataBinary binary)
+        {
+            if (binary == null || binary.FileBytes == null)
+                return 0;
+
+            return binary.FileBytes.Length;
         }
 
         private FormModel GetFormModel(String formName)
@@ -391,36 +470,7 @@ namespace Gms.Portal.Web.Utils
             ILookup<String, ControlEntity> fieldsLp;
             if (!_formFieldsCache.TryGetValue(formModel.ID, out fieldsLp))
             {
-                var controls = FormStructureUtil.PreOrderTraversal(formModel.Entity);
-
-                var entitiesQuery = (from n in controls
-                                     let key = (!String.IsNullOrWhiteSpace(n.Alias) ? n.Alias : n.Name)
-                                     where !String.IsNullOrWhiteSpace(key)
-                                     select new
-                                     {
-                                         Key = ExpressionParser.Escape(key),
-                                         Entity = n
-                                     });
-
-                //var namesQuery = (from n in controls
-                //                  where !String.IsNullOrWhiteSpace(n.Name)
-                //                  select new
-                //                  {
-                //                      Key = ExpressionParser.Escape(n.Name),
-                //                      Entity = n
-                //                  });
-
-                //var aliasQuery = (from n in controls
-                //                  where !String.IsNullOrWhiteSpace(n.Alias)
-                //                  select new
-                //                  {
-                //                      Key = ExpressionParser.Escape(n.Alias),
-                //                      Entity = n
-                //                  });
-
-                //var finalQuery = namesQuery.Union(aliasQuery);
-
-                fieldsLp = entitiesQuery.ToLookup(n => n.Key, n => n.Entity);
+                fieldsLp = GetControlsLp(formModel.Entity);
 
                 _formFieldsCache[formModel.ID] = fieldsLp;
             }
@@ -448,6 +498,98 @@ namespace Gms.Portal.Web.Utils
                 yield break;
 
             yield return formData;
+        }
+
+        private ILookup<String, ControlEntity> GetControlsLp(ContentEntity contentEntity)
+        {
+            var controls = FormStructureUtil.PreOrderTraversal(contentEntity);
+
+            var fieldsLp = GetControlsLp(controls);
+            return fieldsLp;
+        }
+
+        private ILookup<String, ControlEntity> GetControlsLp(IEnumerable<ControlEntity> controls)
+        {
+            var namesQuery = from n in controls
+                             where !String.IsNullOrWhiteSpace(n.Name)
+                             select new
+                             {
+                                 Key = ExpressionParser.Escape(n.Name),
+                                 Entity = n
+                             };
+
+            var aliasQuery = from n in controls
+                             where !String.IsNullOrWhiteSpace(n.Alias)
+                             select new
+                             {
+                                 Key = ExpressionParser.Escape(n.Alias),
+                                 Entity = n
+                             };
+
+            var finalQuery = namesQuery.Union(aliasQuery);
+
+            var fieldsLp = finalQuery.ToLookup(n => n.Key, n => n.Entity);
+            return fieldsLp;
+        }
+
+        private ControlEntity GetCorrectControl(String fieldKey, IEnumerable<ControlEntity> controls)
+        {
+            var query = (from n in controls
+                         where n is FieldEntity ||
+                               n is GridEntity ||
+                               n is TreeEntity
+                         orderby n.OrderIndex, n.Name
+                         select n).Distinct();
+
+            var list = query.ToList();
+            if (list.Count == 0)
+                return null;
+
+            if (list.Count > 1)
+                throw new Exception($"Too many fields with name or alias '{fieldKey}'");
+
+            return list[0];
+        }
+
+        private bool IsCurrentEntityField(String formName)
+        {
+            var escapeFormName = ExpressionParser.Escape(formName);
+            if (escapeFormName == "@")
+                return true;
+
+            if (_entity == null)
+                return false;
+
+            var entityEscName = ExpressionParser.Escape(_entity.Name);
+            var entityEscAlias = ExpressionParser.Escape(_entity.Alias);
+
+            if (entityEscName == escapeFormName || entityEscAlias == escapeFormName)
+                return true;
+
+            return false;
+        }
+
+        private Object Transform(FormDataListRef listRef)
+        {
+            var list = new FormDataBaseList();
+            if (listRef == null || listRef.ParentID == null)
+                return list;
+
+            var formList = new FormDataLazyList(listRef);
+
+            var contentEntity = _fieldsMap.GetValueOrDefault(listRef.OwnerID) as ContentEntity;
+            if (contentEntity == null)
+                return formList;
+
+            var compitability = FormStructureUtil.CreateCompitabilityMap(contentEntity);
+
+            foreach (var formData in formList)
+            {
+                var dict = FormDataUtil.Transform(formData, compitability);
+                list.Add(dict);
+            }
+
+            return list;
         }
     }
 }

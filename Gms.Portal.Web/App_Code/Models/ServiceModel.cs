@@ -1,5 +1,5 @@
 ﻿using System;
-using Gms.Portal.Web.Entities.ServiseStructure;
+using Gms.Portal.Web.Entities.ServiceStructure;
 
 namespace Gms.Portal.Web.Models
 {

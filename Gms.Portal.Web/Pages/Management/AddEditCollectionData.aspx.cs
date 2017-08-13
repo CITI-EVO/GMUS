@@ -61,7 +61,7 @@ namespace Gms.Portal.Web.Pages.Management
             }
         }
 
-        protected void btnSaveCollectionData_OnClick(object sender, EventArgs e)
+        protected void btnSave_OnClick(object sender, EventArgs e)
         {
             var recordID = DataConverter.ToNullableGuid(RequestUrl["recordID"]);
             var collectionID = DataConverter.ToNullableGuid(RequestUrl["collectionID"]);
@@ -122,7 +122,7 @@ namespace Gms.Portal.Web.Pages.Management
             //Response.Redirect(urlHelper.ToEncodedUrl());
         }
 
-        protected void btnCancelCollectionData_OnClick(object sender, EventArgs e)
+        protected void btnCancel_OnClick(object sender, EventArgs e)
         {
             var urlHelper = new UrlHelper("~/Pages/Management/CollectionDataList.aspx")
             {

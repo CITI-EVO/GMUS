@@ -95,7 +95,6 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
-
         private Control CreateControl(FieldEntity entity, int index)
         {
             if (!String.IsNullOrWhiteSpace(entity.DataSourceID) && String.IsNullOrWhiteSpace(entity.DependentFillExp))
@@ -212,7 +211,6 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
-
         public void BindData(IDictionary<String, Object> data)
         {
             if (data == null)
@@ -298,7 +296,7 @@ namespace Gms.Portal.Web.Controls.User
             return resultDict;
         }
 
-        private DictionaryDataBinder CreateDataBinder(FieldEntity fieldEntity)
+        private MetaFormDataBinder CreateDataBinder(FieldEntity fieldEntity)
         {
             var textExp = fieldEntity.TextExpression;
             var valueExp = fieldEntity.ValueExpression;
@@ -310,8 +308,8 @@ namespace Gms.Portal.Web.Controls.User
             var dataSourceHelper = new DataSourceHelper(userID, fieldEntity);
             var dataRecords = dataSourceHelper.LoadDataRecords();
 
-            var dictionaryBinder = new DictionaryDataBinder(dataRecords, textExp, valueExp);
-            return dictionaryBinder;
+            var formDataBinder = new MetaFormDataBinder(dataRecords, textExp, valueExp);
+            return formDataBinder;
         }
     }
 }

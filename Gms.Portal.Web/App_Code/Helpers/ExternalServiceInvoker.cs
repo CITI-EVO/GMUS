@@ -2,29 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text.RegularExpressions;
-using AjaxControlToolkit;
-using CITI.EVO.Rpc.Exceptions;
 using log4net;
 using CITI.EVO.Tools.Utils;
-using Gms.Portal.Web.Entities.ServiseStructure;
 using CITI.EVO.Tools.Web.Services;
-using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Models;
 using CITI.EVO.Tools.Extensions;
 using Gms.Portal.Web.Entities.Others;
+using Gms.Portal.Web.Entities.ServiceStructure;
 
 namespace Gms.Portal.Web.Helpers
 {
-
-
     public class ExternalServiceInvoker
     {
-        private const String ResultItemKey = "result";
         private const String ServicesCacheKey = "ServicesCacheRootFolder";
 
         private readonly ILog _logger;
@@ -32,9 +27,19 @@ namespace Gms.Portal.Web.Helpers
         private readonly ServiceModel _serviceModel;
         private readonly MethodEntity _methodEntity;
 
+        public ExternalServiceInvoker(ServiceModel serviceModel, Guid methodID)
+        {
+            _logger = LogUtil.GetLogger("ServicesLogger");
+
+            _serviceModel = serviceModel;
+            _methodEntity = _serviceModel.Entity.Methods.Single(n => n.ID == methodID);
+
+            InitDynamicObject(false);
+        }
         public ExternalServiceInvoker(ServiceModel serviceModel, String methodName)
         {
             _logger = LogUtil.GetLogger("ServicesLogger");
+
             _serviceModel = serviceModel;
             _methodEntity = _serviceModel.Entity.Methods.Single(n => n.Name == methodName);
 
@@ -207,7 +212,7 @@ namespace Gms.Portal.Web.Helpers
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             folderPath = Regex.Replace(folderPath, @"{AppPath}", baseDirectory, RegexOptions.IgnoreCase);
 
-            var serviceFolderPath = $@"{folderPath}\{Service.ID}\{Service.Name}";
+            var serviceFolderPath = $@"{folderPath}\{Service.ID}";
 
             try
             {
@@ -221,8 +226,11 @@ namespace Gms.Portal.Web.Helpers
             if (refresh)
             {
                 var serviceUri = new Uri(Service.Url);
-
                 AssemblyLoader = DynamicProxyFactory.Load(serviceUri);
+
+                if (!Directory.Exists(serviceFolderPath))
+                    Directory.CreateDirectory(serviceFolderPath);
+
                 DynamicProxyFactory.Save(serviceFolderPath, (DynamicProxyLoader)AssemblyLoader);
             }
 

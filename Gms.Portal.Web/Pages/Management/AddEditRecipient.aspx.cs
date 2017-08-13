@@ -111,9 +111,11 @@ namespace Gms.Portal.Web.Pages.Management
             btnNew.Visible = (group.Type != "Expression");
             recipientsControl.CommandsVisible = (group.Type != "Expression");
 
-            var model = new RecipientsModel();
-            model.List = RecipientsGroupUtil.GetRecipients(group).ToList();
-            model.Description = group.Description;
+            var model = new RecipientsModel
+            {
+                List = RecipientsGroupUtil.GetRecipients(@group).ToList(),
+                Description = @group.Description
+            };
 
             recipientsControl.Model = model;
             recipientsControl.DataBind();

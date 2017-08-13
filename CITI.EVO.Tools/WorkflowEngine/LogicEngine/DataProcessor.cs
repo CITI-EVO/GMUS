@@ -311,7 +311,9 @@ namespace CITI.EVO.Tools.WorkflowEngine.LogicEngine
                 _expressionCache.Add(expression, expNode);
             }
 
-            var expValue = ExpressionEvaluator.Eval(expNode, item.GetValueOrDefault);
+            var advResolver = new AdvancedDataResolver(item.GetValueOrDefault);
+
+            var expValue = ExpressionEvaluator.Eval(expNode, advResolver);
             return expValue;
         }
     }

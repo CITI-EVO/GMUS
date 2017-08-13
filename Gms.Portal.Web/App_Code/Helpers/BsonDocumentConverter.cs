@@ -39,6 +39,7 @@ namespace Gms.Portal.Web.Helpers
             foreach (var fieldName in fields)
             {
                 var bsonValue = source[fieldName];
+
                 var objValue = BsonTypeMapper.MapToDotNetValue(bsonValue);
                 var strValue = (Convert.ToString(objValue) ?? String.Empty);
 
@@ -91,6 +92,15 @@ namespace Gms.Portal.Web.Helpers
             return docsLp;
         }
 
+        public static Object ConvertToObject(BsonValue bsonValue)
+        {
+            if (bsonValue == null)
+                return null;
+
+            var obj = BsonTypeMapper.MapToDotNetValue(bsonValue);
+            return obj;
+        }
+
         public static BsonArray ConvertToBsonArray(BsonValue bsonValue)
         {
             BsonArray array;
@@ -125,6 +135,9 @@ namespace Gms.Portal.Web.Helpers
 
         public static IEnumerable<FormStatusUnit> ConvertToFormStatuses(IEnumerable<BsonValue> bsonValues)
         {
+            if (bsonValues == null)
+                yield break;
+
             var documents = (from n in bsonValues
                              where !n.IsBsonNull &&
                                     n.IsBsonDocument
@@ -133,17 +146,27 @@ namespace Gms.Portal.Web.Helpers
             foreach (var document in documents)
             {
                 var dict = ConvertToDictionary(document);
+                var @params = dict.GetValueOrDefault(FormDataConstants.ParamsField) as IDictionary<String, Object>;
 
                 var unit = new FormStatusUnit
                 {
-                    Step = DataConverter.ToNullableInt(dict.GetValueOrDefault(FormDataConstants.StepField)),
+                    Params = @params,
                     UserID = DataConverter.ToNullableGuid(dict.GetValueOrDefault(FormDataConstants.UserIDField)),
                     StatusID = DataConverter.ToNullableGuid(dict.GetValueOrDefault(FormDataConstants.StatusIDField)),
-                    DateOfStatus = DataConverter.ToNullableDateTime(dict.GetValueOrDefault(FormDataConstants.StatusChangeDateField)),
+                    DateOfStatus = DataConverter.ToNullableDateTime(dict.GetValueOrDefault(FormDataConstants.DateOfStatusField)),
+                    DateOfAssigne = DataConverter.ToNullableDateTime(dict.GetValueOrDefault(FormDataConstants.DateOfAssigneField)),
                 };
 
                 yield return unit;
             }
+        }
+
+        public static BsonArray ConvertToFormStatusesArray(IEnumerable<FormStatusUnit> formStatuses)
+        {
+            var documents = ConvertToFormStatuses(formStatuses);
+
+            var array = new BsonArray(documents);
+            return array;
         }
 
         public static IEnumerable<BsonDocument> ConvertToFormStatuses(IEnumerable<FormStatusUnit> formStatuses)
@@ -153,12 +176,16 @@ namespace Gms.Portal.Web.Helpers
                 if (item == null)
                     continue;
 
+                var @params = (BsonValue)ConvertToBsonDocument(item.Params);
+                @params = (@params ?? BsonNull.Value);
+
                 var doc = new BsonDocument
                 {
-                    [FormDataConstants.StepField] = BsonValue.Create(item.Step),
+                    [FormDataConstants.ParamsField] = @params,
                     [FormDataConstants.UserIDField] = BsonValue.Create(item.UserID),
                     [FormDataConstants.StatusIDField] = BsonValue.Create(item.StatusID),
-                    [FormDataConstants.StatusChangeDateField] = BsonValue.Create(item.DateOfStatus)
+                    [FormDataConstants.DateOfStatusField] = BsonValue.Create(item.DateOfStatus),
+                    [FormDataConstants.DateOfAssigneField] = BsonValue.Create(item.DateOfAssigne),
                 };
 
                 yield return doc;
@@ -256,7 +283,7 @@ namespace Gms.Portal.Web.Helpers
 
             foreach (var pair in source)
             {
-                var value = (ReferenceEquals(pair.Value, FormNoData.Value) ? null : pair.Value);
+                var value = (ReferenceEquals(pair.Value, DBNull.Value) ? null : pair.Value);
 
                 if (value is IDictionary<String, Object>)
                 {
@@ -300,7 +327,9 @@ namespace Gms.Portal.Web.Helpers
             if (source == null)
                 return null;
 
-            var recordID = source[FormDataConstants.IDField].AsNullableGuid;
+            var idVal = BsonTypeMapper.MapToDotNetValue(source[FormDataConstants.IDField]);
+            var recordID = DataConverter.ToNullableGuid(idVal);
+
             var formData = new FormDataUnit();
 
             foreach (var element in source.Elements)
@@ -315,10 +344,7 @@ namespace Gms.Portal.Web.Helpers
                         var bsonArray = ConvertToBsonArray(bsonValue);
                         if (bsonArray != null)
                         {
-                            var query = (from n in bsonArray
-                                         where !n.IsBsonNull
-                                         select n.AsString);
-
+                            var query = bsonArray.Where(n => !n.IsBsonArray).Select(n => n.AsString);
                             formData[element.Name] = query.ToHashSet();
                         }
                     }
@@ -409,7 +435,7 @@ namespace Gms.Portal.Web.Helpers
 
             foreach (var pair in source)
             {
-                var value = (ReferenceEquals(pair.Value, FormNoData.Value) ? null : pair.Value);
+                var value = (ReferenceEquals(pair.Value, DBNull.Value) ? null : pair.Value);
 
                 if (value is FormDataListRef)
                 {
@@ -417,11 +443,11 @@ namespace Gms.Portal.Web.Helpers
 
                     var listRefDoc = new BsonDocument
                     {
-                        {FormDataConstants.DocTypeField, FormDataConstants.ReferenceDocType },
+                        {FormDataConstants.DocTypeField, FormDataConstants.ReferenceDocType},
 
-                        {FormDataConstants.FormIDField, listRef.FormID },
-                        {FormDataConstants.OwnerIDField, listRef.OwnerID },
-                        {FormDataConstants.ParentIDField, source.ID }
+                        {FormDataConstants.FormIDField, listRef.FormID},
+                        {FormDataConstants.OwnerIDField, listRef.OwnerID},
+                        {FormDataConstants.ParentIDField, source.ID}
                     };
 
                     document[pair.Key] = listRefDoc;
@@ -432,9 +458,9 @@ namespace Gms.Portal.Web.Helpers
 
                     var binaryDoc = new BsonDocument
                     {
-                        {FormDataConstants.DocTypeField, FormDataConstants.BinaryDocType },
-                        {FormDataConstants.FileNameField, binary.FileName },
-                        {FormDataConstants.FileBytesField, BsonBinaryData.Create(binary.FileBytes) },
+                        {FormDataConstants.DocTypeField, FormDataConstants.BinaryDocType},
+                        {FormDataConstants.FileNameField, binary.FileName},
+                        {FormDataConstants.FileBytesField, BsonBinaryData.Create(binary.FileBytes)},
                     };
 
                     document[pair.Key] = binaryDoc;

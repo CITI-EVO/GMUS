@@ -9,7 +9,9 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
 		public Object Evaluate(String expression, NameValueDataList dataList)
 		{
-			var result = ExpressionEvaluator.Eval(expression, n => dataList[n]);
+		    var advResolver = new AdvancedDataResolver(n => dataList[n]);
+
+            var result = ExpressionEvaluator.Eval(expression, advResolver);
 			return result;
 		}
 

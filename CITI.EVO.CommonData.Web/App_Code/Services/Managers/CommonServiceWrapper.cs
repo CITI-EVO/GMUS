@@ -2,13 +2,28 @@
 using System.Collections.Generic;
 using CITI.EVO.CommonData.Svc.Contracts;
 using CITI.EVO.CommonData.Svc.Enums;
+using CITI.EVO.CommonData.Web.Helpers;
+using CITI.EVO.CommonData.Web.Utils;
 using CITI.EVO.Rpc.Attributes;
 
 namespace CITI.EVO.CommonData.Web.Services.Managers
 {
 	public static class CommonServiceWrapper
 	{
-		[RpcAllowRemoteCall]
+	    [RpcAllowRemoteCall]
+	    public static PersonInfoContract GetPerson(String personalID, String birthYear)
+	    {
+	        return CommonDataManager.GetPerson(personalID, birthYear);
+	    }
+
+        [RpcAllowRemoteCall]
+	    public static bool SendSms(String number, String text)
+	    {
+	        LogUtil.Log.Info(String.Format("Sending Sms notification to: {0} text: {1}", number, text));
+	        return HttpSmsHelper.SendSms(number, text);
+	    }
+
+        [RpcAllowRemoteCall]
 		public static List<AreaContract> GetAreas(AreaTypesEnum type, RecordTypesEnum recordType)
 		{
 			return CommonDataManager.GetAreas(type, recordType);
@@ -37,12 +52,6 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 		{
 			return CommonDataManager.GetAllMobileIndexes();
 		}
-
-        [RpcAllowRemoteCall]
-        public static void SendSms(String number, String message)
-        {
-            //Add Sms send message
-        }
 
         [RpcAllowRemoteCall]
 		public static MobileIndexesContract GetMobileIndexByID(Guid? ID)

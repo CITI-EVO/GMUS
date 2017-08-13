@@ -53,6 +53,9 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("DisplayOnFilter")]
         public bool? DisplayOnFilter { get; set; }
 
+        [XmlElement("ResetDataOnHide")]
+        public bool? ResetDataOnHide { get; set; }
+
         [XmlElement("ValidationExp")]
         public String ValidationExp { get; set; }
 

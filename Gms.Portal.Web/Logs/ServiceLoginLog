@@ -1,3 +1,1 @@
-﻿2017-05-10 19:09:56,390 [8] INFO  LoginLogger [(null)] - Event: LoginByToken; LoginName: giorgibagashvili088@gmail.com; Password: 07121988; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: b296fb4f-4318-4b53-9ba3-d0ce7bacc028; SessionID: ine15fqvvfcxhcaoffxffepj; ClientIP: ::1, ::1; Success: True
-2017-05-10 19:11:54,740 [6] INFO  LoginLogger [(null)] - Event: Logout; LoginName: giorgibagashvili088@gmail.com; Password: 07121988; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: b296fb4f-4318-4b53-9ba3-d0ce7bacc028; SessionID: ine15fqvvfcxhcaoffxffepj; ClientIP: ::1, ::1; Success: 
-2017-05-10 19:28:58,624 [11] INFO  LoginLogger [(null)] - Event: Logout; LoginName: v.ezugbaia@gmail.com; Password: 123; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: f7108eec-4b62-4f80-a7d3-183b7ea26278; SessionID: ine15fqvvfcxhcaoffxffepj; ClientIP: ::1, ::1; Success: 
+﻿

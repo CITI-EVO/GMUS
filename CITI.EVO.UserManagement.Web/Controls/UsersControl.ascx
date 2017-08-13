@@ -22,6 +22,7 @@
                 <asp:BoundField HeaderText="გვარი" DataField="LastName" />
                 <asp:BoundField HeaderText="აქტივაცია" DataField="IsActive" />
                 <asp:BoundField HeaderText="ელ.ფოსტა" DataField="Email" />
+                <asp:BoundField HeaderText="ტელეფონი" DataField="Phone" />
                 <asp:BoundField HeaderText="მისამართი" DataField="Address" />
                 <asp:BoundField HeaderText="პაროლის ვალიდურობის თარიღი" DataField="PasswordExpire" />
             </Columns>

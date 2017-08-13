@@ -12,6 +12,10 @@ namespace Gms.Portal.Web.Models
 
         public String Number { get; set; }
 
+        public String Abbreviation { get; set; }
+
+        public String Year { get; set; }
+
         public Guid? CategoryID { get; set; }
 
         public int? OrderIndex { get; set; }
@@ -29,6 +33,8 @@ namespace Gms.Portal.Web.Models
         public String FillingValidationMessage { get; set; }
 
         public String UserMode { get; set; }
+
+        public String FormType { get; set; }
 
         public FormEntity Entity { get; set; }
     }

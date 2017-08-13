@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Web.UI.WebControls;
 using CITI.EVO.Tools.Extensions;
+using CITI.EVO.Tools.Helpers;
 using CITI.EVO.UserManagement.DAL.Domain;
 using CITI.EVO.UserManagement.Web.Bases;
 using CITI.EVO.UserManagement.Web.Models;
@@ -19,6 +20,12 @@ namespace CITI.EVO.UserManagement.Web.Controls
                           where n.DateDeleted == null &&
                                 Enumerable.Contains(ConfigUtil.UserRegisterGroupID, n.ID)
                           select n).ToList();
+
+            foreach (var @group in groups)
+            {
+                var trn = new DefaultTranslatable(@group.Name);
+                @group.Name = trn.Text;
+            }
 
             BindData(cbxGroups, groups);
 
