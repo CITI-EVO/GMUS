@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="local" TagName="MonitoringItemControl" Src="~/Controls/User/Monitoring/MonitoringItemControl.ascx" %>
 <%@ Register TagPrefix="local" TagName="MonitoringDataGridsControl" Src="~/Controls/User/Monitoring/MonitoringDataGridsControl.ascx" %>
 <%@ Register TagPrefix="local" TagName="MonitoringBudgetDataControl" Src="~/Controls/User/Monitoring/MonitoringBudgetDataControl.ascx" %>
+<%@ Register TagPrefix="local" TagName="SummaryBudgetDataControl" Src="~/Controls/User/Monitoring/SummaryBudgetDataControl.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphHead" runat="Server">
 </asp:Content>
@@ -15,12 +16,20 @@
                         <local:MonitoringDataGridsControl runat="server" ID="monitoringDataGridsControl" />
                     </div>
                     <div class="form-group">
-                        <local:MonitoringBudgetDataControl runat="server" ID="monitoringBudgetDataControl" 
-                            OnAccept="monitoringBudgetDataControl_OnAccept" 
-                            OnReturn="monitoringBudgetDataControl_OnReturn" 
-                            OnView="monitoringBudgetDataControl_OnView" 
-                            OnEdit="monitoringBudgetDataControl_OnEdit" 
-                            OnDelete="monitoringBudgetDataControl_OnDelete" />
+                        <div>
+                            <ce:LinkButton runat="server" ID="btnMonitoringItemNew" OnClick="btnMonitoringItemNew_OnClick" CssClass="btn btn-success fa fa-plus" />
+                        </div>
+                        <div>
+                            <local:MonitoringBudgetDataControl runat="server" ID="monitoringBudgetDataControl"
+                                OnAccept="monitoringBudgetDataControl_OnAccept"
+                                OnReturn="monitoringBudgetDataControl_OnReturn"
+                                OnView="monitoringBudgetDataControl_OnView"
+                                OnEdit="monitoringBudgetDataControl_OnEdit"
+                                OnDelete="monitoringBudgetDataControl_OnDelete" />
+                        </div>
+                    </div>
+                    <div>
+                        <local:SummaryBudgetDataControl runat="server" ID="summaryBudgetDataControl" />
                     </div>
                 </div>
             </div>

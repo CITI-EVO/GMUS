@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CITI.EVO.Tools.EventArguments;
 using CITI.EVO.Tools.Utils;
-using DevExpress.XtraPrinting.Native;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Bases;
 using Gms.Portal.Web.Converters.EntityToModel;
@@ -14,6 +13,7 @@ using Gms.Portal.Web.Models;
 using Gms.Portal.Web.Utils;
 using NHibernate.Linq;
 using CITI.EVO.Tools.Extensions;
+using Gms.Portal.Web.Entities.Others;
 
 namespace Gms.Portal.Web.Pages.User
 {
@@ -83,16 +83,21 @@ namespace Gms.Portal.Web.Pages.User
             }
         }
 
+        private IEnumerable<IDictionary<String, Object>> _monitoringData;
+        protected IEnumerable<IDictionary<String, Object>> MonitoringData
+        {
+            get
+            {
+                _monitoringData = (_monitoringData ?? LoadMonitoringData());
+                return _monitoringData;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             monitoringDataGridsControl.InitStructure(FormEntity);
 
             FillMonitoringData();
-        }
-
-        protected void monitoringItemControl_OnDataChanged(object sender, EventArgs e)
-        {
-            mpeMonitoringItem.Show();
         }
 
         protected void btnMonitoringItemOK_OnClick(object sender, EventArgs e)
@@ -120,30 +125,70 @@ namespace Gms.Portal.Web.Pages.User
             {
                 dict = new Dictionary<String, Object>
                 {
-                    ["FormID"] = FormID,
+                    ["ID"] = Guid.NewGuid(),
+                    ["OwnerID"] = FormID,
                     ["RecordID"] = RecordID,
-                    ["Accepted"] = false,
-                    ["Returned"] = false,
-                    ["AcceptUserID"] = null,
-                    ["ReturnUserID"] = null,
-                    ["DateCreated"] = DateTime.Now,
+
+                    ["Goal"] = null,
+                    ["TaskID"] = null,
+                    ["DateOfTransfer"] = false,
+
+                    ["Remain"] = null,
+                    ["Incoming"] = null,
+                    ["Outgoing"] = null,
+
                     ["CreateUserID"] = UserUtil.GetCurrentUserID(),
+
+                    ["Accepted"] = false,
+                    ["AcceptUserID"] = null,
+                    ["DateOfAccept"] = null,
+
+                    ["Returned"] = false,
+                    ["ReturnUserID"] = null,
+                    ["DateOfReturn"] = null,
+
+                    ["Comment"] = null,
+
+                    ["DateCreated"] = DateTime.Now,
+                    ["DateChanged"] = null,
+                    ["DateDeleted"] = null,
                 };
             }
 
-            dict["GoalID"] = model.GoalID;
-            dict["BudgetID"] = model.BudgetID;
+            dict["Goal"] = model.Goal;
+            dict["TaskID"] = model.TaskID;
             dict["DateOfTransfer"] = model.DateOfTransfer;
+
+            var list = MonitoringData.Select(n => new MoneyTransferEntity(n)).ToList();
+
+            var remain = DataConverter.ToNullableDouble(dict["Remain"]);
+
+            if (isNew)
+            {
+                var last = list.LastOrDefault();
+                if (last != null)
+                    remain = last.Remain;
+            }
+            else
+            {
+                var index = list.FindIndex(n => n.ID == model.ID);
+                if (index > -1)
+                    remain = list[index].Remain;
+            }
 
             if (model.Type == "Incoming")
             {
                 dict["Incoming"] = model.Amount;
-                dict["Outgoing"] = 0D;
+                dict["Outgoing"] = null;
+
+                dict["Remain"] = remain.GetValueOrDefault() + model.Amount;
             }
             else if (model.Type == "Outgoing")
             {
-                dict["Incoming"] = 0D;
+                dict["Incoming"] = null;
                 dict["Outgoing"] = model.Amount;
+
+                dict["Remain"] = remain.GetValueOrDefault() - model.Amount;
             }
 
             var bsonDoc = BsonDocumentConverter.ConvertToBsonDocument(dict);
@@ -153,11 +198,26 @@ namespace Gms.Portal.Web.Pages.User
                 MongoDbUtil.UpdateDocument(MongoDbUtil.MonitoringCollectionName, bsonDoc);
 
             mpeMonitoringItem.Hide();
+
+            FillMonitoringData();
+        }
+
+        protected void btnMonitoringItemNew_OnClick(object sender, EventArgs e)
+        {
+            var model = new MonitoringItemModel();
+            monitoringItemControl.Model = model;
+
+            mpeMonitoringItem.Show();
         }
 
         protected void btnMonitoringItemCancel_OnClick(object sender, EventArgs e)
         {
             mpeMonitoringItem.Hide();
+        }
+
+        protected void monitoringItemControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeMonitoringItem.Show();
         }
 
         protected void monitoringBudgetDataControl_OnAccept(object sender, GenericEventArgs<Guid> e)
@@ -249,8 +309,8 @@ namespace Gms.Portal.Web.Pages.User
                 ID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("ID")),
                 Type = type,
                 Amount = amount,
-                GoalID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("GoalID")),
-                BudgetID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("BudgetID")),
+                Goal = DataConverter.ToString(dict.GetValueOrDefault("Goal")),
+                TaskID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("TaskID")),
                 DateOfTransfer = DataConverter.ToNullableDateTime(dict.GetValueOrDefault("DateOfTransfer")),
             };
 
@@ -295,8 +355,8 @@ namespace Gms.Portal.Web.Pages.User
                 ID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("ID")),
                 Type = type,
                 Amount = amount,
-                GoalID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("GoalID")),
-                BudgetID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("BudgetID")),
+                Goal = DataConverter.ToString(dict.GetValueOrDefault("Goal")),
+                TaskID = DataConverter.ToNullableGuid(dict.GetValueOrDefault("TaskID")),
                 DateOfTransfer = DataConverter.ToNullableDateTime(dict.GetValueOrDefault("DateOfTransfer")),
             };
 
@@ -347,23 +407,43 @@ namespace Gms.Portal.Web.Pages.User
             return formData;
         }
 
+        protected IEnumerable<IDictionary<String, Object>> LoadMonitoringData()
+        {
+            var filter = new Dictionary<String, Object>
+            {
+                ["OwnerID"] = FormID,
+                ["RecordID"] = RecordID,
+                ["DateDeleted"] = null
+            };
+
+            var sorts = new[] { "DateCreated" };
+
+            var documents = MongoDbUtil.FindDocuments(MongoDbUtil.MonitoringCollectionName, filter, sorts);
+            var dictionaries = documents.Select(BsonDocumentConverter.ConvertToDictionary);
+
+            return dictionaries;
+        }
+
         protected void FillMonitoringData()
         {
             var filter = new Dictionary<String, Object>
             {
+                ["OwnerID"] = FormID,
                 ["RecordID"] = RecordID,
-                ["FormID"] = FormID,
                 ["DateDeleted"] = null
             };
 
-            var documents = MongoDbUtil.FindDocuments(MongoDbUtil.MonitoringCollectionName, filter);
+            var sorts = new[] { "DateCreated" };
+
+            var documents = MongoDbUtil.FindDocuments(MongoDbUtil.MonitoringCollectionName, filter, sorts);
             var dictionaries = documents.Select(BsonDocumentConverter.ConvertToDictionary);
 
             monitoringDataGridsControl.BindData(FormData);
 
             monitoringBudgetDataControl.BindData(FormEntity, FormData, dictionaries);
+            summaryBudgetDataControl.BindData(FormEntity, FormData, dictionaries);
             monitoringItemControl.BindData(FormEntity, FormData);
-        }
 
+        }
     }
 }

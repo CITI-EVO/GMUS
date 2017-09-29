@@ -18,10 +18,7 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
     public partial class MonitoringBudgetDataControl : BaseUserControl
     {
         private ControlEntity _taskNameField;
-        private ControlEntity _goalNameField;
-
         private IDictionary<Guid?, FormDataUnit> _budgetData;
-        private IDictionary<Guid?, FormDataUnit> _goalsData;
 
         public event EventHandler<GenericEventArgs<Guid>> View;
         protected virtual void OnView(GenericEventArgs<Guid> e)
@@ -98,6 +95,11 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
                 OnReturn(new GenericEventArgs<Guid>(itemID.Value));
         }
 
+        protected void gridView_OnRowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
         public void BindData(ContentEntity entity, FormDataUnit formData, IEnumerable<IDictionary<String, Object>> transfers)
         {
             var entities = transfers.Select(n => new MoneyTransferEntity(n));
@@ -113,49 +115,45 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
 
             var dataGrids = (from n in controls
                              where (n is GridEntity || n is TreeEntity) &&
-                                   n.Alias == "Budget" &&
-                                   n.Alias == "Goals"
+                                   (n.Alias == "Budget")
                              select n);
 
             var controlLp = dataGrids.ToLookup(n => n.Alias, comparer);
 
             var budget = controlLp["Budget"].SingleOrDefault() as ContentEntity;
-            var goals = controlLp["Goals"].SingleOrDefault() as ContentEntity;
+
+            var errors = new List<String>();
 
             if (budget == null)
-                throw new Exception("Unable to find 'Budget'");
+                errors.Add(@"Unable to find 'Budget'");
 
-            if (goals == null)
-                throw new Exception("Unable to find 'Goals'");
+            if (errors.Count > 0)
+            {
+                lblError.Text = String.Join("<br/>", errors);
+                return;
+            }
 
             _taskNameField = (from n in FormStructureUtil.PreOrderIndexedTraversal(budget)
                               where comparer.Equals(n.Alias, "TaskName")
                               select n).SingleOrDefault();
 
-
-            _goalNameField = (from n in FormStructureUtil.PreOrderIndexedTraversal(budget)
-                              where comparer.Equals(n.Alias, "GoalName")
-                              select n).SingleOrDefault();
-
             if (_taskNameField == null)
-                throw new Exception(@"Unable to find 'Budget\TaskName'");
+                errors.Add(@"Unable to find 'Budget\TaskName'");
 
-            if (_goalNameField == null)
-                throw new Exception(@"Unable to find 'Goals\GoalName'");
+            if (errors.Count > 0)
+            {
+                lblError.Text = String.Join("<br/>", errors);
+                return;
+            }
 
             var budgetKey = Convert.ToString(budget.ID);
-            var goalsKey = Convert.ToString(goals.ID);
 
             var budgetData = formData[budgetKey];
             if (budgetData is FormDataListRef)
                 budgetData = new FormDataLazyList((FormDataListRef)budgetData);
 
-            var goalsData = formData[goalsKey];
-            if (goalsData is FormDataListRef)
-                goalsData = new FormDataLazyList((FormDataListRef)goalsData);
-
-            _budgetData = ((FormDataLazyList)budgetData).ToDictionary(n => n.ID);
-            _goalsData = ((FormDataLazyList)goalsData).ToDictionary(n => n.ID);
+            if (budgetData != null)
+                _budgetData = ((FormDataLazyList)budgetData).ToDictionary(n => n.ID);
 
             gvData.DataSource = transfers;
             gvData.DataBind();
@@ -175,6 +173,9 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
 
         protected String GetTaskName(object eval)
         {
+            if (_budgetData == null)
+                return null;
+
             var itemID = DataConverter.ToNullableGuid(eval);
             if (itemID == null)
                 return null;
@@ -189,16 +190,7 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
 
         protected String GetGoalName(object eval)
         {
-            var itemID = DataConverter.ToNullableGuid(eval);
-            if (itemID == null)
-                return null;
-
-            var formData = _goalsData.GetValueOrDefault(itemID);
-            if (formData == null)
-                return null;
-
-            var key = Convert.ToString(_goalNameField.ID);
-            return Convert.ToString(formData[key]);
+            return Convert.ToString(eval);
         }
 
         protected bool GetViewVisible(object dataItem)
@@ -224,11 +216,6 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
         protected bool GetReturnVisible(object dataItem)
         {
             return true;
-        }
-
-        protected void gridView_OnRowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            
         }
     }
 }

@@ -5,6 +5,13 @@ namespace CITI.EVO.Tools.Comparers
 {
     public class StringLogicalComparer : ComparerBase<String>
     {
+        private struct Segment
+        {
+            public int index;
+            public int length;
+            public bool digits;
+        }
+
         public static readonly StringLogicalComparer Ordinal;
         public static readonly StringLogicalComparer OrdinalIgnoreCase;
         public static readonly StringLogicalComparer FloatingNumberSensitive;
@@ -21,10 +28,10 @@ namespace CITI.EVO.Tools.Comparers
         private readonly bool _ignoreCase;
         private readonly bool _floatNumbers;
 
-        private readonly int _decimalSeparatorLen;
         private readonly String _decimalSeparator;
+        private readonly int _decimalSeparatorLen;
 
-        private readonly StringComparer _comparer;
+        private readonly StringComparer _stringComparer;
         private readonly NumberFormatInfo _numberFormatInfo;
 
         public StringLogicalComparer()
@@ -38,9 +45,10 @@ namespace CITI.EVO.Tools.Comparers
 
             _numberFormatInfo = NumberFormatInfo.InvariantInfo;
             _decimalSeparator = _numberFormatInfo.NumberDecimalSeparator;
+
             _decimalSeparatorLen = _decimalSeparator.Length;
 
-            _comparer = (_ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+            _stringComparer = (_ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
         }
 
         public bool IgnoreCase
@@ -91,7 +99,8 @@ namespace CITI.EVO.Tools.Comparers
                 return new Segment();
 
             var index = start;
-            var separator = false;
+            var separatorReached = false;
+            var decimalSeparator = false;
 
             var segment = new Segment
             {
@@ -102,7 +111,7 @@ namespace CITI.EVO.Tools.Comparers
 
             while (index < text.Length)
             {
-                var @char = text[index++];
+                var @char = text[index];
 
                 if (char.IsDigit(@char))
                 {
@@ -113,14 +122,27 @@ namespace CITI.EVO.Tools.Comparers
                 {
                     if (segment.digits)
                     {
-                        if (_floatNumbers && !separator && IsDecimalSeparator(text, index))
-                            separator = true;
+                        decimalSeparator = IsDecimalSeparator(text, index);
+
+                        if (_floatNumbers && !separatorReached && decimalSeparator)
+                            separatorReached = true;
                         else
                             break;
                     }
                 }
 
-                segment.length++;
+                if (decimalSeparator)
+                {
+                    segment.length += _decimalSeparatorLen;
+                    index += _decimalSeparatorLen;
+
+                    decimalSeparator = false;
+                }
+                else
+                {
+                    segment.length++;
+                    index++;
+                }
             }
 
             return segment;
@@ -141,7 +163,7 @@ namespace CITI.EVO.Tools.Comparers
                 }
             }
 
-            return _comparer.Compare(xs, ys);
+            return _stringComparer.Compare(xs, ys);
         }
 
         private bool IsDecimalSeparator(String text, int index)
@@ -155,7 +177,7 @@ namespace CITI.EVO.Tools.Comparers
 
         public override bool Equals(String x, String y)
         {
-            return _comparer.Equals(x, y);
+            return _stringComparer.Equals(x, y);
         }
 
         public override int GetHashCode(String obj)
@@ -163,14 +185,7 @@ namespace CITI.EVO.Tools.Comparers
             if (obj == null)
                 return 0;
 
-            return _comparer.GetHashCode(obj);
-        }
-
-        private struct Segment
-        {
-            public int index;
-            public int length;
-            public bool digits;
+            return _stringComparer.GetHashCode(obj);
         }
     }
 }

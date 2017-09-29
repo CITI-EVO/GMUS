@@ -43,10 +43,10 @@ namespace Gms.Portal.Web.Entities.Others
             set { _data["TaskID"] = value; }
         }
 
-        public Guid? GoalID
+        public String Goal
         {
-            get { return DataConverter.ToNullableGuid(_data.GetValueOrDefault("GoalID")); }
-            set { _data["GoalID"] = value; }
+            get { return DataConverter.ToString(_data.GetValueOrDefault("Goal")); }
+            set { _data["Goal"] = value; }
         }
 
         public DateTime? DateOfTransfer
@@ -73,10 +73,10 @@ namespace Gms.Portal.Web.Entities.Others
             set { _data["Outgoing"] = value; }
         }
 
-        public bool? Returned
+        public Guid? CreateUserID
         {
-            get { return DataConverter.ToNullableBool(_data.GetValueOrDefault("Returned")); }
-            set { _data["Returned"] = value; }
+            get { return DataConverter.ToNullableGuid(_data.GetValueOrDefault("CreateUserID")); }
+            set { _data["CreateUserID"] = value; }
         }
 
         public bool? Accepted
@@ -84,25 +84,32 @@ namespace Gms.Portal.Web.Entities.Others
             get { return DataConverter.ToNullableBool(_data.GetValueOrDefault("Accepted")); }
             set { _data["Accepted"] = value; }
         }
-
-        public Guid? CreateUserID
-        {
-            get { return DataConverter.ToNullableGuid(_data.GetValueOrDefault("CreateUserID")); }
-            set { _data["CreateUserID"] = value; }
-        }
-
         public Guid? AcceptUserID
         {
             get { return DataConverter.ToNullableGuid(_data.GetValueOrDefault("AcceptUserID")); }
             set { _data["AcceptUserID"] = value; }
         }
-
         public DateTime? DateOfAccept
         {
             get { return DataConverter.ToNullableDateTime(_data.GetValueOrDefault("DateOfAccept")); }
             set { _data["DateOfAccept"] = value; }
         }
 
+        public bool? Returned
+        {
+            get { return DataConverter.ToNullableBool(_data.GetValueOrDefault("Returned")); }
+            set { _data["Returned"] = value; }
+        }
+        public Guid? ReturnUserID
+        {
+            get { return DataConverter.ToNullableGuid(_data.GetValueOrDefault("ReturnUserID")); }
+            set { _data["ReturnUserID"] = value; }
+        }
+        public DateTime? DateOfReturn
+        {
+            get { return DataConverter.ToNullableDateTime(_data.GetValueOrDefault("DateOfReturn")); }
+            set { _data["DateOfReturn"] = value; }
+        }
 
         public String Comment
         {
@@ -120,12 +127,12 @@ namespace Gms.Portal.Web.Entities.Others
             get { return DataConverter.ToNullableDateTime(_data.GetValueOrDefault("DateChanged")); }
             set { _data["DateChanged"] = value; }
         }
-         public DateTime? DateDeleted
+        public DateTime? DateDeleted
         {
             get { return DataConverter.ToNullableDateTime(_data.GetValueOrDefault("DateDeleted")); }
             set { _data["DateDeleted"] = value; }
         }
-       
+
         public IDictionary<String, Object> GetContainer()
         {
             return _data;

@@ -9,9 +9,9 @@ namespace Gms.Portal.Web.Models
 
         public Guid? RecordID { get; set; }
 
-        public Guid? BudgetID { get; set; }
+        public Guid? TaskID { get; set; }
 
-        public Guid? GoalID { get; set; }
+        public String Goal { get; set; }
 
         public String Type { get; set; }
 

@@ -114,6 +114,7 @@
     <Compile Include="Cache\RequestObjectCache.cs" />
     <Compile Include="Cache\SessionObjectCache.cs" />
     <Compile Include="Collections\BTeeSet.cs" />
+    <Compile Include="Collections\EntityLookup.cs" />
     <Compile Include="ExpressionEngine\AdvancedDataResolver.cs" />
     <Compile Include="ExpressionEngine\DefaultDataResolver.cs" />
     <Compile Include="ExpressionEngine\IDataResolver.cs" />

@@ -1052,8 +1052,12 @@ namespace Gms.Portal.Web.Controls.User
             if (entity == null || !entity.Visible)
                 return;
 
-            var leftClass = $"col-sm-{entity.CaptionSize.GetValueOrDefault(4)} control-label";
-            var rightClass = $"col-sm-{entity.ControlSize.GetValueOrDefault(8)}";
+            var leftSize = entity.CaptionSize.GetValueOrDefault(4);
+            var rightSize = entity.ControlSize.GetValueOrDefault(8);
+            var totalSize = leftSize + rightSize;
+
+            var leftClass = $"col-sm-{leftSize} control-label";
+            var rightClass = $"col-sm-{rightSize}";
 
             var enabled = Enabled;
             if (enabled && entity.ReadOnly.GetValueOrDefault())
@@ -1062,7 +1066,7 @@ namespace Gms.Portal.Web.Controls.User
             var mainPanel = new Panel
             {
                 ID = String.Format(FieldPabelIDFormat, entity.ID),
-                CssClass = "form-group",
+                CssClass = $"form-group col-sm-{totalSize}",
                 Enabled = enabled
             };
 

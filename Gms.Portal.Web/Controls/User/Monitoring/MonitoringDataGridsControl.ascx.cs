@@ -60,7 +60,7 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
 
         public void BindData(FormDataUnit formData)
         {
-            foreach (var pair in _entities)
+            foreach (var pair in Entities)
             {
                 var controlKey = Convert.ToString(pair.Key);
 
@@ -109,23 +109,27 @@ namespace Gms.Portal.Web.Controls.User.Monitoring
 
             var dataGrids = (from n in controls
                              where (n is GridEntity || n is TreeEntity) &&
-                                    n.Alias == "Budget" &&
-                                    n.Alias == "Goals"
+                                   (n.Alias == "Budget" || n.Alias == "Goals")
                              select n);
 
             var controlLp = dataGrids.ToLookup(n => n.Alias, comparer);
 
+            var errors = new List<String>();
+
             var budgetEntity = controlLp["Budget"].SingleOrDefault();
             if (budgetEntity == null)
-                lblError.Text = "Unable to find 'Budget' container";
+                errors.Add(@"Unable to find 'Budget'");
             else
                 SetTreeOrGrid(budgetEntity);
 
             var goalsEntity = controlLp["Goals"].SingleOrDefault();
             if (goalsEntity == null)
-                lblError.Text = "Unable to find 'Goals' container";
+                errors.Add(@"Unable to find 'Goals'");
             else
                 SetTreeOrGrid(goalsEntity);
+
+            if (errors.Count > 0)
+                lblError.Text = String.Join("<br/>", errors);
         }
 
         private void SetTreeOrGrid(ControlEntity entity)

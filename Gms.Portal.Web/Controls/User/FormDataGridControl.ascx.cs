@@ -80,6 +80,8 @@ namespace Gms.Portal.Web.Controls.User
                 Print(this, e);
         }
 
+        private GM_Form _dbForm;
+
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -164,16 +166,28 @@ namespace Gms.Portal.Web.Controls.User
 
         public void InitStructure(GM_Form dbForm)
         {
+            _dbForm = dbForm;
+            SetupStructure();
+        }
+
+        public void BindData(DictionaryDataView formDataView)
+        {
+            gvData.DataSource = formDataView;
+            gvData.DataBind();
+        }
+
+        protected void SetupStructure()
+        {
             var converter = new FormEntityModelConverter(HbSession);
-            var model = converter.Convert(dbForm);
+            var model = converter.Convert(_dbForm);
 
             var entity = model.Entity;
 
             var controls = FormStructureUtil.InOrderFirstLevelTraversal(entity);
 
             var list = (from n in controls.OfType<FieldEntity>()
-                        where n.Visible && n.DisplayOnGrid == "Always"
-                        select n).ToList();
+                where n.Visible && n.DisplayOnGrid == "Always"
+                select n).ToList();
 
             var columns = gvData.Columns;
 
@@ -185,13 +199,13 @@ namespace Gms.Portal.Web.Controls.User
                 if (existFields.Contains(dataField))
                     continue;
 
-                var column = new GridViewMetaBoundField(null, dbForm.ID, field, entity);
+                var column = new GridViewMetaBoundField(null, _dbForm.ID, field, entity);
                 gvData.Columns.Add(column);
             }
 
             var columnsLp = gvData.Columns.OfType<DataControlField>().ToLookup(n => n.HeaderText);
 
-            if (!dbForm.RequiresApprove.GetValueOrDefault())
+            if (!_dbForm.RequiresApprove.GetValueOrDefault())
             {
                 var statusNameColumn = columnsLp["Status Name"].First();
                 statusNameColumn.Visible = false;
@@ -203,17 +217,12 @@ namespace Gms.Portal.Web.Controls.User
                 statusChangeDateColumn.Visible = false;
             }
 
-            if (dbForm.ApprovalDeadline.GetValueOrDefault() < 1)
+            if (_dbForm.ApprovalDeadline.GetValueOrDefault() < 1)
             {
                 var daysLeftColumn = columnsLp["Days Left"].First();
                 daysLeftColumn.Visible = false;
             }
-        }
 
-        public void BindData(DictionaryDataView formDataView)
-        {
-            gvData.DataSource = formDataView;
-            gvData.DataBind();
         }
 
         protected Control CreateHeaderControl(FieldEntity field)
@@ -373,6 +382,9 @@ namespace Gms.Portal.Web.Controls.User
 
         protected bool GetMonitoringVisible(object dataItem)
         {
+            if (_dbForm == null || _dbForm.FormType != "Standard")
+                return false;
+
             return UmUtil.Instance.HasAccess("Monitoring");
         }
 

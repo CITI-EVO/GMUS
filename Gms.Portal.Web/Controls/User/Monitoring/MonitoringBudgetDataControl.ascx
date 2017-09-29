@@ -1,6 +1,21 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MonitoringBudgetDataControl.ascx.cs" Inherits="Gms.Portal.Web.Controls.User.Monitoring.MonitoringBudgetDataControl" %>
 
-<ce:GridView runat="server" ID="gvData" AutoGenerateColumns="False" UseAccessibleHeader="True" TableSectionHeader="True" ShowHeaderWhenEmpty="True" EnableViewState="False" CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" Property="FormDataGridModel.DataView=DataSource, Mode=Assigne" OnRowDataBound="gridView_OnRowDataBound">
+<asp:Panel runat="server" ID="pnlMessage">
+    <asp:Label runat="server" ForeColor="Red" ID="lblError">
+    </asp:Label>
+</asp:Panel>
+<ce:GridView ID="gvData"
+    runat="server"
+    AutoGenerateColumns="False"
+    UseAccessibleHeader="True"
+    TableSectionHeader="True"
+    ShowHeaderWhenEmpty="True"
+    EnableViewState="False"
+    CssClass="tableStd table table-striped table-bordered table-hover"
+    data-page-size="8"
+    data-filter="#filter"
+    OnRowDataBound="gridView_OnRowDataBound"
+    Property="{MonitoringBudgetDataModel.DataView=DataSource, Mode=Assigne}">
     <Columns>
         <asp:TemplateField>
             <ItemTemplate>
@@ -29,7 +44,7 @@
                 <ce:Label runat="server" Text='Goal' />
             </HeaderTemplate>
             <ItemTemplate>
-                <ce:Label runat="server" Text='<%# GetGoalName(Eval("GoalID")) %>' />
+                <ce:Label runat="server" Text='<%# GetGoalName(Eval("Goal")) %>' />
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="DateOfTransfer">

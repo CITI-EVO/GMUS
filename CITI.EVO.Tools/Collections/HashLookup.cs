@@ -133,48 +133,53 @@ namespace CITI.EVO.Tools.Collections
         private Grouping GetGrouping(TKey key, bool create)
         {
             var hashCode = GetHashCode(key);
-            var index = hashCode % _groupings.Length;
 
-            for (var group = _groupings[index]; group != null; group = group.HashNext)
+            var groupIndex = hashCode % _groupings.Length;
+            var grouping = _groupings[groupIndex];
+
+            while (grouping != null)
             {
-                if (group.HashCode == hashCode && _comparer.Equals(group.Key, key))
-                    return group;
+                if (grouping.HashCode == hashCode && _comparer.Equals(grouping.Key, key))
+                    return grouping;
+
+                grouping = grouping.HashNext;
             }
 
-            if (create)
+            if (!create)
             {
-                if (_count >= _groupings.Length)
-                {
-                    EnsureCapacity();
-                    index = hashCode % _groupings.Length;
-                }
-
-                var group = new Grouping
-                {
-                    Key = key,
-                    HashCode = hashCode,
-                    HashNext = _groupings[index]
-                };
-
-                _groupings[index] = group;
-
-                if (_lastGrouping == null)
-                {
-                    group.NextGroup = group;
-                }
-                else
-                {
-                    group.NextGroup = _lastGrouping.NextGroup;
-                    _lastGrouping.NextGroup = group;
-                }
-
-                _lastGrouping = group;
-                _count++;
-
-                return group;
+                return null;
             }
 
-            return null;
+            if (_groupings.Length == _count)
+            {
+                IncreaseSize();
+                groupIndex = hashCode % _groupings.Length;
+            }
+
+            var newGrouping = new Grouping
+            {
+                Key = key,
+                HashCode = hashCode,
+                HashNext = _groupings[groupIndex]
+            };
+
+            _groupings[groupIndex] = newGrouping;
+
+            if (_lastGrouping == null)
+            {
+                newGrouping.NextGroup = newGrouping;
+            }
+            else
+            {
+                newGrouping.NextGroup = _lastGrouping.NextGroup;
+                _lastGrouping.NextGroup = newGrouping;
+            }
+
+            _lastGrouping = newGrouping;
+
+            _count++;
+
+            return newGrouping;
         }
 
         private int GetHashCode(TKey key)
@@ -185,7 +190,7 @@ namespace CITI.EVO.Tools.Collections
             return _comparer.GetHashCode(key) & 0x7FFFFFFF;
         }
 
-        private void EnsureCapacity()
+        private void IncreaseSize()
         {
             var newSize = checked(_groupings.Length * 2 + 1);
 

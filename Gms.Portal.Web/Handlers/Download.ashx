@@ -33,7 +33,7 @@ public class Download : IHttpHandler
         var historyID = DataConverter.ToNullableGuid(requestUrl["HistoryID"]);
         if (historyID != null)
         {
-            var historyCollection = MongoDbUtil.GetHistoryCollection();
+            var historyCollection = MongoDbUtil.GetCollection(MongoDbUtil.HistoryCollectionName);
             var historyDocument = MongoDbUtil.GetDocument(historyCollection, historyID);
 
             var historyDict = BsonDocumentConverter.ConvertToDictionary(historyDocument);

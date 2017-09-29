@@ -16,7 +16,7 @@
                             <ce:LinkButton runat="server" ID="btnStatus" ToolTip="Change status" Visible='<%# GetStatusVisible(Container.DataItem) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnStatus_OnCommand" CssClass="btn btn-warning btn-sm fa fa-cog" />
                             <ce:LinkButton runat="server" ID="btnAssigne" ToolTip="Assigne users" Visible='<%# GetAssigneVisible(Container.DataItem) %>' CommandArgument='<%# Eval("ID") %>' OnCommand="btnAssigne_OnCommand" CssClass="btn btn-info btn-sm fa fa-address-book-o" />
                             <asp:HyperLink runat="server" ID="lnkHistory" ToolTip="History" Visible='<%# GetHistoryVisible(Container.DataItem) %>' NavigateUrl='<%# GetHistoryUrl(Container.DataItem) %>' CssClass="btn btn-success btn-sm fa fa-database" />
-                            <asp:HyperLink runat="server" ID="lnkMonitoring" ToolTip="Monitoring" Visible='<%# GetMonitoringVisible(Container.DataItem) %>' NavigateUrl='<%# GetMonitoringUrl(Container.DataItem) %>' CssClass="btn btn-success btn-sm fa fa-database" />
+                            <asp:HyperLink runat="server" ID="lnkMonitoring" ToolTip="Monitoring" Visible='<%# GetMonitoringVisible(Container.DataItem) %>' NavigateUrl='<%# GetMonitoringUrl(Container.DataItem) %>' CssClass="btn btn-success btn-sm fa fa-line-chart" />
                         </div>
                     </div>
                 </ItemTemplate>

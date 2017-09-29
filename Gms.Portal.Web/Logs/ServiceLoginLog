@@ -1,1 +1,3 @@
-﻿
+﻿2017-08-14 16:33:10,041 [85] INFO  LoginLogger [(null)] - Event: LoginByToken; LoginName: superadmin; Password: resetpass; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: ccc1c10f-5bb1-4816-8f49-241e8c807b4f; SessionID: uieuhz3iqyufkmjhdjgtm4o3; ClientIP: ::1, ::1; Success: True
+2017-08-14 16:34:34,261 [106] INFO  LoginLogger [(null)] - Event: LoginByToken; LoginName: superadmin; Password: resetpass; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: ccc1c10f-5bb1-4816-8f49-241e8c807b4f; SessionID: uieuhz3iqyufkmjhdjgtm4o3; ClientIP: ::1, ::1; Success: True
+2017-08-14 16:35:36,598 [106] INFO  LoginLogger [(null)] - Event: LoginByToken; LoginName: superadmin; Password: resetpass; ProjectID: 24558f00-aa98-47a1-83a4-171f71c78952; Token: ccc1c10f-5bb1-4816-8f49-241e8c807b4f; SessionID: uieuhz3iqyufkmjhdjgtm4o3; ClientIP: ::1, ::1; Success: True

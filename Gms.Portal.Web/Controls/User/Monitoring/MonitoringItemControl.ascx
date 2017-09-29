@@ -7,13 +7,13 @@
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Budget</ce:Label>
     <div class="col-lg-10">
-        <ce:DropDownList runat="server" ID="cbxBudget" DataTextField="Name" DataValueField="ID" Property="{MonitoringItemModel.BudgetID=SelectedValue}" CssClass="chosen-select" />
+        <ce:DropDownList runat="server" ID="cbxTasks" DataTextField="Name" DataValueField="ID" Property="{MonitoringItemModel.TaskID=SelectedValue}" CssClass="chosen-select" />
     </div>
 </div>
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Goal</ce:Label>
     <div class="col-lg-10">
-        <ce:DropDownList runat="server" ID="cbxGoals" DataTextField="Name" DataValueField="ID" Property="{MonitoringItemModel.GoalID=SelectedValue}" CssClass="chosen-select" />
+        <asp:TextBox runat="server" ID="tbxGoal" Property="{MonitoringItemModel.Goal=Text}" CssClass="form-control" />
     </div>
 </div>
 <div class="form-group">

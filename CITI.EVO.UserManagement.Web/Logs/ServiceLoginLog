@@ -1,2 +1,1 @@
-﻿2017-07-06 20:18:12,351 [6] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: 21787f6a-6aa0-4ef0-9067-7baccd2747ce
-2017-07-06 20:18:12,494 [9] INFO  LoginLogger [(null)] - Event: LoginByName; LoginName: superadmin; Password: resetpass; ProjectID: 15e903ec-8bac-4619-aaa2-03c7c12afcea; Token: 21787f6a-6aa0-4ef0-9067-7baccd2747ce; SessionID: qnl1zdreh2gzyjrsa3bg1edc; ClientIP: ::1, ::1; Success: True
+﻿2017-09-18 16:58:21,059 [15] INFO  ServiceLoginLogger [(null)] - Login - LoginName: superadmin, Password: resetpass, ClientIP: ::1, ::1, Token: a5a7709b-063f-4b3b-9430-5cee8cf3335b
