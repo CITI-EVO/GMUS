@@ -14,11 +14,13 @@ namespace CITI.EVO.UserManagement.Web.Models
 
         public String PersonalID { get; set; }
 
+        public String BirthYear { get; set; }
+
         public String FirstName { get; set; }
 
         public String LastName { get; set; }
 
-        public String BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public String Password { get; set; }
 

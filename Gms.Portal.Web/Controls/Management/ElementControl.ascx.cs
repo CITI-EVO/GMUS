@@ -189,6 +189,7 @@ namespace Gms.Portal.Web.Controls.Management
             pnlMask.Visible = false;
             pnlGroupSize.Visible = false;
             pnlDataSource.Visible = false;
+            pnlTotalSize.Visible = false;
             pnlCaptionSize.Visible = false;
             pnlControlSize.Visible = false;
             pnlErrorMessage.Visible = false;
@@ -233,6 +234,7 @@ namespace Gms.Portal.Web.Controls.Management
                 pnlType.Visible = true;
                 pnlMask.Visible = true;
                 pnlOrderIndex.Visible = true;
+                pnlTotalSize.Visible = true;
                 pnlCaptionSize.Visible = true;
                 pnlControlSize.Visible = true;
                 pnlErrorMessage.Visible = true;

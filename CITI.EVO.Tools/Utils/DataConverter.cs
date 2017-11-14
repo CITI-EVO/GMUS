@@ -14,6 +14,8 @@ namespace CITI.EVO.Tools.Utils
         private static readonly NumberFormatInfo invariantNumberFormat = NumberFormatInfo.InvariantInfo;
         private static readonly DateTimeFormatInfo invariantDateFormat = DateTimeFormatInfo.InvariantInfo;
 
+        private static readonly String negativeSign = invariantNumberFormat.NegativeSign;
+        private static readonly int numberNegativePattern = invariantNumberFormat.NumberNegativePattern;
         private static readonly String numberDecimalSeparator = invariantNumberFormat.NumberDecimalSeparator;
 
         private static readonly StringComparer ingnoreCaseComparer = StringComparer.OrdinalIgnoreCase;
@@ -77,15 +79,11 @@ namespace CITI.EVO.Tools.Utils
         public static Object ChangeType(Object value, String typeName)
         {
             if (String.IsNullOrWhiteSpace(typeName))
-            {
                 return value;
-            }
 
             var strValue = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(strValue))
-            {
                 return null;
-            }
 
             typeName = typeName.ToLower();
 
@@ -97,93 +95,65 @@ namespace CITI.EVO.Tools.Utils
                 case "system.boolean":
                     {
                         if (ingnoreCaseComparer.Equals(strValue, "on"))
-                        {
                             strValue = "true";
-                        }
                         else if (ingnoreCaseComparer.Equals(strValue, "off"))
-                        {
                             strValue = "false";
-                        }
 
                         return Convert.ToBoolean(strValue, invariantNumberFormat);
                     }
                 case "byte":
                 case "system.byte":
-                    {
-                        return Convert.ToByte(value, invariantNumberFormat);
-                    }
+                    return Convert.ToByte(value, invariantNumberFormat);
                 case "sbyte":
                 case "system.sbyte":
-                    {
-                        return Convert.ToSByte(value, invariantNumberFormat);
-                    }
+                    return Convert.ToSByte(value, invariantNumberFormat);
                 case "short":
                 case "int16":
                 case "system.short":
                 case "system.int16":
-                    {
-                        return Convert.ToInt16(value, invariantNumberFormat);
-                    }
+                    return Convert.ToInt16(value, invariantNumberFormat);
                 case "ushort":
                 case "uint16":
                 case "system.ushort":
                 case "system.uint16":
-                    {
-                        return Convert.ToUInt16(value, invariantNumberFormat);
-                    }
+                    return Convert.ToUInt16(value, invariantNumberFormat);
                 case "int":
                 case "int32":
                 case "system.int":
                 case "system.int32":
-                    {
-                        return Convert.ToInt32(value, invariantNumberFormat);
-                    }
+                    return Convert.ToInt32(value, invariantNumberFormat);
                 case "uint":
                 case "uint32":
                 case "system.uint":
                 case "system.uint32":
-                    {
-                        return Convert.ToUInt32(value, invariantNumberFormat);
-                    }
+                    return Convert.ToUInt32(value, invariantNumberFormat);
                 case "long":
                 case "int64":
                 case "system.long":
                 case "system.int64":
-                    {
-                        return Convert.ToInt64(value, invariantNumberFormat);
-                    }
+                    return Convert.ToInt64(value, invariantNumberFormat);
                 case "ulong":
                 case "uint64":
                 case "system.ulong":
                 case "system.uint64":
-                    {
-                        return Convert.ToUInt64(value, invariantNumberFormat);
-                    }
+                    return Convert.ToUInt64(value, invariantNumberFormat);
                 case "float":
                 case "single":
                 case "system.float":
                 case "system.single":
-                    {
-                        return Convert.ToSingle(value, invariantNumberFormat);
-                    }
+                    return Convert.ToSingle(value, invariantNumberFormat);
                 case "double":
                 case "system.double":
-                    {
-                        return Convert.ToDouble(value, invariantNumberFormat);
-                    }
+                    return Convert.ToDouble(value, invariantNumberFormat);
                 case "decimal":
                 case "system.decimal":
-                    {
-                        return Convert.ToDecimal(value, invariantNumberFormat);
-                    }
+                    return Convert.ToDecimal(value, invariantNumberFormat);
                 case "datetime":
                 case "system.datetime":
                     {
                         var dateTime = ToNullableDateTime(value);
                         if (dateTime != null)
-                        {
                             return dateTime.Value;
-                        }
 
                         return null;
                     }
@@ -192,9 +162,7 @@ namespace CITI.EVO.Tools.Utils
                     {
                         var timeSpan = ToNullableTimeSpan(value);
                         if (timeSpan != null)
-                        {
                             return timeSpan.Value;
-                        }
 
                         return null;
                     }
@@ -203,16 +171,13 @@ namespace CITI.EVO.Tools.Utils
                     {
                         Guid convertedValue;
                         if (Guid.TryParse(strValue, out convertedValue))
-                        {
                             return convertedValue;
-                        }
+
                         return null;
                     }
                 case "string":
                 case "system.string":
-                    {
-                        return strValue;
-                    }
+                    return strValue;
             }
 
             return value;
@@ -231,9 +196,7 @@ namespace CITI.EVO.Tools.Utils
             result = value;
 
             if (String.IsNullOrWhiteSpace(typeName))
-            {
                 return true;
-            }
 
             var strValue = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(strValue))
@@ -254,13 +217,9 @@ namespace CITI.EVO.Tools.Utils
                 case "system.boolean":
                     {
                         if (ingnoreCaseComparer.Equals(strValue, "on"))
-                        {
                             strValue = "true";
-                        }
                         else if (ingnoreCaseComparer.Equals(strValue, "off"))
-                        {
                             strValue = "false";
-                        }
 
                         bool convertedValue;
                         converted = bool.TryParse(strValue, out convertedValue);
@@ -421,45 +380,33 @@ namespace CITI.EVO.Tools.Utils
         {
             var strValue = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(strValue))
-            {
                 return strValue;
-            }
 
             Guid guid;
             if (Guid.TryParse(strValue, out guid))
-            {
                 return guid;
-            }
 
             String correctDouble;
             if (TryGetCorrectDouble(strValue, out correctDouble))
             {
                 decimal dec;
                 if (decimal.TryParse(correctDouble, NumberStyles.Any, invariantNumberFormat, out dec))
-                {
                     return dec;
-                }
             }
             else
             {
                 long lng;
                 if (long.TryParse(strValue, NumberStyles.Any, invariantNumberFormat, out lng))
-                {
                     return lng;
-                }
 
                 ulong ulng;
                 if (ulong.TryParse(strValue, NumberStyles.Any, invariantNumberFormat, out ulng))
-                {
                     return ulng;
-                }
             }
 
             DateTime dateTime;
             if (TryGetDateTime(strValue, out dateTime))
-            {
                 return dateTime;
-            }
 
             return strValue;
         }
@@ -495,15 +442,11 @@ namespace CITI.EVO.Tools.Utils
         public static Boolean? ToNullableBoolean(Object value)
         {
             if (value is Boolean)
-            {
                 return (Boolean)value;
-            }
 
             Boolean result;
             if (!Boolean.TryParse(Convert.ToString(value), out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -515,15 +458,11 @@ namespace CITI.EVO.Tools.Utils
         public static Byte? ToNullableByte(Object value)
         {
             if (value is Byte)
-            {
                 return (Byte)value;
-            }
 
             Byte result;
             if (!Byte.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -537,15 +476,11 @@ namespace CITI.EVO.Tools.Utils
         {
             var strValue = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(strValue))
-            {
                 throw new InvalidDataException();
-            }
 
             DateTime dateTimeValue;
             if (TryGetDateTime(strValue, out dateTimeValue))
-            {
                 return dateTimeValue;
-            }
 
             throw new InvalidDataException();
         }
@@ -553,15 +488,11 @@ namespace CITI.EVO.Tools.Utils
         {
             var strValue = Convert.ToString(value);
             if (String.IsNullOrWhiteSpace(strValue))
-            {
                 return null;
-            }
 
             DateTime dateTimeValue;
             if (TryGetDateTime(strValue, out dateTimeValue))
-            {
                 return dateTimeValue;
-            }
 
             return null;
         }
@@ -573,18 +504,14 @@ namespace CITI.EVO.Tools.Utils
         public static Decimal? ToNullableDecimal(Object value)
         {
             if (value is Decimal)
-            {
                 return (Decimal)value;
-            }
 
             String correctDouble;
             if (TryGetCorrectDouble(Convert.ToString(value), out correctDouble))
             {
                 decimal dec;
                 if (decimal.TryParse(correctDouble, NumberStyles.Any, invariantNumberFormat, out dec))
-                {
                     return dec;
-                }
             }
 
             return null;
@@ -597,18 +524,14 @@ namespace CITI.EVO.Tools.Utils
         public static Double? ToNullableDouble(Object value)
         {
             if (value is Double)
-            {
                 return (Double)value;
-            }
 
             String correctDouble;
             if (TryGetCorrectDouble(Convert.ToString(value), out correctDouble))
             {
                 Double dec;
                 if (Double.TryParse(correctDouble, NumberStyles.Any, invariantNumberFormat, out dec))
-                {
                     return dec;
-                }
             }
 
             return null;
@@ -630,15 +553,11 @@ namespace CITI.EVO.Tools.Utils
         public static Int16? ToNullableInt16(Object value)
         {
             if (value is Int16)
-            {
                 return (Int16)value;
-            }
 
             Int16 result;
             if (!Int16.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -659,15 +578,11 @@ namespace CITI.EVO.Tools.Utils
         public static Int32? ToNullableInt32(Object value)
         {
             if (value is Int32)
-            {
                 return (Int32)value;
-            }
 
             Int32 result;
             if (!Int32.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -688,15 +603,11 @@ namespace CITI.EVO.Tools.Utils
         public static Int64? ToNullableInt64(Object value)
         {
             if (value is Int64)
-            {
                 return (Int64)value;
-            }
 
             Int64 result;
             if (!Int64.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -708,15 +619,11 @@ namespace CITI.EVO.Tools.Utils
         public static SByte? ToNullableSByte(Object value)
         {
             if (value is SByte)
-            {
                 return (SByte)value;
-            }
 
             SByte result;
             if (!SByte.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -737,18 +644,14 @@ namespace CITI.EVO.Tools.Utils
         public static Single? ToNullableSingle(Object value)
         {
             if (value is Single)
-            {
                 return (Single)value;
-            }
 
             String correctDouble;
             if (TryGetCorrectDouble(Convert.ToString(value), out correctDouble))
             {
                 Single dec;
                 if (Single.TryParse(correctDouble, NumberStyles.Any, invariantNumberFormat, out dec))
-                {
                     return dec;
-                }
             }
 
             return null;
@@ -775,15 +678,11 @@ namespace CITI.EVO.Tools.Utils
         public static UInt16? ToNullableUInt16(Object value)
         {
             if (value is UInt16)
-            {
                 return (UInt16)value;
-            }
 
             UInt16 result;
             if (!UInt16.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -804,15 +703,11 @@ namespace CITI.EVO.Tools.Utils
         public static UInt32? ToNullableUInt32(Object value)
         {
             if (value is UInt32)
-            {
                 return (UInt32)value;
-            }
 
             UInt32 result;
             if (!UInt32.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -832,11 +727,12 @@ namespace CITI.EVO.Tools.Utils
         }
         public static UInt64? ToNullableUInt64(Object value)
         {
+            if (value is UInt64)
+                return (UInt64)value;
+
             UInt64 result;
             if (!UInt64.TryParse(Convert.ToString(value), NumberStyles.Any, invariantNumberFormat, out result))
-            {
                 return null;
-            }
 
             return result;
         }
@@ -849,17 +745,13 @@ namespace CITI.EVO.Tools.Utils
         public static Guid? ToNullableGuid(Object value)
         {
             if (value is Guid)
-            {
                 return (Guid)value;
-            }
 
             var strValue = Convert.ToString(value);
 
             Guid guid;
             if (Guid.TryParse(strValue, out guid))
-            {
                 return guid;
-            }
 
             return null;
         }
@@ -867,9 +759,7 @@ namespace CITI.EVO.Tools.Utils
         public static BigInteger ToBigInteger(Object value)
         {
             if (value is BigInteger)
-            {
                 return (BigInteger)value;
-            }
 
             var strValue = Convert.ToString(value);
             return BigInteger.Parse(strValue);
@@ -877,17 +767,13 @@ namespace CITI.EVO.Tools.Utils
         public static BigInteger? ToNullableBigInteger(Object value)
         {
             if (value is BigInteger)
-            {
                 return (BigInteger)value;
-            }
 
             var strValue = Convert.ToString(value);
 
             BigInteger bigInteger;
             if (BigInteger.TryParse(strValue, out bigInteger))
-            {
                 return bigInteger;
-            }
 
             return null;
         }
@@ -895,9 +781,7 @@ namespace CITI.EVO.Tools.Utils
         public static TimeSpan ToTimeSpan(Object value)
         {
             if (value is TimeSpan)
-            {
                 return (TimeSpan)value;
-            }
 
             var strValue = Convert.ToString(value);
             return TimeSpan.Parse(strValue);
@@ -905,17 +789,13 @@ namespace CITI.EVO.Tools.Utils
         public static TimeSpan? ToNullableTimeSpan(Object value)
         {
             if (value is TimeSpan)
-            {
                 return (TimeSpan)value;
-            }
 
             var strValue = Convert.ToString(value);
 
             TimeSpan timeSpan;
             if (TimeSpan.TryParse(strValue, out timeSpan))
-            {
                 return timeSpan;
-            }
 
             return null;
         }
@@ -935,11 +815,12 @@ namespace CITI.EVO.Tools.Utils
         }
         public static TEnum? ToNullableEnum<TEnum>(Object value, bool ignoreCase) where TEnum : struct, IConvertible
         {
+            if (value is TEnum)
+                return (TEnum)value;
+
             TEnum result;
             if (Enum.TryParse(Convert.ToString(value), ignoreCase, out result))
-            {
                 return result;
-            }
 
             return null;
         }
@@ -950,9 +831,7 @@ namespace CITI.EVO.Tools.Utils
             for (var date = startDate; date < endDate; date = date.AddDays(1))
             {
                 if (holidays.Contains(date.DayOfWeek))
-                {
                     continue;
-                }
 
                 daysCount++;
             }
@@ -963,16 +842,15 @@ namespace CITI.EVO.Tools.Utils
         public static int GetBusinessDays(DateTime startDate, DateTime endDate, bool excludeWeekends, List<DateTime> excludeDates)
         {
             var count = 0;
+
             for (var index = startDate; index <= endDate; index = index.AddDays(1))
             {
                 if (excludeWeekends && (index.DayOfWeek == DayOfWeek.Sunday || index.DayOfWeek == DayOfWeek.Saturday))
                     continue;
-                var excluded = excludeDates.Any(t => index.Date.CompareTo(t.Date) == 0);
 
+                var excluded = excludeDates.Any(t => index.Date.CompareTo(t.Date) == 0);
                 if (!excluded)
-                {
                     count++;
-                }
             }
 
             return count;
@@ -990,11 +868,8 @@ namespace CITI.EVO.Tools.Utils
                     continue;
 
                 var excluded = excludeDates.Any(t => index.Date.CompareTo(t.Date) == 0);
-
                 if (!excluded)
-                {
                     count++;
-                }
 
                 index = index.AddDays(increment);
             }
@@ -1021,15 +896,33 @@ namespace CITI.EVO.Tools.Utils
         private static bool TryGetCorrectDouble(String text, out String result)
         {
             result = null;
+            text = (text ?? String.Empty).Trim();
 
             var separator = false;
-            var sb = new StringBuilder(text.Length);
+            var oneSpace = false;
+            var negSign = false;
+
+            var sb = new StringBuilder(text.Length + 2);
 
             for (int i = 0; i < text.Length; i++)
             {
                 var @char = text[i];
 
-                if (char.IsDigit(@char))
+                if (@char == ' ')
+                {
+                    if (oneSpace)
+                        return false;
+
+                    oneSpace = true;
+                }
+                else if (@char == '-' && (i == 0 || i == text.Length - 1))
+                {
+                    if (negSign)
+                        return false;
+
+                    negSign = true;
+                }
+                else if (char.IsDigit(@char))
                 {
                     sb.Append(@char);
                 }
@@ -1044,6 +937,29 @@ namespace CITI.EVO.Tools.Utils
                 else
                 {
                     break;
+                }
+            }
+
+            if (negSign)
+            {
+                switch (numberNegativePattern)
+                {
+                    case 0:
+                        sb.Insert(0, '(');
+                        sb.Append(')');
+                        break;
+                    case 1:
+                        sb.Insert(0, '-');
+                        break;
+                    case 2:
+                        sb.Insert(0, "- ");
+                        break;
+                    case 3:
+                        sb.Append("-");
+                        break;
+                    case 4:
+                        sb.Append(" -");
+                        break;
                 }
             }
 
@@ -1067,9 +983,8 @@ namespace CITI.EVO.Tools.Utils
         public static String MoneyToString(decimal? amount)
         {
             if (amount == null)
-            {
                 return String.Empty;
-            }
+
             return ((decimal)amount).ToString("F2", CultureInfo.InvariantCulture);
         }
     }

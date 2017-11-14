@@ -39,6 +39,8 @@ namespace Gms.Portal.Web.Controls.Management
             FillElementsTree();
             FillCategoreisList();
             FillTemplatesGrid();
+            FillMonitoringPrintGrid();
+            FillMonitoringFlewGrid();
         }
 
         protected void Page_PreRender(object sender, EventArgs e)
@@ -143,6 +145,7 @@ namespace Gms.Portal.Web.Controls.Management
                 entity.Mandatory = model.Mandatory;
                 entity.Parameters = model.Parameters;
                 entity.Description = model.Description;
+                entity.TotalSize = model.TotalSize;
                 entity.CaptionSize = model.CaptionSize;
                 entity.ControlSize = model.ControlSize;
                 entity.ErrorMessage = model.ErrorMessage;
@@ -347,6 +350,8 @@ namespace Gms.Portal.Web.Controls.Management
                 model.Mandatory = fieldEntity.Mandatory.GetValueOrDefault();
                 model.Inversion = fieldEntity.Inversion.GetValueOrDefault();
                 model.Parameters = fieldEntity.Parameters;
+                model.TotalSize = fieldEntity.TotalSize;
+                model.TotalSize = fieldEntity.TotalSize;
                 model.CaptionSize = fieldEntity.CaptionSize;
                 model.ControlSize = fieldEntity.ControlSize;
                 model.ControlType = fieldEntity.Type;
@@ -704,6 +709,191 @@ namespace Gms.Portal.Web.Controls.Management
             formEntity.Templates.RemoveAll(n => n.ID == itemID);
         }
 
+        protected void btnNewMonitoringFieldNew_OnClick(object sender, EventArgs e)
+        {
+            var model = new MonitoringPrintFieldsModel
+            {
+                FormID = FormEntity.ID,
+            };
+
+            monitoringPrintFieldControl.Model = model;
+            monitoringPrintFieldControl.DataBind();
+
+            mpeMonitoringFields.Show();
+        }
+        protected void btnEditMonitoringPrintField_OnCommand(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID == null)
+                return;
+
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null || formEntity.Monitoring.PrintFields == null)
+                return;
+
+            var print = formEntity.Monitoring.PrintFields.FirstOrDefault(n => n.ID == itemID);
+            if (print == null)
+                return;
+
+            var model = new MonitoringPrintFieldsModel
+            {
+                ID = print.ID,
+                Name = print.Name,
+                Template = print.Template,
+                PrintType = print.PrintType,
+                IsLendscape = print.IsLendscape,
+                FormID = FormEntity.ID,
+                BudgetForm = print.BudgetForm,
+                SummaryBudgetForm = print.SummaryBudgetForm,
+                ProjectsForm = print.ProjectsForm
+            };
+
+            monitoringPrintFieldControl.Model = model;
+            monitoringPrintFieldControl.DataBind();
+
+            mpeMonitoringFields.Show();
+        }
+        protected void btnDeleteMonitoringPrintField_OnCommand(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID == null)
+                return;
+
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null || formEntity.Monitoring.PrintFields == null)
+                return;
+
+            formEntity.Monitoring.PrintFields.RemoveAll(n => n.ID == itemID);
+            FillMonitoringPrintGrid();
+        }
+        protected void btnMonitoringFieldCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeMonitoringFields.Hide();
+        }
+        protected void btnMonitoringFieldOk_OnClick(object sender, EventArgs e)
+        {
+            var formEntity = FormEntity;
+            if (formEntity == null)
+                return;
+
+            formEntity.Monitoring = (formEntity.Monitoring ?? new MonitoringEntity());
+            formEntity.Monitoring.PrintFields = (formEntity.Monitoring.PrintFields ?? new List<MonitoringPrintFieldEntity>());
+
+            var model = monitoringPrintFieldControl.Model;
+
+            var template = formEntity.Monitoring.PrintFields.FirstOrDefault(n => n.ID == model.ID);
+            if (template == null)
+            {
+                template = new MonitoringPrintFieldEntity
+                {
+                    ID = Guid.NewGuid()
+                };
+
+                formEntity.Monitoring.PrintFields.Add(template);
+            }
+
+            template.Name = model.Name;
+            template.Template = model.Template;
+            template.IsLendscape = model.IsLendscape;
+            template.PrintType = model.PrintType;
+            template.FormID = formEntity.ID;
+            template.BudgetForm = model.BudgetForm;
+            template.SummaryBudgetForm = model.SummaryBudgetForm;
+            template.ProjectsForm = model.ProjectsForm;
+
+            mpeMonitoringFields.Hide();
+
+            FillMonitoringPrintGrid();
+        }
+        protected void monitoringPrintFieldControl_OnDataChanged(object sender, EventArgs e)
+        {
+            mpeMonitoringFields.Show();
+        }
+
+        protected void btnNewMonitoringFlaw_OnClick(object sender, EventArgs e)
+        {
+            var model = new MonitoringFlawModel();
+
+            monitoringFlawControl.Model = model;
+            monitoringFlawControl.DataBind();
+
+            mpeMonitoringFlaw.Show();
+        }
+        protected void btnEditMonitoringFlaw_OnCommand(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID == null)
+                return;
+
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null || formEntity.Monitoring.Flews == null)
+                return;
+
+            var print = formEntity.Monitoring.Flews.FirstOrDefault(n => n.ID == itemID);
+            if (print == null)
+                return;
+
+            var model = new MonitoringFlawModel
+            {
+                ID = print.ID,
+                Name = print.Name,
+                Type = print.Type,
+                Score = print.Score,
+            };
+
+            monitoringFlawControl.Model = model;
+            monitoringFlawControl.DataBind();
+
+            mpeMonitoringFlaw.Show();
+        }
+        protected void btnDeleteMonitoringFlaw_OnCommand(object sender, CommandEventArgs e)
+        {
+            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
+            if (itemID == null)
+                return;
+
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null || formEntity.Monitoring.Flews == null)
+                return;
+
+            formEntity.Monitoring.Flews.RemoveAll(n => n.ID == itemID);
+            FillMonitoringFlewGrid();
+        }
+        protected void btnMonitoringFlawOk_OnClick(object sender, EventArgs e)
+        {
+            var formEntity = FormEntity;
+            if (formEntity == null)
+                return;
+
+            formEntity.Monitoring = (formEntity.Monitoring ?? new MonitoringEntity());
+            formEntity.Monitoring.Flews = (formEntity.Monitoring.Flews ?? new List<MonitoringFlewEntity>());
+
+            var model = monitoringFlawControl.Model;
+
+            var flew = formEntity.Monitoring.Flews.FirstOrDefault(n => n.ID == model.ID);
+            if (flew == null)
+            {
+                flew = new MonitoringFlewEntity
+                {
+                    ID = Guid.NewGuid(),
+                };
+
+                formEntity.Monitoring.Flews.Add(flew);
+            }
+
+            flew.Name = model.Name;
+            flew.Score = model.Score;
+            flew.Type = model.Type;
+
+            mpeMonitoringFlaw.Hide();
+
+            FillMonitoringFlewGrid();
+        }
+        protected void btnMonitoringFlawCancel_OnClick(object sender, EventArgs e)
+        {
+            mpeMonitoringFlaw.Hide();
+        }
+
         protected void btnPrintTemplateOK_OnClick(object sender, EventArgs e)
         {
             var formEntity = FormEntity;
@@ -780,10 +970,11 @@ namespace Gms.Portal.Web.Controls.Management
             {
                 entity.Name = model.Name;
                 entity.Visible = model.Visible.GetValueOrDefault();
-                entity.VisibleExpression = model.VisibleExpression;
                 entity.OrderIndex = model.OrderIndex.GetValueOrDefault();
+                entity.DefaultFilters = chkDefaultFilters.Checked;
+                entity.VisibleExpression = model.VisibleExpression;
 
-                entity.Rating = entity.Rating ?? new RatingEntity();
+                entity.Rating = (entity.Rating ?? new RatingEntity());
                 entity.Rating.MailTemplate = tbxMailTemplate.Text;
                 entity.Rating.PrintTemplate = tbxPrintTemplate.Text;
                 entity.Rating.SelectorExpression = tbxSelectorExpression.Text;
@@ -797,12 +988,17 @@ namespace Gms.Portal.Web.Controls.Management
         {
             FormEntity = model.Entity;
 
-            if (FormEntity != null && FormEntity.Rating != null)
+            if (FormEntity != null)
             {
-                tbxMailTemplate.Text = FormEntity.Rating.MailTemplate;
-                tbxPrintTemplate.Text = FormEntity.Rating.PrintTemplate;
-                tbxSummaryExpression.Text = FormEntity.Rating.SummaryExpression;
-                tbxSelectorExpression.Text = FormEntity.Rating.SelectorExpression;
+                chkDefaultFilters.Checked = FormEntity.DefaultFilters.GetValueOrDefault();
+
+                if (FormEntity.Rating != null)
+                {
+                    tbxMailTemplate.Text = FormEntity.Rating.MailTemplate;
+                    tbxPrintTemplate.Text = FormEntity.Rating.PrintTemplate;
+                    tbxSummaryExpression.Text = FormEntity.Rating.SummaryExpression;
+                    tbxSelectorExpression.Text = FormEntity.Rating.SelectorExpression;
+                }
             }
 
             base.SetModel(model);
@@ -839,6 +1035,26 @@ namespace Gms.Portal.Web.Controls.Management
 
             gvTemplates.DataSource = formEntity.Templates;
             gvTemplates.DataBind();
+        }
+
+        protected void FillMonitoringPrintGrid()
+        {
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null)
+                return;
+
+            gvMonitoringPrint.DataSource = formEntity.Monitoring.PrintFields;
+            gvMonitoringPrint.DataBind();
+        }
+
+        protected void FillMonitoringFlewGrid()
+        {
+            var formEntity = FormEntity;
+            if (formEntity == null || formEntity.Monitoring == null)
+                return;
+
+            gvMonitoringFlaws.DataSource = formEntity.Monitoring.Flews;
+            gvMonitoringFlaws.DataBind();
         }
 
         protected void FillRatesTree()
@@ -1083,6 +1299,7 @@ namespace Gms.Portal.Web.Controls.Management
             var parent = list.FirstOrDefault(n => n.ID == child.ParentID);
             return new ParentChildEntity<ElementTreeNodeEntity>(parent, child);
         }
+
 
 
     }

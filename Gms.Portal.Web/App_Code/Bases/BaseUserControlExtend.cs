@@ -66,5 +66,11 @@ namespace Gms.Portal.Web.Bases
             if (itemID != null)
                 OnDelete(new GenericEventArgs<Guid>(itemID.Value));
         }
+
+        protected string GetCheckStatus(object eval)
+        {
+            var @checked = DataConverter.ToNullableBoolean(eval);
+            return @checked.GetValueOrDefault() ? "კი" : "არა";
+        }
     }
 }

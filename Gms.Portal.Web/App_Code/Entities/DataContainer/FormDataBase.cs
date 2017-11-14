@@ -8,41 +8,47 @@ namespace Gms.Portal.Web.Entities.DataContainer
 {
     public class FormDataBase : IDictionary<String, Object>
     {
+        private static readonly String[] _defaultFieldsArr =
+        {
+            FormDataConstants.IDField,
+            FormDataConstants.DocIDField,
+            FormDataConstants.FormIDField,
+            FormDataConstants.UserIDField,
+            FormDataConstants.OwnerIDField,
+            FormDataConstants.IDNumberField,
+            FormDataConstants.StatusIDField,
+            FormDataConstants.ParentIDField,
+            FormDataConstants.PreviousIDField,
+            FormDataConstants.ContainerIDField,
+            FormDataConstants.ParentVersionField,
+
+            FormDataConstants.VersionField,
+            FormDataConstants.HashCodeField,
+
+            FormDataConstants.ReviewFields,
+            FormDataConstants.PrivacyFields,
+            FormDataConstants.DescriptionField,
+
+            FormDataConstants.DateOfStatusField,
+
+            FormDataConstants.DateCreatedField,
+            FormDataConstants.DateChangedField,
+            FormDataConstants.DateDeletedField,
+
+            FormDataConstants.DateOfAcceptField,
+            FormDataConstants.DateOfSubmitField,
+            FormDataConstants.DateOfAssigneField,
+
+            FormDataConstants.ChangesRequiresAcceptField
+        };
+
         private static ISet<String> _defaultFields;
         public static ISet<String> DefaultFields
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                if (_defaultFields == null)
-                {
-                    _defaultFields = new HashSet<String>(new[]
-                    {
-                        FormDataConstants.IDField,
-                        FormDataConstants.DocIDField,
-                        FormDataConstants.FormIDField,
-                        FormDataConstants.UserIDField,
-                        FormDataConstants.OwnerIDField,
-                        FormDataConstants.IDNumberField,
-                        FormDataConstants.StatusIDField,
-                        FormDataConstants.ParentIDField,
-                        FormDataConstants.PreviousIDField,
-                        FormDataConstants.ContainerIDField,
-
-                        FormDataConstants.HashCodeField,
-
-                        FormDataConstants.ReviewFields,
-                        FormDataConstants.PrivacyFields,
-                        FormDataConstants.DescriptionField,
-
-                        FormDataConstants.DateOfStatusField,
-
-                        FormDataConstants.DateCreatedField,
-                        FormDataConstants.DateChangedField,
-                        FormDataConstants.DateDeletedField,
-                    });
-                }
-
+                _defaultFields = (_defaultFields ?? new HashSet<String>(_defaultFieldsArr));
                 return _defaultFields;
             }
         }

@@ -56,83 +56,76 @@ namespace CITI.EVO.Tools.ExpressionEngine
             return result;
         }
 
-        public static bool TryEval(String expression, out Object result)
+        public static ExpressionResult TryEval(String expression)
         {
-            try
-            {
-                result = Eval(expression);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                result = null;
-                return false;
-            }
-        }
-        public static bool TryEval(String expression, Func<String, Object> varResolver, out Object result)
-        {
-            var advResolver = new AdvancedDataResolver(varResolver);
-            return TryEval(expression, advResolver, out result);
-        }
-        public static bool TryEval(String expression, IDataResolver dataResolver, out Object result)
-        {
-            try
-            {
-                result = Eval(expression, dataResolver);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                result = null;
-                return false;
-            }
-        }
+            var result = new ExpressionResult();
 
-        public static bool TryEval(ExpressionNode node, out Object result)
-        {
             try
             {
-                result = Eval(node);
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                result = null;
-
-                return false;
-            }
-        }
-        public static bool TryEval(ExpressionNode node, Func<String, Object> varResolver, out Object result)
-        {
-            var advResolver = new AdvancedDataResolver(varResolver);
-            return TryEval(node, advResolver, out result);
-        }
-        public static bool TryEval(ExpressionNode node, IDataResolver dataResolver, out Object result)
-        {
-            try
-            {
-                result = Eval(node, dataResolver);
-                return true;
+                result.Value = Eval(expression);
             }
             catch (Exception ex)
             {
-                var logger = LogUtil.GetLogger("ExpressionLogger");
-                if (logger != null)
-                {
-                    var message = String.Empty;
-                    if (node != null)
-                        message = node.ToString();
-
-                    logger.Error(message, ex);
-                }
-
-                result = null;
-
-                return false;
+                result.Error = ex;
             }
+
+            return result;
+        }
+        public static ExpressionResult TryEval(String expression, Func<String, Object> varResolver)
+        {
+            var advResolver = new AdvancedDataResolver(varResolver);
+            return TryEval(expression, advResolver);
+        }
+        public static ExpressionResult TryEval(String expression, IDataResolver dataResolver)
+        {
+            var result = new ExpressionResult();
+
+            try
+            {
+                result.Value = Eval(expression, dataResolver);
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex;
+            }
+
+            return result;
+        }
+
+        public static ExpressionResult TryEval(ExpressionNode node)
+        {
+            var result = new ExpressionResult();
+
+            try
+            {
+                result.Value = Eval(node);
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex;
+            }
+
+            return result;
+        }
+        public static ExpressionResult TryEval(ExpressionNode node, Func<String, Object> varResolver)
+        {
+            var advResolver = new AdvancedDataResolver(varResolver);
+            return TryEval(node, advResolver);
+        }
+        public static ExpressionResult TryEval(ExpressionNode node, IDataResolver dataResolver)
+        {
+            var result = new ExpressionResult();
+
+            try
+            {
+                result.Value = Eval(node, dataResolver);
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex;
+            }
+
+            return result;
         }
 
         private static Object IntenalEval(ExpressionNode node, IDataResolver dataResolver)

@@ -16,15 +16,15 @@ namespace CITI.EVO.Tools.Web.UI.Helpers
             _type = typeof(IDictionary<String, Object>);
             _collection = collection;
 
-            var descriptorsList = new List<PropertyDescriptor>();
+            var descriptorIndex = 0;
+            var descriptorsArray = new PropertyDescriptor[fields.Count];
 
             foreach (var key in fields)
             {
                 var descriptor = new DictionaryItemPropertyDescriptor(key);
-                descriptorsList.Add(descriptor);
+                descriptorsArray[descriptorIndex++] = descriptor;
             }
 
-            var descriptorsArray = descriptorsList.ToArray();
             _propertyDescriptors = new PropertyDescriptorCollection(descriptorsArray, true);
         }
 

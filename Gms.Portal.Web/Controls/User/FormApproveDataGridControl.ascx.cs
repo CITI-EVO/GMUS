@@ -143,9 +143,9 @@ namespace Gms.Portal.Web.Controls.User
             {
                 var expNode = ExpressionParser.GetOrParse(model.VisibleExpression);
 
-                Object eval;
-                if (ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))
-                    AllowStatusChange = DataConverter.ToNullableBoolean(eval);
+                var result = ExpressionEvaluator.TryEval(expNode, expGlobals.Eval);
+                if (result.Error == null)
+                    AllowStatusChange = DataConverter.ToNullableBoolean(result.Value);
             }
 
             var columnsLp = gvData.Columns.OfType<DataControlField>().ToLookup(n => n.HeaderText);

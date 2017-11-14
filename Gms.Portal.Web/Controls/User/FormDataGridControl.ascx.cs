@@ -24,20 +24,6 @@ namespace Gms.Portal.Web.Controls.User
 {
     public partial class FormDataGridControl : BaseUserControl
     {
-        public event EventHandler<GenericEventArgs<Guid>> View;
-        protected virtual void OnView(GenericEventArgs<Guid> e)
-        {
-            if (View != null)
-                View(this, e);
-        }
-
-        public event EventHandler<GenericEventArgs<Guid>> Edit;
-        protected virtual void OnEdit(GenericEventArgs<Guid> e)
-        {
-            if (Edit != null)
-                Edit(this, e);
-        }
-
         public event EventHandler<GenericEventArgs<Guid>> Delete;
         protected virtual void OnDelete(GenericEventArgs<Guid> e)
         {
@@ -52,32 +38,25 @@ namespace Gms.Portal.Web.Controls.User
                 Status(this, e);
         }
 
-        public event EventHandler<GenericEventArgs<Guid>> Review;
-        protected virtual void OnReview(GenericEventArgs<Guid> e)
-        {
-            if (Review != null)
-                Review(this, e);
-        }
-
-        public event EventHandler<GenericEventArgs<Guid>> Inspect;
-        protected virtual void OnInspect(GenericEventArgs<Guid> e)
-        {
-            if (Inspect != null)
-                Inspect(this, e);
-        }
-
-        public event EventHandler<GenericEventArgs<Guid>> Assigne;
-        protected virtual void OnAssigne(GenericEventArgs<Guid> e)
-        {
-            if (Assigne != null)
-                Assigne(this, e);
-        }
-
         public event EventHandler<GenericEventArgs<Guid>> Print;
         protected virtual void OnPrint(GenericEventArgs<Guid> e)
         {
             if (Print != null)
                 Print(this, e);
+        }
+
+        public event EventHandler<GenericEventArgs<Guid>> AcceptChanges;
+        protected virtual void OnAcceptChanges(GenericEventArgs<Guid> e)
+        {
+            if (AcceptChanges != null)
+                AcceptChanges(this, e);
+        }
+
+        public event EventHandler<GenericEventArgs<Guid>> RestoreChanges;
+        protected virtual void OnRestoreChanges(GenericEventArgs<Guid> e)
+        {
+            if (RestoreChanges != null)
+                RestoreChanges(this, e);
         }
 
         private GM_Form _dbForm;
@@ -86,18 +65,18 @@ namespace Gms.Portal.Web.Controls.User
         {
         }
 
-        protected void btnView_OnCommand(object sender, CommandEventArgs e)
+        protected void btnAcceptChanges_OnCommand(object sender, CommandEventArgs e)
         {
             var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
             if (itemID != null)
-                OnView(new GenericEventArgs<Guid>(itemID.Value));
+                OnAcceptChanges(new GenericEventArgs<Guid>(itemID.Value));
         }
 
-        protected void btnEdit_OnCommand(object sender, CommandEventArgs e)
+        protected void btnRestoreChanges_OnCommand(object sender, CommandEventArgs e)
         {
             var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
             if (itemID != null)
-                OnEdit(new GenericEventArgs<Guid>(itemID.Value));
+                OnRestoreChanges(new GenericEventArgs<Guid>(itemID.Value));
         }
 
         protected void btnDelete_OnCommand(object sender, CommandEventArgs e)
@@ -112,27 +91,6 @@ namespace Gms.Portal.Web.Controls.User
             var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
             if (itemID != null)
                 OnStatus(new GenericEventArgs<Guid>(itemID.Value));
-        }
-
-        protected void btnReview_OnCommand(object sender, CommandEventArgs e)
-        {
-            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (itemID != null)
-                OnReview(new GenericEventArgs<Guid>(itemID.Value));
-        }
-
-        protected void btnInspect_OnCommand(object sender, CommandEventArgs e)
-        {
-            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (itemID != null)
-                OnInspect(new GenericEventArgs<Guid>(itemID.Value));
-        }
-
-        protected void btnAssigne_OnCommand(object sender, CommandEventArgs e)
-        {
-            var itemID = DataConverter.ToNullableGuid(e.CommandArgument);
-            if (itemID != null)
-                OnAssigne(new GenericEventArgs<Guid>(itemID.Value));
         }
 
         protected void btnPrint_OnCommand(object sender, CommandEventArgs e)
@@ -186,8 +144,8 @@ namespace Gms.Portal.Web.Controls.User
             var controls = FormStructureUtil.InOrderFirstLevelTraversal(entity);
 
             var list = (from n in controls.OfType<FieldEntity>()
-                where n.Visible && n.DisplayOnGrid == "Always"
-                select n).ToList();
+                        where n.Visible && n.DisplayOnGrid == "Always"
+                        select n).ToList();
 
             var columns = gvData.Columns;
 
@@ -277,7 +235,7 @@ namespace Gms.Portal.Web.Controls.User
 
         protected bool GetEditVisible(object dataItem)
         {
-            if (UmUtil.Instance.CurrentUser.IsSuperAdmin)
+            if (UserUtil.IsSuperAdmin() || UmUtil.Instance.HasAccess("RecordEdit"))
                 return true;
 
             var descriptor = dataItem as DictionaryItemDescriptor;
@@ -292,7 +250,10 @@ namespace Gms.Portal.Web.Controls.User
             if (statusID == null)
                 return false;
 
-            return (statusID == DataStatusCache.None.ID);
+            if (statusID == DataStatusCache.None.ID || statusID == DataStatusCache.Winner.ID)
+                return true;
+
+            return false;
         }
 
         protected bool GetPrintVisible(object dataItem)
@@ -302,7 +263,7 @@ namespace Gms.Portal.Web.Controls.User
 
         protected bool GetDeleteVisible(object dataItem)
         {
-            if (UmUtil.Instance.CurrentUser.IsSuperAdmin)
+            if (UserUtil.IsSuperAdmin() || UmUtil.Instance.HasAccess("RecordDelete"))
                 return true;
 
             var descriptor = dataItem as DictionaryItemDescriptor;
@@ -350,9 +311,12 @@ namespace Gms.Portal.Web.Controls.User
             if (statusID == null)
                 return false;
 
-            if (statusID == DataStatusCache.Submit.ID)
+            if (statusID == DataStatusCache.Winner.ID ||
+                statusID == DataStatusCache.Submit.ID ||
+                statusID == DataStatusCache.Accepted.ID ||
+                statusID == DataStatusCache.Rejected.ID)
             {
-                if (UmUtil.Instance.HasAccess("Admin"))
+                if (UmUtil.Instance.HasAccess("Admin") || UmUtil.Instance.HasAccess("RecordInspect"))
                     return true;
             }
 
@@ -372,7 +336,7 @@ namespace Gms.Portal.Web.Controls.User
             if (statusID == DataStatusCache.None.ID)
                 return false;
 
-            return UserUtil.IsSuperAdmin();
+            return UmUtil.Instance.HasAccess("Admin");
         }
 
         protected bool GetHistoryVisible(object dataItem)
@@ -385,7 +349,44 @@ namespace Gms.Portal.Web.Controls.User
             if (_dbForm == null || _dbForm.FormType != "Standard")
                 return false;
 
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return false;
+
+            var statusID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.StatusIDField));
+            if (statusID == null)
+                return false;
+
+            if (statusID != DataStatusCache.Winner.ID)
+                return false;
+
             return UmUtil.Instance.HasAccess("Monitoring");
+        }
+
+        protected bool GetAcceptChangesVisible(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return false;
+
+            if (!UmUtil.Instance.HasAccess("Admin") && !UmUtil.Instance.HasAccess("MonitoringStatus"))
+                return false;
+
+            var @bool = DataConverter.ToNullableBool(descriptor.GetValue(FormDataConstants.ChangesRequiresAcceptField));
+            return @bool.GetValueOrDefault();
+        }
+
+        protected bool GetRestoreChangesVisible(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return false;
+
+            if (!UmUtil.Instance.HasAccess("Admin") && !UmUtil.Instance.HasAccess("MonitoringStatus"))
+                return false;
+
+            var @bool = DataConverter.ToNullableBool(descriptor.GetValue(FormDataConstants.ChangesRequiresAcceptField));
+            return @bool.GetValueOrDefault();
         }
 
         protected String GetStatusName(object eval)
@@ -545,6 +546,70 @@ namespace Gms.Portal.Web.Controls.User
             return urlHelper.ToEncodedUrl();
         }
 
+        protected String GetReviewUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var parentID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.ParentIDField));
+
+            var ownerID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.OwnerIDField));
+            if (ownerID == null)
+                ownerID = formID;
+
+            if (formID == null || recordID == null)
+                return null;
+
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Review),
+                ["FormID"] = formID,
+                ["OwnerID"] = ownerID,
+                ["RecordID"] = recordID,
+                ["ParentID"] = parentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
+        protected String GetInspectUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var parentID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.ParentIDField));
+
+            var ownerID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.OwnerIDField));
+            if (ownerID == null)
+                ownerID = formID;
+
+            if (formID == null || recordID == null)
+                return null;
+
+            var returnUrl = RequestUrl.ToEncodedUrl();
+
+            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            {
+                ["Mode"] = Convert.ToString(FormMode.Inspect),
+                ["FormID"] = formID,
+                ["OwnerID"] = ownerID,
+                ["RecordID"] = recordID,
+                ["ParentID"] = parentID,
+                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
         protected String GetHistoryUrl(object dataItem)
         {
             var descriptor = dataItem as DictionaryItemDescriptor;
@@ -556,6 +621,26 @@ namespace Gms.Portal.Web.Controls.User
             var urlHelper = new UrlHelper("~/Pages/User/RecordHistory.aspx")
             {
                 ["RecordID"] = recordID,
+            };
+
+            return urlHelper.ToEncodedUrl();
+        }
+
+        protected String GetAssigneUrl(object dataItem)
+        {
+            var descriptor = dataItem as DictionaryItemDescriptor;
+            if (descriptor == null)
+                return null;
+
+            var recordID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.IDField));
+            var formID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.FormIDField));
+            var userID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.UserIDField));
+
+            var urlHelper = new UrlHelper("~/Pages/User/AssigneExperts.aspx")
+            {
+                ["FormID"] = formID,
+                ["RecordID"] = recordID,
+                ["UserID"] = userID
             };
 
             return urlHelper.ToEncodedUrl();

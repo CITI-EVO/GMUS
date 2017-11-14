@@ -149,7 +149,7 @@ namespace Gms.Portal.Web.Controls.User
 
             var userStatuses = descriptor.GetValue("UserStatusesFields") as IEnumerable<FormStatusUnit>;
             if (userStatuses == null)
-                return true;
+                return false;
 
             var query = (from n in userStatuses
                          where n.UserID == userID
@@ -170,7 +170,7 @@ namespace Gms.Portal.Web.Controls.User
 
             var userStatuses = descriptor.GetValue("UserStatusesFields") as IEnumerable<FormStatusUnit>;
             if (userStatuses == null)
-                return true;
+                return false;
 
             var query = (from n in userStatuses
                          where n.UserID == userID
@@ -191,7 +191,7 @@ namespace Gms.Portal.Web.Controls.User
 
             var userStatuses = descriptor.GetValue("UserStatusesFields") as IEnumerable<FormStatusUnit>;
             if (userStatuses == null)
-                return true;
+                return false;
 
             var query = (from n in userStatuses
                          where n.UserID == userID

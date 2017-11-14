@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using CITI.EVO.Tools.Cache;
 using CITI.EVO.Tools.ExpressionEngine;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Security;
 using CITI.EVO.Tools.Utils;
+using DevExpress.XtraRichEdit.Import.OpenXml;
 using Gms.Portal.DAL.Domain;
 using Gms.Portal.Web.Converters.EntityToModel;
 using Gms.Portal.Web.Entities.DataContainer;
@@ -34,7 +36,8 @@ namespace Gms.Portal.Web.Utils
 
         private readonly IDictionary<String, Guid?> _formsIDCache;
         private readonly IDictionary<String, FormModel> _formModelsCache;
-        private readonly IDictionary<Guid?, ILookup<String, ControlEntity>> _formFieldsCache;
+
+        private readonly IDictionary<Guid?, ILookup<String, ControlEntity>> _controlFieldsCache;
 
         public ExpressionGlobalsUtil(params IDictionary<String, Object>[] sources)
             : this((Guid?)null, sources)
@@ -107,7 +110,7 @@ namespace Gms.Portal.Web.Utils
 
             _formsIDCache = CommonObjectCache.InitObject(formsIDCache, CommonCacheStore.Request, () => new Dictionary<String, Guid?>());
             _formModelsCache = CommonObjectCache.InitObject(formModelsCache, CommonCacheStore.Request, () => new Dictionary<String, FormModel>());
-            _formFieldsCache = CommonObjectCache.InitObject(formFieldsCache, CommonCacheStore.Request, () => new Dictionary<Guid?, ILookup<String, ControlEntity>>());
+            _controlFieldsCache = CommonObjectCache.InitObject(formFieldsCache, CommonCacheStore.Request, () => new Dictionary<Guid?, ILookup<String, ControlEntity>>());
         }
 
         public Object this[String fieldKey]
@@ -164,6 +167,7 @@ namespace Gms.Portal.Web.Utils
         {
             return _sources.Contains(source);
         }
+
         public IEnumerable<IDictionary<String, Object>> GetSources()
         {
             foreach (var source in _sources)
@@ -237,6 +241,10 @@ namespace Gms.Portal.Web.Utils
                 case "@userlastname":
                     value = UmUtil.Instance.CurrentUser.LastName;
                     return true;
+                case "@userbirthdate":
+                    value = UmUtil.Instance.CurrentUser.BirthDate;
+                    return true;
+
                 case "@userid":
                     value = UmUtil.Instance.CurrentUser.ID;
                     return true;
@@ -245,6 +253,9 @@ namespace Gms.Portal.Web.Utils
                     return true;
                 case "@formname":
                     value = LanguageUtil.GetLanguage();
+                    return true;
+                case "@mode":
+                    value = HttpServerUtil.RequestUrl["mode"];
                     return true;
             }
 
@@ -319,12 +330,8 @@ namespace Gms.Portal.Web.Utils
             {
                 var formDataList = (IEnumerable<FormDataBase>)formGridData;
 
-                var subControls = FormStructureUtil.PreOrderTraversal(collEntity);
-
-                var fieldQuery = (from n in subControls
-                                  where ExpressionParser.Escape(n.Name) == escapeFieldName ||
-                                        ExpressionParser.Escape(n.Alias) == escapeFieldName
-                                  select n);
+                var subControlsLp = GetControlsLp(collEntity);
+                var fieldQuery = subControlsLp[escapeFieldName];
 
                 var fieldKey = escapeFieldName;
                 var fieldAlias = escapeFieldName;
@@ -367,7 +374,6 @@ namespace Gms.Portal.Web.Utils
 
             return null;
         }
-
         private Object GetValue(IEnumerable<IDictionary<String, Object>> sources, String fieldKey)
         {
             Object val;
@@ -376,6 +382,7 @@ namespace Gms.Portal.Web.Utils
 
             return null;
         }
+
         private bool TryGetValue(IEnumerable<IDictionary<String, Object>> sources, String fieldKey, out Object value)
         {
             String realName;
@@ -467,14 +474,7 @@ namespace Gms.Portal.Web.Utils
             if (formModel == null || formModel.Entity == null)
                 return null;
 
-            ILookup<String, ControlEntity> fieldsLp;
-            if (!_formFieldsCache.TryGetValue(formModel.ID, out fieldsLp))
-            {
-                fieldsLp = GetControlsLp(formModel.Entity);
-
-                _formFieldsCache[formModel.ID] = fieldsLp;
-            }
-
+            var fieldsLp = GetControlsLp(formModel.Entity);
             return fieldsLp;
         }
 
@@ -488,26 +488,36 @@ namespace Gms.Portal.Web.Utils
             var filter = new Dictionary<String, Object>
             {
                 [FormDataConstants.UserIDField] = userID,
+                //[FormDataConstants.ParentIDField] = parentID,
                 [FormDataConstants.DateDeletedField] = null
             };
 
-            var document = MongoDbUtil.FindDocuments(formModel.ID, filter).FirstOrDefault();
-
-            var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
-            if (formData == null)
-                yield break;
-
-            yield return formData;
+            var documents = MongoDbUtil.FindDocuments(formModel.ID, filter);
+            foreach (var document in documents)
+            {
+                var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
+                if (formData != null)
+                    yield return formData;
+            }
         }
 
-        private ILookup<String, ControlEntity> GetControlsLp(ContentEntity contentEntity)
+        private ILookup<String, ControlEntity> GetControlsLp(ControlEntity control)
         {
-            var controls = FormStructureUtil.PreOrderTraversal(contentEntity);
+            var content = control as ContentEntity;
+            if (content == null)
+                return null;
 
-            var fieldsLp = GetControlsLp(controls);
+            ILookup<String, ControlEntity> fieldsLp;
+            if (!_controlFieldsCache.TryGetValue(content.ID, out fieldsLp))
+            {
+                var controls = FormStructureUtil.PreOrderTraversal(content);
+                fieldsLp = GetControlsLp(controls);
+
+                _controlFieldsCache.Add(content.ID, fieldsLp);
+            }
+
             return fieldsLp;
         }
-
         private ILookup<String, ControlEntity> GetControlsLp(IEnumerable<ControlEntity> controls)
         {
             var namesQuery = from n in controls

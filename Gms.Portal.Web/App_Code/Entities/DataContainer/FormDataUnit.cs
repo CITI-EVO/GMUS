@@ -263,6 +263,45 @@ namespace Gms.Portal.Web.Entities.DataContainer
             }
         }
 
+        public DateTime? DateOfStatus
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.DateOfStatusField);
+                return DataConverter.ToNullableDateTime(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.DateOfStatusField, value);
+            }
+        }
+
+        public int? Version
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.VersionField);
+                return DataConverter.ToNullableInt(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.VersionField, value);
+            }
+        }
+
+        public int? ParentVersion
+        {
+            get
+            {
+                var val = GetValue(FormDataConstants.ParentVersionField);
+                return DataConverter.ToNullableInt(val);
+            }
+            set
+            {
+                SetValue(FormDataConstants.ParentVersionField, value);
+            }
+        }
+
         public ISet<String> ReviewFields
         {
             get

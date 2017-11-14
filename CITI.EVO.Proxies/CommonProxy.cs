@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CITI.EVO.CommonData.Svc.Contracts;
 using CITI.EVO.CommonData.Svc.Enums;
 using CITI.EVO.Rpc;
@@ -13,7 +10,7 @@ namespace CITI.EVO.Proxies
     public static class CommonProxy
     {
         [RpcRemoteMethod("Common.CITI.EVO.CommonData.Web.Services.Managers.CommonServiceWrapper.GetPerson")]
-        public static PersonInfoContract GetPerson(String personalID, String birthYear)
+        public static PersonInfoContract GetPerson(String personalID, int birthYear)
         {
             return RpcInvoker.InvokeMethod<PersonInfoContract>(personalID, birthYear);
         }

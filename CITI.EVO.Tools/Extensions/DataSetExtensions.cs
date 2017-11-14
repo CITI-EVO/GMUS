@@ -94,8 +94,10 @@ namespace CITI.EVO.Tools.Extensions
 
                 var dataColumn = new DataColumn(columnName);
 
-                dataColumn.DataType = propertyType;
-                dataColumn.AllowDBNull = (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>));
+                var isNullable = (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>));
+
+                dataColumn.AllowDBNull = isNullable;
+                dataColumn.DataType = isNullable ? typeof(string) : propertyType;
 
                 if (dataColumn.AllowDBNull)
                 {
@@ -116,7 +118,7 @@ namespace CITI.EVO.Tools.Extensions
                     var columnName = mapping[propertyInfo.Name];
                     var propertyValue = propertyInfo.GetValue(item, null);
 
-                    dataRow[columnName] = propertyValue;
+                    dataRow[columnName] = propertyValue ?? DBNull.Value;
                 }
 
                 dataTable.Rows.Add(dataRow);

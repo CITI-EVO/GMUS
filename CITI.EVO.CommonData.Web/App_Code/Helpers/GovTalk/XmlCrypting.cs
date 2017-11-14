@@ -40,7 +40,7 @@ namespace CITI.EVO.CommonData.Web.Helpers.GovTalk
         /// <param name="key">Encryption key</param>
         public static void DecryptXml(this XmlElement element, byte[] key)
         {
-            using (AesCryptoServiceProvider aescp = new AesCryptoServiceProvider { Mode = CipherMode.CBC, KeySize = 256 })
+            using (var aescp = new AesCryptoServiceProvider { Mode = CipherMode.CBC, KeySize = 256 })
             {
                 var sData = element.InnerXml;
                 var eData = Convert.FromBase64String(sData);

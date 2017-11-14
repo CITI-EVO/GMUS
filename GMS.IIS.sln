@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{F62A6F90-F19E-4E84-83A5-DCA0FBE005C9}"
 EndProject
@@ -118,6 +118,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Gms.Portal.Web", "http://lo
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "false"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
+		ProjectReferences = "{BFD02FAD-2A02-4A38-B680-1F02772FD1FE}|CITI.EVO.Tools.dll;{5B8F965A-240C-4B1A-93B5-87160C20E47E}|CITI.EVO.CommonData.Svc.dll;{DD01C646-4FBD-4B4D-AF10-1F7CB74D5E0C}|CITI.EVO.Proxies.dll;{416C5D23-950C-46B2-A2AB-784FBA7A376C}|CITI.EVO.Rpc.dll;{0616AF18-8B68-4924-93ED-8DC51A0A8D7F}|CITI.EVO.UserManagement.Svc.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Gms.Portal.Web"
 		Debug.AspNetCompiler.PhysicalPath = "Gms.Portal.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Gms.Portal.Web\"

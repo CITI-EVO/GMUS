@@ -433,20 +433,6 @@ namespace Gms.Portal.Web.Utils
             }
         }
 
-        private static bool IsLeaf(ControlEntity entity)
-        {
-            var container = entity as ContentEntity;
-
-            if (container == null ||
-                container.Controls == null ||
-                container.Controls.Count == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         private static String GetControlTypeName(ControlEntity entity)
         {
             var field = entity as FieldEntity;
@@ -480,6 +466,20 @@ namespace Gms.Portal.Web.Utils
                 return "TabContainer";
 
             return "UNKNOWN";
+        }
+
+        private static bool IsLeaf(ControlEntity entity)
+        {
+            var container = entity as ContentEntity;
+
+            if (container == null ||
+                container.Controls == null ||
+                container.Controls.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -334,12 +334,12 @@ namespace Gms.Portal.Web.Pages.User
                 {
                     var expNode = ExpressionParser.GetOrParse(formModel.VisibleExpression);
 
-                    Object eval;
-                    if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))
+                    var result = ExpressionEvaluator.TryEval(expNode, expGlobals.Eval);
+                    if (result.Error != null)
                         continue;
 
-                    var result = DataConverter.ToNullableBoolean(eval);
-                    if (!result.GetValueOrDefault())
+                    var value = DataConverter.ToNullableBoolean(result.Value);
+                    if (!value.GetValueOrDefault())
                         continue;
                 }
 

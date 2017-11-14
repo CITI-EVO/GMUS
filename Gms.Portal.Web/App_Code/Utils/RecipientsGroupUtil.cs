@@ -79,10 +79,10 @@ namespace Gms.Portal.Web.Utils
 
                         var expGlobals = new ExpressionGlobalsUtil(adpFormData);
 
-                        Object value;
-                        if (ExpressionEvaluator.TryEval(node, expGlobals.Eval, out value))
+                        var result = ExpressionEvaluator.TryEval(node, expGlobals.Eval);
+                        if (result.Error == null)
                         {
-                            var @bool = DataConverter.ToNullableBool(value);
+                            var @bool = DataConverter.ToNullableBool(result.Value);
                             if (@bool.GetValueOrDefault())
                             {
                                 if (formData.UserID != null)

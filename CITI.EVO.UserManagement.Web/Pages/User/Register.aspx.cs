@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.Linq;
+using CITI.EVO.Proxies;
 using CITI.EVO.Tools.Extensions;
 using CITI.EVO.Tools.Helpers;
 using CITI.EVO.Tools.Utils;
@@ -28,6 +29,8 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            lblError.Text = null;
+
             if (!ConfigUtil.UserRegisterEnabled)
             {
                 lblMessage.Text = "რეგისტრაცია გათიშულია";
@@ -100,7 +103,7 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
                     Phone = model.Phone,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    //BirthDate = deBirthDate.Date
+                    BirthDate = model.BirthDate,
                     Password = model.Password,
                     UserCode = Convert.ToString(Guid.NewGuid()),
                     PasswordExpirationDate = DateTime.Now.AddDays(30),
@@ -152,6 +155,36 @@ namespace CITI.EVO.UserManagement.Web.Pages.User
         protected void btCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Pages/User/Login.aspx");
+        }
+
+        protected void registerUserControl_OnSync(object sender, EventArgs e)
+        {
+            var model = registerUserControl.Model;
+            model.FirstName = null;
+            model.LastName = null;
+            model.BirthDate = null;
+
+            registerUserControl.Model = model;
+
+            var year = DataConverter.ToNullableInt32(model.BirthYear);
+            if (String.IsNullOrWhiteSpace(model.PersonalID) || year == null)
+            {
+                lblError.Text = "გთხოვთ მიუთითეთ პირადი ნომერი და დაბადების წელი";
+                return;
+            }
+
+            var person = CommonProxy.GetPerson(model.PersonalID, year.Value);
+            if (person == null)
+            {
+                lblError.Text = "პიროვნება მითითებული მონაცემებით არ მოიძებნა, გთხოვთ სცადოთ თავიდან";
+                return;
+            }
+
+            model.FirstName = person.FirstName;
+            model.LastName = person.LastName;
+            model.BirthDate = person.BirthDate;
+
+            registerUserControl.Model = model;
         }
     }
 }

@@ -423,7 +423,7 @@ namespace Gms.Portal.Web.Utils
                 return value;
 
             var userID = _formData.UserID;
-            var dataSourceHelper = new DataSourceHelper(userID, field);
+            var dataSourceHelper = new DataSourceHelper(userID, _entity, field);
 
             var values = new[] { value };
             if (value is IEnumerable && !(value is String))
@@ -450,11 +450,11 @@ namespace Gms.Portal.Web.Utils
             {
                 _expGlobals.AddSource(dataRecord);
 
-                Object result;
-                if (!ExpressionEvaluator.TryEval(expNode, _expGlobals.Eval, out result))
-                    yield return "[TextExpression error]";
-
-                yield return Convert.ToString(result);
+                var result = ExpressionEvaluator.TryEval(expNode, _expGlobals.Eval);
+                if (result.Error != null)
+                    yield return $"[TextExpression error] - {result.Error.Message}";
+                else
+                    yield return Convert.ToString(result.Value);
 
                 _expGlobals.RemoveSource(dataRecord);
             }

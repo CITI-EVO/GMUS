@@ -20,7 +20,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
             yearRx = new Regex(@"^(19|20)\d\d$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             monthRx = new Regex(@"^(0[1-9]|1[012])$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-            lazyFuncs = new HashSet<String>(StringComparer.OrdinalIgnoreCase) { "if", "any", "all", "switch", "first", "last", "sortasc", "F", "select" };
+            lazyFuncs = new HashSet<String>(StringComparer.OrdinalIgnoreCase) { "if", "any", "all", "switch", "first", "last", "sortasc", "sortdesc", "select" };
         }
 
         public static Object Eval(ExpressionNode node, IDataResolver dataResolver)

@@ -13,7 +13,8 @@ namespace CITI.EVO.CommonData.Web.Helpers.GovTalk
             if (idAttribute == null)
                 idAttribute = unsignedXml.OwnerDocument.CreateAttribute("Id");
 
-            unsignedXml.Attributes.Append(idAttribute).Value = signObjectUid.ToString();
+            var attribute = unsignedXml.Attributes.Append(idAttribute);
+            attribute.Value = signObjectUid.ToString();
 
             var signature = XMLSigner.GenerateXMLSignature(unsignedXml, unsignedXml.Attributes["Id"].Value, certificate);
             unsignedXml.AppendChild(signature);

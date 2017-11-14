@@ -18,7 +18,7 @@
 <div class="form-group">
     <ce:Label runat="server" CssClass="col-lg-2 control-label">Source</ce:Label>
     <div class="col-lg-10">
-        <asp:DropDownList runat="server" ID="cbxSource" DataTextField="Value" DataValueField="Key" ValueType="System.Guid" Property="{LogicModel.SourceID=SelectedValue}" CssClass="chosen-select">
+        <asp:DropDownList runat="server" ID="cbxSource" DataTextField="Key" DataValueField="Value" Property="{LogicModel.SourceID=SelectedValue}"  CssClass="chosen-select">
         </asp:DropDownList>
     </div>
 </div>

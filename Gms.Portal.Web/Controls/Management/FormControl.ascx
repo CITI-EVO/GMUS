@@ -8,6 +8,9 @@
 <%@ Register Src="~/Controls/Management/PrintTemplateControl.ascx" TagPrefix="local" TagName="PrintTemplateControl" %>
 
 <%@ Register Src="~/Controls/Common/HiddenFieldValueControl.ascx" TagPrefix="local" TagName="HiddenFieldValueControl" %>
+<%@ Register Src="~/Controls/Management/MonitoringFlawControl.ascx" TagPrefix="local" TagName="MonitoringFlawControl" %>
+<%@ Register Src="~/Controls/Management/MonitoringPrintFieldControl.ascx" TagPrefix="local" TagName="MonitoringPrintFieldControl" %>
+
 
 <local:HiddenFieldValueControl runat="server" ID="hdID" Property="{FormModel.ID=Value}" />
 
@@ -24,6 +27,9 @@
         </li>
         <li>
             <a data-toggle="tab" href="#tab-rating" aria-expanded="false">Rating</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab-monitoring" aria-expanded="false">Monitoring Templates</a>
         </li>
     </ul>
     <div class="tab-content">
@@ -136,6 +142,13 @@
                     <ce:Label runat="server" CssClass="col-lg-2 control-label">Approval Deadline</ce:Label>
                     <div class="col-lg-10">
                         <asp:TextBox runat="server" ID="tbxApprovalDeadline" Property="{FormModel.ApprovalDeadline=Text}" CssClass="intSpinEdit" />
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <ce:Label runat="server" CssClass="col-lg-2 control-label">Default filters</ce:Label>
+                    <div class="col-lg-10">
+                        <asp:CheckBox runat="server" ID="chkDefaultFilters" />
                     </div>
                 </div>
             </div>
@@ -266,7 +279,7 @@
                         <ce:Label runat="server" Text="Selector Expression" />
                     </div>
                     <div>
-                        <asp:TextBox runat="server" ID="tbxSelectorExpression" Width="100%"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="tbxSelectorExpression" Width="100%" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="form-group">
@@ -274,7 +287,7 @@
                         <ce:Label runat="server" Text="Summary Expression" />
                     </div>
                     <div>
-                        <asp:TextBox runat="server" ID="tbxSummaryExpression" Width="100%"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="tbxSummaryExpression" Width="100%" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="form-group">
@@ -282,7 +295,7 @@
                         <ce:Label runat="server" Text="Print Template" />
                     </div>
                     <div>
-                        <asp:TextBox runat="server" ID="tbxPrintTemplate" TextMode="MultiLine" Width="100%"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="tbxPrintTemplate" TextMode="MultiLine" Width="100%" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="form-group">
@@ -290,7 +303,7 @@
                         <ce:Label runat="server" Text="Mail Template" />
                     </div>
                     <div>
-                        <asp:TextBox runat="server" ID="tbxMailTemplate" TextMode="MultiLine" Width="100%"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="tbxMailTemplate" TextMode="MultiLine" Width="100%" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="form-group">
@@ -353,6 +366,118 @@
                             </dx:TreeListTextColumn>
                         </Columns>
                     </ce:ASPxTreeList>
+                </div>
+            </div>
+        </div>
+        <div id="tab-monitoring" class="tab-pane">
+            <div class="panel-body">
+                <h5><ce:Label runat="server">Printing</ce:Label></h5>
+                <div class="form-group">
+                    <ce:LinkButton runat="server" ID="btnNewMonitoringFieldNew" OnClick="btnNewMonitoringFieldNew_OnClick" CssClass="btn btn-success fa fa-plus" />
+                </div>
+                <div class="form-group">
+                    <ce:GridView runat="server" ID="gvMonitoringPrint" UseAccessibleHeader="True" TableSectionHeader="True" AutoGenerateColumns="False" EnableViewState="False"
+                        CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" ShowHeaderWhenEmpty="True">
+                        <Columns>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text=" " />
+                                </HeaderTemplate>
+                                <ItemStyle Width="150" />
+                                <ItemTemplate>
+                                    <ce:LinkButton runat="server" ID="btnEditMonitoringPrint" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEditMonitoringPrintField_OnCommand" CssClass="btn btn-primary btn-xs fa fa-edit" />
+                                    <ce:LinkButton runat="server" ID="btnDeleteMonitoringPrint" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDeleteMonitoringPrintField_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Name" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# Eval("Name") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Print Type" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# Eval("PrintType") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Budget" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# GetCheckStatus(Eval("BudgetForm")) %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Summary Budget" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# GetCheckStatus(Eval("SummaryBudgetForm")) %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Projects" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# GetCheckStatus(Eval("ProjectsForm")) %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </ce:GridView>
+                </div>
+            </div>
+            <div class="panel-body">
+                <h5><ce:Label runat="server">Flaws</ce:Label></h5>
+                <div class="form-group">
+                    <ce:LinkButton runat="server" ID="btnNewMonitoringFlaw" OnClick="btnNewMonitoringFlaw_OnClick" CssClass="btn btn-success fa fa-plus" />
+                </div>
+                <div class="form-group">
+                    <ce:GridView runat="server" ID="gvMonitoringFlaws" UseAccessibleHeader="True" TableSectionHeader="True" AutoGenerateColumns="False" EnableViewState="False"
+                        CssClass="tableStd table table-striped table-bordered table-hover" data-page-size="8" data-filter="#filter" ShowHeaderWhenEmpty="True">
+                        <Columns>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text=" " />
+                                </HeaderTemplate>
+                                <ItemStyle Width="150" />
+                                <ItemTemplate>
+                                    <ce:LinkButton runat="server" ID="btnEditMonitoringFlaw" ToolTip="Edit" CommandArgument='<%# Eval("ID") %>' OnCommand="btnEditMonitoringFlaw_OnCommand" CssClass="btn btn-primary btn-xs fa fa-edit" />
+                                    <ce:LinkButton runat="server" ID="btnDeleteMonitoringFlaw" ToolTip="Delete" CommandArgument='<%# Eval("ID") %>' OnCommand="btnDeleteMonitoringFlaw_OnCommand" CssClass="btn btn-danger btn-xs fa fa-trash" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Name" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# Eval("Name") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Score" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# Eval("Score") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <ce:Label runat="server" Text="Type" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <ce:Label runat="server" Text='<%# Eval("Type") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </ce:GridView>
                 </div>
             </div>
         </div>
@@ -483,6 +608,64 @@
                 <div class="modal-footer">
                     <ce:LinkButton runat="server" ID="btnRateOK" OnClick="btnRateOK_OnClick" CssClass="btn btn-success fa fa-save" />
                     <ce:LinkButton runat="server" ID="btnRateCancel" OnClick="btnRateCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
+                </div>
+            </div>
+        </div>
+    </ce:ModalPopup>
+</div>
+
+
+
+<div>
+    <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpeMonitoringFields" runat="server" Style="display: none" DefaultButton="btnMonitoringFieldOk">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>
+                        <ce:Label runat="server" Text="Monitoring Print Fields" />
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ce:Label ID="lblMonitoringField" runat="server" ForeColor="Red"></ce:Label>
+                    </div>
+                    <div class="form-group">
+                        <local:MonitoringPrintFieldControl runat="server" ID="monitoringPrintFieldControl" OnDataChanged="monitoringPrintFieldControl_OnDataChanged" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btnMonitoringFieldOk" OnClick="btnMonitoringFieldOk_OnClick" CssClass="btn btn-success fa fa-save" />
+                    <ce:LinkButton runat="server" ID="btnMonitoringFieldCancel" OnClick="btnMonitoringFieldCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
+                </div>
+            </div>
+        </div>
+    </ce:ModalPopup>
+</div>
+
+
+
+<div>
+    <ce:ModalPopup CssClass="modal fade" role="dialog" ID="mpeMonitoringFlaw" runat="server" Style="display: none" DefaultButton="btnMonitoringFlawOk">
+        <div class="modal-dialog" style="width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5>
+                        <ce:Label runat="server" Text="Monitoring Flaws" />
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ce:Label ID="Label1" runat="server" ForeColor="Red"></ce:Label>
+                    </div>
+                    <div class="form-group">
+                        <local:MonitoringFlawControl runat="server" ID="monitoringFlawControl" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <ce:LinkButton runat="server" ID="btnMonitoringFlawOk" OnClick="btnMonitoringFlawOk_OnClick" CssClass="btn btn-success fa fa-save" />
+                    <ce:LinkButton runat="server" ID="btnMonitoringFlawCancel" OnClick="btnMonitoringFlawCancel_OnClick" CssClass="btn btn-warning fa fa-close" />
                 </div>
             </div>
         </div>

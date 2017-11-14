@@ -73,6 +73,31 @@ namespace Gms.Portal.Web.Utils
             return result;
         }
 
+        public static bool DateBetween(DateTime? c, DateTime? x, DateTime? y)
+        {
+            if (x != null && y != null && c != null)
+                return c >= x && c <= y;
+
+            return true;
+        }
+
+        public static bool DateLessOrEquals(DateTime? x, DateTime? y)
+        {
+            if (y == null)
+                return true;
+
+            return x.GetValueOrDefault() <= y.GetValueOrDefault();
+
+        }
+
+        public static bool DateGreaterOrEquals(DateTime? x, DateTime? y)
+        {
+            if (y == null)
+                return true;
+
+            return x.GetValueOrDefault() >= y.GetValueOrDefault();
+        }
+
         public static IDictionary<String, Object> Merge(IDictionary<String, Object> x, IDictionary<String, Object> y)
         {
             if (x == null && y == null)

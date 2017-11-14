@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CITI.EVO.Proxies;
+using CITI.EVO.Tools.Utils;
 using Gms.Portal.Web.Helpers;
 
 namespace Gms.Portal.Web.Controls.User
@@ -17,11 +18,12 @@ namespace Gms.Portal.Web.Controls.User
         {
             var dict = new Dictionary<String, Object>();
 
-            if (String.IsNullOrWhiteSpace(tbxPersonalID.Text) ||
-                String.IsNullOrWhiteSpace(seBirthYear.Text))
+            var year = DataConverter.ToNullableInt32(seBirthYear.Text);
+
+            if (String.IsNullOrWhiteSpace(tbxPersonalID.Text) || year == null)
                 return dict;
 
-            var personData = CommonProxy.GetPerson(tbxPersonalID.Text, seBirthYear.Text);
+            var personData = CommonProxy.GetPerson(tbxPersonalID.Text, year.Value);
             if (personData == null)
                 return dict;
 

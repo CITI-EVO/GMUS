@@ -21,6 +21,7 @@
                         <ce:LinkButton runat="server" ID="btnNewHistory" OnClick="btnNewHistory_OnClick" ToolTip="Insert into History" CssClass="btn btn-primary fa fa-database" />
                         <ce:LinkButton runat="server" ID="btnCancel" OnClick="btnCancel_OnClick" ToolTip="Close" CssClass="btn btn-warning fa fa-close" />
                         <ce:LinkButton runat="server" ID="btnFiles" OnClick="btnFiles_OnClick" ToolTip="Files" CssClass="btn btn-danger fa fa-file" />
+                        <asp:HyperLink runat="server" ID="lnkMonitoring" ToolTip="Monitoring"  CssClass="btn btn-success btn-sm fa fa-line-chart" />
 
                         <asp:Label runat="server" ID="lblStatusDesc" ForeColor="Red" />
                     </div>

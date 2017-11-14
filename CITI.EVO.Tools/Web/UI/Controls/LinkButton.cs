@@ -10,7 +10,6 @@ namespace CITI.EVO.Tools.Web.UI.Controls
 {
     public class LinkButton : System.Web.UI.WebControls.LinkButton, ITranslatable, ICommand, IPermissionDependent
     {
-        private String text;
         private String trnKey;
 
         [Category("Appearance"), DefaultValue(true)]
@@ -33,27 +32,6 @@ namespace CITI.EVO.Tools.Web.UI.Controls
             set
             {
                 trnKey = value;
-            }
-        }
-
-        [Bindable(true)]
-        [Category("Appearance")]
-        [DefaultValue("")]
-        [PersistenceMode(PersistenceMode.InnerDefaultProperty)]
-        public new String Text
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(text))
-                {
-                    return String.Empty;
-                }
-
-                return text;
-            }
-            set
-            {
-                text = value;
             }
         }
 

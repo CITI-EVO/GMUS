@@ -4,18 +4,22 @@
 
 <local:HiddenFieldValueControl runat="server" ID="hdKey" Property="{ExpressionModel.Key=Value}" />
 <div class="form-group">
-    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Expression:" />
-    <asp:TextBox runat="server" ID="txtExpression" Property="{ExpressionModel.Expression=Text}" Width="180" />
+    <ce:Label runat="server" CssClass="col-sm-3 control-label" Text="Expression:" />
+    <div class="col-sm-9">
+        <asp:TextBox runat="server" ID="txtExpression" CssClass="form-control" Property="{ExpressionModel.Expression=Text}" />
+    </div>
 </div>
 <div class="form-group">
-    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Type:" />
-    <ce:DropDownList runat="server" Width="180" ID="ddlType" Property="{ExpressionModel.OutputType=SelectedValue}" CssClass="chosen-select">
-        <Items>
-            <asp:ListItem Text="Unspecified" Value="Unspecified" />
-            <asp:ListItem Text="Text" Value="Text" />
-            <asp:ListItem Text="Number" Value="Number" />
-            <asp:ListItem Text="DateTime" Value="DateTime" />
-        </Items>
-    </ce:DropDownList>
+    <ce:Label runat="server" CssClass="col-sm-3 control-label" Text="Type:" />
+    <div class="col-sm-9">
+        <ce:DropDownList runat="server" ID="ddlType" Property="{ExpressionModel.OutputType=SelectedValue}" CssClass="chosen-select">
+            <Items>
+                <asp:ListItem Text="Unspecified" Value="Unspecified" />
+                <asp:ListItem Text="Text" Value="Text" />
+                <asp:ListItem Text="Number" Value="Number" />
+                <asp:ListItem Text="DateTime" Value="DateTime" />
+            </Items>
+        </ce:DropDownList>
+    </div>
 </div>
 

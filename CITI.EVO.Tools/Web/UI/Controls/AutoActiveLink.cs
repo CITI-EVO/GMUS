@@ -9,7 +9,7 @@ using CITI.EVO.Tools.Web.UI.Common;
 
 namespace CITI.EVO.Tools.Web.UI.Controls
 {
-    public class AutoActiveLink : HyperLink, ITranslatable, IPermissionDependent
+    public class AutoActiveLink : System.Web.UI.WebControls.HyperLink, ITranslatable, IPermissionDependent
     {
         private String text;
         private String trnKey;

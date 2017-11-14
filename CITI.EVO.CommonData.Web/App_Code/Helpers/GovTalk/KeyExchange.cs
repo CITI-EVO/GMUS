@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using System.Web;
 using System.Xml;
 using SdaWSCryptoClient.Keys;
 
@@ -43,29 +41,36 @@ namespace CITI.EVO.CommonData.Web.Helpers.GovTalk
 
         /// <summary>
         /// Builds key exchange request xml with generated keypair's public key and calls key exchange subcontract to receive providers public key
-        /// </summary>
-        /// <param name="subcontractId">Key exchange subcontractId given by service provider</param>
+        /// </summary>S
+        /// <param name="fileName"></param>
+        /// <param name="subContractId">Key exchange subcontractId given by service provider</param>
         /// <param name="signingCert">Signing certificate</param>
-        public void PerformExchange(String subcontractId, X509Certificate2 signingCert)
+        public void PerformExchange(String fileName, String subContractId, X509Certificate2 signingCert)
         {
             if (GeneratedPublicKey == null)
                 GenerateKeyPair();
 
             var publicKeyXml = GeneratedPublicKey.ToXml();
 
-            var firstChild = (XmlElement)publicKeyXml.FirstChild;
-            firstChild.SignXml(signingCert, Guid.NewGuid());
+            var signId = GovTalkHelpers.GenerateSignId();
 
-            var requestNode = GovTalkHelpers.ComposeRequestXmlWithParamObjects(subcontractId, publicKeyXml);
+            var firstChild = (XmlElement)publicKeyXml.FirstChild;
+            firstChild.SignXml(signingCert, signId);
+
+            var xmlText = GovTalkHelpers.GetXmlFile(fileName);
+
+            var requestNode = GovTalkHelpers.ComposeRequestXmlWithParamObjects(xmlText, subContractId, publicKeyXml);
 
             var keyExchangeResponse = GovTalkCallApi.GetResponse(requestNode.OuterXml);
 
             var keyExchangeDoc = new XmlDocument();
             keyExchangeDoc.LoadXml(keyExchangeResponse);
 
-            var fileName = HttpContext.Current.Server.MapPath($"~/XmlLogs/keyExch_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.xml");
-            using (var file = File.CreateText(fileName))
-                keyExchangeDoc.Save(file);
+            //var logFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XmlLogs", $"keyExch_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.xml");
+            //var fileName = HttpContext.Current.Server.MapPath($"~/XmlLogs/keyExch_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.xml");
+
+            //using (var file = File.CreateText(logFileName))
+            //    keyExchangeDoc.Save(file);
 
             var resultStatus = GovTalkHelpers.GetResponseStatus(keyExchangeDoc);
             if (resultStatus.Code != "14")

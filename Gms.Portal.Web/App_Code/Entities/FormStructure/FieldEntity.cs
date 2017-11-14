@@ -35,6 +35,9 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("Description")]
         public String Description { get; set; }
 
+        [XmlElement("TotalSize")]
+        public int? TotalSize { get; set; }
+
         [XmlElement("CaptionSize")]
         public int? CaptionSize { get; set; }
 

@@ -127,29 +127,37 @@ namespace Gms.Portal.Web.Controls.Management
                 }
             }
 
-            var servicesDataSource = (from n in HbSession.Query<GM_Service>()
-                                      where n.DateDeleted == null
-                                      select n);
-
-            var serviceConverter = new ServiceEntityModelConverter(HbSession);
-
-            foreach (var item in servicesDataSource)
+            var systemEntity = new KeyValueEntity
             {
-                var model = serviceConverter.Convert(item);
-                if (model.Entity != null)
-                {
-                    foreach (var method in model.Entity.Methods)
-                    {
-                        var subEntity = new KeyValueEntity
-                        {
-                            Key = $"{item.Name}/{method.Name}",
-                            Value = $"{item.ID}/{method.ID}"
-                        };
+                Key = MongoDbUtil.MonitoringBudgetCollectionName,
+                Value = MongoDbUtil.MonitoringBudgetCollectionName
+            };
 
-                        yield return subEntity;
-                    }
-                }
-            }
+            yield return systemEntity;
+
+            //var servicesDataSource = (from n in HbSession.Query<GM_Service>()
+            //                          where n.DateDeleted == null
+            //                          select n);
+
+            //var serviceConverter = new ServiceEntityModelConverter(HbSession);
+
+            //foreach (var item in servicesDataSource)
+            //{
+            //    var model = serviceConverter.Convert(item);
+            //    if (model.Entity != null)
+            //    {
+            //        foreach (var method in model.Entity.Methods)
+            //        {
+            //            var subEntity = new KeyValueEntity
+            //            {
+            //                Key = $"{item.Name}/{method.Name}",
+            //                Value = $"{item.ID}/{method.ID}"
+            //            };
+
+            //            yield return subEntity;
+            //        }
+            //    }
+            //}
         }
 
     }

@@ -72,6 +72,18 @@ namespace Gms.Portal.Web.Caches
             }
         }
 
+        private static GM_DataStatus _winner;
+        public static GM_DataStatus Winner
+        {
+            get
+            {
+                if (_winner == null)
+                    _winner = GetStatus("Winner");
+
+                return _winner;
+            }
+        }
+
         public static IList<GM_DataStatus> Statuses
         {
             get

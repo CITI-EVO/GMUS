@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.Extensions;
 using Gms.Portal.Web.Bases;
 using CITI.EVO.Tools.Utils;
 using CITI.EVO.Tools.Web.UI.Helpers;
+using Gms.Portal.Web.Caches;
+using Gms.Portal.Web.Entities.DataContainer;
 using Gms.Portal.Web.Entities.FormStructure;
 using Gms.Portal.Web.Helpers;
 using Gms.Portal.Web.Utils;
@@ -22,13 +25,29 @@ namespace Gms.Portal.Web.Controls.User
         private const String FieldIDFormat = "fltFld_{0}_{1:n}";
         private const String FieldPabelIDFormat = "fltFldPanel_{0:n}";
 
+        private ContentEntity _contentEntity;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            var statuses = (from n in DataStatusCache.Statuses
+                            orderby n.Code
+                            select n);
+
+            cbxStatuses.BindData(statuses);
         }
 
-        public void InitStructure(ContentEntity container)
+        public void InitStructure(ContentEntity contentEntity)
         {
-            var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(container);
+            _contentEntity = contentEntity;
+
+            var formEntity = _contentEntity as FormEntity;
+            if (formEntity != null)
+            {
+                pnlStatus.Visible = formEntity.DefaultFilters.GetValueOrDefault();
+                pnlDateCreated.Visible = formEntity.DefaultFilters.GetValueOrDefault();
+            }
+
+            var allControls = FormStructureUtil.PreOrderFirstLevelTraversal(_contentEntity);
             var filterControls = (from n in allControls.OfType<FieldEntity>()
                                   where n.DisplayOnFilter.GetValueOrDefault()
                                   orderby n.OrderIndex, n.Name
@@ -36,6 +55,97 @@ namespace Gms.Portal.Web.Controls.User
             int index = 0;
             foreach (var entity in filterControls)
                 SetFilterField(entity, index++ % 2);
+        }
+
+        public void BindData(IDictionary<String, Object> data)
+        {
+            if (data == null)
+                return;
+
+            var allControls = UserInterfaceUtil.TraverseControls(pnlMain);
+            var controlsLp = allControls.ToLookup(n => n.ID);
+
+            foreach (var pair in data)
+            {
+                var key = pair.Key;
+
+                var fieldID = DataConverter.ToNullableGuid(pair.Key);
+                if (fieldID != null)
+                    key = fieldID.Value.ToString("n");
+
+                if (pair.Value is Object[])
+                {
+                    var array = (Object[])pair.Value;
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        var controlKey = String.Format(FieldIDFormat, i, key);
+                        var control = controlsLp[controlKey].OfType<TextBox>().First();
+
+                        control.Text = Convert.ToString(array[i]);
+                    }
+                }
+                else
+                {
+                    var controlKey = String.Format(FieldIDFormat, 0, key);
+                    var control = controlsLp[controlKey].OfType<TextBox>().First();
+
+                    control.Text = Convert.ToString(pair.Value);
+                }
+            }
+        }
+
+        public IDictionary<String, Object> GetData()
+        {
+            var resultDict = new Dictionary<String, Object>();
+
+            if (!IsPostBack)
+                return resultDict;
+
+            var startDate = DataConverter.ToNullableDateTime(tbxStartDate.Text);
+            var endDate = DataConverter.ToNullableDateTime(tbxStartDate.Text);
+
+            resultDict[FormDataConstants.StatusIDField] = cbxStatuses.TryGetGuidValue();
+            resultDict[FormDataConstants.DateCreatedField] = new Tuple<Object, Object>(startDate, endDate);
+
+            var fieldsValues = from n in Request.Form.AllKeys
+                               where RegexUtil.FilterElementParserRx.IsMatch(n)
+                               let val = Request.Form[n]
+                               let match = RegexUtil.FilterElementParserRx.Match(n)
+                               let type = match.Groups["type"].Value
+                               let index = match.Groups["index"].Value
+                               let elemID = match.Groups["elemID"].Value
+                               let fieldID = DataConverter.ToNullableGuid(elemID)
+                               where fieldID != null
+                               select new
+                               {
+                                   Type = type,
+                                   Value = val,
+                                   Index = index,
+                                   FieldID = fieldID.Value,
+                               };
+
+            var valuesLp = fieldsValues.ToLookup(n => n.FieldID);
+
+            foreach (var valuesGrp in valuesLp)
+            {
+                var query = (from n in valuesGrp
+                             orderby n.Index
+                             select n.Value);
+
+                var key = Convert.ToString(valuesGrp.Key);
+
+                if (valuesGrp.Count() > 1)
+                {
+                    var array = query.ToArray();
+                    var tuple = new Tuple<Object, Object>(array[0], array[1]);
+
+                    resultDict[key] = tuple;
+                }
+                else
+                    resultDict[key] = query.First();
+            }
+
+            return resultDict;
         }
 
         private void SetFilterField(FieldEntity entity, int side)
@@ -211,91 +321,6 @@ namespace Gms.Portal.Web.Controls.User
             }
         }
 
-        public void BindData(IDictionary<String, Object> data)
-        {
-            if (data == null)
-                return;
-
-            var allControls = UserInterfaceUtil.TraverseControls(pnlMain);
-            var controlsLp = allControls.ToLookup(n => n.ID);
-
-            foreach (var pair in data)
-            {
-                var key = pair.Key;
-
-                var fieldID = DataConverter.ToNullableGuid(pair.Key);
-                if (fieldID != null)
-                    key = fieldID.Value.ToString("n");
-
-                if (pair.Value is Object[])
-                {
-                    var array = (Object[])pair.Value;
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        var controlKey = String.Format(FieldIDFormat, i, key);
-                        var control = controlsLp[controlKey].OfType<TextBox>().First();
-
-                        control.Text = Convert.ToString(array[i]);
-                    }
-                }
-                else
-                {
-                    var controlKey = String.Format(FieldIDFormat, 0, key);
-                    var control = controlsLp[controlKey].OfType<TextBox>().First();
-
-                    control.Text = Convert.ToString(pair.Value);
-                }
-            }
-        }
-
-        public IDictionary<String, Object> GetData()
-        {
-            var resultDict = new Dictionary<String, Object>();
-
-            if (!IsPostBack)
-                return resultDict;
-
-            var fieldsValues = from n in Request.Form.AllKeys
-                               where RegexUtil.FilterElementParserRx.IsMatch(n)
-                               let val = Request.Form[n]
-                               let match = RegexUtil.FilterElementParserRx.Match(n)
-                               let type = match.Groups["type"].Value
-                               let index = match.Groups["index"].Value
-                               let elemID = match.Groups["elemID"].Value
-                               let fieldID = DataConverter.ToNullableGuid(elemID)
-                               where fieldID != null
-                               select new
-                               {
-                                   Type = type,
-                                   Value = val,
-                                   Index = index,
-                                   FieldID = fieldID.Value,
-                               };
-
-            var valuesLp = fieldsValues.ToLookup(n => n.FieldID);
-
-            foreach (var valuesGrp in valuesLp)
-            {
-                var query = (from n in valuesGrp
-                             orderby n.Index
-                             select n.Value);
-
-                var key = Convert.ToString(valuesGrp.Key);
-
-                if (valuesGrp.Count() > 1)
-                {
-                    var array = query.ToArray();
-                    var tuple = new Tuple<Object, Object>(array[0], array[1]);
-
-                    resultDict[key] = tuple;
-                }
-                else
-                    resultDict[key] = query.First();
-            }
-
-            return resultDict;
-        }
-
         private MetaFormDataBinder CreateDataBinder(FieldEntity fieldEntity)
         {
             var textExp = fieldEntity.TextExpression;
@@ -305,7 +330,7 @@ namespace Gms.Portal.Web.Controls.User
             if (!UserUtil.IsSuperAdmin())
                 userID = UserUtil.GetCurrentUserID();
 
-            var dataSourceHelper = new DataSourceHelper(userID, fieldEntity);
+            var dataSourceHelper = new DataSourceHelper(userID, _contentEntity, fieldEntity);
             var dataRecords = dataSourceHelper.LoadDataRecords();
 
             var formDataBinder = new MetaFormDataBinder(dataRecords, textExp, valueExp);

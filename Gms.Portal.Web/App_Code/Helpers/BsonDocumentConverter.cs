@@ -231,17 +231,18 @@ namespace Gms.Portal.Web.Helpers
                 }
                 else if (bsonValue.IsBsonArray)
                 {
-                    var stringsQuery = (from n in bsonValue.AsBsonArray
-                                        where !n.IsBsonNull && n.IsString
-                                        select (Object)n.AsString);
+                    var valuesQuery = (from n in bsonValue.AsBsonArray
+                                       where !n.IsBsonDocument
+                                       let v = BsonTypeMapper.MapToDotNetValue(n)
+                                       select v);
 
                     var documentsQuery = (from n in bsonValue.AsBsonArray
-                                          where !n.IsBsonNull && n.IsBsonDocument
+                                          where n.IsBsonDocument
                                           let d = ConvertToDictionary(n.AsBsonDocument)
                                           select (Object)d);
 
-                    var valuesQuery = stringsQuery.Union(documentsQuery);
-                    dictionary[element.Name] = valuesQuery.ToArray();
+                    var finalQuery = valuesQuery.Union(documentsQuery);
+                    dictionary[element.Name] = finalQuery.ToArray();
                 }
                 else if (bsonValue.IsValidDateTime)
                     dictionary[element.Name] = bsonValue.ToNullableLocalTime();
@@ -303,28 +304,41 @@ namespace Gms.Portal.Web.Helpers
 
         public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IMongoQueryable<BsonDocument> source)
         {
+            return ConvertToFormDataUnit(source, false);
+        }
+        public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IMongoQueryable<BsonDocument> source, bool provideLazyLists)
+        {
             if (source == null)
                 return null;
 
             var list = IAsyncCursorSourceExtensions.ToList(source);
-            return ConvertToFormDataUnit(list);
+            return ConvertToFormDataUnit(list, provideLazyLists);
         }
 
         public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IEnumerable<BsonDocument> source)
+        {
+            return ConvertToFormDataUnit(source, false);
+        }
+        public static IEnumerable<FormDataUnit> ConvertToFormDataUnit(IEnumerable<BsonDocument> source, bool provideLazyLists)
         {
             if (source == null)
                 yield break;
 
             foreach (var document in source)
             {
-                var formDataUnit = ConvertToFormDataUnit(document);
-                yield return formDataUnit;
+                var formDataUnit = ConvertToFormDataUnit(document, provideLazyLists);
+                if (formDataUnit != null)
+                    yield return formDataUnit;
             }
         }
 
         public static FormDataUnit ConvertToFormDataUnit(BsonDocument source)
         {
-            if (source == null)
+            return ConvertToFormDataUnit(source, false);
+        }
+        public static FormDataUnit ConvertToFormDataUnit(BsonDocument source, bool provideLazyLists)
+        {
+            if (source == null || !source.Contains(FormDataConstants.IDField))
                 return null;
 
             var idVal = BsonTypeMapper.MapToDotNetValue(source[FormDataConstants.IDField]);
@@ -395,7 +409,10 @@ namespace Gms.Portal.Web.Helpers
                         var subParentID = recordID;
 
                         var listRef = new FormDataListRef(subFormID, subOwnerID, subParentID);
-                        formData[element.Name] = listRef;
+                        if (provideLazyLists)
+                            formData[element.Name] = new FormDataLazyList(listRef);
+                        else
+                            formData[element.Name] = listRef;
                     }
                 }
                 else
@@ -413,7 +430,6 @@ namespace Gms.Portal.Web.Helpers
             var list = source.ToList();
             return ConvertToBsonDocument(list);
         }
-
         public static IEnumerable<BsonDocument> ConvertToBsonDocument(IEnumerable<FormDataUnit> source)
         {
             if (source == null)

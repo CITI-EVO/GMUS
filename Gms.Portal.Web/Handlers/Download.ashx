@@ -56,6 +56,36 @@ public class Download : IHttpHandler
             return;
         }
 
+        var fileID = DataConverter.ToNullableGuid(requestUrl["FileID"]);
+        if (fileID != null)
+        {
+            var filesCollection = MongoDbUtil.GetCollection(MongoDbUtil.FilesCollectionName);
+            var fileDocument = MongoDbUtil.GetDocument(filesCollection, fileID);
+
+            if (fileDocument == null)
+                return;
+
+            var fileDict = BsonDocumentConverter.ConvertToDictionary(fileDocument);
+
+            var fileData = fileDict.GetValueOrDefault("FileData") as byte[];
+            var name = fileDict.GetValueOrDefault("FileName") as String;
+
+            if (fileData == null)
+                return;
+
+            var contnetDisposition = new ContentDisposition
+            {
+                Inline = true,
+                FileName = HttpUtility.UrlEncode(name, Encoding.UTF8)
+            };
+
+            response.ContentType = MimeTypeUtil.GetMimeType(name);
+            response.Headers["Content-Disposition"] = contnetDisposition.ToString();
+            response.BinaryWrite(fileData);
+
+            return;
+        }
+
         var ownerID = DataConverter.ToNullableGuid(requestUrl[FormDataConstants.OwnerIDField]);
         var recordID = DataConverter.ToNullableGuid(requestUrl[FormDataConstants.IDField]);
         var fieldID = DataConverter.ToNullableGuid(requestUrl["FieldID"]);

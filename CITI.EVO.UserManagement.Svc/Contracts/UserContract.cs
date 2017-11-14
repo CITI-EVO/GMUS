@@ -27,6 +27,9 @@ namespace CITI.EVO.UserManagement.Svc.Contracts
         public String LastName { get; set; }
 
         [DataMember]
+        public DateTime? BirthDate { get; set; }
+
+        [DataMember]
         public String Email { get; set; }
 
         [DataMember]
@@ -36,10 +39,10 @@ namespace CITI.EVO.UserManagement.Svc.Contracts
         public String Address { get; set; }
 
         [DataMember]
-        public bool IsSuperAdmin { get; set; }
+        public bool IsActive { get; set; }
 
         [DataMember]
-        public bool IsActive { get; set; }
+        public bool IsSuperAdmin { get; set; }
 
         [DataMember]
         public Guid? UserCategoryID { get; set; }

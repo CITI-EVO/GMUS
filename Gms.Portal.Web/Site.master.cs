@@ -74,6 +74,7 @@ namespace Gms.Portal.Web
 
             liCurrData.Visible = UmUtil.Instance.HasAccess("Org");
             liDataApprove.Visible = UmUtil.Instance.HasAccess("Org");
+            liAnalitics.Visible = UmUtil.Instance.HasAccess("Admin");
 
             var loginToken = Convert.ToString(UmUtil.Instance.CurrentToken);
 
@@ -308,12 +309,12 @@ namespace Gms.Portal.Web
                 {
                     var expNode = ExpressionParser.GetOrParse(form.VisibleExpression);
 
-                    Object eval;
-                    if (!ExpressionEvaluator.TryEval(expNode, expGlobals.Eval, out eval))
+                    var result = ExpressionEvaluator.TryEval(expNode, expGlobals.Eval);
+                    if (result.Error != null)
                         continue;
 
-                    var result = DataConverter.ToNullableBoolean(eval);
-                    if (!result.GetValueOrDefault())
+                    var value = DataConverter.ToNullableBoolean(result.Value);
+                    if (!value.GetValueOrDefault())
                         continue;
                 }
 

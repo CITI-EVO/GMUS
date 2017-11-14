@@ -4,21 +4,27 @@
 
 <local:HiddenFieldValueControl runat="server" ID="hdKey" Property="{NamedExpressionModel.Key=Value}" />
 <div class="form-group">
-    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Name:" />
-    <asp:TextBox runat="server" ID="txtName" CssClass="form-control" Property="{NamedExpressionModel.Name=Text}" Width="180" />
+    <ce:Label runat="server" CssClass="col-sm-3 control-label" Text="Name:" />
+    <div class="col-sm-9">
+        <asp:TextBox runat="server" ID="tbxName" CssClass="form-control" Property="{NamedExpressionModel.Name=Text}" />
+    </div>
 </div>
 <div class="form-group">
-    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Expression:" />
-    <asp:TextBox runat="server" ID="txtExpression" CssClass="form-control" Property="{NamedExpressionModel.Expression=Text}" Width="180" />
+    <ce:Label runat="server" CssClass="col-sm-3 control-label" Text="Expression:" />
+    <div class="col-sm-9">
+        <asp:TextBox runat="server" ID="tbxExpression" CssClass="form-control" Property="{NamedExpressionModel.Expression=Text}"></asp:TextBox>
+    </div>
 </div>
 <div class="form-group">
-    <ce:Label runat="server" CssClass="col-sm-2 control-label" Text="Type:" />
-    <asp:DropDownList runat="server" Width="180" ID="ddlType" Property="{NamedExpressionModel.OutputType=SelectedValue}" CssClass="chosen-select">
-        <Items>
-            <asp:ListItem Text="Unspecified" Value="Unspecified" />
-            <asp:ListItem Text="Text" Value="Text" />
-            <asp:ListItem Text="Number" Value="Number" />
-            <asp:ListItem Text="DateTime" Value="DateTime" />
-        </Items>
-    </asp:DropDownList>
+    <ce:Label runat="server" CssClass="col-sm-3 control-label" Text="Type:" />
+    <div class="col-sm-9">
+        <asp:DropDownList runat="server" ID="ddlType" Property="{NamedExpressionModel.OutputType=SelectedValue}" CssClass="chosen-select">
+            <Items>
+                <asp:ListItem Text="Unspecified" Value="Unspecified" />
+                <asp:ListItem Text="Text" Value="Text" />
+                <asp:ListItem Text="Number" Value="Number" />
+                <asp:ListItem Text="DateTime" Value="DateTime" />
+            </Items>
+        </asp:DropDownList>
+    </div>
 </div>

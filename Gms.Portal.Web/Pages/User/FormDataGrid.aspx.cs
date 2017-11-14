@@ -135,8 +135,8 @@ namespace Gms.Portal.Web.Pages.User
         {
             var collection = MongoDbUtil.GetCollection(OwnerID);
 
-            var filter = Builders<BsonDocument>.Filter.Eq("ID", e.Value);
-            var update = Builders<BsonDocument>.Update.Set("DateDeleted", DateTime.Now);
+            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, e.Value);
+            var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateDeletedField, DateTime.Now);
 
             collection.UpdateMany(filter, update);
 
@@ -163,62 +163,56 @@ namespace Gms.Portal.Web.Pages.User
             mpeRecordStatus.Show();
         }
 
-        protected void formDataGridControl_OnReview(object sender, GenericEventArgs<Guid> e)
+        protected void formDataGridControl_OnAcceptChanges(object sender, GenericEventArgs<Guid> e)
         {
-            var returnUrl = RequestUrl.ToEncodedUrl();
+            var collection = MongoDbUtil.GetCollection(OwnerID);
 
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
-            {
-                ["Mode"] = Convert.ToString(FormMode.Review),
-                ["FormID"] = FormID,
-                ["OwnerID"] = (OwnerID ?? FormID),
-                ["RecordID"] = e.Value,
-                ["ParentID"] = ParentID,
-                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
-            };
+            var filter = Builders<BsonDocument>.Filter.Eq(FormDataConstants.IDField, e.Value);
 
-            Response.Redirect(urlHelper.ToEncodedUrl());
+            var update = Builders<BsonDocument>.Update.Set(FormDataConstants.DateOfStatusField, DateTime.Now);
+            update = update.Set(FormDataConstants.ChangesRequiresAcceptField, false);
+
+            collection.UpdateMany(filter, update);
+
+            FillGridView();
         }
 
-        protected void formDataGridControl_OnInspect(object sender, GenericEventArgs<Guid> e)
+        protected void formDataGridControl_OnRestoreChanges(object sender, GenericEventArgs<Guid> e)
         {
-            var returnUrl = RequestUrl.ToEncodedUrl();
+            var lastID = e.Value;
+            var restoreID = (Guid?)lastID;
 
-            var urlHelper = new UrlHelper("~/Pages/User/FormDataView.aspx")
+            var prev = (FormDataUnit)null;
+
+            while (true)
             {
-                ["Mode"] = "Inspect",
-                ["FormID"] = FormID,
-                ["OwnerID"] = (OwnerID ?? FormID),
-                ["RecordID"] = e.Value,
-                ["ParentID"] = ParentID,
-                ["ReturnUrl"] = GmsCommonUtil.ConvertToBase64(returnUrl)
-            };
-
-            Response.Redirect(urlHelper.ToEncodedUrl());
-        }
-
-        protected void formDataGridControl_OnAssigne(object sender, GenericEventArgs<Guid> e)
-        {
-            var recordID = e.Value;
-            var ownerID = (OwnerID ?? FormID);
-
-            var userID = UserID;
-            if (UserID == null)
-            {
-                var document = MongoDbUtil.GetDocument(ownerID, recordID);
+                var document = MongoDbUtil.GetDocument(FormID, restoreID);
                 if (document == null)
-                    return;
+                    break;
 
                 var formData = BsonDocumentConverter.ConvertToFormDataUnit(document);
-                userID = formData.UserID;
+                if (formData == null)
+                    break;
+
+                if (prev != null)
+                {
+                    if (//formData.StatusID != DataStatusCache.Winner.ID ||
+                        formData.DateOfStatus != prev.DateOfStatus)
+                    {
+                        restoreID = formData.ID;
+                        break;
+                    }
+                }
+
+                prev = formData;
+
+                restoreID = formData.PreviousID;
             }
 
-            var url = new UrlHelper("~/Pages/User/AssigneExperts.aspx");
-            url["FormID"] = FormID;
-            url["RecordID"] = recordID;
-            url["UserID"] = userID;
+            if (restoreID != null)
+                FormDataDbUtil.RestoreVersion(FormID, lastID, restoreID);
 
-            Response.Redirect(url.ToEncodedUrl());
+            FillGridView();
         }
 
         protected void recordStatusControl_OnDataChanged(object sender, EventArgs e)

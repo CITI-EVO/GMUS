@@ -974,11 +974,11 @@ namespace Gms.Portal.Web.Pages.User
             {
                 expGlobal.AddSource(dataRecord);
 
-                Object result;
-                if (!ExpressionEvaluator.TryEval(expNode, expGlobal.Eval, out result))
-                    yield return "[TextExpression error]";
-
-                yield return Convert.ToString(result);
+                var result = ExpressionEvaluator.TryEval(expNode, expGlobal.Eval);
+                if (result.Error != null)
+                    yield return $"[TextExpression error] - {result.Error.Message}";
+                else
+                    yield return Convert.ToString(result.Value);
 
                 expGlobal.RemoveSource(dataRecord);
             }

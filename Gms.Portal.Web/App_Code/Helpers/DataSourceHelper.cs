@@ -41,26 +41,30 @@ namespace Gms.Portal.Web.Helpers
         private readonly String _valueExpression;
 
         private readonly FieldEntity _fieldEntity;
-        private readonly FormDataBase _formDataBase;
+        private readonly ContentEntity _contentEntity;
         private readonly ILookup<String, String> _fields;
+        private readonly IDictionary<String, Object>[] _formDatas;
         private readonly IDictionary<Guid, ControlEntity> _controls;
 
-        public DataSourceHelper(FieldEntity fieldEntity) : this(null, fieldEntity)
+        public DataSourceHelper(ContentEntity content, FieldEntity field) : this(null, content, field)
         {
         }
-        public DataSourceHelper(Guid? userID, FieldEntity fieldEntity) : this(userID, fieldEntity, null, null)
+        public DataSourceHelper(Guid? userID, ContentEntity content, FieldEntity field) : this(userID, content, field, null)
         {
         }
-        public DataSourceHelper(Guid? userID, FieldEntity fieldEntity, FormDataBase formDataBase, IDictionary<Guid, ControlEntity> controls)
+        public DataSourceHelper(Guid? userID, ContentEntity content, FieldEntity field, params IDictionary<String, Object>[] formDatas)
         {
             _userID = userID;
-            _controls = controls;
-            _fieldEntity = fieldEntity;
-            _formDataBase = formDataBase;
+            _fieldEntity = field;
+            _contentEntity = content;
+            _formDatas = formDatas;
 
-            _filterByUser = fieldEntity.FilterByUser;
-            _dataSourceID = fieldEntity.DataSourceID;
-            _valueExpression = fieldEntity.ValueExpression;
+            _filterByUser = field.FilterByUser;
+            _dataSourceID = field.DataSourceID;
+            _valueExpression = field.ValueExpression;
+
+            if (content != null)
+                _controls = FormStructureUtil.PreOrderTraversal(content).ToDictionary(n => n.ID);
 
             if (RegexUtil.DataSourceParserRx.IsMatch(_dataSourceID))
             {
@@ -112,11 +116,11 @@ namespace Gms.Portal.Web.Helpers
                 var expNode = ExpressionParser.GetOrParse(_valueExpression);
                 foreach (var dict in dictionaries)
                 {
-                    Object result;
-                    if (!ExpressionEvaluator.TryEval(expNode, n => dict.GetValueOrDefault(n), out result))
+                    var result = ExpressionEvaluator.TryEval(expNode, n => dict.GetValueOrDefault(n));
+                    if (result.Error != null)
                         continue;
 
-                    if (GmsCommonUtil.Compare(result, value) == 0)
+                    if (GmsCommonUtil.Compare(result.Value, value) == 0)
                     {
                         cache[recordKey] = dict;
                         return dict;
@@ -126,7 +130,7 @@ namespace Gms.Portal.Web.Helpers
                 return null;
             }
         }
-
+        
         public IEnumerable<FormDataBase> LoadDataRecords()
         {
             if (String.IsNullOrWhiteSpace(_dataSourceID))
@@ -148,6 +152,27 @@ namespace Gms.Portal.Web.Helpers
             DiagUtil.Current.StartOrStop("SortDataRecords");
 
             return dictionaries;
+        }
+
+        public IEnumerable<FormDataBase> TransferDataRecords()
+        {
+            var cache = CommonObjectCache.InitObject(TransferDataCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<String, IEnumerable<FormDataBase>>);
+            lock (cache)
+            {
+                IEnumerable<FormDataBase> records;
+                if (cache.TryGetValue(_dataSourceID, out records))
+                    return records;
+
+                var results = GetSourceData().ToList();
+                if (results.Count == 0)
+                {
+                    cache[_dataSourceID] = null;
+                    return null;
+                }
+
+                cache[_dataSourceID] = results;
+                return results;
+            }
         }
 
         public IEnumerable<FormDataBase> SortDataRecords(IEnumerable<FormDataBase> dictionaries)
@@ -196,21 +221,20 @@ namespace Gms.Portal.Web.Helpers
                 return filteredData;
             }
 
-            if (_formDataBase == null || _controls == null)
+            if (_formDatas == null || _controls == null)
                 return formDataBases;
 
             var sourceField = _controls.GetValueOrDefault(_fieldEntity.DependentFieldID.Value) as FieldEntity;
             if (sourceField == null)
                 return formDataBases;
 
-            var sourceKey = Convert.ToString(sourceField.ID);
-            var sourceValue = _formDataBase[sourceKey];
+            var sourceValue = GetFieldValue(sourceField);
 
             if ((sourceField.Type == "ComboBox" || sourceField.Type == "Lookup") &&
                 !String.IsNullOrWhiteSpace(sourceField.DataSourceID) &&
                 !String.IsNullOrWhiteSpace(sourceField.ValueExpression))
             {
-                var sourceHelper = new DataSourceHelper(sourceField);
+                var sourceHelper = new DataSourceHelper(_contentEntity, sourceField);
                 //var sourceData = new Dictionary<String, Object>();
 
                 //var sourceRecord = sourceHelper.FindDataRecord(sourceValue);
@@ -238,42 +262,23 @@ namespace Gms.Portal.Web.Helpers
             return formDataBases;
         }
 
-        public IEnumerable<FormDataBase> TransferDataRecords()
-        {
-            var cache = CommonObjectCache.InitObject(TransferDataCacheKey, CommonCacheStore.Request, ConcurrencyHelper.CreateDictionary<String, IEnumerable<FormDataBase>>);
-            lock (cache)
-            {
-                IEnumerable<FormDataBase> records;
-                if (cache.TryGetValue(_dataSourceID, out records))
-                    return records;
-
-                var results = GetSourceData().ToList();
-                if (results.Count == 0)
-                {
-                    cache[_dataSourceID] = null;
-                    return null;
-                }
-
-                cache[_dataSourceID] = results;
-                return results;
-            }
-        }
-
         public IEnumerable<FormDataBase> ApplyFilter(IEnumerable<FormDataBase> target, String filterExp)
         {
             return ApplyFilter(target, (Object)null, filterExp);
         }
         public IEnumerable<FormDataBase> ApplyFilter(IEnumerable<FormDataBase> target, Object sourceValue, String filterExp)
         {
-            var sourceValDict = new Dictionary<String, Object>()
+            var sourceValDict = new Dictionary<String, Object>
             {
                 {"@", sourceValue},
                 {"@val", sourceValue},
                 {"@value", sourceValue}
             };
 
+            var sources = GetAllSources(sourceValDict);
+
             var filterNode = ExpressionParser.GetOrParse(filterExp);
-            var expGlobals = new ExpressionGlobalsUtil(_userID, sourceValDict);
+            var expGlobals = new ExpressionGlobalsUtil(_userID, _contentEntity, sources);
 
             foreach (var targetRecord in target)
             {
@@ -283,10 +288,10 @@ namespace Gms.Portal.Web.Helpers
 
                 expGlobals.AddSource(adpTargetRecord);
 
-                Object result;
-                if (ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result))
+                var result = ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval);
+                if (result.Error == null)
                 {
-                    var @bool = DataConverter.ToNullableBool(result);
+                    var @bool = DataConverter.ToNullableBool(result.Value);
                     if (@bool.GetValueOrDefault())
                         yield return targetRecord;
                 }
@@ -308,14 +313,15 @@ namespace Gms.Portal.Web.Helpers
                 foreach (var pair in targetRecord)
                     adpTargetRecord[$"${pair.Key}"] = pair.Value;
 
-                var expGlobals = new ExpressionGlobalsUtil(_userID, adpSourceRecord, adpTargetRecord);
+                var sources = GetAllSources(adpSourceRecord, adpTargetRecord);
 
-                Object result;
-                var flag = ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval, out result);
-                if (!flag)
+                var expGlobals = new ExpressionGlobalsUtil(_userID, _contentEntity, sources);
+
+                var result = ExpressionEvaluator.TryEval(filterNode, expGlobals.Eval);
+                if (result.Error != null)
                     continue;
 
-                var @bool = DataConverter.ToNullableBool(result);
+                var @bool = DataConverter.ToNullableBool(result.Value);
                 if (@bool.GetValueOrDefault())
                     yield return targetRecord;
             }
@@ -388,12 +394,45 @@ namespace Gms.Portal.Web.Helpers
                 return fields;
             }
         }
+        
+        private String CreateRecordKey(Object value)
+        {
+            if (!(value is String) && value is IEnumerable)
+            {
+                var collection = (IEnumerable)value;
+                var items = collection.Cast<Object>();
+                var keys = String.Join("_", items);
+
+                var recordKey = $"{_dataSourceID}_{_valueExpression}_{keys}";
+                return recordKey;
+            }
+            else
+            {
+                var recordKey = $"{_dataSourceID}_{_valueExpression}_{value}";
+                return recordKey;
+            }
+        }
 
         private IEnumerable<FormDataBase> GetSourceData()
         {
             var dbCollectionID = _collectionID.GetValueOrDefault();
 
             return GetCollectionData(dbCollectionID);
+        }
+
+        private Object GetFieldValue(FieldEntity sourceField)
+        {
+            var sourceKey = Convert.ToString(sourceField.ID);
+            var sources = GetAllSources();
+
+            foreach (var source in sources)
+            {
+                Object val;
+                if (source.TryGetValue(sourceKey, out val))
+                    return val;
+            }
+
+            return null;
         }
 
         private IEnumerable<FormDataBase> GetCollectionData(Guid dbCollectionID)
@@ -477,22 +516,26 @@ namespace Gms.Portal.Web.Helpers
             }
         }
 
-        private String CreateRecordKey(Object value)
+        private IEnumerable<IDictionary<String, Object>> GetAllSources(params IDictionary<String, Object>[] sources)
         {
-            if (!(value is String) && value is IEnumerable)
+            if (sources != null)
             {
-                var collection = (IEnumerable)value;
-                var items = collection.Cast<Object>();
-                var keys = String.Join("_", items);
-
-                var recordKey = $"{_dataSourceID}_{_valueExpression}_{keys}";
-                return recordKey;
+                foreach (var item in sources)
+                {
+                    if (item != null)
+                        yield return item;
+                }
             }
-            else
+
+            if (_formDatas != null)
             {
-                var recordKey = $"{_dataSourceID}_{_valueExpression}_{value}";
-                return recordKey;
+                foreach (var item in _formDatas)
+                {
+                    if (item != null)
+                        yield return item;
+                }
             }
         }
+
     }
 }

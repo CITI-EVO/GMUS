@@ -45,6 +45,15 @@
     <Compile Include="Contracts\AreaTypeContract.cs" />
     <Compile Include="Contracts\CardReaderDocumentContract.cs" />
     <Compile Include="Contracts\ExecutionResultContract.cs" />
+    <Compile Include="Contracts\GovTalk\Request\ParameterItem.cs" />
+    <Compile Include="Contracts\GovTalk\Request\Parameters.cs" />
+    <Compile Include="Contracts\GovTalk\Request\RequestItem.cs" />
+    <Compile Include="Contracts\GovTalk\Response\PersonAdditionalStatuses.cs" />
+    <Compile Include="Contracts\GovTalk\Response\PersonInfo.cs" />
+    <Compile Include="Contracts\GovTalk\Response\Registration.cs" />
+    <Compile Include="Contracts\GovTalk\Response\ResponseItem.cs" />
+    <Compile Include="Contracts\GovTalk\Response\ResultData.cs" />
+    <Compile Include="Contracts\GovTalk\Response\ResultStatus.cs" />
     <Compile Include="Contracts\LanguageContract.cs" />
     <Compile Include="Contracts\LegalFormContract.cs" />
     <Compile Include="Contracts\MessageContract.cs" />

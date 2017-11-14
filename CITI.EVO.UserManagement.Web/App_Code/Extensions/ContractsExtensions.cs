@@ -217,6 +217,7 @@ namespace CITI.EVO.UserManagement.Web.Extensions
             contract.LoginName = entity.LoginName;
             contract.FirstName = entity.FirstName;
             contract.LastName = entity.LastName;
+            contract.BirthDate = entity.BirthDate;
             contract.Password = entity.Password;
             contract.IsActive = entity.IsActive;
             contract.IsSuperAdmin = entity.IsSuperAdmin;

@@ -16,8 +16,11 @@ namespace Gms.Portal.Web.Utils
 {
     public static class MongoDbUtil
     {
+        public const String FilesCollectionName = "Collection_Files";
         public const String HistoryCollectionName = "Collection_RecordHistories";
-        public const String MonitoringCollectionName = "Collection_RecordMonitorings";
+
+        public const String MonitoringBudgetCollectionName = "Collection_RecordBudgetMonitorings";
+        public const String MonitoringProjectCollectionName = "Collection_RecordProjectMonitorings";
 
         public static IEnumerable<BsonDocument> Execute(IQueryable<BsonDocument> query)
         {

@@ -46,6 +46,8 @@ namespace Gms.Portal.Web.Models
 
         public bool? Inversion { get; set; }
 
+        public int? TotalSize { get; set; }
+
         public int? CaptionSize { get; set; }
 
         public int? ControlSize { get; set; }

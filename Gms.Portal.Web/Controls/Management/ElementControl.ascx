@@ -55,6 +55,7 @@
                         <asp:TextBox runat="server" ID="seOrderIndex" Property="{ElementModel.OrderIndex=Text}" CssClass="intSpinEdit" />
                     </div>
                 </asp:Panel>
+               
                 <asp:Panel runat="server" ID="pnlGroupSize" CssClass="form-group">
                     <ce:Label runat="server" CssClass="col-sm-6 font-normal">Group Size</ce:Label>
                     <div class="col-lg-6">
@@ -85,7 +86,8 @@
                                 <asp:ListItem Text="Label" Value="Label" />
                                 <asp:ListItem Text="Date" Value="Date" />
                                 <asp:ListItem Text="Time" Value="Time" />
-                                <asp:ListItem Text="Number" Value="Number" />
+                                <asp:ListItem Text="Number (float)" Value="Number" />
+                                <asp:ListItem Text="Number (int)" Value="Number_Int" />
                                 <asp:ListItem Text="CheckBox" Value="CheckBox" />
                                 <asp:ListItem Text="ComboBox" Value="ComboBox" />
                                 <asp:ListItem Text="CheckBoxList" Value="CheckBoxList" />
@@ -94,6 +96,12 @@
                                 <asp:ListItem Text="PersonLookup" Value="PersonLookup" />
                             </Items>
                         </ce:DropDownList>
+                    </div>
+                </asp:Panel>
+                <asp:Panel runat="server" ID="pnlTotalSize" CssClass="form-group">
+                    <ce:Label runat="server" CssClass="col-sm-6 font-normal">Total Size</ce:Label>
+                    <div class="col-lg-6">
+                        <asp:TextBox runat="server" ID="tbxTotalSize" Property="{ElementModel.TotalSize=Text}" CssClass="elementSizeSpinEdit" />
                     </div>
                 </asp:Panel>
                 <asp:Panel runat="server" ID="pnlCaptionSize" CssClass="form-group">

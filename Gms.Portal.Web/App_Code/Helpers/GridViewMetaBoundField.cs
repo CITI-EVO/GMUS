@@ -13,16 +13,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CITI.EVO.Tools.Collections;
+using HyperLink = CITI.EVO.Tools.Web.UI.Controls.HyperLink;
 
 namespace Gms.Portal.Web.Helpers
 {
     public class GridViewMetaBoundField : TemplateField
     {
-        private readonly ExpressionGlobalsUtil _expGlobals;
+        private readonly IDictionary<Guid, FieldDataSourceUtil> _fieldDataSourceUtils;
 
         public GridViewMetaBoundField(String dataField)
         {
             DataField = dataField;
+            HeaderText = dataField;
         }
         public GridViewMetaBoundField(Guid? userID, Guid? ownerID)
         {
@@ -38,7 +41,7 @@ namespace Gms.Portal.Web.Helpers
             HeaderText = fieldEntity.Name;
             DataField = Convert.ToString(FieldEntity.ID);
 
-            _expGlobals = new ExpressionGlobalsUtil(UserID, ContentEntity);
+            _fieldDataSourceUtils = new Dictionary<Guid, FieldDataSourceUtil>();
         }
 
         public Guid? UserID { get; private set; }
@@ -187,49 +190,24 @@ namespace Gms.Portal.Web.Helpers
             if (FieldEntity.Type != "ComboBox" && FieldEntity.Type != "CheckBoxList")
                 return value;
 
-            var textExp = FieldEntity.TextExpression;
-            var valueExp = FieldEntity.ValueExpression;
-
-            if (FieldEntity.DataSourceID == null || String.IsNullOrWhiteSpace(textExp) || String.IsNullOrWhiteSpace(valueExp))
-                return value;
-
             var userID = DataConverter.ToNullableGuid(descriptor.GetValue(FormDataConstants.UserIDField));
 
-            var dataSourceHelper = new DataSourceHelper(userID, FieldEntity);
+            var fieldDataSourceUtil = GetFieldDataSourceUtil(userID);
 
-            var values = new[] { value };
-            if (value is IEnumerable && !(value is String))
-            {
-                var collection = (IEnumerable)value;
-                values = collection.Cast<Object>().ToArray();
-            }
-
-            var dataRecords = dataSourceHelper.FindDataRecords(values);
-            if (dataRecords == null)
-                return value;
-
-            var texts = GetLabelTexts(dataRecords, textExp);
-            var result = String.Join("; ", texts);
-
-            return result;
+            var text = fieldDataSourceUtil.GetFieldText(value);
+            return text;
         }
 
-        private IEnumerable<String> GetLabelTexts(IEnumerable<FormDataBase> dataRecords, String textExpression)
+        private FieldDataSourceUtil GetFieldDataSourceUtil(Guid? userID)
         {
-            var expNode = ExpressionParser.GetOrParse(textExpression);
-
-            foreach (var dataRecord in dataRecords)
+            var fieldDataSourceUtil = _fieldDataSourceUtils.GetValueOrDefault(userID.GetValueOrDefault());
+            if (fieldDataSourceUtil == null)
             {
-                _expGlobals.AddSource(dataRecord);
-
-                Object result;
-                if (!ExpressionEvaluator.TryEval(expNode, _expGlobals.Eval, out result))
-                    yield return "[TextExpression error]";
-
-                yield return Convert.ToString(result);
-
-                _expGlobals.RemoveSource(dataRecord);
+                fieldDataSourceUtil = new FieldDataSourceUtil(userID, ContentEntity, FieldEntity);
+                _fieldDataSourceUtils.Add(userID.GetValueOrDefault(), fieldDataSourceUtil);
             }
+
+            return fieldDataSourceUtil;
         }
 
         private decimal GetSummaryValue(DictionaryDataView source)

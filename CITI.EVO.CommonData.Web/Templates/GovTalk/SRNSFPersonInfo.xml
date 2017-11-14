@@ -11,10 +11,10 @@
     </MessageDetails>
     <SenderDetails>
       <IDAuthentication>
-        <SenderID>RustaveliFound</SenderID>
+        <SenderID>$!{SenderID}</SenderID>
         <Authentication>
           <Method>clear</Method>
-          <Value>RustP7756</Value>
+          <Value>$!{AuthVal}</Value>
         </Authentication>
       </IDAuthentication>
       <EmailAddress>nomail</EmailAddress>
@@ -23,8 +23,13 @@
   <Body>
     <Message xmlns="urn:g3.ge:cra:call:CRA_Xcrms_ProcessRequest:v1">
       <Request>
-        <SubcontractId></SubcontractId>
-        <Parameters></Parameters>
+        <SubcontractId>SRNSFPersonInfo</SubcontractId>
+        <Parameters>
+          <Person>
+            <PrivateNumber>$!{PrivateNumber}</PrivateNumber>
+            <BirthYear>$!{BirthYear}</BirthYear>
+          </Person>
+        </Parameters>
       </Request>
     </Message>
   </Body>

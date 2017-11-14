@@ -114,7 +114,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
 
                 var dateTime = DataConverter.ToNullableDateTime(strValue);
                 if (dateTime == null)
-                    throw new Exception();
+                    throw new Exception($"'{value}' is not correct DateTime");
 
                 return dateTime.Value;
             }
@@ -123,7 +123,7 @@ namespace CITI.EVO.Tools.ExpressionEngine
             if (result.HasValue)
                 return result.Value;
 
-            throw new Exception();
+            throw new Exception($"'{value}' is not correct DateTime");
         }
 
         public static bool IsNumber(Object value)

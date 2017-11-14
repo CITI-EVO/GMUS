@@ -11,11 +11,13 @@ namespace Gms.Portal.Web.Entities.DataContainer
         public const String UserIDField = "UserID";
         public const String FieldIDField = "FieldID";
         public const String OwnerIDField = "OwnerID";
+        public const String VersionField = "Version";
         public const String IDNumberField = "IDNumber";
         public const String StatusIDField = "StatusID";
         public const String ParentIDField = "ParentID";
         public const String PreviousIDField = "PreviousID";
         public const String ContainerIDField = "ContainerID";
+        public const String ParentVersionField = "ParentVersion";
 
         public const String ReviewFields = "ReviewFields";
         public const String PrivacyFields = "PrivaryFields";
@@ -29,6 +31,8 @@ namespace Gms.Portal.Web.Entities.DataContainer
         public const String DateOfStatusField = "StatusChangeDate";
         public const String DateOfAssigneField = "DateOfAssigne";
 
+        public const String ChangesRequiresAcceptField = "ChangesRequiresAccept";
+        
         public const String HashCodeField = "HashCode";
 
         public const String FileNameField = "FileName";
@@ -45,6 +49,12 @@ namespace Gms.Portal.Web.Entities.DataContainer
         public const String StatusComment = "StatusComment";
         public const String UserStatusesFields = "UserStatusesFields";
 
+        public const String MonitoringBudget = "MonitoringBudget";
+        public const String MonitoringProject = "MonitoringProject";
+        public const String MonitoringPeriod = "MonitoringPeriod";
+        public const String MonitoringStartDate = "MonitoringStartDate";
+        public const String MonitoringEndDate = "MonitoringEndDate";
+        
         public const String UserStatusStepField = "UserStatusesFields.Step";
         public const String UserStatusParamsField = "UserStatusesFields.Params";
         public const String UserStatusUserIDField = "UserStatusesFields.UserID";

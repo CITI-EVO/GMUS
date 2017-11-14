@@ -10,6 +10,7 @@ namespace CITI.EVO.Tools.Structures
         private readonly int _degree;
 
         private BPlusNode<TItem> _root;
+
         private int _height;
         private int _count;
 

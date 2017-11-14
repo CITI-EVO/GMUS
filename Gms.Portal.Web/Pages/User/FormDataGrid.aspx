@@ -40,7 +40,7 @@
                     <div class="hr-line-dashed"></div>
                 </ce:Panel>
                 <div class="form-group">
-                    <local:FormDataGridControl runat="server" ID="formDataGridControl" OnDelete="formDataGridControl_OnDelete" OnStatus="formDataGridControl_OnStatus" OnReview="formDataGridControl_OnReview" OnInspect="formDataGridControl_OnInspect" OnAssigne="formDataGridControl_OnAssigne" OnPrint="formDataGridControl_OnPrint" />
+                    <local:FormDataGridControl runat="server" ID="formDataGridControl" OnDelete="formDataGridControl_OnDelete" OnStatus="formDataGridControl_OnStatus" OnPrint="formDataGridControl_OnPrint" OnAcceptChanges="formDataGridControl_OnAcceptChanges" />
                 </div>
             </div>
         </div>

@@ -501,17 +501,17 @@ namespace Gms.Portal.Web.Controls.User
             var advResolver = new AdvancedDataResolver();
             advResolver.SetValue("scores", scores);
 
-            Object selectorResult;
-            if (!ExpressionEvaluator.TryEval(selectorExpNode, advResolver, out selectorResult))
+            var selectorResult = ExpressionEvaluator.TryEval(selectorExpNode, advResolver);
+            if (selectorResult.Error != null)
                 return null;
 
-            advResolver.SetValue("scores", selectorResult);
+            advResolver.SetValue("scores", selectorResult.Value);
 
-            Object summaryResult;
-            if (!ExpressionEvaluator.TryEval(summaryExpNode, advResolver, out summaryResult))
+            var summaryResult = ExpressionEvaluator.TryEval(summaryExpNode, advResolver);
+            if (summaryResult.Error != null)
                 return null;
 
-            return Convert.ToString(summaryResult);
+            return Convert.ToString(summaryResult.Value);
         }
 
         protected String GetTemplateID(DictionaryItemDescriptor descriptor)

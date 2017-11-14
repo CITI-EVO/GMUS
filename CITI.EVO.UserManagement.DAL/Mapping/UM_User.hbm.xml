@@ -12,6 +12,7 @@
     <property name="Password" />
     <property name="FirstName" />
     <property name="LastName" />
+    <property name="BirthDate" />
     <property name="Email" />
     <property name="Phone" />
     <property name="Address" />

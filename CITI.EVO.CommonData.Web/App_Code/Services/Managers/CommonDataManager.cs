@@ -15,9 +15,26 @@ namespace CITI.EVO.CommonData.Web.Services.Managers
 {
     public static class CommonDataManager
     {
-        public static PersonInfoContract GetPerson(String personalID, String birthYear)
+        public static PersonInfoContract GetPerson(String personalID, int birthYear)
         {
-            return PersonApi.GetPerson(personalID, birthYear);
+            var result = GovTalkApiClient.GetPersonInfo(personalID, birthYear);
+            if (result == null)
+                return null;
+
+            var contract = new PersonInfoContract
+            {
+                ID = result.ID,
+                PersonalID = result.PrivateNumber,
+                FirstName = result.FirstName,
+                LastName = result.LastName,
+                BirthDate = DataConverter.ToNullableDateTime(result.BirthDate),
+                CitizenshipCountry = result.CitizenshipCountry,
+                CitizenshipCountryID = result.CitizenshipCountryID,
+                PersonStatus = result.PersonStatus,
+                PersonStatusId = result.PersonStatusId,
+            };
+
+            return contract;
         }
 
         public static List<AreaContract> GetAreas(AreaTypesEnum type, RecordTypesEnum recordType)

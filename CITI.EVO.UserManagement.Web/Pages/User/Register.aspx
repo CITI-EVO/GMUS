@@ -28,7 +28,7 @@
                 <div>
                     <ce:Label runat="server" ForeColor="Red" ID="lblError" Font-Size="14px" Font-Bold="True"></ce:Label>
                 </div>
-                <local:RegisterUserControl runat="server" ID="registerUserControl" />
+                <local:RegisterUserControl runat="server" ID="registerUserControl" OnSync="registerUserControl_OnSync" />
                 <div>
                     <ce:LinkButton ID="btOK" CssClass="btn btn-success block full-width m-b" runat="server" OnClick="btOK_Click">
                         <ce:label runat="server" Text="გაგზავნა"/>

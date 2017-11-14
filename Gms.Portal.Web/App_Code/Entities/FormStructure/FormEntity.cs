@@ -21,10 +21,17 @@ namespace Gms.Portal.Web.Entities.FormStructure
         [XmlElement("Ratings")]
         public RatingEntity Rating { get; set; }
 
+        [XmlElement("DefaultFilters")]
+        public bool? DefaultFilters { get; set; }
+
         [XmlElement("Templates")]
         public List<TemplateEntity> Templates { get; set; }
 
         [XmlElement("Validations")]
         public List<ValidationEntity> Validations { get; set; }
+
+        [XmlElement("Monitoring")]
+        public MonitoringEntity Monitoring { get; set; }
+
     }
 }
